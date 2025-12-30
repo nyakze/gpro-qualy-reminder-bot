@@ -15,8 +15,8 @@ def format_full_calendar(calendar_data, title="Full Season", is_current_season=T
     """Generic formatter for current/next season"""
     if not calendar_data:
         return "No races scheduled"
-    
-    now = datetime.now()
+
+    now = datetime.utcnow()
     race_list = []
     
     # Collect races 1-17 in sequential order
@@ -59,10 +59,10 @@ def format_full_calendar(calendar_data, title="Full Season", is_current_season=T
 
 def format_race_beautiful(race_data):
     if not race_data: return "None"
-    
+
     track = race_data.get('track', 'Unknown')
     hours_left = race_data.get('hours_left', 0)
-    quali_close = race_data.get('quali_close', datetime.now())
+    quali_close = race_data.get('quali_close', datetime.utcnow())
     
     hours_display = math.floor(hours_left)
     deadline = quali_close.strftime("%d.%m %H:%M")
@@ -71,7 +71,7 @@ def format_race_beautiful(race_data):
 
 def format_time_until_quali(quali_close):
     """Time remaining until quali deadline - human friendly"""
-    now = datetime.now()
+    now = datetime.utcnow()
     delta = quali_close - now
     
     total_minutes = delta.total_seconds() / 60
@@ -108,49 +108,6 @@ def format_time_until_quali(quali_close):
     else:
         hours = math.floor(total_hours)
         return f"{hours}h"  # "23h"
-    """Generic formatter for current/next season - Races #1-#17 sequential"""
-    if not calendar_data:
-        return "No races scheduled"
-    
-    now = datetime.now()
-    race_list = []
-    
-    # Collect races 1-17 in sequential order
-    if isinstance(calendar_data, dict):
-        for race_id in range(1, 18):  # Force 1-17 order
-            if race_id in calendar_data and isinstance(calendar_data[race_id], dict):
-                race_data = calendar_data[race_id].copy()
-                race_data['race_id'] = race_id
-                race_list.append(race_data)
-    
-    # Find next race (first with future quali)
-    next_race_id = None
-    for race in race_list:
-        if race.get('quali_close', now) > now:
-            next_race_id = race['race_id']
-            break
-    
-    text = ""
-    for race in race_list:
-        track = race.get('track', f'Race {race["race_id"]}')
-        race_date = race.get('date', now)
-        quali_close = race.get('quali_close', now)
-        race_id = race['race_id']
-        
-        date_str = race_date.strftime("%a %d.%m")
-        time_text = format_time_until_quali(quali_close)
-        
-        time_info = date_str
-        if time_text:
-            time_info += f" • {time_text}"
-        
-        # 🔥 NEXT RACE
-        if race_id == next_race_id:
-            text += f"🔥 **#{race_id} {track}** - {time_info}\n"
-        else:
-            text += f"**#{race_id} {track}** - {time_info}\n"
-    
-    return text.rstrip()
 
 @router.message(Command("start"))
 async def cmd_start(message: Message):
@@ -227,7 +184,7 @@ async def cmd_notify(message: Message, bot):
     
     if future_races:
         next_race_id, next_race_data = future_races[0]  # First = soonest
-        await send_quali_notification(bot, message.from_user.id, next_race_id, next_race_data)
+        await send_quali_notification(bot, message.from_user.id, next_race_id, next_race_data, "manual")
         logger.info(f"🔔 /notify sent for race {next_race_id} ({next_race_data.get('track', 'Unknown')}) to {message.from_user.id}")
     else:
         await message.answer("🔔 No upcoming qualifications")
@@ -258,10 +215,10 @@ async def cmd_schedule(message: Message):
 
 @router.message(Command("update"))
 async def cmd_update(message: Message):
-    from config import ADMIN_USER_ID
+    from config import ADMIN_USER_IDS
     from notifications import users_data, reset_user_status
 
-    if message.from_user.id != ADMIN_USER_ID:
+    if message.from_user.id not in ADMIN_USER_IDS:
         await message.answer("❌ Admin only")
         return
 
@@ -293,34 +250,33 @@ async def cmd_update(message: Message):
 
 @router.message(Command("users"))
 async def cmd_users(message: Message):
-    from config import ADMIN_USER_ID
-    print(f"USERS DEBUG - User: {message.from_user.id} ({type(message.from_user.id)}), Admin: {ADMIN_USER_ID} ({type(ADMIN_USER_ID)})")
-    
-    if message.from_user.id != ADMIN_USER_ID:
-        print("USERS: Access denied")
+    from config import ADMIN_USER_IDS
+    logger.debug(f"USERS - User: {message.from_user.id} ({type(message.from_user.id)}), Admins: {ADMIN_USER_IDS}")
+
+    if message.from_user.id not in ADMIN_USER_IDS:
+        logger.warning(f"USERS: Access denied for user {message.from_user.id}")
         await message.answer("❌ Admin only")
         return
-    
-    print("USERS: Admin access granted")
-    
+
+    logger.info("USERS: Admin access granted")
+
     try:
         from notifications import users_data
-        print(f"USERS: Loaded {len(users_data)} users from notifications")
-        
+        logger.info(f"USERS: Loaded {len(users_data)} users from notifications")
+
         if not users_data:
             await message.answer("📊 **0 users** in database", parse_mode='Markdown')
             return
-            
+
         text = f"📊 **{len(users_data)} users**:\n\n"
         for uid, status in users_data.items():
             quali = status.get("completed_quali", "None")
-            # Use HTML to avoid Markdown backtick issues with user IDs
-            text += f"• `<code>{uid}</code>`: Race {quali}\n"
-        
-        await message.answer(text, parse_mode='HTML')
-        
+            text += f"• `{uid}`: Race {quali}\n"
+
+        await message.answer(text, parse_mode='Markdown')
+
     except Exception as e:
-        print(f"USERS ERROR: {e}")
+        logger.error(f"USERS ERROR: {e}")
         await message.answer("❌ Error loading user data", parse_mode='Markdown')
 
 @router.callback_query(F.data.startswith("done_"))
@@ -330,10 +286,17 @@ async def handle_quali_done(callback: CallbackQuery):
     await callback.message.edit_text(callback.message.text + "\n\n✅ *Race marked done!*")
     await callback.answer("✅ Done!")
 
-@router.callback_query(F.data == "reset_all")
-async def reset_all(callback: CallbackQuery):
-    reset_user_status(callback.from_user.id)
-    await callback.message.edit_text(callback.message.text + "\n\n🔄 *Notifications reset!*")
-    await callback.answer("🔄 Reset!")
+@router.callback_query(F.data.startswith("reset_"))
+async def handle_reset(callback: CallbackQuery):
+    if callback.data == "reset_all":
+        reset_user_status(callback.from_user.id)
+        await callback.message.edit_text(callback.message.text + "\n\n🔄 *Notifications reset!*")
+        await callback.answer("🔄 Reset!")
+    else:
+        # reset_{race_id} format
+        race_id = int(callback.data.split("_")[1])
+        reset_user_status(callback.from_user.id)
+        await callback.message.edit_text(callback.message.text + "\n\n🔄 *Notifications re-enabled!*")
+        await callback.answer("🔄 Re-enabled!")
 
 logger.info("✅ handlers.py loaded - Aiogram 3.x Router ready (/next added)")
