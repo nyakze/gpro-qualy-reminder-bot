@@ -103,7 +103,13 @@ def build_timezone_search_index() -> dict:
         tz_name_map = {}
         timezone_info = {}
 
-        for entry in timezone_data:
+        # Sort entries: canonical timezones first, then aliases
+        # This ensures canonical timezones get priority in the mapping
+        sorted_entries = sorted(
+            timezone_data, key=lambda e: (e.get("type") != "canonical", e.get("tzIdentifier", ""))
+        )
+
+        for entry in sorted_entries:
             # Geoapify format uses 'tzIdentifier' instead of 'timezone'
             tz_name = entry.get("tzIdentifier")
             if not tz_name:
@@ -112,10 +118,7 @@ def build_timezone_search_index() -> dict:
             # Store full metadata
             timezone_info[tz_name] = entry
 
-            # Check if this is a canonical timezone (prefer canonical over aliases in duplicates)
-            is_canonical = entry.get("type") == "canonical"
-
-            # Add timezone name itself
+            # Add timezone name itself (always unique)
             search_corpus.append(tz_name)
             tz_name_map[tz_name] = tz_name
 
@@ -127,39 +130,37 @@ def build_timezone_search_index() -> dict:
                 region = parts[0] if len(parts) > 0 else None
                 city = parts[-1].replace("_", " ")
 
-                # Add city name
+                # Add city name (only if not already mapped - first one wins, and we sorted canonical first)
                 search_corpus.append(city)
-                # Only overwrite if new entry is canonical and old is not, or if key doesn't exist
-                if city not in tz_name_map or is_canonical:
+                if city not in tz_name_map:
                     tz_name_map[city] = tz_name
 
-                # Add region + city (e.g., "Europe Moscow", "Asia Tbilisi")
+                # Add region + city (always unique since we include tz_name)
                 region_city = f"{region} {city}"
                 search_corpus.append(region_city)
                 tz_name_map[region_city] = tz_name
 
-            # Add abbreviations with city context to avoid duplicates
+            # Add abbreviations - only if not already mapped (canonical processed first)
             abbr_standard = entry.get("abbreviationStandard")
             if abbr_standard:
-                # Add plain abbreviation, but prefer canonical timezones
-                if abbr_standard not in tz_name_map or is_canonical:
-                    search_corpus.append(abbr_standard)
+                search_corpus.append(abbr_standard)
+                if abbr_standard not in tz_name_map:
                     tz_name_map[abbr_standard] = tz_name
 
-                # Add city+abbreviation for better matching (e.g., "Moscow MSK", "Tbilisi +04")
-                if city and abbr_standard:
+                # Add city+abbreviation for better matching (always unique if city exists)
+                if city:
                     city_abbr = f"{city} {abbr_standard}"
                     search_corpus.append(city_abbr)
                     tz_name_map[city_abbr] = tz_name
 
             abbr_dst = entry.get("abbreviationDst")
             if abbr_dst and abbr_dst != abbr_standard:
-                if abbr_dst not in tz_name_map or is_canonical:
-                    search_corpus.append(abbr_dst)
+                search_corpus.append(abbr_dst)
+                if abbr_dst not in tz_name_map:
                     tz_name_map[abbr_dst] = tz_name
 
                 # Add city+abbreviation for DST too
-                if city and abbr_dst:
+                if city:
                     city_abbr_dst = f"{city} {abbr_dst}"
                     search_corpus.append(city_abbr_dst)
                     tz_name_map[city_abbr_dst] = tz_name
@@ -564,10 +565,9 @@ def fuzzy_search_timezones(query: str, limit: int = 5) -> list[tuple[str, float]
     if not query:
         return []
 
-    # Special case: UTC offset parsing
-    utc_offset_tz = parse_utc_offset(query)
-    if utc_offset_tz:
-        return [(utc_offset_tz, 100.0)]
+    # Note: We used to have UTC offset parsing here that returned a single hardcoded timezone
+    # Now we let fuzzy search find ALL timezones matching the offset abbreviation (e.g., all +04 zones)
+    # The abbreviations are already in the search corpus from Geoapify data
 
     # Try to use new search index if available
     if _timezone_search_index:
