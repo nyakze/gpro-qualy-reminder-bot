@@ -246,7 +246,7 @@ async def cmd_users(message: Message, i18n: I18nContext):
 
     except Exception as e:
         logger.error(f"USERS ERROR: {e}")
-        await message.answer("❌ Error loading user data", parse_mode='Markdown')
+        await message.answer(i18n.get("error-invalid-data"), parse_mode='Markdown')
 
 
 @router.message(Command("weather"))
