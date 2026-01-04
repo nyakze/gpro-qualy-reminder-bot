@@ -37,7 +37,7 @@ async def download_timezone_data() -> bool:
     """
     import aiohttp
 
-    url = "https://data.geoapify.com/data-share/timezones/timezone-info.json"
+    url = "https://www.geoapify.com/data-share/timezones/timezone-info.json"
 
     try:
         logger.info(f"Downloading timezone data from {url}...")
