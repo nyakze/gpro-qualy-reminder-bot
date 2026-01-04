@@ -88,6 +88,10 @@ settings-language-title = 🌍 **Настройки языка**
 
     Выберите предпочитаемый язык для ссылок на GPRO:
 
+ui-lang-menu-title = 💬 **Язык бота**
+
+    Выберите язык интерфейса бота:
+
 settings-group-title = 🏁 **Настройки группы**
 
     Текущая группа: **{ $group }**
@@ -365,9 +369,14 @@ feedback-all-disabled = ✅ Все уведомления отключены!
 feedback-notif-enabled = ✅ { $label } включено!
 feedback-notif-disabled = ✅ { $label } отключено!
 feedback-quali-done = ✅ Готово!
+feedback-race-marked-done = ✅ *Гонка отмечена как завершенная!*
 feedback-reset = 🔄 Сброшено!
+feedback-notifications-reset = 🔄 *Уведомления сброшены!*
+feedback-reenabled = 🔄 Включено заново!
+feedback-notifications-reenabled = 🔄 *Уведомления включены заново!*
 feedback-language-set = ✅ Язык установлен: { $language }
 feedback-language-reset = ✅ Язык сброшен на английский
+feedback-ui-language-set = ✅ Язык бота установлен: { $language }
 feedback-group-set = ✅ Группа установлена: { $group }
 feedback-custom-notif-set = ✅ { $message }
 feedback-custom-notif-disabled = ✅ Кастомное уведомление { $slot } отключено
@@ -379,6 +388,15 @@ feedback-weather-sent = 🌤️ Прогноз погоды отправлен!
 # =======================
 # Форматирование времени
 # =======================
+# Сокращения дней недели (2 буквы)
+weekday-mon = Пн
+weekday-tue = Вт
+weekday-wed = Ср
+weekday-thu = Чт
+weekday-fri = Пт
+weekday-sat = Сб
+weekday-sun = Вс
+
 time-minutes = { $minutes } { $minutes ->
     [one] минута
     [few] минуты

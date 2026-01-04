@@ -88,6 +88,10 @@ settings-language-title = 🌍 **Language Settings**
 
     Select your preferred language for GPRO race links:
 
+ui-lang-menu-title = 💬 **Bot Language**
+
+    Select bot interface language:
+
 settings-group-title = 🏁 **Group Settings**
 
     Current group: **{ $group }**
@@ -365,9 +369,14 @@ feedback-all-disabled = ✅ All notifications disabled!
 feedback-notif-enabled = ✅ { $label } enabled!
 feedback-notif-disabled = ✅ { $label } disabled!
 feedback-quali-done = ✅ Done!
+feedback-race-marked-done = ✅ *Race marked done!*
 feedback-reset = 🔄 Reset!
+feedback-notifications-reset = 🔄 *Notifications reset!*
+feedback-reenabled = 🔄 Re-enabled!
+feedback-notifications-reenabled = 🔄 *Notifications re-enabled!*
 feedback-language-set = ✅ Language set to { $language }
 feedback-language-reset = ✅ Language reset to English
+feedback-ui-language-set = ✅ Bot language set to { $language }
 feedback-group-set = ✅ Group set to { $group }
 feedback-custom-notif-set = ✅ { $message }
 feedback-custom-notif-disabled = ✅ Custom notification { $slot } disabled
@@ -379,6 +388,15 @@ feedback-weather-sent = 🌤️ Weather forecast sent!
 # =======================
 # Time Formatting
 # =======================
+# Weekday abbreviations (2-letter)
+weekday-mon = Mo
+weekday-tue = Tu
+weekday-wed = We
+weekday-thu = Th
+weekday-fri = Fr
+weekday-sat = Sa
+weekday-sun = Su
+
 time-minutes = { $minutes ->
     [one] { $minutes } minute
    *[other] { $minutes } minutes

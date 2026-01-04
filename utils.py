@@ -203,6 +203,35 @@ def format_race_beautiful(race_data: dict) -> str:
     return f"Qualification closes in {hours_display}h\n**({deadline})** - {track}"
 
 
+def get_localized_weekday(date: datetime, i18n=None) -> str:
+    """Get 2-letter weekday abbreviation in the user's language
+
+    Args:
+        date: Date to get weekday for
+        i18n: Optional i18n context for translations
+
+    Returns:
+        2-letter weekday abbreviation (e.g., "Mo", "Tu", "Пн", "Вт")
+    """
+    weekday_map = {
+        0: "weekday-mon",
+        1: "weekday-tue",
+        2: "weekday-wed",
+        3: "weekday-thu",
+        4: "weekday-fri",
+        5: "weekday-sat",
+        6: "weekday-sun"
+    }
+
+    weekday_key = weekday_map[date.weekday()]
+
+    if i18n:
+        return i18n.get(weekday_key)
+    else:
+        # Fallback to English 3-letter abbreviation if no i18n
+        return date.strftime("%a")
+
+
 def format_full_calendar(calendar_data: dict, title: str = "Full Season", is_current_season: bool = True, i18n=None) -> str:
     """Generic formatter for current/next season
 
@@ -245,7 +274,9 @@ def format_full_calendar(calendar_data: dict, title: str = "Full Season", is_cur
         quali_close = race.get('quali_close', now)
         race_id = race['race_id']
 
-        date_str = race_date.strftime("%a %d.%m")
+        # Get localized 2-letter weekday abbreviation
+        weekday = get_localized_weekday(race_date, i18n)
+        date_str = f"{weekday} {race_date.strftime('%d.%m')}"
         time_text = format_time_until_quali(quali_close, i18n)
 
         time_info = date_str

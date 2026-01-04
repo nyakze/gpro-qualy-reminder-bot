@@ -310,70 +310,70 @@ async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext)
 
 
 @router.callback_query(F.data.startswith("done_"))
-async def handle_quali_done(callback: CallbackQuery):
+async def handle_quali_done(callback: CallbackQuery, i18n: I18nContext):
     try:
         race_id = int(callback.data.split("_")[1])
     except (ValueError, IndexError):
-        await callback.answer("❌ Invalid race ID", show_alert=True)
+        await callback.answer(i18n.get("error-invalid-race"), show_alert=True)
         return
 
     mark_quali_done(callback.from_user.id, race_id)
-    await callback.message.edit_text(callback.message.text + "\n\n✅ *Race marked done!*")
-    await callback.answer("✅ Done!")
+    await callback.message.edit_text(callback.message.text + "\n\n" + i18n.get("feedback-race-marked-done"))
+    await callback.answer(i18n.get("feedback-quali-done"))
 
 
 @router.callback_query(F.data.startswith("reset_"))
-async def handle_reset(callback: CallbackQuery):
+async def handle_reset(callback: CallbackQuery, i18n: I18nContext):
     if callback.data == "reset_all":
         reset_user_status(callback.from_user.id)
-        await callback.message.edit_text(callback.message.text + "\n\n🔄 *Notifications reset!*")
-        await callback.answer("🔄 Reset!")
+        await callback.message.edit_text(callback.message.text + "\n\n" + i18n.get("feedback-notifications-reset"))
+        await callback.answer(i18n.get("feedback-reset"))
     else:
         # reset_{race_id} format
         try:
             race_id = int(callback.data.split("_")[1])
         except (ValueError, IndexError):
-            await callback.answer("❌ Invalid race ID", show_alert=True)
+            await callback.answer(i18n.get("error-invalid-race"), show_alert=True)
             return
 
         reset_user_status(callback.from_user.id)
-        await callback.message.edit_text(callback.message.text + "\n\n🔄 *Notifications re-enabled!*")
-        await callback.answer("🔄 Re-enabled!")
+        await callback.message.edit_text(callback.message.text + "\n\n" + i18n.get("feedback-notifications-reenabled"))
+        await callback.answer(i18n.get("feedback-reenabled"))
 
 
 @router.callback_query(F.data.startswith("weather_"))
-async def handle_weather(callback: CallbackQuery):
+async def handle_weather(callback: CallbackQuery, i18n: I18nContext):
     """Display weather forecast for a race"""
     try:
         race_id = int(callback.data.split("_")[1])
     except (ValueError, IndexError):
-        await callback.answer("❌ Invalid race ID", show_alert=True)
+        await callback.answer(i18n.get("error-invalid-race"), show_alert=True)
         return
 
     # Get weather data from race_calendar
     if race_id not in race_calendar:
-        await callback.answer("❌ Race not found", show_alert=True)
+        await callback.answer(i18n.get("error-race-not-found"), show_alert=True)
         return
 
     race_data = race_calendar[race_id]
     weather_data = race_data.get('weather')
 
     if not weather_data:
-        await callback.answer("⚠️ Weather data not available yet", show_alert=True)
+        await callback.answer(i18n.get("error-weather-not-available"), show_alert=True)
         return
 
     # Format and send weather message
-    weather_message = format_weather_data(weather_data)
+    weather_message = format_weather_data(weather_data, i18n)
     track = add_flag_to_track(race_data.get('track', f'Race {race_id}'))
 
     full_message = f"**Race #{race_id}: {track}**\n\n{weather_message}"
 
     try:
         await callback.message.answer(full_message, parse_mode='Markdown')
-        await callback.answer("🌤️ Weather forecast sent!")
+        await callback.answer(i18n.get("feedback-weather-sent"))
     except Exception as e:
         logger.error(f"Failed to send weather for race {race_id}: {e}")
-        await callback.answer("❌ Failed to send weather", show_alert=True)
+        await callback.answer(i18n.get("error-weather-send-failed"), show_alert=True)
 
 
 @router.callback_query(F.data == "lang_menu")
@@ -401,7 +401,7 @@ async def handle_language_page(callback: CallbackQuery, i18n: I18nContext):
     try:
         page = int(callback.data.split("_")[2])
     except (ValueError, IndexError):
-        await callback.answer("❌ Invalid page", show_alert=True)
+        await callback.answer(i18n.get("error-invalid-page"), show_alert=True)
         return
 
     keyboard = build_language_keyboard(page=page, current_lang=current_lang, i18n=i18n)
@@ -448,9 +448,9 @@ async def handle_language_select(callback: CallbackQuery, i18n: I18nContext):
             reply_markup=keyboard,
             parse_mode='Markdown'
         )
-        await callback.answer(f"✅ Language set to {lang_display}")
+        await callback.answer(i18n.get("feedback-language-set", language=lang_display))
     else:
-        await callback.answer("❌ Invalid language", show_alert=True)
+        await callback.answer(i18n.get("error-invalid-language"), show_alert=True)
 
 
 @router.callback_query(F.data == "lang_reset_default")
@@ -466,9 +466,9 @@ async def handle_language_reset(callback: CallbackQuery, i18n: I18nContext):
             reply_markup=keyboard,
             parse_mode='Markdown'
         )
-        await callback.answer("✅ Language reset to English")
+        await callback.answer(i18n.get("feedback-language-reset"))
     else:
-        await callback.answer("❌ Reset failed", show_alert=True)
+        await callback.answer(i18n.get("error-reset-failed"), show_alert=True)
 
 
 @router.callback_query(F.data == "ui_lang_menu")
@@ -502,18 +502,12 @@ async def handle_ui_language_menu(callback: CallbackQuery, i18n: I18nContext):
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
 
-    # Use localized text based on current language
-    if current_ui_lang == 'ru':
-        text = "💬 **Язык бота**\n\nВыберите язык интерфейса бота:"
-    else:
-        text = "💬 **Bot Language**\n\nSelect bot interface language:"
-
-    await callback.message.edit_text(text, reply_markup=keyboard, parse_mode='Markdown')
+    await callback.message.edit_text(i18n.get("ui-lang-menu-title"), reply_markup=keyboard, parse_mode='Markdown')
     await callback.answer()
 
 
 @router.callback_query(F.data.startswith("set_ui_lang_"))
-async def handle_set_ui_language(callback: CallbackQuery):
+async def handle_set_ui_language(callback: CallbackQuery, i18n: I18nContext):
     """Handle bot UI language selection in settings"""
     user_id = callback.from_user.id
 
@@ -525,7 +519,15 @@ async def handle_set_ui_language(callback: CallbackQuery):
         lang_display = "English" if ui_lang == 'en' else "Русский"
 
         # Show feedback and rebuild menu with new language
-        await callback.answer(f"✅ Bot language set to {lang_display}")
+        # IMPORTANT: Get new i18n context after language change
+        from aiogram_i18n import I18nContext
+        new_i18n = I18nContext.get_current(no_error=True)
+        if new_i18n is None:
+            # Fallback: create context manually
+            from i18n_setup import i18n as i18n_middleware
+            new_i18n = await i18n_middleware.core.get_context(locale=ui_lang)
+
+        await callback.answer(new_i18n.get("feedback-ui-language-set", language=lang_display))
 
         # Rebuild UI language menu with updated selection
         current_ui_lang = get_user_ui_language(user_id)
@@ -546,24 +548,17 @@ async def handle_set_ui_language(callback: CallbackQuery):
             callback_data="set_ui_lang_ru"
         )])
 
-        # Back button (use appropriate language)
-        back_text = "◀ Назад" if current_ui_lang == 'ru' else "◀ Back"
+        # Back button
         keyboard_buttons.append([InlineKeyboardButton(
-            text=back_text,
+            text=new_i18n.get("button-back"),
             callback_data="settings_main"
         )])
 
         keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
 
-        # Update message with appropriate language
-        if current_ui_lang == 'ru':
-            text = "💬 **Язык бота**\n\nВыберите язык интерфейса бота:"
-        else:
-            text = "💬 **Bot Language**\n\nSelect bot interface language:"
-
-        await callback.message.edit_text(text, reply_markup=keyboard, parse_mode='Markdown')
+        await callback.message.edit_text(new_i18n.get("ui-lang-menu-title"), reply_markup=keyboard, parse_mode='Markdown')
     else:
-        await callback.answer("❌ Invalid language", show_alert=True)
+        await callback.answer(i18n.get("error-invalid-language"), show_alert=True)
 
 
 @router.callback_query(F.data == "settings_main")
@@ -723,14 +718,14 @@ async def handle_custom_notifications_menu(callback: CallbackQuery, i18n: I18nCo
 
 
 @router.callback_query(F.data.startswith("custom_notif_edit_"))
-async def handle_custom_notification_edit(callback: CallbackQuery, state: FSMContext):
+async def handle_custom_notification_edit(callback: CallbackQuery, state: FSMContext, i18n: I18nContext):
     """Handle editing a custom notification slot"""
     user_id = callback.from_user.id
 
     try:
         slot_idx = int(callback.data.split("_")[-1])
     except (ValueError, IndexError):
-        await callback.answer("❌ Invalid slot", show_alert=True)
+        await callback.answer(i18n.get("error-invalid-slot"), show_alert=True)
         return
 
     custom_notifs = get_custom_notifications(user_id)
@@ -757,20 +752,20 @@ async def handle_custom_notification_edit(callback: CallbackQuery, state: FSMCon
 
     # Add "Custom time" button
     keyboard_buttons.append([InlineKeyboardButton(
-        text="✏️ Enter Custom Time",
+        text=i18n.get("button-enter-custom-time"),
         callback_data=f"custom_notif_input_{slot_idx}"
     )])
 
     # Add "Disable" button if currently enabled
     if custom_notif.get('enabled', False):
         keyboard_buttons.append([InlineKeyboardButton(
-            text="🔕 Disable This Notification",
+            text=i18n.get("button-disable-notification"),
             callback_data=f"custom_notif_disable_{slot_idx}"
         )])
 
     # Back button
     keyboard_buttons.append([InlineKeyboardButton(
-        text="◀ Back",
+        text=i18n.get("button-back"),
         callback_data="custom_notif_menu"
     )])
 
@@ -778,12 +773,11 @@ async def handle_custom_notification_edit(callback: CallbackQuery, state: FSMCon
 
     current_status = ""
     if custom_notif.get('enabled', False):
-        time_str = format_custom_notification_time(custom_notif.get('hours_before'))
+        time_str = format_custom_notification_time(custom_notif.get('hours_before'), i18n)
         current_status = f"\n\n**Current:** {time_str}"
 
     await callback.message.edit_text(
-        f"⏱️ **Custom Notification {slot_idx+1}**{current_status}\n\n"
-        "Select a preset time or enter a custom time:",
+        i18n.get("settings-custom-notif-edit", slot=slot_idx+1, current=current_status),
         reply_markup=keyboard,
         parse_mode='Markdown'
     )
@@ -791,7 +785,7 @@ async def handle_custom_notification_edit(callback: CallbackQuery, state: FSMCon
 
 
 @router.callback_query(F.data.startswith("custom_notif_set_"))
-async def handle_custom_notification_set(callback: CallbackQuery):
+async def handle_custom_notification_set(callback: CallbackQuery, i18n: I18nContext):
     """Handle setting a custom notification with a preset value"""
     user_id = callback.from_user.id
 
@@ -800,47 +794,47 @@ async def handle_custom_notification_set(callback: CallbackQuery):
         slot_idx = int(parts[3])
         hours_before = float(parts[4])
     except (ValueError, IndexError):
-        await callback.answer("❌ Invalid data", show_alert=True)
+        await callback.answer(i18n.get("error-invalid-data"), show_alert=True)
         return
 
     success, message = set_custom_notification(user_id, slot_idx, hours_before)
 
     if success:
-        await callback.answer(f"✅ {message}")
+        await callback.answer(i18n.get("feedback-custom-notif-set", message=message))
         # Return to custom notifications menu
-        await handle_custom_notifications_menu(callback)
+        await handle_custom_notifications_menu(callback, i18n)
     else:
         await callback.answer(f"❌ {message}", show_alert=True)
 
 
 @router.callback_query(F.data.startswith("custom_notif_disable_"))
-async def handle_custom_notification_disable(callback: CallbackQuery):
+async def handle_custom_notification_disable(callback: CallbackQuery, i18n: I18nContext):
     """Handle disabling a custom notification"""
     user_id = callback.from_user.id
 
     try:
         slot_idx = int(callback.data.split("_")[-1])
     except (ValueError, IndexError):
-        await callback.answer("❌ Invalid slot", show_alert=True)
+        await callback.answer(i18n.get("error-invalid-slot"), show_alert=True)
         return
 
     success, message = set_custom_notification(user_id, slot_idx, None)
 
     if success:
-        await callback.answer(f"✅ Custom notification {slot_idx+1} disabled")
+        await callback.answer(i18n.get("feedback-custom-notif-disabled", slot=slot_idx+1))
         # Return to custom notifications menu
-        await handle_custom_notifications_menu(callback)
+        await handle_custom_notifications_menu(callback, i18n)
     else:
         await callback.answer(f"❌ {message}", show_alert=True)
 
 
 @router.callback_query(F.data.startswith("custom_notif_input_"))
-async def handle_custom_notification_input_prompt(callback: CallbackQuery, state: FSMContext):
+async def handle_custom_notification_input_prompt(callback: CallbackQuery, state: FSMContext, i18n: I18nContext):
     """Prompt user to enter custom time"""
     try:
         slot_idx = int(callback.data.split("_")[-1])
     except (ValueError, IndexError):
-        await callback.answer("❌ Invalid slot", show_alert=True)
+        await callback.answer(i18n.get("error-invalid-slot"), show_alert=True)
         return
 
     # Store slot index in state
@@ -848,20 +842,11 @@ async def handle_custom_notification_input_prompt(callback: CallbackQuery, state
     await state.set_state(CustomNotificationStates.waiting_for_time)
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="❌ Cancel", callback_data="custom_notif_menu")]
+        [InlineKeyboardButton(text=i18n.get("button-cancel"), callback_data="custom_notif_menu")]
     ])
 
     await callback.message.edit_text(
-        f"⏱️ **Custom Notification {slot_idx+1}**\n\n"
-        "Enter your custom notification time.\n\n"
-        "**Accepted formats:**\n"
-        "• `20m` or `45 minutes` (20m-70h)\n"
-        "• `2h` or `12 hours`\n"
-        "• `1h 30m` or `2h30m`\n\n"
-        "**Examples:**\n"
-        "• `20m` - 20 minutes before\n"
-        "• `6h` - 6 hours before\n"
-        "• `1h 30m` - 1 hour 30 minutes before",
+        i18n.get("settings-custom-notif-input", slot=slot_idx+1),
         reply_markup=keyboard,
         parse_mode='Markdown'
     )
