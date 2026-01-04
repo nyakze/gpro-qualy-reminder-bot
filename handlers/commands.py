@@ -249,6 +249,42 @@ async def cmd_users(message: Message, i18n: I18nContext):
         await message.answer(i18n.get("error-invalid-data"), parse_mode='Markdown')
 
 
+@router.message(Command("deleteuser"))
+async def cmd_deleteuser(message: Message, i18n: I18nContext):
+    """Admin command to delete a user from the database (for testing onboarding)
+
+    Usage:
+        /deleteuser USER_ID - Delete specified user
+        /deleteuser - Delete yourself
+    """
+    if message.from_user.id not in ADMIN_USER_IDS:
+        await message.answer(i18n.get("admin-only"))
+        return
+
+    # Parse user ID from command
+    if message.text and len(message.text.split()) > 1:
+        try:
+            target_user_id = int(message.text.split()[1])
+        except ValueError:
+            await message.answer("❌ Invalid user ID. Usage: `/deleteuser USER_ID`", parse_mode='Markdown')
+            return
+    else:
+        target_user_id = message.from_user.id
+
+    # Delete user
+    if target_user_id in users_data:
+        del users_data[target_user_id]
+        save_users_data()
+        await message.answer(
+            f"✅ Deleted user `{target_user_id}` from database.\n\n"
+            f"They will see onboarding on next /start",
+            parse_mode='Markdown'
+        )
+        logger.info(f"Admin {message.from_user.id} deleted user {target_user_id}")
+    else:
+        await message.answer(f"❌ User `{target_user_id}` not found in database", parse_mode='Markdown')
+
+
 @router.message(Command("weather"))
 async def cmd_weather(message: Message, i18n: I18nContext):
     """Admin command to manually fetch weather data for next race

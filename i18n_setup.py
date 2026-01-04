@@ -29,13 +29,18 @@ class UserLanguageManager(BaseManager):
             str: Language code ('en' or 'ru')
         """
         # Import here to avoid circular dependency
-        from notifications import get_user_status
+        from notifications import users_data
 
         if not event_from_user:
             return DEFAULT_UI_LANGUAGE
 
         user_id = event_from_user.id
-        user_status = get_user_status(user_id)
+
+        # Don't auto-create users - just check if they exist
+        if user_id not in users_data:
+            return DEFAULT_UI_LANGUAGE
+
+        user_status = users_data[user_id]
 
         # Get UI language (separate from GPRO language)
         ui_lang = user_status.get('ui_lang', DEFAULT_UI_LANGUAGE)
