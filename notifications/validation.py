@@ -1,4 +1,5 @@
 """Validation and parsing functions for custom notifications"""
+
 import logging
 import re
 
@@ -23,6 +24,7 @@ def validate_custom_notification_hours(hours: float, i18n=None) -> tuple[bool, s
     # Import i18n context if not provided
     if i18n is None:
         from aiogram_i18n import I18nContext
+
         try:
             i18n = I18nContext.get_current(no_error=True)
         except:
@@ -64,6 +66,7 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
     # Import i18n context if not provided
     if i18n is None:
         from aiogram_i18n import I18nContext
+
         try:
             i18n = I18nContext.get_current(no_error=True)
         except:
@@ -81,7 +84,7 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
     time_str = time_str.strip().lower()
 
     # Try to match "Xh Ym" or "XhYm" format
-    match = re.match(r'^(\d+)\s*h(?:ours?)?\s*(\d+)\s*m(?:in(?:utes?)?)?$', time_str)
+    match = re.match(r"^(\d+)\s*h(?:ours?)?\s*(\d+)\s*m(?:in(?:utes?)?)?$", time_str)
     if match:
         hours = int(match.group(1))
         minutes = int(match.group(2))
@@ -89,13 +92,13 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
         return total_hours, ""
 
     # Try to match hours only: "Xh" or "X hours"
-    match = re.match(r'^(\d+)\s*h(?:ours?)?$', time_str)
+    match = re.match(r"^(\d+)\s*h(?:ours?)?$", time_str)
     if match:
         hours = int(match.group(1))
         return float(hours), ""
 
     # Try to match minutes only: "Xm" or "X minutes"
-    match = re.match(r'^(\d+)\s*m(?:in(?:utes?)?)?$', time_str)
+    match = re.match(r"^(\d+)\s*m(?:in(?:utes?)?)?$", time_str)
     if match:
         minutes = int(match.group(1))
         return minutes / 60, ""
@@ -124,6 +127,7 @@ def format_custom_notification_time(hours: float, i18n=None) -> str:
     # Import i18n context if not provided
     if i18n is None:
         from aiogram_i18n import I18nContext
+
         try:
             i18n = I18nContext.get_current(no_error=True)
         except:
@@ -160,11 +164,14 @@ def get_custom_notifications(user_id: int) -> list:
         List of custom notification dicts
     """
     from .user_data import get_user_status, get_default_custom_notifications
+
     user_status = get_user_status(user_id)
-    return user_status.get('custom_notifications', get_default_custom_notifications())
+    return user_status.get("custom_notifications", get_default_custom_notifications())
 
 
-def set_custom_notification(user_id: int, slot: int, hours_before: float, i18n=None) -> tuple[bool, str]:
+def set_custom_notification(
+    user_id: int, slot: int, hours_before: float, i18n=None
+) -> tuple[bool, str]:
     """Set or update a custom notification slot
 
     Args:
@@ -179,6 +186,7 @@ def set_custom_notification(user_id: int, slot: int, hours_before: float, i18n=N
     # Import i18n context if not provided
     if i18n is None:
         from aiogram_i18n import I18nContext
+
         try:
             i18n = I18nContext.get_current(no_error=True)
         except:
@@ -191,7 +199,9 @@ def set_custom_notification(user_id: int, slot: int, hours_before: float, i18n=N
         return key
 
     if slot < 0 or slot >= CUSTOM_NOTIF_MAX_SLOTS:
-        return False, get_text("validation-invalid-slot", maxSlots=CUSTOM_NOTIF_MAX_SLOTS-1)
+        return False, get_text(
+            "validation-invalid-slot", maxSlots=CUSTOM_NOTIF_MAX_SLOTS - 1
+        )
 
     # Validate hours if provided
     if hours_before is not None:
@@ -199,23 +209,30 @@ def set_custom_notification(user_id: int, slot: int, hours_before: float, i18n=N
         if not is_valid:
             return False, error_msg
 
-    from .user_data import get_user_status, get_default_custom_notifications, save_users_data
+    from .user_data import (
+        get_user_status,
+        get_default_custom_notifications,
+        save_users_data,
+    )
+
     user_status = get_user_status(user_id)
-    custom_notifs = user_status.get('custom_notifications', get_default_custom_notifications())
+    custom_notifs = user_status.get(
+        "custom_notifications", get_default_custom_notifications()
+    )
 
     # Ensure list has correct size
     while len(custom_notifs) < CUSTOM_NOTIF_MAX_SLOTS:
-        custom_notifs.append({'enabled': False, 'hours_before': None})
+        custom_notifs.append({"enabled": False, "hours_before": None})
 
     # Update slot
     if hours_before is None:
-        custom_notifs[slot] = {'enabled': False, 'hours_before': None}
+        custom_notifs[slot] = {"enabled": False, "hours_before": None}
     else:
-        custom_notifs[slot] = {'enabled': True, 'hours_before': hours_before}
+        custom_notifs[slot] = {"enabled": True, "hours_before": hours_before}
 
-    user_status['custom_notifications'] = custom_notifs
+    user_status["custom_notifications"] = custom_notifs
     save_users_data()
 
     time_str = format_custom_notification_time(hours_before, i18n)
     logger.info(f"User {user_id} set custom notification {slot+1} to: {time_str}")
-    return True, get_text("custom-notif-set", slot=slot+1, time=time_str)
+    return True, get_text("custom-notif-set", slot=slot + 1, time=time_str)

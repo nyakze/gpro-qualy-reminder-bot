@@ -1,21 +1,31 @@
 """Onboarding flow for new users"""
+
 import logging
 from aiogram import F
-from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import (
+    Message,
+    CallbackQuery,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+)
 from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
 
-from notifications import set_user_language, set_user_ui_language, set_user_group, LANGUAGE_OPTIONS, get_user_status
-from utils import format_group_display
+from notifications import (
+    set_user_language,
+    set_user_ui_language,
+    get_user_status,
+)
 from .states import OnboardingStates
-from .callbacks import build_language_keyboard
 from . import router
 
 logger = logging.getLogger(__name__)
 
 
 @router.callback_query(F.data.startswith("onboard_ui_lang_"))
-async def handle_onboarding_ui_language_select(callback: CallbackQuery, state: FSMContext, i18n: I18nContext):
+async def handle_onboarding_ui_language_select(
+    callback: CallbackQuery, state: FSMContext, i18n: I18nContext
+):
     """Handle bot UI language selection at start of onboarding"""
     user_id = callback.from_user.id
 
@@ -28,7 +38,7 @@ async def handle_onboarding_ui_language_select(callback: CallbackQuery, state: F
 
         # Map UI language to GPRO language
         # en -> gb, others stay the same
-        gpro_lang = 'gb' if ui_lang == 'en' else ui_lang
+        gpro_lang = "gb" if ui_lang == "en" else ui_lang
         set_user_language(user_id, gpro_lang)
         logger.info(f"User {user_id} GPRO language auto-set to: {gpro_lang}")
 
@@ -40,33 +50,41 @@ async def handle_onboarding_ui_language_select(callback: CallbackQuery, state: F
         await callback.answer("Error setting language", show_alert=True)
 
 
-async def show_onboarding_group_menu(message: Message, user_id: int, i18n: I18nContext, state: FSMContext = None):
+async def show_onboarding_group_menu(
+    message: Message, user_id: int, i18n: I18nContext, state: FSMContext = None
+):
     """Show group selection menu during onboarding - text input only"""
     # Set state to wait for group input
     if state:
         await state.set_state(OnboardingStates.waiting_for_group)
 
     # Only show skip button
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=i18n.get("button-skip"), callback_data="onboard_skip_group")]
-    ])
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-skip"), callback_data="onboard_skip_group"
+                )
+            ]
+        ]
+    )
 
     await message.edit_text(
-        i18n.get("onboard-group-custom"),
-        reply_markup=keyboard,
-        parse_mode='Markdown'
+        i18n.get("onboard-group-custom"), reply_markup=keyboard, parse_mode="Markdown"
     )
 
 
 @router.callback_query(F.data == "onboard_skip_group")
-async def handle_onboarding_skip_group(callback: CallbackQuery, state: FSMContext, i18n: I18nContext):
+async def handle_onboarding_skip_group(
+    callback: CallbackQuery, state: FSMContext, i18n: I18nContext
+):
     """Skip group selection during onboarding"""
     user_id = callback.from_user.id
     await state.clear()
 
     # Get user's selected language and show completion message in that language
     user_status = get_user_status(user_id)
-    ui_lang = user_status.get('ui_lang', 'en')
+    ui_lang = user_status.get("ui_lang", "en")
 
     with i18n.use_locale(ui_lang):
         await callback.answer(i18n.get("feedback-skip-group"))
@@ -76,17 +94,37 @@ async def handle_onboarding_skip_group(callback: CallbackQuery, state: FSMContex
 
 async def show_onboarding_complete(message: Message, i18n: I18nContext):
     """Show onboarding complete message with main menu buttons"""
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=i18n.get("button-main-menu-status"), callback_data="main_menu_status")],
-        [InlineKeyboardButton(text=i18n.get("button-main-menu-calendar"), callback_data="main_menu_calendar")],
-        [InlineKeyboardButton(text=i18n.get("button-main-menu-next"), callback_data="main_menu_next")],
-        [InlineKeyboardButton(text=i18n.get("button-main-menu-settings"), callback_data="main_menu_settings")]
-    ])
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-main-menu-status"),
+                    callback_data="main_menu_status",
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-main-menu-calendar"),
+                    callback_data="main_menu_calendar",
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-main-menu-next"),
+                    callback_data="main_menu_next",
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-main-menu-settings"),
+                    callback_data="main_menu_settings",
+                )
+            ],
+        ]
+    )
 
     await message.edit_text(
-        i18n.get("onboard-complete"),
-        reply_markup=keyboard,
-        parse_mode='Markdown'
+        i18n.get("onboard-complete"), reply_markup=keyboard, parse_mode="Markdown"
     )
 
 

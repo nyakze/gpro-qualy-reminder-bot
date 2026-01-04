@@ -93,6 +93,7 @@ ADMIN_USER_ID=your_telegram_id # to use admin commands
 | `/next` | Next season calendar (when published) |
 | `/settings` | Configure language, group, and notification preferences |
 | `/update` | Update calendar from API (admin only) |
+| `/updatetz` | Download timezone data and rebuild search index (admin only) |
 | `/weather` | Manually fetch weather data for testing (admin only) |
 | `/users` | See user list (admin only) |
 
@@ -196,7 +197,27 @@ GET https://gpro.net/gb/backend/api/v2/Practice
 
 
 
-🗄️ Caches results in `gpro_calendar.json`. Requires GPRO API token (.env → GPRO_API_TOKEN) 
+🗄️ Caches results in `gpro_calendar.json`. Requires GPRO API token (.env → GPRO_API_TOKEN)
+
+## Data Attribution
+
+### Timezone Data
+
+This project uses timezone metadata from [Geoapify's Timezone Dataset](https://github.com/geoapify/timezone-data), which combines data from multiple open sources:
+
+- **IANA Time Zone Database**: Timezone identifiers and offset rules (Public Domain)
+  - *"Unless specified below, all files in the tz code and data (including this LICENSE file) are in the public domain."*
+
+- **Wikipedia**: Timezone textual metadata (Creative Commons BY-SA 3.0 / GFDL)
+  - Used for city names and alternative names in multiple languages
+
+The timezone dataset is downloaded via the `/updatetz` admin command and stored in `timezone-info.json`. This file should be committed to the repository for offline functionality.
+
+**Attribution Requirements:**
+- ✅ IANA timezone identifiers: Public domain (no attribution required)
+- ✅ Wikipedia-derived metadata: CC BY-SA 3.0 / GFDL (attribution provided above)
+
+We do not use OpenStreetMap geographic boundary data (ODbL) from the dataset.
 
 ## License
 **Unlicense** - Free software, public domain. Use freely! ✨
