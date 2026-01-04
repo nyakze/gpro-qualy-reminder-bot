@@ -13,7 +13,7 @@ from notifications import (
     format_custom_notification_time, CUSTOM_NOTIF_MIN_HOURS, CUSTOM_NOTIF_MAX_HOURS,
     format_weather_data, set_user_ui_language, get_user_ui_language
 )
-from utils import add_flag_to_track, format_group_display
+from utils import add_flag_to_track, format_group_display, get_ui_language_display
 from .states import CustomNotificationStates, SetGroupStates
 from . import router
 
@@ -190,7 +190,7 @@ async def handle_main_menu_settings(callback: CallbackQuery, state: FSMContext, 
     keyboard_buttons = []
 
     # Bot UI Language button
-    ui_lang_display = "🇬🇧 English" if current_ui_lang == 'en' else "🇷🇺 Русский"
+    ui_lang_display = get_ui_language_display(current_ui_lang)
     keyboard_buttons.append([InlineKeyboardButton(
         text=i18n.get("button-ui-language", language=ui_lang_display),
         callback_data="ui_lang_menu"
@@ -495,6 +495,13 @@ async def handle_ui_language_menu(callback: CallbackQuery, i18n: I18nContext):
         callback_data="set_ui_lang_ru"
     )])
 
+    # Brazilian Portuguese button
+    br_prefix = "✅ " if current_ui_lang == 'br' else ""
+    keyboard_buttons.append([InlineKeyboardButton(
+        text=f"{br_prefix}🇧🇷 Português",
+        callback_data="set_ui_lang_br"
+    )])
+
     # Back button
     keyboard_buttons.append([InlineKeyboardButton(
         text=i18n.get("button-back"),
@@ -517,7 +524,7 @@ async def handle_set_ui_language(callback: CallbackQuery, i18n: I18nContext):
 
     # Set UI language
     if set_user_ui_language(user_id, ui_lang):
-        lang_display = "English" if ui_lang == 'en' else "Русский"
+        lang_display = get_ui_language_display(ui_lang)
 
         # Show feedback and rebuild menu with new language
         # IMPORTANT: Get new i18n context after language change
@@ -549,6 +556,13 @@ async def handle_set_ui_language(callback: CallbackQuery, i18n: I18nContext):
             callback_data="set_ui_lang_ru"
         )])
 
+        # Brazilian Portuguese button
+        br_prefix = "✅ " if current_ui_lang == 'br' else ""
+        keyboard_buttons.append([InlineKeyboardButton(
+            text=f"{br_prefix}🇧🇷 Português",
+            callback_data="set_ui_lang_br"
+        )])
+
         # Back button
         keyboard_buttons.append([InlineKeyboardButton(
             text=new_i18n.get("button-back"),
@@ -575,7 +589,7 @@ async def handle_settings_main(callback: CallbackQuery, i18n: I18nContext):
     keyboard_buttons = []
 
     # Bot UI Language button (NEW)
-    ui_lang_display = "🇬🇧 English" if current_ui_lang == 'en' else "🇷🇺 Русский"
+    ui_lang_display = get_ui_language_display(current_ui_lang)
     keyboard_buttons.append([InlineKeyboardButton(
         text=i18n.get("button-ui-language", language=ui_lang_display),
         callback_data="ui_lang_menu"

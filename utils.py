@@ -4,6 +4,25 @@ import math
 import re
 from datetime import datetime
 
+# UI Language Display Names
+UI_LANGUAGE_DISPLAY = {
+    "en": "🇬🇧 English",
+    "ru": "🇷🇺 Русский",
+    "br": "🇧🇷 Português"
+}
+
+
+def get_ui_language_display(lang_code: str) -> str:
+    """Get display name for a UI language code
+
+    Args:
+        lang_code: Language code (e.g., 'en', 'ru', 'br')
+
+    Returns:
+        str: Display name with flag (e.g., '🇬🇧 English')
+    """
+    return UI_LANGUAGE_DISPLAY.get(lang_code, "🇬🇧 English")
+
 
 def country_code_to_flag(country_code: str) -> str:
     """Convert ISO 2-letter country code to flag emoji

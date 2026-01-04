@@ -223,7 +223,7 @@ def set_user_ui_language(user_id: int, lang: str) -> bool:
         bool: True if language was set successfully, False if invalid
     """
     # Validate UI language
-    valid_ui_langs = ['en', 'ru']
+    valid_ui_langs = ['en', 'ru', 'br']
     lang = lang.strip().lower()
 
     if lang not in valid_ui_langs:

@@ -38,12 +38,14 @@ async def cmd_start(message: Message, state: FSMContext, i18n: I18nContext):
         # Show bot UI language selection first (new step!)
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="🇬🇧 English", callback_data="onboard_ui_lang_en")],
-            [InlineKeyboardButton(text="🇷🇺 Русский", callback_data="onboard_ui_lang_ru")]
+            [InlineKeyboardButton(text="🇷🇺 Русский", callback_data="onboard_ui_lang_ru")],
+            [InlineKeyboardButton(text="🇧🇷 Português", callback_data="onboard_ui_lang_br")]
         ])
         await message.answer(
-            "👋 **Welcome to GPRO Bot!** / **Добро пожаловать в GPRO Bot!**\n\n"
+            "👋 **Welcome to GPRO Bot!** / **Добро пожаловать в GPRO Bot!** / **Bem-vindo ao GPRO Bot!**\n\n"
             "Choose your preferred bot language:\n"
-            "Выберите язык бота:",
+            "Выберите язык бота:\n"
+            "Escolha o idioma preferido do bot:",
             reply_markup=keyboard,
             parse_mode='Markdown'
         )
