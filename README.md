@@ -203,7 +203,7 @@ GET https://gpro.net/gb/backend/api/v2/Practice
 
 ### Timezone Data
 
-This project uses timezone metadata from [Geoapify's Timezone Dataset](https://github.com/geoapify/timezone-data), which combines data from multiple open sources:
+This project uses timezone metadata from [Geoapify's Timezone Dataset]([https://github.com/geoapify/timezone-data](https://www.geoapify.com/download-timezones/#download-files)), which combines data from multiple open sources:
 
 - **IANA Time Zone Database**: Timezone identifiers and offset rules (Public Domain)
   - *"Unless specified below, all files in the tz code and data (including this LICENSE file) are in the public domain."*
