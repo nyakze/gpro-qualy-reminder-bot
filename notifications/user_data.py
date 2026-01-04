@@ -32,6 +32,7 @@ USERS_FILE = os.path.join(_SCRIPT_DIR, 'users_data.json')
 def get_default_notification_preferences():
     """Default notification settings - all enabled by default"""
     return {
+        '72h': True,
         '48h': True,
         '24h': True,
         '2h': True,
@@ -132,6 +133,11 @@ def get_user_status(user_id: int) -> Dict:
         if 'ui_lang' not in users_data[user_id]:
             users_data[user_id]['ui_lang'] = 'en'
             logger.debug(f"Added 'ui_lang' field to user {user_id}")
+            needs_save = True
+        # Migration: Add 72h notification preference for existing users
+        if '72h' not in users_data[user_id]['notifications']:
+            users_data[user_id]['notifications']['72h'] = True
+            logger.debug(f"Added '72h' notification to user {user_id}")
             needs_save = True
 
         # Save only once if any migrations were applied

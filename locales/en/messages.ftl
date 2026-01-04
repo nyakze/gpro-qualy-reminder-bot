@@ -193,8 +193,9 @@ button-custom-notif-time = ⏱️ Custom { $slot }: { $time }
 # =======================
 # Notifications
 # =======================
-notif-label-48h = 48h before quali closes
-notif-label-24h = 24h before quali closes
+notif-label-72h = 3d before quali closes
+notif-label-48h = 2d before quali closes
+notif-label-24h = 1d before quali closes
 notif-label-2h = 2h before quali closes
 notif-label-10min = 10min before quali closes
 notif-label-opens = Quali is open
@@ -481,8 +482,9 @@ validation-invalid-slot = Invalid slot (must be 0-{ $maxSlots })
 # =======================
 # Notification Labels
 # =======================
-notif-label-48h = 48h before quali closes
-notif-label-24h = 24h before quali closes
+notif-label-72h = 3d before quali closes
+notif-label-48h = 2d before quali closes
+notif-label-24h = 1d before quali closes
 notif-label-2h = 2h before quali closes
 notif-label-10min = 10min before quali closes
 notif-label-opens-soon = Quali is open

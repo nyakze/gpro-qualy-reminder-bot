@@ -9,6 +9,7 @@ Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadli
 
 ### Notifications
 - **Automatic quali notifications:** 48h, 24h, 2h, 10min before quali closes
+- **Extended Tuesday reminder:** 72h notification for Tuesday races (longer gap between races)
 - **Custom notification times:** Set up to 2 custom notification times (20m-70h)
 - **Quali open detection:** API-based detection when qualification opens (2-3.5h after race)
 - **Race live notifications:** Get notified when race goes live

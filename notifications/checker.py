@@ -18,11 +18,14 @@ logger = logging.getLogger(__name__)
 
 # Notification windows: (hours_before, tolerance_minutes, label)
 NOTIFICATION_WINDOWS = [
-    (48, 6, "48h"),      # 48h ±6min
-    (24, 6, "24h"),      # 24h ±6min
+    (48, 15, "48h"),     # 48h ±15min (wider tolerance for >36h notifications)
+    (24, 10, "24h"),     # 24h ±10min (optimized tolerance)
     (2, 5, "2h"),        # 2h ±5min
     (10/60, 2, "10min")  # 10min ±2min
 ]
+
+# Additional notification for Tuesday races (more time between races)
+TUESDAY_NOTIFICATION = (72, 15, "72h")  # 72h ±15min (wider tolerance for far-advance notifications)
 
 # Timing constants
 CHECK_INTERVAL_NORMAL_SECONDS = 300  # 5 minutes between checks (normal)
@@ -46,6 +49,19 @@ notify_history = {}  # {(race_id, window): sent_timestamp}
 last_api_check_time = None  # Track last API check to limit calls
 
 
+def _is_tuesday_race(race_data: dict) -> bool:
+    """Check if a race is on Tuesday (weekday 1)
+
+    Args:
+        race_data: Race data dict with 'date' field
+
+    Returns:
+        bool: True if race is on Tuesday
+    """
+    race_date = race_data['date']
+    return race_date.weekday() == 1  # 0=Monday, 1=Tuesday, etc.
+
+
 def _check_quali_closing_notifications(now: datetime) -> list:
     """Check for races with qualifying closing soon
 
@@ -53,7 +69,7 @@ def _check_quali_closing_notifications(now: datetime) -> list:
         list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
     """
     notifications = []
-    races_closing = get_races_closing_soon(48)
+    races_closing = get_races_closing_soon(72)  # Extended to 72h for Tuesday races
 
     for race_id, race_data in races_closing.items():
         quali_close = race_data['quali_close']
@@ -69,6 +85,19 @@ def _check_quali_closing_notifications(now: datetime) -> list:
                 history_key = (race_id, label)
 
                 # Only send if not sent before
+                if history_key not in notify_history:
+                    notifications.append(('quali', race_id, race_data, label, history_key))
+
+        # Check 72h notification for Tuesday races only
+        if _is_tuesday_race(race_data):
+            hours_before, tolerance_min, label = TUESDAY_NOTIFICATION
+            time_until = (quali_close - now).total_seconds() / 3600
+            target_hours = hours_before
+            tolerance_hours = tolerance_min / 60
+
+            if abs(time_until - target_hours) <= tolerance_hours:
+                history_key = (race_id, label)
+
                 if history_key not in notify_history:
                     notifications.append(('quali', race_id, race_data, label, history_key))
 
