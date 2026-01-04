@@ -32,9 +32,12 @@ async def handle_onboarding_ui_language_select(callback: CallbackQuery, state: F
         set_user_language(user_id, gpro_lang)
         logger.info(f"User {user_id} GPRO language auto-set to: {gpro_lang}")
 
-    # Skip GPRO language selection, go directly to group selection
-    await show_onboarding_group_menu(callback.message, user_id, i18n, state)
-    await callback.answer()
+        # Show group selection menu in the newly selected language
+        with i18n.use_locale(ui_lang):
+            await show_onboarding_group_menu(callback.message, user_id, i18n, state)
+        await callback.answer()
+    else:
+        await callback.answer("Error setting language", show_alert=True)
 
 
 async def show_onboarding_group_menu(message: Message, user_id: int, i18n: I18nContext, state: FSMContext = None):
@@ -58,11 +61,17 @@ async def show_onboarding_group_menu(message: Message, user_id: int, i18n: I18nC
 @router.callback_query(F.data == "onboard_skip_group")
 async def handle_onboarding_skip_group(callback: CallbackQuery, state: FSMContext, i18n: I18nContext):
     """Skip group selection during onboarding"""
+    user_id = callback.from_user.id
     await state.clear()
-    await callback.answer(i18n.get("feedback-skip-group"))
 
-    # Show welcome complete message
-    await show_onboarding_complete(callback.message, i18n)
+    # Get user's selected language and show completion message in that language
+    user_status = get_user_status(user_id)
+    ui_lang = user_status.get('ui_lang', 'en')
+
+    with i18n.use_locale(ui_lang):
+        await callback.answer(i18n.get("feedback-skip-group"))
+        # Show welcome complete message
+        await show_onboarding_complete(callback.message, i18n)
 
 
 async def show_onboarding_complete(message: Message, i18n: I18nContext):
