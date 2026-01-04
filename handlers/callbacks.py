@@ -513,14 +513,8 @@ async def handle_set_ui_language(callback: CallbackQuery, i18n: I18nContext):
     if set_user_ui_language(user_id, ui_lang):
         lang_display = get_ui_language_display(ui_lang)
 
-        # Show feedback and rebuild menu with new language
-        # IMPORTANT: Get new i18n context after language change
-        from aiogram_i18n import I18nContext
-        new_i18n = I18nContext.get_current(no_error=True)
-        if new_i18n is None:
-            # Fallback: create context manually
-            from i18n_setup import i18n as i18n_middleware
-            new_i18n = await i18n_middleware.core.get_context(locale=ui_lang)
+        # Get translator for the new language to display UI in new language immediately
+        new_i18n = i18n.core.get_translator(locale=ui_lang)
 
         await callback.answer(new_i18n.get("feedback-ui-language-set", language=lang_display))
 
