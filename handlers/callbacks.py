@@ -19,18 +19,18 @@ from . import router
 
 logger = logging.getLogger(__name__)
 
-# Notification type labels - used across multiple commands
-NOTIFICATION_LABELS = {
-    '72h': '3d before quali closes',
-    '48h': '2d before quali closes',
-    '24h': '1d before quali closes',
-    '2h': '2h before quali closes',
-    '10min': '10min before quali closes',
-    'opens_soon': 'Quali is open',
-    'race_replay': 'Race replay available',
-    'race_live': 'Race is live',
-    'race_results': 'Race results available'
-}
+# Notification types - labels are fetched from i18n
+NOTIFICATION_TYPES = (
+    '72h',
+    '48h',
+    '24h',
+    '2h',
+    '10min',
+    'opens_soon',
+    'race_replay',
+    'race_live',
+    'race_results'
+)
 
 
 def build_language_keyboard(page: int = 1, current_lang: str = 'gb', onboarding: bool = False, i18n=None) -> InlineKeyboardMarkup:
@@ -264,7 +264,7 @@ async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext)
     notifications = user_status.get('notifications', {})
 
     keyboard_buttons = []
-    for notif_type, label in NOTIFICATION_LABELS.items():
+    for notif_type in NOTIFICATION_TYPES:
         enabled = notifications.get(notif_type, True)
         icon = "✅" if enabled else "❌"
         # Get translated label
@@ -283,7 +283,7 @@ async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext)
     )])
 
     # Add "Enable All" / "Disable All" button
-    all_enabled = all(notifications.get(t, True) for t in NOTIFICATION_LABELS.keys())
+    all_enabled = all(notifications.get(t, True) for t in NOTIFICATION_TYPES)
     if all_enabled:
         keyboard_buttons.append([InlineKeyboardButton(
             text=i18n.get("button-disable-all"),
@@ -616,7 +616,7 @@ async def handle_notifications_menu(callback: CallbackQuery, i18n: I18nContext):
     # Build notification toggles keyboard
     keyboard_buttons = []
 
-    for notif_type, label in NOTIFICATION_LABELS.items():
+    for notif_type in NOTIFICATION_TYPES:
         enabled = notifications.get(notif_type, True)
         icon = "✅" if enabled else "❌"
         # Get translated label
@@ -635,7 +635,7 @@ async def handle_notifications_menu(callback: CallbackQuery, i18n: I18nContext):
     )])
 
     # Enable/Disable All button
-    all_enabled = all(notifications.get(t, True) for t in NOTIFICATION_LABELS.keys())
+    all_enabled = all(notifications.get(t, True) for t in NOTIFICATION_TYPES)
     if all_enabled:
         keyboard_buttons.append([InlineKeyboardButton(
             text=i18n.get("button-disable-all"),
