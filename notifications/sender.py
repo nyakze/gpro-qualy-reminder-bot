@@ -155,6 +155,8 @@ def format_weather_data(weather: dict, i18n=None, user_id: int = None) -> str:
 
 async def send_race_live_notification(bot: Bot, user_id: int, race_id: int, race_data: Dict, i18n=None):
     """Send notification when race goes live"""
+    from timezone_utils import format_datetime_for_user
+
     user_status = get_user_status(user_id)
     group = user_status.get('group')
     user_lang = user_status.get('gpro_lang', DEFAULT_USER_LANG)
@@ -162,7 +164,7 @@ async def send_race_live_notification(bot: Bot, user_id: int, race_id: int, race
 
     track = add_flag_to_track(race_data['track'])
     race_date = race_data['date']
-    race_time = race_date.strftime('%d.%m %H:%M UTC')
+    race_time = format_datetime_for_user(race_date, user_id, '%d.%m %H:%M')
 
     race_link = generate_race_link(group, user_lang)
 
@@ -204,6 +206,8 @@ async def send_race_live_notification(bot: Bot, user_id: int, race_id: int, race
 
 async def send_race_replay_notification(bot: Bot, user_id: int, race_id: int, race_data: Dict, i18n=None):
     """Send race replay notification when next quali opens"""
+    from timezone_utils import format_datetime_for_user
+
     user_status = get_user_status(user_id)
     group = user_status.get('group')
     user_lang = user_status.get('gpro_lang', DEFAULT_USER_LANG)
@@ -211,7 +215,7 @@ async def send_race_replay_notification(bot: Bot, user_id: int, race_id: int, ra
 
     track = add_flag_to_track(race_data['track'])
     race_date = race_data['date']
-    race_time = race_date.strftime('%d.%m %H:%M UTC')
+    race_time = format_datetime_for_user(race_date, user_id, '%d.%m %H:%M')
 
     replay_link = generate_replay_link(group, user_lang)
 
@@ -253,6 +257,8 @@ async def send_race_replay_notification(bot: Bot, user_id: int, race_id: int, ra
 
 async def send_race_results_notification(bot: Bot, user_id: int, race_id: int, race_data: Dict, i18n=None):
     """Send race results notification when next quali opens"""
+    from timezone_utils import format_datetime_for_user
+
     user_status = get_user_status(user_id)
     group = user_status.get('group')
     user_lang = user_status.get('gpro_lang', DEFAULT_USER_LANG)
@@ -260,7 +266,7 @@ async def send_race_results_notification(bot: Bot, user_id: int, race_id: int, r
 
     track = add_flag_to_track(race_data['track'])
     race_date = race_data['date']
-    race_time = race_date.strftime('%d.%m %H:%M UTC')
+    race_time = format_datetime_for_user(race_date, user_id, '%d.%m %H:%M')
 
     # Race Analysis link (same for everyone, just language)
     analysis_link = f"https://gpro.net/{user_lang}/RaceAnalysis.asp"
@@ -307,6 +313,8 @@ async def send_race_results_notification(bot: Bot, user_id: int, race_id: int, r
 
 
 async def send_quali_notification(bot: Bot, user_id: int, race_id: int, race_data: Dict, notification_type: str = "deadline", i18n=None):
+    from timezone_utils import format_datetime_for_user
+
     user_status = get_user_status(user_id)
 
     # Skip automatic notifications if user marked quali done
@@ -336,8 +344,8 @@ async def send_quali_notification(bot: Bot, user_id: int, race_id: int, race_dat
     if notification_type == "opens_soon":
         emoji = "🆕"
         title = get_text("notif-quali-opens")
-        deadline = quali_close.strftime("%d.%m %H:%M UTC")
-        race_time = race_date.strftime('%d.%m %H:%M UTC')
+        deadline = format_datetime_for_user(quali_close, user_id, "%d.%m %H:%M")
+        race_time = format_datetime_for_user(race_date, user_id, '%d.%m %H:%M')
     else:
         now = datetime.utcnow()
         if 'hours_left' not in race_data:
@@ -361,8 +369,8 @@ async def send_quali_notification(bot: Bot, user_id: int, race_id: int, race_dat
             time_text = get_text("time-minutes", minutes=minutes)
             emoji = "🚨"
 
-        deadline = quali_close.strftime("%d.%m %H:%M UTC")
-        race_time = race_date.strftime('%d.%m %H:%M UTC')
+        deadline = format_datetime_for_user(quali_close, user_id, "%d.%m %H:%M")
+        race_time = format_datetime_for_user(race_date, user_id, '%d.%m %H:%M')
         title = get_text("notif-quali-closes", time=time_text)
 
     # Check if user already marked this race done

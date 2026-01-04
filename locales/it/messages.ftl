@@ -541,3 +541,35 @@ custom-notif-menu-title = ⏱️ **Notifiche Personalizzate**
     Puoi avere fino a 2 notifiche personalizzate.
 
     Clicca su uno slot per impostarlo o modificarlo.
+
+# =======================
+# Impostazioni Fuso Orario
+# =======================
+button-timezone = ⏰ Fuso orario: { $timezone }
+timezone-menu-title = ⏰ **Impostazioni Fuso Orario**
+
+    Fuso orario attuale: **{ $timezone }**
+
+    Digita il tuo fuso orario (nome città, abbreviazione o offset UTC):
+
+    Esempi: `Roma`, `CET`, `UTC+1`, `New York`
+
+timezone-select-matches = 🌍 **Seleziona il tuo fuso orario:**
+
+    Corrispondenze per "{ $query }":
+
+timezone-set-success = ✅ **Fuso orario impostato!**
+
+    { $timezone }
+
+    Ora attuale nel tuo fuso orario: **{ $localTime }**
+
+    Tutti gli orari delle gare saranno mostrati nel tuo orario locale.
+
+button-reset-timezone = 🔄 Ripristina UTC
+feedback-timezone-set = ✅ Fuso orario aggiornato
+feedback-timezone-reset = ✅ Fuso orario ripristinato a UTC
+error-timezone-not-found = ❌ Nessun fuso orario trovato per "{ $query }"
+
+    Prova: nome città (Roma), abbreviazione (CET), o offset UTC (UTC+1)
+error-invalid-timezone = ❌ Fuso orario non valido

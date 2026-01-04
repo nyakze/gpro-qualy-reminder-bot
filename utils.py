@@ -254,13 +254,14 @@ def get_localized_weekday(date: datetime, i18n=None) -> str:
         return date.strftime("%a")
 
 
-def format_full_calendar(calendar_data: dict, title: str = "Full Season", is_current_season: bool = True, i18n=None) -> str:
+def format_full_calendar(calendar_data: dict, title: str = "Full Season", is_current_season: bool = True, user_id: int = None, i18n=None) -> str:
     """Generic formatter for current/next season
 
     Args:
         calendar_data: Dictionary of race data
         title: Title for the calendar
         is_current_season: Whether this is the current season
+        user_id: Optional user ID for timezone conversion
         i18n: Optional i18n context for translations
 
     Returns:
@@ -295,6 +296,11 @@ def format_full_calendar(calendar_data: dict, title: str = "Full Season", is_cur
         race_date = race.get('date', now)
         quali_close = race.get('quali_close', now)
         race_id = race['race_id']
+
+        # Convert to user timezone if user_id provided
+        if user_id is not None:
+            from timezone_utils import convert_to_user_tz
+            race_date = convert_to_user_tz(race_date, user_id) or race_date
 
         # Get localized 2-letter weekday abbreviation
         weekday = get_localized_weekday(race_date, i18n)

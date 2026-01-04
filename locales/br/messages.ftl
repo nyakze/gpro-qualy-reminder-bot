@@ -541,3 +541,35 @@ custom-notif-menu-title = ⏱️ **Notificações Personalizadas**
     Você pode ter até 2 notificações personalizadas.
 
     Clique em um slot para configurar ou editar.
+
+# =======================
+# Configurações de Fuso Horário
+# =======================
+button-timezone = ⏰ Fuso horário: { $timezone }
+timezone-menu-title = ⏰ **Configurações de Fuso Horário**
+
+    Fuso horário atual: **{ $timezone }**
+
+    Digite seu fuso horário (nome da cidade, abreviação ou deslocamento UTC):
+
+    Exemplos: `São Paulo`, `BRT`, `UTC-3`, `Lisboa`
+
+timezone-select-matches = 🌍 **Selecione seu fuso horário:**
+
+    Correspondências para "{ $query }":
+
+timezone-set-success = ✅ **Fuso horário definido!**
+
+    { $timezone }
+
+    Horário atual no seu fuso horário: **{ $localTime }**
+
+    Todos os horários das corridas serão exibidos no seu horário local.
+
+button-reset-timezone = 🔄 Redefinir para UTC
+feedback-timezone-set = ✅ Fuso horário atualizado
+feedback-timezone-reset = ✅ Fuso horário redefinido para UTC
+error-timezone-not-found = ❌ Nenhum fuso horário encontrado para "{ $query }"
+
+    Tente: nome da cidade (São Paulo), abreviação (BRT), ou deslocamento UTC (UTC-3)
+error-invalid-timezone = ❌ Fuso horário inválido

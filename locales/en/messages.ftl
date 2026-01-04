@@ -556,3 +556,35 @@ weather-1h00m-1h30m = **1h00m - 1h30m:**
 weather-1h30m-2h00m = **1h30m - 2h00m:**
 weather-temp-hum-range = Temp: { $temp } • Humidity: { $hum }
 weather-rain-prob = Rain probability: { $rain }
+
+# =======================
+# Timezone Settings
+# =======================
+button-timezone = ⏰ Timezone: { $timezone }
+timezone-menu-title = ⏰ **Timezone Settings**
+
+    Current timezone: **{ $timezone }**
+
+    Type your timezone (city name, abbreviation, or UTC offset):
+
+    Examples: `New York`, `PST`, `UTC+3`, `London`
+
+timezone-select-matches = 🌍 **Select your timezone:**
+
+    Matches for "{ $query }":
+
+timezone-set-success = ✅ **Timezone set!**
+
+    { $timezone }
+
+    Current time in your timezone: **{ $localTime }**
+
+    All race times will now be shown in your local time.
+
+button-reset-timezone = 🔄 Reset to UTC
+feedback-timezone-set = ✅ Timezone updated
+feedback-timezone-reset = ✅ Timezone reset to UTC
+error-timezone-not-found = ❌ No timezone found for "{ $query }"
+
+    Try: city name (New York), abbreviation (PST), or UTC offset (UTC+3)
+error-invalid-timezone = ❌ Invalid timezone

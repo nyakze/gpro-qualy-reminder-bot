@@ -541,3 +541,35 @@ custom-notif-menu-title = ⏱️ **Notifications Personnalisées**
     Vous pouvez avoir jusqu'à 2 notifications personnalisées.
 
     Cliquez sur un emplacement pour le configurer ou le modifier.
+
+# =======================
+# Paramètres de Fuseau Horaire
+# =======================
+button-timezone = ⏰ Fuseau horaire: { $timezone }
+timezone-menu-title = ⏰ **Paramètres de Fuseau Horaire**
+
+    Fuseau horaire actuel: **{ $timezone }**
+
+    Tapez votre fuseau horaire (nom de ville, abréviation ou décalage UTC):
+
+    Exemples: `Paris`, `CET`, `UTC+1`, `New York`
+
+timezone-select-matches = 🌍 **Sélectionnez votre fuseau horaire:**
+
+    Correspondances pour "{ $query }":
+
+timezone-set-success = ✅ **Fuseau horaire défini!**
+
+    { $timezone }
+
+    Heure actuelle dans votre fuseau horaire: **{ $localTime }**
+
+    Tous les horaires des courses seront affichés dans votre heure locale.
+
+button-reset-timezone = 🔄 Réinitialiser à UTC
+feedback-timezone-set = ✅ Fuseau horaire mis à jour
+feedback-timezone-reset = ✅ Fuseau horaire réinitialisé à UTC
+error-timezone-not-found = ❌ Aucun fuseau horaire trouvé pour "{ $query }"
+
+    Essayez: nom de ville (Paris), abréviation (CET), ou décalage UTC (UTC+1)
+error-invalid-timezone = ❌ Fuseau horaire invalide

@@ -128,6 +128,15 @@ sudo journalctl -u gpro -f
 **`utils.py`** - Shared utilities
 - Flag emoji generation, time formatting, URL builders, group name formatting
 
+**`timezone_utils.py`** - Timezone conversion & management
+- POPULAR_TIMEZONES: Curated list of ~100 major timezones with search aliases
+- get_user_timezone(): Get ZoneInfo object for user
+- convert_to_user_tz(): Convert UTC datetime to user's timezone
+- format_datetime_for_user(): Convert and format with timezone abbreviation
+- get_timezone_display_name(): Human-readable names like "New York (EST)"
+- fuzzy_search_timezones(): Rapidfuzz-based search with support for city names, abbreviations, UTC offsets
+- Automatic DST handling via Python's zoneinfo module
+
 ### Important Implementation Details
 
 **Notification Timing Logic:**
@@ -152,6 +161,17 @@ sudo journalctl -u gpro -f
 - `/weather`: Manual weather fetch for testing
 - `/users`: List all users with completion status
 - Admin check: `user_id in ADMIN_USER_IDS` (set in config.py)
+
+**Timezone Support:**
+- Users can set their timezone via Settings → Timezone
+- Text input → fuzzy search → inline keyboard selection flow
+- All race times displayed in user's local timezone with abbreviation (e.g., "15.01 19:00 EST")
+- DST handled automatically via Python's `zoneinfo` module
+- Default timezone: UTC (backward compatible with existing users)
+- Fuzzy search supports:  city names ("new york"), abbreviations ("pst"), UTC offsets ("utc+3")
+- ~100 popular timezones in POPULAR_TIMEZONES dict (timezone_utils.py)
+- Conversion happens at display time, UTC stored in calendar
+- Migration auto-adds 'timezone': 'UTC' field to existing users
 
 ### Testing Considerations
 

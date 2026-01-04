@@ -27,6 +27,10 @@ class OnboardingStates(StatesGroup):
     waiting_for_group = State()
 
 
+class TimezoneStates(StatesGroup):
+    waiting_for_timezone_input = State()
+
+
 @router.message(SetGroupStates.waiting_for_group, F.text & ~F.text.startswith('/'))
 async def process_group_input(message: Message, state: FSMContext, i18n: I18nContext):
     """Process user's group input from settings"""
@@ -143,6 +147,57 @@ async def process_onboarding_group_input(message: Message, state: FSMContext, i1
 
     await message.answer(
         i18n.get("onboard-complete-with-group", group=group_display),
+        reply_markup=keyboard,
+        parse_mode='Markdown'
+    )
+
+
+@router.message(TimezoneStates.waiting_for_timezone_input, F.text & ~F.text.startswith('/'))
+async def process_timezone_input(message: Message, state: FSMContext, i18n: I18nContext):
+    """Process user's timezone search input and show fuzzy-matched options"""
+    from timezone_utils import fuzzy_search_timezones, get_timezone_display_name
+    from zoneinfo import ZoneInfo
+    from datetime import datetime, timezone as tz
+
+    user_id = message.from_user.id
+    query = message.text.strip()
+
+    # Fuzzy search timezones
+    matches = fuzzy_search_timezones(query, limit=5)
+
+    if not matches:
+        # No matches found
+        await message.answer(
+            i18n.get("error-timezone-not-found", query=query),
+            parse_mode='Markdown'
+        )
+        return
+
+    # Build inline keyboard with top matches
+    keyboard_buttons = []
+    now = datetime.now(tz.utc)
+
+    for tz_name, score in matches:
+        try:
+            timezone_obj = ZoneInfo(tz_name)
+            display_name = get_timezone_display_name(timezone_obj, now)
+            keyboard_buttons.append([InlineKeyboardButton(
+                text=display_name,
+                callback_data=f"tz_select_{tz_name}"
+            )])
+        except Exception as e:
+            logger.warning(f"Failed to create button for {tz_name}: {e}")
+
+    # Add cancel button
+    keyboard_buttons.append([InlineKeyboardButton(
+        text=i18n.get("button-cancel"),
+        callback_data="settings_main"
+    )])
+
+    keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
+
+    await message.answer(
+        i18n.get("timezone-select-matches", query=query),
         reply_markup=keyboard,
         parse_mode='Markdown'
     )

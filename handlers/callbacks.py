@@ -149,8 +149,9 @@ async def handle_main_menu_calendar(callback: CallbackQuery, i18n: I18nContext):
     """Handle Calendar button from main menu"""
     from utils import format_full_calendar
 
+    user_id = callback.from_user.id
     await callback.answer()
-    calendar_text = format_full_calendar(race_calendar, "Full Season", is_current_season=True, i18n=i18n)
+    calendar_text = format_full_calendar(race_calendar, "Full Season", is_current_season=True, user_id=user_id, i18n=i18n)
     title = i18n.get("calendar-title-full")
     text = f"{title}\n\n{calendar_text}"
     await callback.message.answer(text, parse_mode='Markdown')
@@ -162,6 +163,7 @@ async def handle_main_menu_next(callback: CallbackQuery, i18n: I18nContext):
     from gpro_calendar import next_season_calendar, load_next_season_silent
     from utils import format_full_calendar
 
+    user_id = callback.from_user.id
     await callback.answer()
     await load_next_season_silent()
 
@@ -169,7 +171,7 @@ async def handle_main_menu_next(callback: CallbackQuery, i18n: I18nContext):
         await callback.message.answer(i18n.get("next-season-not-published"))
         return
 
-    calendar_text = format_full_calendar(next_season_calendar, "Next Season", is_current_season=False, i18n=i18n)
+    calendar_text = format_full_calendar(next_season_calendar, "Next Season", is_current_season=False, user_id=user_id, i18n=i18n)
     title = i18n.get("calendar-title-next", count=len(next_season_calendar))
     text = f"{title}\n\n{calendar_text}"
     await callback.message.answer(text, parse_mode='Markdown')
@@ -560,6 +562,21 @@ async def handle_settings_main(callback: CallbackQuery, i18n: I18nContext):
         callback_data="notif_menu"
     )])
 
+    # Timezone button
+    from notifications import get_user_timezone
+    from timezone_utils import get_timezone_display_name
+    from zoneinfo import ZoneInfo
+    from datetime import datetime, timezone
+
+    current_tz = get_user_timezone(user_id)
+    tz = ZoneInfo(current_tz)
+    tz_display = get_timezone_display_name(tz, datetime.now(timezone.utc))
+
+    keyboard_buttons.append([InlineKeyboardButton(
+        text=i18n.get("button-timezone", timezone=tz_display),
+        callback_data="timezone_menu"
+    )])
+
     keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
 
     await callback.message.edit_text(
@@ -856,3 +873,106 @@ async def handle_group_reset(callback: CallbackQuery, state: FSMContext, i18n: I
     await state.clear()
     await callback.answer(i18n.get("group-reset-success"), show_alert=True)
     await handle_settings_main(callback, i18n)
+
+
+@router.callback_query(F.data == "timezone_menu")
+async def handle_timezone_menu(callback: CallbackQuery, state: FSMContext, i18n: I18nContext):
+    """Show timezone settings menu"""
+    from notifications import get_user_timezone
+    from timezone_utils import get_timezone_display_name
+    from zoneinfo import ZoneInfo
+    from datetime import datetime, timezone
+    from .states import TimezoneStates
+
+    user_id = callback.from_user.id
+    current_tz = get_user_timezone(user_id)
+    tz = ZoneInfo(current_tz)
+    tz_display = get_timezone_display_name(tz, datetime.now(timezone.utc))
+
+    # Build keyboard with reset and back buttons
+    keyboard_buttons = []
+
+    # Reset to UTC button (only if not already UTC)
+    if current_tz != 'UTC':
+        keyboard_buttons.append([InlineKeyboardButton(
+            text=i18n.get("button-reset-timezone"),
+            callback_data="tz_reset_utc"
+        )])
+
+    # Back button
+    keyboard_buttons.append([InlineKeyboardButton(
+        text=i18n.get("button-back-to-settings"),
+        callback_data="settings_main"
+    )])
+
+    keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
+
+    # Set state to wait for timezone input
+    await state.set_state(TimezoneStates.waiting_for_timezone_input)
+
+    await callback.message.edit_text(
+        i18n.get("timezone-menu-title", timezone=tz_display),
+        reply_markup=keyboard,
+        parse_mode='Markdown'
+    )
+    await callback.answer()
+
+
+@router.callback_query(F.data.startswith("tz_select_"))
+async def handle_timezone_select(callback: CallbackQuery, state: FSMContext, i18n: I18nContext):
+    """Handle timezone selection from fuzzy search results"""
+    from notifications import set_user_timezone
+    from timezone_utils import get_timezone_display_name
+    from zoneinfo import ZoneInfo
+    from datetime import datetime, timezone
+
+    user_id = callback.from_user.id
+
+    # Extract timezone name from callback data
+    tz_name = callback.data.replace("tz_select_", "")
+
+    # Set timezone
+    if set_user_timezone(user_id, tz_name):
+        await state.clear()
+
+        # Get display name and example time
+        tz = ZoneInfo(tz_name)
+        tz_display = get_timezone_display_name(tz, datetime.now(timezone.utc))
+
+        # Show example time conversion
+        utc_now = datetime.now(timezone.utc)
+        local_now = utc_now.astimezone(tz)
+        local_time_str = local_now.strftime('%H:%M')
+
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(
+                text=i18n.get("button-back-to-settings"),
+                callback_data="settings_main"
+            )]
+        ])
+
+        await callback.message.edit_text(
+            i18n.get("timezone-set-success",
+                     timezone=tz_display,
+                     localTime=local_time_str),
+            reply_markup=keyboard,
+            parse_mode='Markdown'
+        )
+        await callback.answer(i18n.get("feedback-timezone-set"))
+    else:
+        await callback.answer(i18n.get("error-invalid-timezone"), show_alert=True)
+
+
+@router.callback_query(F.data == "tz_reset_utc")
+async def handle_timezone_reset(callback: CallbackQuery, state: FSMContext, i18n: I18nContext):
+    """Reset timezone to UTC"""
+    from notifications import set_user_timezone
+
+    user_id = callback.from_user.id
+
+    if set_user_timezone(user_id, 'UTC'):
+        await state.clear()
+        await callback.answer(i18n.get("feedback-timezone-reset"))
+        await handle_settings_main(callback, i18n)
+    else:
+        await callback.answer(i18n.get("error-reset-failed"), show_alert=True)

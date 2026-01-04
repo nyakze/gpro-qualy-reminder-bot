@@ -541,3 +541,35 @@ custom-notif-menu-title = ⏱️ **Notificaciones Personalizadas**
     Puedes tener hasta 2 notificaciones personalizadas.
 
     Haz clic en un espacio para configurarlo o editarlo.
+
+# =======================
+# Configuración de Zona Horaria
+# =======================
+button-timezone = ⏰ Zona horaria: { $timezone }
+timezone-menu-title = ⏰ **Configuración de Zona Horaria**
+
+    Zona horaria actual: **{ $timezone }**
+
+    Escribe tu zona horaria (nombre de ciudad, abreviatura o desplazamiento UTC):
+
+    Ejemplos: `Madrid`, `CET`, `UTC+1`, `Buenos Aires`
+
+timezone-select-matches = 🌍 **Selecciona tu zona horaria:**
+
+    Coincidencias para "{ $query }":
+
+timezone-set-success = ✅ **¡Zona horaria configurada!**
+
+    { $timezone }
+
+    Hora actual en tu zona horaria: **{ $localTime }**
+
+    Todos los horarios de las carreras se mostrarán en tu hora local.
+
+button-reset-timezone = 🔄 Restablecer a UTC
+feedback-timezone-set = ✅ Zona horaria actualizada
+feedback-timezone-reset = ✅ Zona horaria restablecida a UTC
+error-timezone-not-found = ❌ No se encontró zona horaria para "{ $query }"
+
+    Intenta: nombre de ciudad (Madrid), abreviatura (CET), o desplazamiento UTC (UTC+1)
+error-invalid-timezone = ❌ Zona horaria inválida

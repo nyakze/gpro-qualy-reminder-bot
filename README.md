@@ -22,6 +22,7 @@ Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadli
 - **Multi-language support:** Bot UI in 6 languages (English, Russian, Portuguese, Italian, Spanish, French) + 31 languages for GPRO links
 - **Group settings:** Personalized race/replay links (Elite, Master, Pro, Amateur, Rookie)
 - **Notification preferences:** Toggle individual notification types on/off
+- **Timezone support:** Set your timezone for local time display with automatic DST handling (fuzzy search supports city names, abbreviations, UTC offsets)
 
 ### Commands
 - `/status` - Next race with full details, qualifying link, and weather button
@@ -38,16 +39,17 @@ Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadli
 
 ## Planned features
 
-- Timezone selection with DST support (pytz named timezones)
+(No features currently planned - suggestions welcome!)
 
 # Hosting your own bot
 
 ## Tech Stack
 
-- Python 3.10+ with Aiogram 3.x
-- GPRO API (authentiation required)
+- Python 3.12+ with Aiogram 3.x
+- GPRO API (authentication required)
 - `python-dotenv` for `TELEGRAM_BOT_TOKEN`
-- `pytz` for timezone handling (planned)
+- `zoneinfo` (built-in) for timezone handling with automatic DST
+- `rapidfuzz` for fuzzy timezone search
 - `asyncio` for concurrent notifications
 
 ## Quick Start

@@ -15,6 +15,7 @@ aiohttp==3.13.2
 # Utilities
 python-dotenv==1.2.1
 pycountry==24.6.1
+rapidfuzz==3.10.0
 
 # ==============================================================================
 # Transitive Dependencies (auto-installed by packages above)

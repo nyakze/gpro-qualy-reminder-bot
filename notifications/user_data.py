@@ -114,7 +114,8 @@ def get_user_status(user_id: int) -> Dict:
             'notifications': get_default_notification_preferences(),
             'custom_notifications': get_default_custom_notifications(),
             'gpro_lang': DEFAULT_USER_LANG,
-            'ui_lang': 'en'  # Default UI language (separate from GPRO links language)
+            'ui_lang': 'en',  # Default UI language (separate from GPRO links language)
+            'timezone': 'UTC'  # Default timezone
         }
         save_users_data()
     else:
@@ -145,6 +146,11 @@ def get_user_status(user_id: int) -> Dict:
         if '72h' not in users_data[user_id]['notifications']:
             users_data[user_id]['notifications']['72h'] = True
             logger.debug(f"Added '72h' notification to user {user_id}")
+            needs_save = True
+        # Migration: Add timezone field for existing users
+        if 'timezone' not in users_data[user_id]:
+            users_data[user_id]['timezone'] = 'UTC'
+            logger.debug(f"Added 'timezone' field to user {user_id}")
             needs_save = True
 
         # Save only once if any migrations were applied
@@ -254,6 +260,44 @@ def get_user_ui_language(user_id: int) -> str:
     """
     user_status = get_user_status(user_id)
     return user_status.get('ui_lang', 'en')
+
+
+def get_user_timezone(user_id: int) -> str:
+    """Get user's timezone IANA name
+
+    Args:
+        user_id: Telegram user ID
+
+    Returns:
+        str: IANA timezone name (e.g., 'America/New_York', defaults to 'UTC')
+    """
+    user_status = get_user_status(user_id)
+    return user_status.get('timezone', 'UTC')
+
+
+def set_user_timezone(user_id: int, timezone: str) -> bool:
+    """Set user's timezone
+
+    Args:
+        user_id: Telegram user ID
+        timezone: IANA timezone name (e.g., 'America/New_York')
+
+    Returns:
+        bool: True if timezone was set successfully, False if invalid
+    """
+    # Validate timezone exists
+    try:
+        from zoneinfo import ZoneInfo
+        ZoneInfo(timezone)
+    except Exception as e:
+        logger.warning(f"Invalid timezone '{timezone}': {e}")
+        return False
+
+    get_user_status(user_id)
+    users_data[user_id]['timezone'] = timezone
+    save_users_data()
+    logger.info(f"User {user_id} set timezone to: {timezone}")
+    return True
 
 
 def mark_quali_done(user_id: int, race_id: int):
