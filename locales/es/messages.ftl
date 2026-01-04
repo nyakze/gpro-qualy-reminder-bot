@@ -40,7 +40,7 @@ onboard-group-title = 🏁 **Selección de Grupo**
 
     Selecciona un grupo común o ingresa el tuyo:
 
-onboard-group-custom = 🏁 **Grupo Personalizado**
+onboard-group-custom = 🏁 **Selección de Grupo**
 
     Ingresa tu grupo en uno de estos formatos:
     • **E** (Elite)
@@ -50,6 +50,8 @@ onboard-group-custom = 🏁 **Grupo Personalizado**
     • **R11** (Rookie 11)
 
     Los números pueden tener de 1 a 3 dígitos.
+
+    💡 *El idioma del sitio GPRO se ha configurado para coincidir con el idioma del bot. Puedes cambiarlo más tarde en /settings*
 
 onboard-complete = ✅ **¡Configuración Completada!**
 

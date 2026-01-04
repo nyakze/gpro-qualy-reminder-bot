@@ -133,9 +133,12 @@ async def process_onboarding_group_input(message: Message, state: FSMContext, i1
     group_display = format_group_display(group_input)
     await state.clear()
 
-    # Show welcome complete message
+    # Show welcome complete message with main menu buttons
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=i18n.get("button-got-it"), callback_data="onboard_complete")]
+        [InlineKeyboardButton(text=i18n.get("button-main-menu-status"), callback_data="main_menu_status")],
+        [InlineKeyboardButton(text=i18n.get("button-main-menu-calendar"), callback_data="main_menu_calendar")],
+        [InlineKeyboardButton(text=i18n.get("button-main-menu-next"), callback_data="main_menu_next")],
+        [InlineKeyboardButton(text=i18n.get("button-main-menu-settings"), callback_data="main_menu_settings")]
     ])
 
     await message.answer(
