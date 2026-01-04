@@ -46,12 +46,12 @@ def build_language_keyboard(page: int = 1, current_lang: str = 'gb', onboarding:
         InlineKeyboardMarkup with language options and navigation
     """
     # Language codes distributed across 4 pages (31 total)
-    # gb and ru appear first on page 1
+    # All bot UI languages (gb, ru, br, it, es, fr) appear first on page 1
     pages = [
-        ['gb', 'ru', 'de', 'es', 'ro', 'it', 'fr', 'pl'],
-        ['bg', 'mk', 'nl', 'fi', 'hu', 'tr', 'gr', 'dk'],
-        ['pt', 'rs', 'se', 'lt', 'ee', 'al', 'hr', 'ch'],
-        ['my', 'in', 'pi', 'be', 'br', 'cz', 'sk']
+        ['gb', 'ru', 'br', 'it', 'es', 'fr', 'de', 'pt'],
+        ['ro', 'pl', 'bg', 'mk', 'nl', 'fi', 'hu', 'tr'],
+        ['gr', 'dk', 'rs', 'se', 'lt', 'ee', 'al', 'hr'],
+        ['ch', 'my', 'in', 'pi', 'be', 'cz', 'sk']
     ]
 
     buttons = []
@@ -429,12 +429,12 @@ async def handle_language_select(callback: CallbackQuery, i18n: I18nContext):
 
         # Get current page to rebuild keyboard with updated selection
         current_lang = get_user_language(user_id)
-        # Determine which page this language is on (updated order with gb and ru first)
+        # Determine which page this language is on (all bot UI languages on page 1)
         pages = [
-            ['gb', 'ru', 'de', 'es', 'ro', 'it', 'fr', 'pl'],
-            ['bg', 'mk', 'nl', 'fi', 'hu', 'tr', 'gr', 'dk'],
-            ['pt', 'rs', 'se', 'lt', 'ee', 'al', 'hr', 'ch'],
-            ['my', 'in', 'pi', 'be', 'br', 'cz', 'sk']
+            ['gb', 'ru', 'br', 'it', 'es', 'fr', 'de', 'pt'],
+            ['ro', 'pl', 'bg', 'mk', 'nl', 'fi', 'hu', 'tr'],
+            ['gr', 'dk', 'rs', 'se', 'lt', 'ee', 'al', 'hr'],
+            ['ch', 'my', 'in', 'pi', 'be', 'cz', 'sk']
         ]
         current_page = 1
         for i, page_langs in enumerate(pages, 1):
