@@ -225,7 +225,7 @@ async def handle_main_menu_settings(callback: CallbackQuery, state: FSMContext, 
 
 
 @router.callback_query(F.data.startswith("toggle_"))
-async def handle_toggle_notification(callback: CallbackQuery):
+async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext):
     """Handle notification toggle button clicks"""
     user_id = callback.from_user.id
 
@@ -235,20 +235,27 @@ async def handle_toggle_notification(callback: CallbackQuery):
         for notif_type in user_status['notifications'].keys():
             user_status['notifications'][notif_type] = True
         save_users_data()
-        feedback_text = "✅ All notifications enabled!"
+        feedback_text = i18n.get("feedback-all-enabled")
     elif callback.data == "toggle_all_off":
         user_status = get_user_status(user_id)
         for notif_type in user_status['notifications'].keys():
             user_status['notifications'][notif_type] = False
         save_users_data()
-        feedback_text = "🔕 All notifications disabled!"
+        feedback_text = i18n.get("feedback-all-disabled")
     else:
         # Toggle individual notification
         notification_type = callback.data.replace("toggle_", "")
         new_state = toggle_notification(user_id, notification_type)
 
-        status_text = "enabled" if new_state else "disabled"
-        feedback_text = f"✅ {NOTIFICATION_LABELS[notification_type]} {status_text}!"
+        # Get translated label for feedback
+        label_key = f"notif-label-{notification_type.replace('_', '-')}"
+        label_text = i18n.get(label_key)
+
+        if new_state:
+            feedback_text = i18n.get("feedback-notif-enabled", label=label_text)
+        else:
+            feedback_text = i18n.get("feedback-notif-disabled", label=label_text)
+
         # Get updated status after toggle
         user_status = get_user_status(user_id)
 
@@ -259,28 +266,37 @@ async def handle_toggle_notification(callback: CallbackQuery):
     for notif_type, label in NOTIFICATION_LABELS.items():
         enabled = notifications.get(notif_type, True)
         icon = "✅" if enabled else "❌"
-        button_text = f"{icon} {label}"
+        # Get translated label
+        label_key = f"notif-label-{notif_type.replace('_', '-')}"
+        label_text = i18n.get(label_key)
+        button_text = f"{icon} {label_text}"
         keyboard_buttons.append([InlineKeyboardButton(
             text=button_text,
             callback_data=f"toggle_{notif_type}"
         )])
 
+    # Custom notifications button
+    keyboard_buttons.append([InlineKeyboardButton(
+        text=i18n.get("button-custom-notifications"),
+        callback_data="custom_notif_menu"
+    )])
+
     # Add "Enable All" / "Disable All" button
     all_enabled = all(notifications.get(t, True) for t in NOTIFICATION_LABELS.keys())
     if all_enabled:
         keyboard_buttons.append([InlineKeyboardButton(
-            text="🔕 Disable All Notifications",
+            text=i18n.get("button-disable-all"),
             callback_data="toggle_all_off"
         )])
     else:
         keyboard_buttons.append([InlineKeyboardButton(
-            text="🔔 Enable All Notifications",
+            text=i18n.get("button-enable-all"),
             callback_data="toggle_all_on"
         )])
 
     # Back button
     keyboard_buttons.append([InlineKeyboardButton(
-        text="◀ Back",
+        text=i18n.get("button-back"),
         callback_data="settings_main"
     )])
 
