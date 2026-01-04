@@ -19,7 +19,7 @@ Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadli
 ### Personalization
 - **Interactive onboarding:** New users select language and group during /start
 - **Dual language support:** Bot UI in English/Russian + 31 languages for GPRO links
-- **Group settings:** Personalized race/replay links (Elite, Master 1-5, Pro, Amateur, Rookie)
+- **Group settings:** Personalized race/replay links (Elite, Master, Pro, Amateur, Rookie)
 - **Notification preferences:** Toggle individual notification types on/off
 - **Full i18n support:** All messages, buttons, and notifications are localized
 
@@ -45,7 +45,7 @@ Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadli
 ## Tech Stack
 
 - Python 3.10+ with Aiogram 3.x
-- GPRO public API (no login credentials needed)
+- GPRO API (authentiation required)
 - `python-dotenv` for `TELEGRAM_BOT_TOKEN`
 - `pytz` for timezone handling (planned)
 - `asyncio` for concurrent notifications
@@ -175,10 +175,20 @@ This file provides detailed architectural guidance including notification timing
 
 ## API Integration
 
-Uses GPRO public calendar API:
+Uses GPRO Calendar API:
 ```
 GET https://gpro.net/gb/backend/api/v2/Calendar
 ```
+GPRO office API:
+```
+GET https://gpro.net/gb/backend/api/v2/office
+```
+GPRO Practice API:
+```
+GET https://gpro.net/gb/backend/api/v2/Practice
+```
+
+
 
 🗄️ Caches results in `gpro_calendar.json`. Requires GPRO API token (.env → GPRO_API_TOKEN) 
 
