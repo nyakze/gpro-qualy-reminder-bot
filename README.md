@@ -19,10 +19,9 @@ Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadli
 
 ### Personalization
 - **Interactive onboarding:** New users select language and group during /start
-- **Dual language support:** Bot UI in English/Russian + 31 languages for GPRO links
+- **Multi-language support:** Bot UI in 6 languages (English, Russian, Portuguese, Italian, Spanish, French) + 31 languages for GPRO links
 - **Group settings:** Personalized race/replay links (Elite, Master, Pro, Amateur, Rookie)
 - **Notification preferences:** Toggle individual notification types on/off
-- **Full i18n support:** All messages, buttons, and notifications are localized
 
 ### Commands
 - `/status` - Next race with full details, qualifying link, and weather button
@@ -118,7 +117,11 @@ gpro-bot/
 │   └── checker.py             # Main notification loop
 ├── locales/                    # i18n translations
 │   ├── en/                    # English
-│   └── ru/                    # Russian
+│   ├── ru/                    # Russian
+│   ├── br/                    # Portuguese (Brazilian)
+│   ├── it/                    # Italian
+│   ├── es/                    # Spanish
+│   └── fr/                    # French
 ├── requirements.txt
 ├── .env.example               # Rename to .env and fill in your data
 ├── CLAUDE.md                  # Architecture docs for AI assistance

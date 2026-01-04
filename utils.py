@@ -8,7 +8,10 @@ from datetime import datetime
 UI_LANGUAGE_DISPLAY = {
     "en": "🇬🇧 English",
     "ru": "🇷🇺 Русский",
-    "br": "🇧🇷 Português"
+    "br": "🇧🇷 Português",
+    "it": "🇮🇹 Italiano",
+    "es": "🇪🇸 Español",
+    "fr": "🇫🇷 Français"
 }
 
 

@@ -7,7 +7,7 @@ from aiogram_i18n.cores import FluentRuntimeCore
 from aiogram_i18n.managers import BaseManager
 
 # Supported UI languages
-SUPPORTED_UI_LANGUAGES = ['en', 'ru', 'br']
+SUPPORTED_UI_LANGUAGES = ['en', 'ru', 'br', 'it', 'es', 'fr']
 DEFAULT_UI_LANGUAGE = 'en'
 
 # Get absolute path to locales directory
@@ -80,7 +80,8 @@ def setup_i18n() -> I18nMiddleware:
 
     i18n_middleware = I18nMiddleware(
         core=FluentRuntimeCore(
-            path=locales_path
+            path=locales_path,
+            raise_key_error=False  # Gracefully handle missing keys, fall back to default locale
         ),
         manager=UserLanguageManager(),
         default_locale=DEFAULT_UI_LANGUAGE
