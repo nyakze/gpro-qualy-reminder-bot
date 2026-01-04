@@ -514,8 +514,9 @@ async def handle_set_ui_language(callback: CallbackQuery, i18n: I18nContext):
         lang_display = get_ui_language_display(ui_lang)
         await callback.answer(f"✅ {lang_display}")
 
-        # Return to main settings menu (will show in new language)
-        await handle_settings_main(callback, i18n)
+        # Return to main settings menu using the new language context
+        with i18n.use_locale(ui_lang):
+            await handle_settings_main(callback, i18n)
     else:
         await callback.answer(i18n.get("error-invalid-language"), show_alert=True)
 
