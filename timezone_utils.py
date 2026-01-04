@@ -111,7 +111,7 @@ def build_timezone_search_index() -> dict:
                 tz_name_map[city] = tz_name
 
             city_alt = entry.get("city_alt")
-            if city_alt:
+            if city_alt and isinstance(city_alt, list):
                 for alt_city in city_alt:
                     search_corpus.append(alt_city)
                     tz_name_map[alt_city] = tz_name
@@ -515,6 +515,9 @@ def fuzzy_search_timezones(query: str, limit: int = 5) -> list[tuple[str, float]
     if _timezone_search_index:
         search_corpus = _timezone_search_index["search_corpus"]
         tz_name_map = _timezone_search_index["tz_name_map"]
+        logger.debug(
+            f"Using timezone search index: {len(search_corpus)} search terms, {len(tz_name_map)} mappings"
+        )
     else:
         # Fallback to POPULAR_TIMEZONES
         logger.debug("Using POPULAR_TIMEZONES fallback for timezone search")
@@ -539,12 +542,22 @@ def fuzzy_search_timezones(query: str, limit: int = 5) -> list[tuple[str, float]
         limit=limit * 3,  # Get more results initially to filter duplicates
     )
 
+    logger.debug(f"Fuzzy search for '{query}': found {len(results)} raw matches")
+
     # Deduplicate by timezone name (keep highest score for each timezone)
     seen_timezones = {}
     for match_text, score, _ in results:
         tz_name = tz_name_map.get(match_text)
         if tz_name and tz_name not in seen_timezones:
             seen_timezones[tz_name] = score
+        elif not tz_name:
+            logger.warning(
+                f"Match '{match_text}' not found in tz_name_map (score: {score})"
+            )
+
+    logger.debug(
+        f"After deduplication: {len(seen_timezones)} unique timezones for query '{query}'"
+    )
 
     # Sort by score and limit results
     final_results = sorted(seen_timezones.items(), key=lambda x: x[1], reverse=True)[
