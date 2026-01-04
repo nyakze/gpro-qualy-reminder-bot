@@ -70,47 +70,11 @@ async def cmd_settings(message: Message, state: FSMContext, i18n: I18nContext):
     # Clear any active state when command is issued
     await state.clear()
 
-    user_id = message.from_user.id
-    user_status = get_user_status(user_id)
-    current_ui_lang = user_status.get('ui_lang', 'en')
-    current_lang = user_status.get('gpro_lang', 'gb')
-    current_group = user_status.get('group')
-
     # Import here to avoid circular import
-    from notifications import LANGUAGE_OPTIONS
-    from utils import format_group_display
+    from .callbacks import build_settings_keyboard
 
-    # Build main settings menu
-    keyboard_buttons = []
-
-    # Bot UI Language button (NEW - first option)
-    ui_lang_display = "🇬🇧 English" if current_ui_lang == 'en' else "🇷🇺 Русский"
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=i18n.get("button-ui-language", language=ui_lang_display),
-        callback_data="ui_lang_menu"
-    )])
-
-    # GPRO Website Language button
-    lang_display = LANGUAGE_OPTIONS.get(current_lang, current_lang)
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=i18n.get("button-gpro-language", language=lang_display),
-        callback_data="lang_menu"
-    )])
-
-    # Group button
-    group_display = format_group_display(current_group)
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=i18n.get("button-group", group=group_display),
-        callback_data="group_menu"
-    )])
-
-    # Notifications button (opens sub-menu)
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=i18n.get("button-notifications"),
-        callback_data="notif_menu"
-    )])
-
-    keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
+    user_id = message.from_user.id
+    keyboard = build_settings_keyboard(user_id, i18n)
 
     await message.answer(
         i18n.get("settings-title"),

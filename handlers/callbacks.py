@@ -19,6 +19,68 @@ from . import router
 
 logger = logging.getLogger(__name__)
 
+
+def build_settings_keyboard(user_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
+    """Build settings menu keyboard with all options
+
+    Args:
+        user_id: Telegram user ID
+        i18n: I18n context for translations
+
+    Returns:
+        InlineKeyboardMarkup with all settings buttons
+    """
+    from notifications import get_user_timezone
+    from timezone_utils import get_timezone_display_name
+    from zoneinfo import ZoneInfo
+    from datetime import datetime, timezone
+
+    user_status = get_user_status(user_id)
+    current_ui_lang = user_status.get('ui_lang', 'en')
+    current_lang = user_status.get('gpro_lang', 'gb')
+    current_group = user_status.get('group')
+
+    keyboard_buttons = []
+
+    # Bot UI Language button
+    ui_lang_display = get_ui_language_display(current_ui_lang)
+    keyboard_buttons.append([InlineKeyboardButton(
+        text=i18n.get("button-ui-language", language=ui_lang_display),
+        callback_data="ui_lang_menu"
+    )])
+
+    # GPRO Website Language button
+    lang_display = LANGUAGE_OPTIONS.get(current_lang, current_lang)
+    keyboard_buttons.append([InlineKeyboardButton(
+        text=i18n.get("button-gpro-language", language=lang_display),
+        callback_data="lang_menu"
+    )])
+
+    # Group button
+    group_display = format_group_display(current_group)
+    keyboard_buttons.append([InlineKeyboardButton(
+        text=i18n.get("button-group", group=group_display),
+        callback_data="group_menu"
+    )])
+
+    # Notifications button
+    keyboard_buttons.append([InlineKeyboardButton(
+        text=i18n.get("button-notifications"),
+        callback_data="notif_menu"
+    )])
+
+    # Timezone button
+    current_tz = get_user_timezone(user_id)
+    tz = ZoneInfo(current_tz)
+    tz_display = get_timezone_display_name(tz, datetime.now(timezone.utc))
+    keyboard_buttons.append([InlineKeyboardButton(
+        text=i18n.get("button-timezone", timezone=tz_display),
+        callback_data="timezone_menu"
+    )])
+
+    return InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
+
+
 # Notification types - labels are fetched from i18n
 NOTIFICATION_TYPES = (
     '72h',
@@ -183,42 +245,7 @@ async def handle_main_menu_settings(callback: CallbackQuery, state: FSMContext, 
     await callback.answer()
 
     user_id = callback.from_user.id
-    user_status = get_user_status(user_id)
-    current_ui_lang = user_status.get('ui_lang', 'en')
-    current_lang = user_status.get('gpro_lang', 'gb')
-    current_group = user_status.get('group')
-
-    # Build main settings menu
-    keyboard_buttons = []
-
-    # Bot UI Language button
-    ui_lang_display = get_ui_language_display(current_ui_lang)
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=i18n.get("button-ui-language", language=ui_lang_display),
-        callback_data="ui_lang_menu"
-    )])
-
-    # GPRO Website Language button
-    lang_display = LANGUAGE_OPTIONS.get(current_lang, current_lang)
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=i18n.get("button-gpro-language", language=lang_display),
-        callback_data="lang_menu"
-    )])
-
-    # Group button
-    group_display = format_group_display(current_group)
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=i18n.get("button-group", group=group_display),
-        callback_data="group_menu"
-    )])
-
-    # Notifications button
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=i18n.get("button-notifications"),
-        callback_data="notif_menu"
-    )])
-
-    keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
+    keyboard = build_settings_keyboard(user_id, i18n)
 
     await callback.message.answer(
         i18n.get("settings-title"),
@@ -527,57 +554,7 @@ async def handle_set_ui_language(callback: CallbackQuery, i18n: I18nContext):
 async def handle_settings_main(callback: CallbackQuery, i18n: I18nContext):
     """Return to main settings menu"""
     user_id = callback.from_user.id
-    user_status = get_user_status(user_id)
-    current_ui_lang = user_status.get('ui_lang', 'en')
-    current_lang = user_status.get('gpro_lang', 'gb')
-    current_group = user_status.get('group')
-
-    # Build main settings keyboard
-    keyboard_buttons = []
-
-    # Bot UI Language button (NEW)
-    ui_lang_display = get_ui_language_display(current_ui_lang)
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=i18n.get("button-ui-language", language=ui_lang_display),
-        callback_data="ui_lang_menu"
-    )])
-
-    # GPRO Website Language button
-    lang_display = LANGUAGE_OPTIONS.get(current_lang, current_lang)
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=i18n.get("button-gpro-language", language=lang_display),
-        callback_data="lang_menu"
-    )])
-
-    # Group button
-    group_display = format_group_display(current_group)
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=i18n.get("button-group", group=group_display),
-        callback_data="group_menu"
-    )])
-
-    # Notifications button
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=i18n.get("button-notifications"),
-        callback_data="notif_menu"
-    )])
-
-    # Timezone button
-    from notifications import get_user_timezone
-    from timezone_utils import get_timezone_display_name
-    from zoneinfo import ZoneInfo
-    from datetime import datetime, timezone
-
-    current_tz = get_user_timezone(user_id)
-    tz = ZoneInfo(current_tz)
-    tz_display = get_timezone_display_name(tz, datetime.now(timezone.utc))
-
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=i18n.get("button-timezone", timezone=tz_display),
-        callback_data="timezone_menu"
-    )])
-
-    keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
+    keyboard = build_settings_keyboard(user_id, i18n)
 
     await callback.message.edit_text(
         i18n.get("settings-title"),
