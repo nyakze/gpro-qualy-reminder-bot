@@ -6,6 +6,13 @@ from typing import Dict
 
 logger = logging.getLogger(__name__)
 
+# Import UI language list for validation
+try:
+    from utils import UI_LANGUAGE_DISPLAY
+except ImportError:
+    # Fallback if import fails (shouldn't happen in normal operation)
+    UI_LANGUAGE_DISPLAY = {"en": "English", "ru": "Русский", "br": "Português", "it": "Italiano", "es": "Español", "fr": "Français"}
+
 users_data: Dict[int, Dict] = {}
 
 # Language options for URL generation (user-facing)
@@ -222,11 +229,10 @@ def set_user_ui_language(user_id: int, lang: str) -> bool:
     Returns:
         bool: True if language was set successfully, False if invalid
     """
-    # Validate UI language
-    valid_ui_langs = ['en', 'ru', 'br', 'it', 'es', 'fr']
     lang = lang.strip().lower()
 
-    if lang not in valid_ui_langs:
+    # Validate against available UI languages (dynamically from UI_LANGUAGE_DISPLAY)
+    if lang not in UI_LANGUAGE_DISPLAY:
         logger.warning(f"Invalid UI language code: {lang}")
         return False
 

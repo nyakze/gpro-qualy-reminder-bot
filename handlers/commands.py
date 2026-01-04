@@ -35,12 +35,13 @@ async def cmd_start(message: Message, state: FSMContext, i18n: I18nContext):
 
     if was_new:
         logger.info(f"🆕 NEW user {user_id} registered via /start")
-        # Show bot UI language selection first (new step!)
-        keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text=UI_LANGUAGE_DISPLAY["en"], callback_data="onboard_ui_lang_en")],
-            [InlineKeyboardButton(text=UI_LANGUAGE_DISPLAY["ru"], callback_data="onboard_ui_lang_ru")],
-            [InlineKeyboardButton(text=UI_LANGUAGE_DISPLAY["br"], callback_data="onboard_ui_lang_br")]
-        ])
+        # Show bot UI language selection - dynamically built from available languages
+        keyboard_buttons = [
+            [InlineKeyboardButton(text=display_name, callback_data=f"onboard_ui_lang_{lang_code}")]
+            for lang_code, display_name in UI_LANGUAGE_DISPLAY.items()
+        ]
+        keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
+
         await message.answer(
             "👋 **Welcome to GPRO Bot!**\n\n"
             "Choose your preferred bot language:",
