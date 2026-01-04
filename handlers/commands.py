@@ -15,7 +15,7 @@ from notifications import (
     get_user_status, reset_user_status, send_quali_notification,
     save_users_data, users_data, set_user_ui_language
 )
-from utils import format_full_calendar
+from utils import format_full_calendar, UI_LANGUAGE_DISPLAY
 from config import ADMIN_USER_IDS
 from . import router
 
@@ -37,15 +37,13 @@ async def cmd_start(message: Message, state: FSMContext, i18n: I18nContext):
         logger.info(f"🆕 NEW user {user_id} registered via /start")
         # Show bot UI language selection first (new step!)
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="🇬🇧 English", callback_data="onboard_ui_lang_en")],
-            [InlineKeyboardButton(text="🇷🇺 Русский", callback_data="onboard_ui_lang_ru")],
-            [InlineKeyboardButton(text="🇧🇷 Português", callback_data="onboard_ui_lang_br")]
+            [InlineKeyboardButton(text=UI_LANGUAGE_DISPLAY["en"], callback_data="onboard_ui_lang_en")],
+            [InlineKeyboardButton(text=UI_LANGUAGE_DISPLAY["ru"], callback_data="onboard_ui_lang_ru")],
+            [InlineKeyboardButton(text=UI_LANGUAGE_DISPLAY["br"], callback_data="onboard_ui_lang_br")]
         ])
         await message.answer(
-            "👋 **Welcome to GPRO Bot!** / **Добро пожаловать в GPRO Bot!** / **Bem-vindo ao GPRO Bot!**\n\n"
-            "Choose your preferred bot language:\n"
-            "Выберите язык бота:\n"
-            "Escolha o idioma preferido do bot:",
+            "👋 **Welcome to GPRO Bot!**\n\n"
+            "Choose your preferred bot language:",
             reply_markup=keyboard,
             parse_mode='Markdown'
         )

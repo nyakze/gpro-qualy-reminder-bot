@@ -13,7 +13,7 @@ from notifications import (
     format_custom_notification_time, CUSTOM_NOTIF_MIN_HOURS, CUSTOM_NOTIF_MAX_HOURS,
     format_weather_data, set_user_ui_language, get_user_ui_language
 )
-from utils import add_flag_to_track, format_group_display, get_ui_language_display
+from utils import add_flag_to_track, format_group_display, get_ui_language_display, UI_LANGUAGE_DISPLAY
 from .states import CustomNotificationStates, SetGroupStates
 from . import router
 
@@ -481,26 +481,13 @@ async def handle_ui_language_menu(callback: CallbackQuery, i18n: I18nContext):
     # Build UI language selection keyboard
     keyboard_buttons = []
 
-    # English button
-    en_prefix = "✅ " if current_ui_lang == 'en' else ""
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=f"{en_prefix}🇬🇧 English",
-        callback_data="set_ui_lang_en"
-    )])
-
-    # Russian button
-    ru_prefix = "✅ " if current_ui_lang == 'ru' else ""
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=f"{ru_prefix}🇷🇺 Русский",
-        callback_data="set_ui_lang_ru"
-    )])
-
-    # Brazilian Portuguese button
-    br_prefix = "✅ " if current_ui_lang == 'br' else ""
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=f"{br_prefix}🇧🇷 Português",
-        callback_data="set_ui_lang_br"
-    )])
+    # Build language buttons dynamically from UI_LANGUAGE_DISPLAY
+    for lang_code, lang_display in UI_LANGUAGE_DISPLAY.items():
+        prefix = "✅ " if current_ui_lang == lang_code else ""
+        keyboard_buttons.append([InlineKeyboardButton(
+            text=f"{prefix}{lang_display}",
+            callback_data=f"set_ui_lang_{lang_code}"
+        )])
 
     # Back button
     keyboard_buttons.append([InlineKeyboardButton(
@@ -542,26 +529,13 @@ async def handle_set_ui_language(callback: CallbackQuery, i18n: I18nContext):
 
         keyboard_buttons = []
 
-        # English button
-        en_prefix = "✅ " if current_ui_lang == 'en' else ""
-        keyboard_buttons.append([InlineKeyboardButton(
-            text=f"{en_prefix}🇬🇧 English",
-            callback_data="set_ui_lang_en"
-        )])
-
-        # Russian button
-        ru_prefix = "✅ " if current_ui_lang == 'ru' else ""
-        keyboard_buttons.append([InlineKeyboardButton(
-            text=f"{ru_prefix}🇷🇺 Русский",
-            callback_data="set_ui_lang_ru"
-        )])
-
-        # Brazilian Portuguese button
-        br_prefix = "✅ " if current_ui_lang == 'br' else ""
-        keyboard_buttons.append([InlineKeyboardButton(
-            text=f"{br_prefix}🇧🇷 Português",
-            callback_data="set_ui_lang_br"
-        )])
+        # Build language buttons dynamically from UI_LANGUAGE_DISPLAY
+        for lang_code, lang_display in UI_LANGUAGE_DISPLAY.items():
+            prefix = "✅ " if current_ui_lang == lang_code else ""
+            keyboard_buttons.append([InlineKeyboardButton(
+                text=f"{prefix}{lang_display}",
+                callback_data=f"set_ui_lang_{lang_code}"
+            )])
 
         # Back button
         keyboard_buttons.append([InlineKeyboardButton(
