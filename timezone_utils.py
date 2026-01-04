@@ -27,6 +27,55 @@ _timezone_search_index = None
 # Default timezone for users who haven't set a preference
 DEFAULT_TIMEZONE = "UTC"
 
+# Manual translation mapping for common cities (non-Latin scripts)
+# Maps: translated name -> IANA timezone
+CITY_TRANSLATIONS = {
+    # Russian cities
+    "москва": "Europe/Moscow",
+    "санкт-петербург": "Europe/Moscow",
+    "питер": "Europe/Moscow",  # Common nickname for St. Petersburg
+    "екатеринбург": "Asia/Yekaterinburg",
+    "новосибирск": "Asia/Novosibirsk",
+    "красноярск": "Asia/Krasnoyarsk",
+    "иркутск": "Asia/Irkutsk",
+    "владивосток": "Asia/Vladivostok",
+    "калининград": "Europe/Kaliningrad",
+    "самара": "Europe/Samara",
+    "волгоград": "Europe/Volgograd",
+    "киров": "Europe/Kirov",
+    # Georgian
+    "თბილისი": "Asia/Tbilisi",
+    "тбилиси": "Asia/Tbilisi",
+    # Ukrainian
+    "київ": "Europe/Kiev",
+    "киев": "Europe/Kiev",
+    # Belarusian
+    "мінск": "Europe/Minsk",
+    "минск": "Europe/Minsk",
+    # Greek
+    "αθήνα": "Europe/Athens",
+    # Turkish
+    "istanbul": "Europe/Istanbul",
+    "İstanbul": "Europe/Istanbul",
+    # Chinese cities
+    "北京": "Asia/Shanghai",
+    "上海": "Asia/Shanghai",
+    "香港": "Asia/Hong_Kong",
+    "台北": "Asia/Taipei",
+    "东京": "Asia/Tokyo",
+    # Japanese
+    "東京": "Asia/Tokyo",
+    "とうきょう": "Asia/Tokyo",
+    # Korean
+    "서울": "Asia/Seoul",
+    # Arabic
+    "دبي": "Asia/Dubai",
+    "الرياض": "Asia/Riyadh",
+    # Hebrew
+    "ירושלים": "Asia/Jerusalem",
+    # Add more as needed
+}
+
 
 async def download_timezone_data() -> bool:
     """
@@ -167,6 +216,12 @@ def build_timezone_search_index() -> dict:
 
             # Add abbreviations (if we had them, but Geoapify doesn't provide them)
             # We could compute current abbreviation, but it changes with DST
+
+        # Add manual translations for non-Latin city names
+        for translated_name, tz_name in CITY_TRANSLATIONS.items():
+            if tz_name in timezone_info:  # Only add if timezone exists in our data
+                search_corpus.append(translated_name)
+                tz_name_map[translated_name] = tz_name
 
         logger.info(
             f"✅ Built search index: {len(timezone_info)} timezones, {len(search_corpus)} search terms"
@@ -565,9 +620,12 @@ def fuzzy_search_timezones(query: str, limit: int = 5) -> list[tuple[str, float]
     if not query:
         return []
 
-    # Note: We used to have UTC offset parsing here that returned a single hardcoded timezone
-    # Now we let fuzzy search find ALL timezones matching the offset abbreviation (e.g., all +04 zones)
-    # The abbreviations are already in the search corpus from Geoapify data
+    # Check for exact match in translation dictionary first (for non-Latin scripts)
+    query_lower = query.lower()
+    if query_lower in CITY_TRANSLATIONS:
+        tz_name = CITY_TRANSLATIONS[query_lower]
+        logger.debug(f"Found exact translation match for '{query}' -> {tz_name}")
+        return [(tz_name, 100.0)]
 
     # Try to use new search index if available
     if _timezone_search_index:
@@ -592,35 +650,67 @@ def fuzzy_search_timezones(query: str, limit: int = 5) -> list[tuple[str, float]
                 search_corpus.append(alias)
                 tz_name_map[alias] = tz_name
 
-    # Perform fuzzy search using rapidfuzz
-    results = process.extract(
-        query,
-        search_corpus,
-        scorer=fuzz.WRatio,  # Weighted ratio - good for partial matches
-        limit=limit * 3,  # Get more results initially to filter duplicates
+    # Detect if query looks like an abbreviation (uppercase, starts with +/-, or short)
+    query_upper = query.upper()
+    is_abbreviation_like = (
+        query.isupper()  # All uppercase like "MSK", "PST"
+        or query.startswith(("+", "-"))  # UTC offset like "+4", "-5"
+        or len(query) <= 4  # Short queries are likely abbreviations
     )
 
-    logger.debug(f"Fuzzy search for '{query}': found {len(results)} raw matches")
-
-    # Deduplicate by timezone name (keep highest score for each timezone)
     seen_timezones = {}
-    for match_text, score, _ in results:
-        tz_name = tz_name_map.get(match_text)
-        if tz_name and tz_name not in seen_timezones:
-            seen_timezones[tz_name] = score
-        elif not tz_name:
-            logger.warning(
-                f"Match '{match_text}' not found in tz_name_map (score: {score})"
-            )
 
-    logger.debug(
-        f"After deduplication: {len(seen_timezones)} unique timezones for query '{query}'"
-    )
+    # Strategy 1: Try exact and prefix matching first (best for abbreviations)
+    if is_abbreviation_like:
+        logger.debug(f"Using exact/prefix matching for abbreviation-like query: '{query}'")
+
+        for term in search_corpus:
+            term_upper = term.upper()
+
+            # Exact match (case-insensitive)
+            if term_upper == query_upper:
+                tz_name = tz_name_map.get(term)
+                if tz_name and tz_name not in seen_timezones:
+                    seen_timezones[tz_name] = 100.0  # Perfect score
+
+            # Prefix match for UTC offsets ("+4" matches "+04" but not "+14")
+            elif query.startswith(("+", "-")) and term_upper == query_upper.ljust(len(term), '0')[:len(term)]:
+                # This ensures "+4" matches "+04" but not "+14"
+                if len(query_upper) <= len(term_upper) and term_upper.startswith(query_upper.rstrip('0') or query_upper):
+                    tz_name = tz_name_map.get(term)
+                    if tz_name and tz_name not in seen_timezones:
+                        seen_timezones[tz_name] = 95.0  # High score for prefix match
+
+    # Strategy 2: Fuzzy matching for partial/typo matches (fallback or for city names)
+    if len(seen_timezones) < limit:
+        logger.debug(f"Using fuzzy matching for query: '{query}' (found {len(seen_timezones)} exact matches)")
+
+        results = process.extract(
+            query,
+            search_corpus,
+            scorer=fuzz.WRatio,
+            limit=limit * 3,
+        )
+
+        logger.debug(f"Fuzzy search for '{query}': found {len(results)} raw matches")
+
+        # Only accept fuzzy matches with high enough score
+        min_score = 80 if is_abbreviation_like else 60  # Stricter for abbreviations
+
+        for match_text, score, _ in results:
+            if score < min_score:
+                continue
+
+            tz_name = tz_name_map.get(match_text)
+            if tz_name and tz_name not in seen_timezones:
+                seen_timezones[tz_name] = score
+            elif not tz_name:
+                logger.warning(f"Match '{match_text}' not found in tz_name_map (score: {score})")
+
+    logger.debug(f"After deduplication: {len(seen_timezones)} unique timezones for query '{query}'")
 
     # Sort by score and limit results
-    final_results = sorted(seen_timezones.items(), key=lambda x: x[1], reverse=True)[
-        :limit
-    ]
+    final_results = sorted(seen_timezones.items(), key=lambda x: x[1], reverse=True)[:limit]
 
     return final_results
 
