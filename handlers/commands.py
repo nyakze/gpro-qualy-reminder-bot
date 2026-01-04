@@ -356,3 +356,46 @@ async def cmd_weather(message: Message, i18n: I18nContext):
             i18n.get("weather-failed"),
             parse_mode='Markdown'
         )
+
+
+@router.message(Command("notify"))
+async def cmd_notify(message: Message, bot, state: FSMContext, i18n: I18nContext):
+    """Send a test notification for the next race (same format as automatic notifications)
+
+    This is a hidden command for testing notification formatting and delivery.
+    It sends the exact same notification that users would receive automatically.
+    """
+    # Clear any active state when command is issued
+    await state.clear()
+
+    if not race_calendar:
+        await message.answer(i18n.get("no-races-scheduled"))
+        return
+
+    # Find next upcoming race
+    now = datetime.utcnow()
+    future_races = []
+
+    # Handle dict or list
+    if isinstance(race_calendar, dict):
+        for race_id, race_data in race_calendar.items():
+            if isinstance(race_data, dict) and race_data.get('quali_close', now) > now:
+                future_races.append((race_id, race_data))
+    else:
+        # List format fallback
+        for i, race_data in enumerate(race_calendar):
+            if isinstance(race_data, dict) and race_data.get('quali_close', now) > now:
+                race_id = race_data.get('race_id', i+1)
+                future_races.append((race_id, race_data))
+
+    # Sort by quali_close (earliest first)
+    future_races.sort(key=lambda x: x[1].get('quali_close', now))
+
+    if future_races:
+        next_race_id, next_race_data = future_races[0]  # First = soonest
+        # Send full notification with weather button and all details
+        # Use "deadline" type (not "manual") to show the full notification format
+        await send_quali_notification(bot, message.from_user.id, next_race_id, next_race_data, "deadline", i18n)
+        logger.info(f"🔔 /notify sent test notification for race {next_race_id} ({next_race_data.get('track', 'Unknown')}) to {message.from_user.id}")
+    else:
+        await message.answer(i18n.get("no-upcoming-qualifications"))

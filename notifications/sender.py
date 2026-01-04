@@ -76,29 +76,33 @@ def generate_replay_link(group: str, lang: str = 'gb') -> str:
     return generate_gpro_link(group, lang, 'replay')
 
 
-def format_weather_data(weather: dict, i18n=None) -> str:
+def format_weather_data(weather: dict, i18n=None, user_id: int = None) -> str:
     """Format weather data into human-readable text
 
     Args:
         weather: Weather data from Practice API
         i18n: I18n context for translations (optional)
+        user_id: User ID for getting user's UI language (optional)
 
     Returns:
         str: Formatted weather message
     """
     # Import i18n context if not provided
     if i18n is None:
-        from aiogram_i18n import I18nContext
-        try:
-            i18n = I18nContext.get_current(no_error=True)
-        except:
-            i18n = None
+        # Get user's UI language if user_id is provided
+        ui_lang = 'en'
+        if user_id is not None:
+            user_status = get_user_status(user_id)
+            ui_lang = user_status.get('ui_lang', 'en')
 
-    # Use i18n if available, fallback to English
-    def get_text(key, **kwargs):
-        if i18n:
+        # Use the global translation function with user's UI language
+        from i18n_setup import get_translation
+        def get_text(key, **kwargs):
+            return get_translation(key, locale=ui_lang, **kwargs)
+    else:
+        # Use i18n if available
+        def get_text(key, **kwargs):
             return i18n.get(key, **kwargs)
-        return key
 
     if not weather:
         return get_text("weather-unavailable")
@@ -154,6 +158,7 @@ async def send_race_live_notification(bot: Bot, user_id: int, race_id: int, race
     user_status = get_user_status(user_id)
     group = user_status.get('group')
     user_lang = user_status.get('gpro_lang', DEFAULT_USER_LANG)
+    ui_lang = user_status.get('ui_lang', 'en')  # Get user's UI language
 
     track = add_flag_to_track(race_data['track'])
     race_date = race_data['date']
@@ -163,17 +168,14 @@ async def send_race_live_notification(bot: Bot, user_id: int, race_id: int, race
 
     # Import i18n context if not provided
     if i18n is None:
-        from aiogram_i18n import I18nContext
-        try:
-            i18n = I18nContext.get_current(no_error=True)
-        except:
-            i18n = None
-
-    # Use i18n if available, fallback to English
-    def get_text(key, **kwargs):
-        if i18n:
+        # Use the global translation function with user's UI language
+        from i18n_setup import get_translation
+        def get_text(key, **kwargs):
+            return get_translation(key, locale=ui_lang, **kwargs)
+    else:
+        # Use i18n context from handler
+        def get_text(key, **kwargs):
             return i18n.get(key, **kwargs)
-        return key
 
     # Build message based on whether group is set
     if group:
@@ -205,6 +207,7 @@ async def send_race_replay_notification(bot: Bot, user_id: int, race_id: int, ra
     user_status = get_user_status(user_id)
     group = user_status.get('group')
     user_lang = user_status.get('gpro_lang', DEFAULT_USER_LANG)
+    ui_lang = user_status.get('ui_lang', 'en')  # Get user's UI language
 
     track = add_flag_to_track(race_data['track'])
     race_date = race_data['date']
@@ -214,17 +217,14 @@ async def send_race_replay_notification(bot: Bot, user_id: int, race_id: int, ra
 
     # Import i18n context if not provided
     if i18n is None:
-        from aiogram_i18n import I18nContext
-        try:
-            i18n = I18nContext.get_current(no_error=True)
-        except:
-            i18n = None
-
-    # Use i18n if available, fallback to English
-    def get_text(key, **kwargs):
-        if i18n:
+        # Use the global translation function with user's UI language
+        from i18n_setup import get_translation
+        def get_text(key, **kwargs):
+            return get_translation(key, locale=ui_lang, **kwargs)
+    else:
+        # Use i18n context from handler
+        def get_text(key, **kwargs):
             return i18n.get(key, **kwargs)
-        return key
 
     # Build message based on whether group is set
     if group:
@@ -256,6 +256,7 @@ async def send_race_results_notification(bot: Bot, user_id: int, race_id: int, r
     user_status = get_user_status(user_id)
     group = user_status.get('group')
     user_lang = user_status.get('gpro_lang', DEFAULT_USER_LANG)
+    ui_lang = user_status.get('ui_lang', 'en')  # Get user's UI language
 
     track = add_flag_to_track(race_data['track'])
     race_date = race_data['date']
@@ -270,17 +271,14 @@ async def send_race_results_notification(bot: Bot, user_id: int, race_id: int, r
 
     # Import i18n context if not provided
     if i18n is None:
-        from aiogram_i18n import I18nContext
-        try:
-            i18n = I18nContext.get_current(no_error=True)
-        except:
-            i18n = None
-
-    # Use i18n if available, fallback to English
-    def get_text(key, **kwargs):
-        if i18n:
+        # Use the global translation function with user's UI language
+        from i18n_setup import get_translation
+        def get_text(key, **kwargs):
+            return get_translation(key, locale=ui_lang, **kwargs)
+    else:
+        # Use i18n context from handler
+        def get_text(key, **kwargs):
             return i18n.get(key, **kwargs)
-        return key
 
     # Build message based on whether group is set
     if group:
@@ -319,24 +317,21 @@ async def send_quali_notification(bot: Bot, user_id: int, race_id: int, race_dat
     race_date = race_data['date']
     quali_close = race_data['quali_close']
     user_lang = user_status.get('gpro_lang', DEFAULT_USER_LANG)
+    ui_lang = user_status.get('ui_lang', 'en')  # Get user's UI language
 
     # Generate qualifying link
     quali_link = f"https://gpro.net/{user_lang}/Qualify.asp"
 
     # Import i18n context if not provided
     if i18n is None:
-        from aiogram_i18n import I18nContext
-        try:
-            i18n = I18nContext.get_current(no_error=True)
-        except:
-            i18n = None
-
-    # Use i18n if available, fallback to English
-    def get_text(key, **kwargs):
-        if i18n:
+        # Use the global translation function with user's UI language
+        from i18n_setup import get_translation
+        def get_text(key, **kwargs):
+            return get_translation(key, locale=ui_lang, **kwargs)
+    else:
+        # Use i18n context from handler
+        def get_text(key, **kwargs):
             return i18n.get(key, **kwargs)
-        # Fallback to English (shouldn't happen, but safety)
-        return key
 
     if notification_type == "opens_soon":
         emoji = "🆕"
