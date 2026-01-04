@@ -111,7 +111,7 @@ def build_timezone_search_index() -> dict:
                 tz_name_map[city] = tz_name
 
             city_alt = entry.get("city_alt")
-            if city_alt:
+            if city_alt and isinstance(city_alt, list):
                 for alt_city in city_alt:
                     search_corpus.append(alt_city)
                     tz_name_map[alt_city] = tz_name
