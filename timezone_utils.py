@@ -88,12 +88,24 @@ def build_timezone_search_index() -> dict:
         with open(TIMEZONE_DATA_FILE, "r", encoding="utf-8") as f:
             timezone_data = json.load(f)
 
+        logger.info(
+            f"Loaded timezone data: type={type(timezone_data).__name__}, "
+            f"length={len(timezone_data) if isinstance(timezone_data, (list, dict)) else 'N/A'}"
+        )
+
+        # Log sample of first entry to understand structure
+        if isinstance(timezone_data, list) and len(timezone_data) > 0:
+            logger.debug(f"Sample entry: {list(timezone_data[0].keys())[:10]}")
+        elif isinstance(timezone_data, dict):
+            logger.debug(f"Data is dict with keys: {list(timezone_data.keys())[:10]}")
+
         search_corpus = []
         tz_name_map = {}
         timezone_info = {}
 
         for entry in timezone_data:
-            tz_name = entry.get("timezone")
+            # Geoapify format uses 'tzIdentifier' instead of 'timezone'
+            tz_name = entry.get("tzIdentifier")
             if not tz_name:
                 continue
 
@@ -104,25 +116,22 @@ def build_timezone_search_index() -> dict:
             search_corpus.append(tz_name)
             tz_name_map[tz_name] = tz_name
 
-            # Add city names (primary and all alternatives)
-            city = entry.get("city")
-            if city:
-                search_corpus.append(city)
-                tz_name_map[city] = tz_name
+            # Extract city name from timezone identifier (e.g., "America/New_York" → "New York")
+            if "/" in tz_name:
+                city_from_tz = tz_name.split("/")[-1].replace("_", " ")
+                search_corpus.append(city_from_tz)
+                tz_name_map[city_from_tz] = tz_name
 
-            city_alt = entry.get("city_alt")
-            if city_alt and isinstance(city_alt, list):
-                for alt_city in city_alt:
-                    search_corpus.append(alt_city)
-                    tz_name_map[alt_city] = tz_name
+            # Add abbreviations for searching
+            abbr_standard = entry.get("abbreviationStandard")
+            if abbr_standard:
+                search_corpus.append(abbr_standard)
+                tz_name_map[abbr_standard] = tz_name
 
-            # Add country names
-            country = entry.get("country")
-            if country:
-                # Combine country + city for better matching
-                combined = f"{country} {city}" if city else country
-                search_corpus.append(combined)
-                tz_name_map[combined] = tz_name
+            abbr_dst = entry.get("abbreviationDst")
+            if abbr_dst and abbr_dst != abbr_standard:
+                search_corpus.append(abbr_dst)
+                tz_name_map[abbr_dst] = tz_name
 
             # Add abbreviations (if we had them, but Geoapify doesn't provide them)
             # We could compute current abbreviation, but it changes with DST
