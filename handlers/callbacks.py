@@ -512,32 +512,10 @@ async def handle_set_ui_language(callback: CallbackQuery, i18n: I18nContext):
     # Set UI language
     if set_user_ui_language(user_id, ui_lang):
         lang_display = get_ui_language_display(ui_lang)
+        await callback.answer(f"✅ {lang_display}")
 
-        # Use i18n.get() with locale parameter to get translations in the new language
-        await callback.answer(i18n.get("feedback-ui-language-set", locale=ui_lang, language=lang_display))
-
-        # Rebuild UI language menu with updated selection
-        current_ui_lang = get_user_ui_language(user_id)
-
-        keyboard_buttons = []
-
-        # Build language buttons dynamically from UI_LANGUAGE_DISPLAY
-        for lang_code, lang_display in UI_LANGUAGE_DISPLAY.items():
-            prefix = "✅ " if current_ui_lang == lang_code else ""
-            keyboard_buttons.append([InlineKeyboardButton(
-                text=f"{prefix}{lang_display}",
-                callback_data=f"set_ui_lang_{lang_code}"
-            )])
-
-        # Back button
-        keyboard_buttons.append([InlineKeyboardButton(
-            text=i18n.get("button-back", locale=ui_lang),
-            callback_data="settings_main"
-        )])
-
-        keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
-
-        await callback.message.edit_text(i18n.get("ui-lang-menu-title", locale=ui_lang), reply_markup=keyboard, parse_mode='Markdown')
+        # Return to main settings menu (will show in new language)
+        await handle_settings_main(callback, i18n)
     else:
         await callback.answer(i18n.get("error-invalid-language"), show_alert=True)
 
