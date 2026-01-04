@@ -1,0 +1,6836 @@
+[
+  {
+    "countryCodes": [
+      "CI",
+      "BF",
+      "GH",
+      "GM",
+      "GN",
+      "IS",
+      "ML",
+      "MR",
+      "SH",
+      "SL",
+      "SN",
+      "TG"
+    ],
+    "tzIdentifier": "Africa/Abidjan",
+    "type": "canonical",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT"
+  },
+  {
+    "countryCodes": [
+      "GH"
+    ],
+    "tzIdentifier": "Africa/Accra",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Africa/Abidjan"
+  },
+  {
+    "countryCodes": [
+      "ET"
+    ],
+    "tzIdentifier": "Africa/Addis_Ababa",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EAT",
+    "abbreviationDst": "EAT",
+    "canonicalLink": "Africa/Nairobi"
+  },
+  {
+    "countryCodes": [
+      "DZ"
+    ],
+    "tzIdentifier": "Africa/Algiers",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CET"
+  },
+  {
+    "countryCodes": [
+      "ER"
+    ],
+    "tzIdentifier": "Africa/Asmara",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EAT",
+    "abbreviationDst": "EAT",
+    "canonicalLink": "Africa/Nairobi"
+  },
+  {
+    "countryCodes": [
+      "ER"
+    ],
+    "tzIdentifier": "Africa/Asmera",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EAT",
+    "abbreviationDst": "EAT",
+    "canonicalLink": "Africa/Nairobi"
+  },
+  {
+    "countryCodes": [
+      "ML"
+    ],
+    "tzIdentifier": "Africa/Bamako",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Africa/Abidjan"
+  },
+  {
+    "countryCodes": [
+      "CF"
+    ],
+    "tzIdentifier": "Africa/Bangui",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WAT",
+    "abbreviationDst": "WAT",
+    "canonicalLink": "Africa/Lagos"
+  },
+  {
+    "countryCodes": [
+      "GM"
+    ],
+    "tzIdentifier": "Africa/Banjul",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Africa/Abidjan"
+  },
+  {
+    "countryCodes": [
+      "GW"
+    ],
+    "tzIdentifier": "Africa/Bissau",
+    "type": "canonical",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT"
+  },
+  {
+    "countryCodes": [
+      "MW"
+    ],
+    "tzIdentifier": "Africa/Blantyre",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CAT",
+    "abbreviationDst": "CAT",
+    "canonicalLink": "Africa/Maputo"
+  },
+  {
+    "countryCodes": [
+      "CG"
+    ],
+    "tzIdentifier": "Africa/Brazzaville",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WAT",
+    "abbreviationDst": "WAT",
+    "canonicalLink": "Africa/Lagos"
+  },
+  {
+    "countryCodes": [
+      "BI"
+    ],
+    "tzIdentifier": "Africa/Bujumbura",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CAT",
+    "abbreviationDst": "CAT",
+    "canonicalLink": "Africa/Maputo"
+  },
+  {
+    "countryCodes": [
+      "EG"
+    ],
+    "tzIdentifier": "Africa/Cairo",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST"
+  },
+  {
+    "countryCodes": [
+      "MA"
+    ],
+    "tzIdentifier": "Africa/Casablanca",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "+01",
+    "abbreviationDst": "+00"
+  },
+  {
+    "countryCodes": [
+      "ES"
+    ],
+    "tzIdentifier": "Africa/Ceuta",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [
+      "GN"
+    ],
+    "tzIdentifier": "Africa/Conakry",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Africa/Abidjan"
+  },
+  {
+    "countryCodes": [
+      "SN"
+    ],
+    "tzIdentifier": "Africa/Dakar",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Africa/Abidjan"
+  },
+  {
+    "countryCodes": [
+      "TZ"
+    ],
+    "tzIdentifier": "Africa/Dar_es_Salaam",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EAT",
+    "abbreviationDst": "EAT",
+    "canonicalLink": "Africa/Nairobi"
+  },
+  {
+    "countryCodes": [
+      "DJ"
+    ],
+    "tzIdentifier": "Africa/Djibouti",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EAT",
+    "abbreviationDst": "EAT",
+    "canonicalLink": "Africa/Nairobi"
+  },
+  {
+    "countryCodes": [
+      "CM"
+    ],
+    "tzIdentifier": "Africa/Douala",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WAT",
+    "abbreviationDst": "WAT",
+    "canonicalLink": "Africa/Lagos"
+  },
+  {
+    "countryCodes": [
+      "EH"
+    ],
+    "tzIdentifier": "Africa/El_Aaiun",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "+01",
+    "abbreviationDst": "+00"
+  },
+  {
+    "countryCodes": [
+      "SL"
+    ],
+    "tzIdentifier": "Africa/Freetown",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Africa/Abidjan"
+  },
+  {
+    "countryCodes": [
+      "BW"
+    ],
+    "tzIdentifier": "Africa/Gaborone",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CAT",
+    "abbreviationDst": "CAT",
+    "canonicalLink": "Africa/Maputo"
+  },
+  {
+    "countryCodes": [
+      "ZW"
+    ],
+    "tzIdentifier": "Africa/Harare",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CAT",
+    "abbreviationDst": "CAT",
+    "canonicalLink": "Africa/Maputo"
+  },
+  {
+    "countryCodes": [
+      "ZA",
+      "LS",
+      "SZ"
+    ],
+    "tzIdentifier": "Africa/Johannesburg",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "SAST",
+    "abbreviationDst": "SAST"
+  },
+  {
+    "countryCodes": [
+      "SS"
+    ],
+    "tzIdentifier": "Africa/Juba",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CAT",
+    "abbreviationDst": "CAT"
+  },
+  {
+    "countryCodes": [
+      "UG"
+    ],
+    "tzIdentifier": "Africa/Kampala",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EAT",
+    "abbreviationDst": "EAT",
+    "canonicalLink": "Africa/Nairobi"
+  },
+  {
+    "countryCodes": [
+      "SD"
+    ],
+    "tzIdentifier": "Africa/Khartoum",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CAT",
+    "abbreviationDst": "CAT"
+  },
+  {
+    "countryCodes": [
+      "RW"
+    ],
+    "tzIdentifier": "Africa/Kigali",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CAT",
+    "abbreviationDst": "CAT",
+    "canonicalLink": "Africa/Maputo"
+  },
+  {
+    "countryCodes": [
+      "CD"
+    ],
+    "tzIdentifier": "Africa/Kinshasa",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WAT",
+    "abbreviationDst": "WAT",
+    "canonicalLink": "Africa/Lagos"
+  },
+  {
+    "countryCodes": [
+      "NG",
+      "AO",
+      "BJ",
+      "CD",
+      "CF",
+      "CG",
+      "CM",
+      "GA",
+      "GQ",
+      "NE"
+    ],
+    "tzIdentifier": "Africa/Lagos",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WAT",
+    "abbreviationDst": "WAT"
+  },
+  {
+    "countryCodes": [
+      "GA"
+    ],
+    "tzIdentifier": "Africa/Libreville",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WAT",
+    "abbreviationDst": "WAT",
+    "canonicalLink": "Africa/Lagos"
+  },
+  {
+    "countryCodes": [
+      "TG"
+    ],
+    "tzIdentifier": "Africa/Lome",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Africa/Abidjan"
+  },
+  {
+    "countryCodes": [
+      "AO"
+    ],
+    "tzIdentifier": "Africa/Luanda",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WAT",
+    "abbreviationDst": "WAT",
+    "canonicalLink": "Africa/Lagos"
+  },
+  {
+    "countryCodes": [
+      "CD"
+    ],
+    "tzIdentifier": "Africa/Lubumbashi",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CAT",
+    "abbreviationDst": "CAT",
+    "canonicalLink": "Africa/Maputo"
+  },
+  {
+    "countryCodes": [
+      "ZM"
+    ],
+    "tzIdentifier": "Africa/Lusaka",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CAT",
+    "abbreviationDst": "CAT",
+    "canonicalLink": "Africa/Maputo"
+  },
+  {
+    "countryCodes": [
+      "GQ"
+    ],
+    "tzIdentifier": "Africa/Malabo",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WAT",
+    "abbreviationDst": "WAT",
+    "canonicalLink": "Africa/Lagos"
+  },
+  {
+    "countryCodes": [
+      "MZ",
+      "BI",
+      "BW",
+      "CD",
+      "MW",
+      "RW",
+      "ZM",
+      "ZW"
+    ],
+    "tzIdentifier": "Africa/Maputo",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CAT",
+    "abbreviationDst": "CAT"
+  },
+  {
+    "countryCodes": [
+      "LS"
+    ],
+    "tzIdentifier": "Africa/Maseru",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "SAST",
+    "abbreviationDst": "SAST",
+    "canonicalLink": "Africa/Johannesburg"
+  },
+  {
+    "countryCodes": [
+      "SZ"
+    ],
+    "tzIdentifier": "Africa/Mbabane",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "SAST",
+    "abbreviationDst": "SAST",
+    "canonicalLink": "Africa/Johannesburg"
+  },
+  {
+    "countryCodes": [
+      "SO"
+    ],
+    "tzIdentifier": "Africa/Mogadishu",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EAT",
+    "abbreviationDst": "EAT",
+    "canonicalLink": "Africa/Nairobi"
+  },
+  {
+    "countryCodes": [
+      "LR"
+    ],
+    "tzIdentifier": "Africa/Monrovia",
+    "type": "canonical",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT"
+  },
+  {
+    "countryCodes": [
+      "KE",
+      "DJ",
+      "ER",
+      "ET",
+      "KM",
+      "MG",
+      "SO",
+      "TZ",
+      "UG",
+      "YT"
+    ],
+    "tzIdentifier": "Africa/Nairobi",
+    "type": "canonical",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EAT",
+    "abbreviationDst": "EAT"
+  },
+  {
+    "countryCodes": [
+      "TD"
+    ],
+    "tzIdentifier": "Africa/Ndjamena",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WAT",
+    "abbreviationDst": "WAT"
+  },
+  {
+    "countryCodes": [
+      "NE"
+    ],
+    "tzIdentifier": "Africa/Niamey",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WAT",
+    "abbreviationDst": "WAT",
+    "canonicalLink": "Africa/Lagos"
+  },
+  {
+    "countryCodes": [
+      "MR"
+    ],
+    "tzIdentifier": "Africa/Nouakchott",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Africa/Abidjan"
+  },
+  {
+    "countryCodes": [
+      "BF"
+    ],
+    "tzIdentifier": "Africa/Ouagadougou",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Africa/Abidjan"
+  },
+  {
+    "countryCodes": [
+      "BJ"
+    ],
+    "tzIdentifier": "Africa/Porto-Novo",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WAT",
+    "abbreviationDst": "WAT",
+    "canonicalLink": "Africa/Lagos"
+  },
+  {
+    "countryCodes": [
+      "ST"
+    ],
+    "tzIdentifier": "Africa/Sao_Tome",
+    "type": "canonical",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT"
+  },
+  {
+    "countryCodes": [
+      "ML"
+    ],
+    "tzIdentifier": "Africa/Timbuktu",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Africa/Abidjan"
+  },
+  {
+    "countryCodes": [
+      "LY"
+    ],
+    "tzIdentifier": "Africa/Tripoli",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EET"
+  },
+  {
+    "countryCodes": [
+      "TN"
+    ],
+    "tzIdentifier": "Africa/Tunis",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CET"
+  },
+  {
+    "countryCodes": [
+      "NA"
+    ],
+    "tzIdentifier": "Africa/Windhoek",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CAT",
+    "abbreviationDst": "CAT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Adak",
+    "type": "canonical",
+    "utcOffsetStandard": "−10:00",
+    "utcOffsetDst": "−09:00",
+    "abbreviationStandard": "HST",
+    "abbreviationDst": "HDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Anchorage",
+    "type": "canonical",
+    "utcOffsetStandard": "−09:00",
+    "utcOffsetDst": "−08:00",
+    "abbreviationStandard": "AKST",
+    "abbreviationDst": "AKDT"
+  },
+  {
+    "countryCodes": [
+      "AI"
+    ],
+    "tzIdentifier": "America/Anguilla",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "AG"
+    ],
+    "tzIdentifier": "America/Antigua",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Araguaina",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Argentina/Buenos_Aires",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Argentina/Catamarca",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Argentina/ComodRivadavia",
+    "type": "alias",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03",
+    "canonicalLink": "America/Argentina/Catamarca"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Argentina/Cordoba",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Argentina/Jujuy",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Argentina/La_Rioja",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Argentina/Mendoza",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Argentina/Rio_Gallegos",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Argentina/Salta",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Argentina/San_Juan",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Argentina/San_Luis",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Argentina/Tucuman",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Argentina/Ushuaia",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AW"
+    ],
+    "tzIdentifier": "America/Aruba",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "PY"
+    ],
+    "tzIdentifier": "America/Asuncion",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Atikokan",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EST",
+    "canonicalLink": "America/Panama"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Atka",
+    "type": "alias",
+    "utcOffsetStandard": "−10:00",
+    "utcOffsetDst": "−09:00",
+    "abbreviationStandard": "HST",
+    "abbreviationDst": "HDT",
+    "canonicalLink": "America/Adak"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Bahia",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "America/Bahia_Banderas",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "BB"
+    ],
+    "tzIdentifier": "America/Barbados",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Belem",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "BZ"
+    ],
+    "tzIdentifier": "America/Belize",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Blanc-Sablon",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Boa_Vista",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "-04",
+    "abbreviationDst": "-04"
+  },
+  {
+    "countryCodes": [
+      "CO"
+    ],
+    "tzIdentifier": "America/Bogota",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "-05",
+    "abbreviationDst": "-05"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Boise",
+    "type": "canonical",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MDT"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Buenos_Aires",
+    "type": "alias",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03",
+    "canonicalLink": "America/Argentina/Buenos_Aires"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Cambridge_Bay",
+    "type": "canonical",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MDT"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Campo_Grande",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "-04",
+    "abbreviationDst": "-04"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "America/Cancun",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EST"
+  },
+  {
+    "countryCodes": [
+      "VE"
+    ],
+    "tzIdentifier": "America/Caracas",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "-04",
+    "abbreviationDst": "-04"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Catamarca",
+    "type": "alias",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03",
+    "canonicalLink": "America/Argentina/Catamarca"
+  },
+  {
+    "countryCodes": [
+      "GF"
+    ],
+    "tzIdentifier": "America/Cayenne",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "KY"
+    ],
+    "tzIdentifier": "America/Cayman",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EST",
+    "canonicalLink": "America/Panama"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Chicago",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "America/Chihuahua",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "America/Ciudad_Juarez",
+    "type": "canonical",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MDT"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Coral_Harbour",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EST",
+    "canonicalLink": "America/Panama"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Cordoba",
+    "type": "alias",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03",
+    "canonicalLink": "America/Argentina/Cordoba"
+  },
+  {
+    "countryCodes": [
+      "CR"
+    ],
+    "tzIdentifier": "America/Costa_Rica",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "CL"
+    ],
+    "tzIdentifier": "America/Coyhaique",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Creston",
+    "type": "alias",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MST",
+    "canonicalLink": "America/Phoenix"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Cuiaba",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "-04",
+    "abbreviationDst": "-04"
+  },
+  {
+    "countryCodes": [
+      "CW"
+    ],
+    "tzIdentifier": "America/Curacao",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "GL"
+    ],
+    "tzIdentifier": "America/Danmarkshavn",
+    "type": "canonical",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Dawson",
+    "type": "canonical",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MST"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Dawson_Creek",
+    "type": "canonical",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MST"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Denver",
+    "type": "canonical",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Detroit",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT"
+  },
+  {
+    "countryCodes": [
+      "DM"
+    ],
+    "tzIdentifier": "America/Dominica",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Edmonton",
+    "type": "canonical",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MDT"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Eirunepe",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "-05",
+    "abbreviationDst": "-05"
+  },
+  {
+    "countryCodes": [
+      "SV"
+    ],
+    "tzIdentifier": "America/El_Salvador",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "America/Ensenada",
+    "type": "alias",
+    "utcOffsetStandard": "−08:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "PST",
+    "abbreviationDst": "PDT",
+    "canonicalLink": "America/Tijuana"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Fort_Nelson",
+    "type": "canonical",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MST"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Fort_Wayne",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT",
+    "canonicalLink": "America/Indiana/Indianapolis"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Fortaleza",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Glace_Bay",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "ADT"
+  },
+  {
+    "countryCodes": [
+      "GL"
+    ],
+    "tzIdentifier": "America/Godthab",
+    "type": "alias",
+    "utcOffsetStandard": "−02:00",
+    "utcOffsetDst": "−01:00",
+    "abbreviationStandard": "-02",
+    "abbreviationDst": "-01",
+    "canonicalLink": "America/Nuuk"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Goose_Bay",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "ADT"
+  },
+  {
+    "countryCodes": [
+      "TC"
+    ],
+    "tzIdentifier": "America/Grand_Turk",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT"
+  },
+  {
+    "countryCodes": [
+      "GD"
+    ],
+    "tzIdentifier": "America/Grenada",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "GP"
+    ],
+    "tzIdentifier": "America/Guadeloupe",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "GT"
+    ],
+    "tzIdentifier": "America/Guatemala",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "EC"
+    ],
+    "tzIdentifier": "America/Guayaquil",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "-05",
+    "abbreviationDst": "-05"
+  },
+  {
+    "countryCodes": [
+      "GY"
+    ],
+    "tzIdentifier": "America/Guyana",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "-04",
+    "abbreviationDst": "-04"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Halifax",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "ADT"
+  },
+  {
+    "countryCodes": [
+      "CU"
+    ],
+    "tzIdentifier": "America/Havana",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "America/Hermosillo",
+    "type": "canonical",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MST"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Indiana/Indianapolis",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Indiana/Knox",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Indiana/Marengo",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Indiana/Petersburg",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Indiana/Tell_City",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Indiana/Vevay",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Indiana/Vincennes",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Indiana/Winamac",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Indianapolis",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT",
+    "canonicalLink": "America/Indiana/Indianapolis"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Inuvik",
+    "type": "canonical",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MDT"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Iqaluit",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT"
+  },
+  {
+    "countryCodes": [
+      "JM"
+    ],
+    "tzIdentifier": "America/Jamaica",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EST"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Jujuy",
+    "type": "alias",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03",
+    "canonicalLink": "America/Argentina/Jujuy"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Juneau",
+    "type": "canonical",
+    "utcOffsetStandard": "−09:00",
+    "utcOffsetDst": "−08:00",
+    "abbreviationStandard": "AKST",
+    "abbreviationDst": "AKDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Kentucky/Louisville",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Kentucky/Monticello",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Knox_IN",
+    "type": "alias",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT",
+    "canonicalLink": "America/Indiana/Knox"
+  },
+  {
+    "countryCodes": [
+      "BQ"
+    ],
+    "tzIdentifier": "America/Kralendijk",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "BO"
+    ],
+    "tzIdentifier": "America/La_Paz",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "-04",
+    "abbreviationDst": "-04"
+  },
+  {
+    "countryCodes": [
+      "PE"
+    ],
+    "tzIdentifier": "America/Lima",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "-05",
+    "abbreviationDst": "-05"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Los_Angeles",
+    "type": "canonical",
+    "utcOffsetStandard": "−08:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "PST",
+    "abbreviationDst": "PDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Louisville",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT",
+    "canonicalLink": "America/Kentucky/Louisville"
+  },
+  {
+    "countryCodes": [
+      "SX"
+    ],
+    "tzIdentifier": "America/Lower_Princes",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Maceio",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "NI"
+    ],
+    "tzIdentifier": "America/Managua",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Manaus",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "-04",
+    "abbreviationDst": "-04"
+  },
+  {
+    "countryCodes": [
+      "MF"
+    ],
+    "tzIdentifier": "America/Marigot",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "MQ"
+    ],
+    "tzIdentifier": "America/Martinique",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "America/Matamoros",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "America/Mazatlan",
+    "type": "canonical",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MST"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Mendoza",
+    "type": "alias",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03",
+    "canonicalLink": "America/Argentina/Mendoza"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Menominee",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "America/Merida",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Metlakatla",
+    "type": "canonical",
+    "utcOffsetStandard": "−09:00",
+    "utcOffsetDst": "−08:00",
+    "abbreviationStandard": "AKST",
+    "abbreviationDst": "AKDT"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "America/Mexico_City",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "PM"
+    ],
+    "tzIdentifier": "America/Miquelon",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−02:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-02"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Moncton",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "ADT"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "America/Monterrey",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "UY"
+    ],
+    "tzIdentifier": "America/Montevideo",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Montreal",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT",
+    "canonicalLink": "America/Toronto"
+  },
+  {
+    "countryCodes": [
+      "MS"
+    ],
+    "tzIdentifier": "America/Montserrat",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "BS"
+    ],
+    "tzIdentifier": "America/Nassau",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT",
+    "canonicalLink": "America/Toronto"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/New_York",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Nipigon",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT",
+    "canonicalLink": "America/Toronto"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Nome",
+    "type": "canonical",
+    "utcOffsetStandard": "−09:00",
+    "utcOffsetDst": "−08:00",
+    "abbreviationStandard": "AKST",
+    "abbreviationDst": "AKDT"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Noronha",
+    "type": "canonical",
+    "utcOffsetStandard": "−02:00",
+    "utcOffsetDst": "−02:00",
+    "abbreviationStandard": "-02",
+    "abbreviationDst": "-02"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/North_Dakota/Beulah",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/North_Dakota/Center",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/North_Dakota/New_Salem",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT"
+  },
+  {
+    "countryCodes": [
+      "GL"
+    ],
+    "tzIdentifier": "America/Nuuk",
+    "type": "canonical",
+    "utcOffsetStandard": "−02:00",
+    "utcOffsetDst": "−01:00",
+    "abbreviationStandard": "-02",
+    "abbreviationDst": "-01"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "America/Ojinaga",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT"
+  },
+  {
+    "countryCodes": [
+      "PA",
+      "CA",
+      "KY"
+    ],
+    "tzIdentifier": "America/Panama",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EST"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Pangnirtung",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT",
+    "canonicalLink": "America/Iqaluit"
+  },
+  {
+    "countryCodes": [
+      "SR"
+    ],
+    "tzIdentifier": "America/Paramaribo",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "US",
+      "CA"
+    ],
+    "tzIdentifier": "America/Phoenix",
+    "type": "canonical",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MST"
+  },
+  {
+    "countryCodes": [
+      "HT"
+    ],
+    "tzIdentifier": "America/Port-au-Prince",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT"
+  },
+  {
+    "countryCodes": [
+      "TT"
+    ],
+    "tzIdentifier": "America/Port_of_Spain",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Porto_Acre",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "-05",
+    "abbreviationDst": "-05",
+    "canonicalLink": "America/Rio_Branco"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Porto_Velho",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "-04",
+    "abbreviationDst": "-04"
+  },
+  {
+    "countryCodes": [
+      "PR",
+      "AG",
+      "CA",
+      "AI",
+      "AW",
+      "BL",
+      "BQ",
+      "CW",
+      "DM",
+      "GD",
+      "GP",
+      "KN",
+      "LC",
+      "MF",
+      "MS",
+      "SX",
+      "TT",
+      "VC",
+      "VG",
+      "VI"
+    ],
+    "tzIdentifier": "America/Puerto_Rico",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST"
+  },
+  {
+    "countryCodes": [
+      "CL"
+    ],
+    "tzIdentifier": "America/Punta_Arenas",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Rainy_River",
+    "type": "alias",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT",
+    "canonicalLink": "America/Winnipeg"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Rankin_Inlet",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Recife",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Regina",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Resolute",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Rio_Branco",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "-05",
+    "abbreviationDst": "-05"
+  },
+  {
+    "countryCodes": [
+      "AR"
+    ],
+    "tzIdentifier": "America/Rosario",
+    "type": "alias",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03",
+    "canonicalLink": "America/Argentina/Cordoba"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "America/Santa_Isabel",
+    "type": "alias",
+    "utcOffsetStandard": "−08:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "PST",
+    "abbreviationDst": "PDT",
+    "canonicalLink": "America/Tijuana"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Santarem",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "CL"
+    ],
+    "tzIdentifier": "America/Santiago",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-04",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "DO"
+    ],
+    "tzIdentifier": "America/Santo_Domingo",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "America/Sao_Paulo",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "GL"
+    ],
+    "tzIdentifier": "America/Scoresbysund",
+    "type": "canonical",
+    "utcOffsetStandard": "−02:00",
+    "utcOffsetDst": "−01:00",
+    "abbreviationStandard": "-02",
+    "abbreviationDst": "-01"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Shiprock",
+    "type": "alias",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MDT",
+    "canonicalLink": "America/Denver"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Sitka",
+    "type": "canonical",
+    "utcOffsetStandard": "−09:00",
+    "utcOffsetDst": "−08:00",
+    "abbreviationStandard": "AKST",
+    "abbreviationDst": "AKDT"
+  },
+  {
+    "countryCodes": [
+      "BL"
+    ],
+    "tzIdentifier": "America/St_Barthelemy",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/St_Johns",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:30",
+    "utcOffsetDst": "−02:30",
+    "abbreviationStandard": "NST",
+    "abbreviationDst": "NDT"
+  },
+  {
+    "countryCodes": [
+      "KN"
+    ],
+    "tzIdentifier": "America/St_Kitts",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "LC"
+    ],
+    "tzIdentifier": "America/St_Lucia",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "VI"
+    ],
+    "tzIdentifier": "America/St_Thomas",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "VC"
+    ],
+    "tzIdentifier": "America/St_Vincent",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Swift_Current",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "HN"
+    ],
+    "tzIdentifier": "America/Tegucigalpa",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "GL"
+    ],
+    "tzIdentifier": "America/Thule",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "ADT"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Thunder_Bay",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT",
+    "canonicalLink": "America/Toronto"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "America/Tijuana",
+    "type": "canonical",
+    "utcOffsetStandard": "−08:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "PST",
+    "abbreviationDst": "PDT"
+  },
+  {
+    "countryCodes": [
+      "CA",
+      "BS"
+    ],
+    "tzIdentifier": "America/Toronto",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT"
+  },
+  {
+    "countryCodes": [
+      "VG"
+    ],
+    "tzIdentifier": "America/Tortola",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Vancouver",
+    "type": "canonical",
+    "utcOffsetStandard": "−08:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "PST",
+    "abbreviationDst": "PDT"
+  },
+  {
+    "countryCodes": [
+      "VI"
+    ],
+    "tzIdentifier": "America/Virgin",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "AST",
+    "canonicalLink": "America/Puerto_Rico"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Whitehorse",
+    "type": "canonical",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MST"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Winnipeg",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "America/Yakutat",
+    "type": "canonical",
+    "utcOffsetStandard": "−09:00",
+    "utcOffsetDst": "−08:00",
+    "abbreviationStandard": "AKST",
+    "abbreviationDst": "AKDT"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "America/Yellowknife",
+    "type": "alias",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MDT",
+    "canonicalLink": "America/Edmonton"
+  },
+  {
+    "countryCodes": [
+      "AQ"
+    ],
+    "tzIdentifier": "Antarctica/Casey",
+    "type": "canonical",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "+08",
+    "abbreviationDst": "+08"
+  },
+  {
+    "countryCodes": [
+      "AQ"
+    ],
+    "tzIdentifier": "Antarctica/Davis",
+    "type": "canonical",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "+07",
+    "abbreviationDst": "+07"
+  },
+  {
+    "countryCodes": [
+      "AQ"
+    ],
+    "tzIdentifier": "Antarctica/DumontDUrville",
+    "type": "alias",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+10:00",
+    "abbreviationStandard": "+10",
+    "abbreviationDst": "+10",
+    "canonicalLink": "Pacific/Port_Moresby"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Antarctica/Macquarie",
+    "type": "canonical",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "AEST",
+    "abbreviationDst": "AEDT"
+  },
+  {
+    "countryCodes": [
+      "AQ"
+    ],
+    "tzIdentifier": "Antarctica/Mawson",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [
+      "AQ"
+    ],
+    "tzIdentifier": "Antarctica/McMurdo",
+    "type": "alias",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+13:00",
+    "abbreviationStandard": "NZST",
+    "abbreviationDst": "NZDT",
+    "canonicalLink": "Pacific/Auckland"
+  },
+  {
+    "countryCodes": [
+      "AQ"
+    ],
+    "tzIdentifier": "Antarctica/Palmer",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AQ"
+    ],
+    "tzIdentifier": "Antarctica/Rothera",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AQ"
+    ],
+    "tzIdentifier": "Antarctica/South_Pole",
+    "type": "alias",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+13:00",
+    "abbreviationStandard": "NZST",
+    "abbreviationDst": "NZDT",
+    "canonicalLink": "Pacific/Auckland"
+  },
+  {
+    "countryCodes": [
+      "AQ"
+    ],
+    "tzIdentifier": "Antarctica/Syowa",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "+03",
+    "abbreviationDst": "+03",
+    "canonicalLink": "Asia/Riyadh"
+  },
+  {
+    "countryCodes": [
+      "AQ"
+    ],
+    "tzIdentifier": "Antarctica/Troll",
+    "type": "canonical",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "+00",
+    "abbreviationDst": "+02"
+  },
+  {
+    "countryCodes": [
+      "AQ"
+    ],
+    "tzIdentifier": "Antarctica/Vostok",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [
+      "SJ"
+    ],
+    "tzIdentifier": "Arctic/Longyearbyen",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Berlin"
+  },
+  {
+    "countryCodes": [
+      "YE"
+    ],
+    "tzIdentifier": "Asia/Aden",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "+03",
+    "abbreviationDst": "+03",
+    "canonicalLink": "Asia/Riyadh"
+  },
+  {
+    "countryCodes": [
+      "KZ"
+    ],
+    "tzIdentifier": "Asia/Almaty",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [
+      "JO"
+    ],
+    "tzIdentifier": "Asia/Amman",
+    "type": "canonical",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "+03",
+    "abbreviationDst": "+03"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Anadyr",
+    "type": "canonical",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+12:00",
+    "abbreviationStandard": "+12",
+    "abbreviationDst": "+12"
+  },
+  {
+    "countryCodes": [
+      "KZ"
+    ],
+    "tzIdentifier": "Asia/Aqtau",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [
+      "KZ"
+    ],
+    "tzIdentifier": "Asia/Aqtobe",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [
+      "TM"
+    ],
+    "tzIdentifier": "Asia/Ashgabat",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [
+      "TM"
+    ],
+    "tzIdentifier": "Asia/Ashkhabad",
+    "type": "alias",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05",
+    "canonicalLink": "Asia/Ashgabat"
+  },
+  {
+    "countryCodes": [
+      "KZ"
+    ],
+    "tzIdentifier": "Asia/Atyrau",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [
+      "IQ"
+    ],
+    "tzIdentifier": "Asia/Baghdad",
+    "type": "canonical",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "+03",
+    "abbreviationDst": "+03"
+  },
+  {
+    "countryCodes": [
+      "BH"
+    ],
+    "tzIdentifier": "Asia/Bahrain",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "+03",
+    "abbreviationDst": "+03",
+    "canonicalLink": "Asia/Qatar"
+  },
+  {
+    "countryCodes": [
+      "AZ"
+    ],
+    "tzIdentifier": "Asia/Baku",
+    "type": "canonical",
+    "utcOffsetStandard": "+04:00",
+    "utcOffsetDst": "+04:00",
+    "abbreviationStandard": "+04",
+    "abbreviationDst": "+04"
+  },
+  {
+    "countryCodes": [
+      "TH",
+      "CX",
+      "KH",
+      "LA",
+      "VN"
+    ],
+    "tzIdentifier": "Asia/Bangkok",
+    "type": "canonical",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "+07",
+    "abbreviationDst": "+07"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Barnaul",
+    "type": "canonical",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "+07",
+    "abbreviationDst": "+07"
+  },
+  {
+    "countryCodes": [
+      "LB"
+    ],
+    "tzIdentifier": "Asia/Beirut",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST"
+  },
+  {
+    "countryCodes": [
+      "KG"
+    ],
+    "tzIdentifier": "Asia/Bishkek",
+    "type": "canonical",
+    "utcOffsetStandard": "+06:00",
+    "utcOffsetDst": "+06:00",
+    "abbreviationStandard": "+06",
+    "abbreviationDst": "+06"
+  },
+  {
+    "countryCodes": [
+      "BN"
+    ],
+    "tzIdentifier": "Asia/Brunei",
+    "type": "alias",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "+08",
+    "abbreviationDst": "+08",
+    "canonicalLink": "Asia/Kuching"
+  },
+  {
+    "countryCodes": [
+      "IN"
+    ],
+    "tzIdentifier": "Asia/Calcutta",
+    "type": "alias",
+    "utcOffsetStandard": "+05:30",
+    "utcOffsetDst": "+05:30",
+    "abbreviationStandard": "IST",
+    "abbreviationDst": "IST",
+    "canonicalLink": "Asia/Kolkata"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Chita",
+    "type": "canonical",
+    "utcOffsetStandard": "+09:00",
+    "utcOffsetDst": "+09:00",
+    "abbreviationStandard": "+09",
+    "abbreviationDst": "+09"
+  },
+  {
+    "countryCodes": [
+      "MN"
+    ],
+    "tzIdentifier": "Asia/Choibalsan",
+    "type": "alias",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "+08",
+    "abbreviationDst": "+08",
+    "canonicalLink": "Asia/Ulaanbaatar"
+  },
+  {
+    "countryCodes": [
+      "CN"
+    ],
+    "tzIdentifier": "Asia/Chongqing",
+    "type": "alias",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST",
+    "canonicalLink": "Asia/Shanghai"
+  },
+  {
+    "countryCodes": [
+      "CN"
+    ],
+    "tzIdentifier": "Asia/Chungking",
+    "type": "alias",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST",
+    "canonicalLink": "Asia/Shanghai"
+  },
+  {
+    "countryCodes": [
+      "LK"
+    ],
+    "tzIdentifier": "Asia/Colombo",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:30",
+    "utcOffsetDst": "+05:30",
+    "abbreviationStandard": "+0530",
+    "abbreviationDst": "+0530"
+  },
+  {
+    "countryCodes": [
+      "BD"
+    ],
+    "tzIdentifier": "Asia/Dacca",
+    "type": "alias",
+    "utcOffsetStandard": "+06:00",
+    "utcOffsetDst": "+06:00",
+    "abbreviationStandard": "+06",
+    "abbreviationDst": "+06",
+    "canonicalLink": "Asia/Dhaka"
+  },
+  {
+    "countryCodes": [
+      "SY"
+    ],
+    "tzIdentifier": "Asia/Damascus",
+    "type": "canonical",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "+03",
+    "abbreviationDst": "+03"
+  },
+  {
+    "countryCodes": [
+      "BD"
+    ],
+    "tzIdentifier": "Asia/Dhaka",
+    "type": "canonical",
+    "utcOffsetStandard": "+06:00",
+    "utcOffsetDst": "+06:00",
+    "abbreviationStandard": "+06",
+    "abbreviationDst": "+06"
+  },
+  {
+    "countryCodes": [
+      "TL"
+    ],
+    "tzIdentifier": "Asia/Dili",
+    "type": "canonical",
+    "utcOffsetStandard": "+09:00",
+    "utcOffsetDst": "+09:00",
+    "abbreviationStandard": "+09",
+    "abbreviationDst": "+09"
+  },
+  {
+    "countryCodes": [
+      "AE",
+      "OM",
+      "RE",
+      "SC",
+      "TF"
+    ],
+    "tzIdentifier": "Asia/Dubai",
+    "type": "canonical",
+    "utcOffsetStandard": "+04:00",
+    "utcOffsetDst": "+04:00",
+    "abbreviationStandard": "+04",
+    "abbreviationDst": "+04"
+  },
+  {
+    "countryCodes": [
+      "TJ"
+    ],
+    "tzIdentifier": "Asia/Dushanbe",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [
+      "CY"
+    ],
+    "tzIdentifier": "Asia/Famagusta",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST"
+  },
+  {
+    "countryCodes": [
+      "PS"
+    ],
+    "tzIdentifier": "Asia/Gaza",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST"
+  },
+  {
+    "countryCodes": [
+      "CN"
+    ],
+    "tzIdentifier": "Asia/Harbin",
+    "type": "alias",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST",
+    "canonicalLink": "Asia/Shanghai"
+  },
+  {
+    "countryCodes": [
+      "PS"
+    ],
+    "tzIdentifier": "Asia/Hebron",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST"
+  },
+  {
+    "countryCodes": [
+      "VN"
+    ],
+    "tzIdentifier": "Asia/Ho_Chi_Minh",
+    "type": "canonical",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "+07",
+    "abbreviationDst": "+07"
+  },
+  {
+    "countryCodes": [
+      "HK"
+    ],
+    "tzIdentifier": "Asia/Hong_Kong",
+    "type": "canonical",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "HKT",
+    "abbreviationDst": "HKT"
+  },
+  {
+    "countryCodes": [
+      "MN"
+    ],
+    "tzIdentifier": "Asia/Hovd",
+    "type": "canonical",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "+07",
+    "abbreviationDst": "+07"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Irkutsk",
+    "type": "canonical",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "+08",
+    "abbreviationDst": "+08"
+  },
+  {
+    "countryCodes": [
+      "TR"
+    ],
+    "tzIdentifier": "Asia/Istanbul",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "+03",
+    "abbreviationDst": "+03",
+    "canonicalLink": "Europe/Istanbul"
+  },
+  {
+    "countryCodes": [
+      "ID"
+    ],
+    "tzIdentifier": "Asia/Jakarta",
+    "type": "canonical",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "WIB",
+    "abbreviationDst": "WIB"
+  },
+  {
+    "countryCodes": [
+      "ID"
+    ],
+    "tzIdentifier": "Asia/Jayapura",
+    "type": "canonical",
+    "utcOffsetStandard": "+09:00",
+    "utcOffsetDst": "+09:00",
+    "abbreviationStandard": "WIT",
+    "abbreviationDst": "WIT"
+  },
+  {
+    "countryCodes": [
+      "IL"
+    ],
+    "tzIdentifier": "Asia/Jerusalem",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "IST",
+    "abbreviationDst": "IDT"
+  },
+  {
+    "countryCodes": [
+      "AF"
+    ],
+    "tzIdentifier": "Asia/Kabul",
+    "type": "canonical",
+    "utcOffsetStandard": "+04:30",
+    "utcOffsetDst": "+04:30",
+    "abbreviationStandard": "+0430",
+    "abbreviationDst": "+0430"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Kamchatka",
+    "type": "canonical",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+12:00",
+    "abbreviationStandard": "+12",
+    "abbreviationDst": "+12"
+  },
+  {
+    "countryCodes": [
+      "PK"
+    ],
+    "tzIdentifier": "Asia/Karachi",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "PKT",
+    "abbreviationDst": "PKT"
+  },
+  {
+    "countryCodes": [
+      "CN"
+    ],
+    "tzIdentifier": "Asia/Kashgar",
+    "type": "alias",
+    "utcOffsetStandard": "+06:00",
+    "utcOffsetDst": "+06:00",
+    "abbreviationStandard": "+06",
+    "abbreviationDst": "+06",
+    "canonicalLink": "Asia/Urumqi"
+  },
+  {
+    "countryCodes": [
+      "NP"
+    ],
+    "tzIdentifier": "Asia/Kathmandu",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:45",
+    "utcOffsetDst": "+05:45",
+    "abbreviationStandard": "+0545",
+    "abbreviationDst": "+0545"
+  },
+  {
+    "countryCodes": [
+      "NP"
+    ],
+    "tzIdentifier": "Asia/Katmandu",
+    "type": "alias",
+    "utcOffsetStandard": "+05:45",
+    "utcOffsetDst": "+05:45",
+    "abbreviationStandard": "+0545",
+    "abbreviationDst": "+0545",
+    "canonicalLink": "Asia/Kathmandu"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Khandyga",
+    "type": "canonical",
+    "utcOffsetStandard": "+09:00",
+    "utcOffsetDst": "+09:00",
+    "abbreviationStandard": "+09",
+    "abbreviationDst": "+09"
+  },
+  {
+    "countryCodes": [
+      "IN"
+    ],
+    "tzIdentifier": "Asia/Kolkata",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:30",
+    "utcOffsetDst": "+05:30",
+    "abbreviationStandard": "IST",
+    "abbreviationDst": "IST"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Krasnoyarsk",
+    "type": "canonical",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "+07",
+    "abbreviationDst": "+07"
+  },
+  {
+    "countryCodes": [
+      "MY"
+    ],
+    "tzIdentifier": "Asia/Kuala_Lumpur",
+    "type": "alias",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "+08",
+    "abbreviationDst": "+08",
+    "canonicalLink": "Asia/Singapore"
+  },
+  {
+    "countryCodes": [
+      "MY",
+      "BN"
+    ],
+    "tzIdentifier": "Asia/Kuching",
+    "type": "canonical",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "+08",
+    "abbreviationDst": "+08"
+  },
+  {
+    "countryCodes": [
+      "KW"
+    ],
+    "tzIdentifier": "Asia/Kuwait",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "+03",
+    "abbreviationDst": "+03",
+    "canonicalLink": "Asia/Riyadh"
+  },
+  {
+    "countryCodes": [
+      "MO"
+    ],
+    "tzIdentifier": "Asia/Macao",
+    "type": "alias",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST",
+    "canonicalLink": "Asia/Macau"
+  },
+  {
+    "countryCodes": [
+      "MO"
+    ],
+    "tzIdentifier": "Asia/Macau",
+    "type": "canonical",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Magadan",
+    "type": "canonical",
+    "utcOffsetStandard": "+11:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "+11",
+    "abbreviationDst": "+11"
+  },
+  {
+    "countryCodes": [
+      "ID"
+    ],
+    "tzIdentifier": "Asia/Makassar",
+    "type": "canonical",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "WITA",
+    "abbreviationDst": "WITA"
+  },
+  {
+    "countryCodes": [
+      "PH"
+    ],
+    "tzIdentifier": "Asia/Manila",
+    "type": "canonical",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "PST",
+    "abbreviationDst": "PST"
+  },
+  {
+    "countryCodes": [
+      "OM"
+    ],
+    "tzIdentifier": "Asia/Muscat",
+    "type": "alias",
+    "utcOffsetStandard": "+04:00",
+    "utcOffsetDst": "+04:00",
+    "abbreviationStandard": "+04",
+    "abbreviationDst": "+04",
+    "canonicalLink": "Asia/Dubai"
+  },
+  {
+    "countryCodes": [
+      "CY"
+    ],
+    "tzIdentifier": "Asia/Nicosia",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Novokuznetsk",
+    "type": "canonical",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "+07",
+    "abbreviationDst": "+07"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Novosibirsk",
+    "type": "canonical",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "+07",
+    "abbreviationDst": "+07"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Omsk",
+    "type": "canonical",
+    "utcOffsetStandard": "+06:00",
+    "utcOffsetDst": "+06:00",
+    "abbreviationStandard": "+06",
+    "abbreviationDst": "+06"
+  },
+  {
+    "countryCodes": [
+      "KZ"
+    ],
+    "tzIdentifier": "Asia/Oral",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [
+      "KH"
+    ],
+    "tzIdentifier": "Asia/Phnom_Penh",
+    "type": "alias",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "+07",
+    "abbreviationDst": "+07",
+    "canonicalLink": "Asia/Bangkok"
+  },
+  {
+    "countryCodes": [
+      "ID"
+    ],
+    "tzIdentifier": "Asia/Pontianak",
+    "type": "canonical",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "WIB",
+    "abbreviationDst": "WIB"
+  },
+  {
+    "countryCodes": [
+      "KP"
+    ],
+    "tzIdentifier": "Asia/Pyongyang",
+    "type": "canonical",
+    "utcOffsetStandard": "+09:00",
+    "utcOffsetDst": "+09:00",
+    "abbreviationStandard": "KST",
+    "abbreviationDst": "KST"
+  },
+  {
+    "countryCodes": [
+      "QA",
+      "BH"
+    ],
+    "tzIdentifier": "Asia/Qatar",
+    "type": "canonical",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "+03",
+    "abbreviationDst": "+03"
+  },
+  {
+    "countryCodes": [
+      "KZ"
+    ],
+    "tzIdentifier": "Asia/Qostanay",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [
+      "KZ"
+    ],
+    "tzIdentifier": "Asia/Qyzylorda",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [
+      "MM"
+    ],
+    "tzIdentifier": "Asia/Rangoon",
+    "type": "alias",
+    "utcOffsetStandard": "+06:30",
+    "utcOffsetDst": "+06:30",
+    "abbreviationStandard": "+0630",
+    "abbreviationDst": "+0630",
+    "canonicalLink": "Asia/Yangon"
+  },
+  {
+    "countryCodes": [
+      "SA",
+      "AQ",
+      "KW",
+      "YE"
+    ],
+    "tzIdentifier": "Asia/Riyadh",
+    "type": "canonical",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "+03",
+    "abbreviationDst": "+03"
+  },
+  {
+    "countryCodes": [
+      "VN"
+    ],
+    "tzIdentifier": "Asia/Saigon",
+    "type": "alias",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "+07",
+    "abbreviationDst": "+07",
+    "canonicalLink": "Asia/Ho_Chi_Minh"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Sakhalin",
+    "type": "canonical",
+    "utcOffsetStandard": "+11:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "+11",
+    "abbreviationDst": "+11"
+  },
+  {
+    "countryCodes": [
+      "UZ"
+    ],
+    "tzIdentifier": "Asia/Samarkand",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [
+      "KR"
+    ],
+    "tzIdentifier": "Asia/Seoul",
+    "type": "canonical",
+    "utcOffsetStandard": "+09:00",
+    "utcOffsetDst": "+09:00",
+    "abbreviationStandard": "KST",
+    "abbreviationDst": "KST"
+  },
+  {
+    "countryCodes": [
+      "CN"
+    ],
+    "tzIdentifier": "Asia/Shanghai",
+    "type": "canonical",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "SG",
+      "AQ",
+      "MY"
+    ],
+    "tzIdentifier": "Asia/Singapore",
+    "type": "canonical",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "+08",
+    "abbreviationDst": "+08"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Srednekolymsk",
+    "type": "canonical",
+    "utcOffsetStandard": "+11:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "+11",
+    "abbreviationDst": "+11"
+  },
+  {
+    "countryCodes": [
+      "TW"
+    ],
+    "tzIdentifier": "Asia/Taipei",
+    "type": "canonical",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST"
+  },
+  {
+    "countryCodes": [
+      "UZ"
+    ],
+    "tzIdentifier": "Asia/Tashkent",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [
+      "GE"
+    ],
+    "tzIdentifier": "Asia/Tbilisi",
+    "type": "canonical",
+    "utcOffsetStandard": "+04:00",
+    "utcOffsetDst": "+04:00",
+    "abbreviationStandard": "+04",
+    "abbreviationDst": "+04"
+  },
+  {
+    "countryCodes": [
+      "IR"
+    ],
+    "tzIdentifier": "Asia/Tehran",
+    "type": "canonical",
+    "utcOffsetStandard": "+03:30",
+    "utcOffsetDst": "+03:30",
+    "abbreviationStandard": "+0330",
+    "abbreviationDst": "+0330"
+  },
+  {
+    "countryCodes": [
+      "IL"
+    ],
+    "tzIdentifier": "Asia/Tel_Aviv",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "IST",
+    "abbreviationDst": "IDT",
+    "canonicalLink": "Asia/Jerusalem"
+  },
+  {
+    "countryCodes": [
+      "BT"
+    ],
+    "tzIdentifier": "Asia/Thimbu",
+    "type": "alias",
+    "utcOffsetStandard": "+06:00",
+    "utcOffsetDst": "+06:00",
+    "abbreviationStandard": "+06",
+    "abbreviationDst": "+06",
+    "canonicalLink": "Asia/Thimphu"
+  },
+  {
+    "countryCodes": [
+      "BT"
+    ],
+    "tzIdentifier": "Asia/Thimphu",
+    "type": "canonical",
+    "utcOffsetStandard": "+06:00",
+    "utcOffsetDst": "+06:00",
+    "abbreviationStandard": "+06",
+    "abbreviationDst": "+06"
+  },
+  {
+    "countryCodes": [
+      "JP",
+      "AU"
+    ],
+    "tzIdentifier": "Asia/Tokyo",
+    "type": "canonical",
+    "utcOffsetStandard": "+09:00",
+    "utcOffsetDst": "+09:00",
+    "abbreviationStandard": "JST",
+    "abbreviationDst": "JST"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Tomsk",
+    "type": "canonical",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "+07",
+    "abbreviationDst": "+07"
+  },
+  {
+    "countryCodes": [
+      "ID"
+    ],
+    "tzIdentifier": "Asia/Ujung_Pandang",
+    "type": "alias",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "WITA",
+    "abbreviationDst": "WITA",
+    "canonicalLink": "Asia/Makassar"
+  },
+  {
+    "countryCodes": [
+      "MN"
+    ],
+    "tzIdentifier": "Asia/Ulaanbaatar",
+    "type": "canonical",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "+08",
+    "abbreviationDst": "+08"
+  },
+  {
+    "countryCodes": [
+      "MN"
+    ],
+    "tzIdentifier": "Asia/Ulan_Bator",
+    "type": "alias",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "+08",
+    "abbreviationDst": "+08",
+    "canonicalLink": "Asia/Ulaanbaatar"
+  },
+  {
+    "countryCodes": [
+      "CN"
+    ],
+    "tzIdentifier": "Asia/Urumqi",
+    "type": "canonical",
+    "utcOffsetStandard": "+06:00",
+    "utcOffsetDst": "+06:00",
+    "abbreviationStandard": "+06",
+    "abbreviationDst": "+06"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Ust-Nera",
+    "type": "canonical",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+10:00",
+    "abbreviationStandard": "+10",
+    "abbreviationDst": "+10"
+  },
+  {
+    "countryCodes": [
+      "LA"
+    ],
+    "tzIdentifier": "Asia/Vientiane",
+    "type": "alias",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "+07",
+    "abbreviationDst": "+07",
+    "canonicalLink": "Asia/Bangkok"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Vladivostok",
+    "type": "canonical",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+10:00",
+    "abbreviationStandard": "+10",
+    "abbreviationDst": "+10"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Yakutsk",
+    "type": "canonical",
+    "utcOffsetStandard": "+09:00",
+    "utcOffsetDst": "+09:00",
+    "abbreviationStandard": "+09",
+    "abbreviationDst": "+09"
+  },
+  {
+    "countryCodes": [
+      "MM",
+      "CC"
+    ],
+    "tzIdentifier": "Asia/Yangon",
+    "type": "canonical",
+    "utcOffsetStandard": "+06:30",
+    "utcOffsetDst": "+06:30",
+    "abbreviationStandard": "+0630",
+    "abbreviationDst": "+0630"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Asia/Yekaterinburg",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [
+      "AM"
+    ],
+    "tzIdentifier": "Asia/Yerevan",
+    "type": "canonical",
+    "utcOffsetStandard": "+04:00",
+    "utcOffsetDst": "+04:00",
+    "abbreviationStandard": "+04",
+    "abbreviationDst": "+04"
+  },
+  {
+    "countryCodes": [
+      "PT"
+    ],
+    "tzIdentifier": "Atlantic/Azores",
+    "type": "canonical",
+    "utcOffsetStandard": "−01:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "-01",
+    "abbreviationDst": "+00"
+  },
+  {
+    "countryCodes": [
+      "BM"
+    ],
+    "tzIdentifier": "Atlantic/Bermuda",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "ADT"
+  },
+  {
+    "countryCodes": [
+      "ES"
+    ],
+    "tzIdentifier": "Atlantic/Canary",
+    "type": "canonical",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WET",
+    "abbreviationDst": "WEST"
+  },
+  {
+    "countryCodes": [
+      "CV"
+    ],
+    "tzIdentifier": "Atlantic/Cape_Verde",
+    "type": "canonical",
+    "utcOffsetStandard": "−01:00",
+    "utcOffsetDst": "−01:00",
+    "abbreviationStandard": "-01",
+    "abbreviationDst": "-01"
+  },
+  {
+    "countryCodes": [
+      "FO"
+    ],
+    "tzIdentifier": "Atlantic/Faeroe",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WET",
+    "abbreviationDst": "WEST",
+    "canonicalLink": "Atlantic/Faroe"
+  },
+  {
+    "countryCodes": [
+      "FO"
+    ],
+    "tzIdentifier": "Atlantic/Faroe",
+    "type": "canonical",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WET",
+    "abbreviationDst": "WEST"
+  },
+  {
+    "countryCodes": [
+      "SJ"
+    ],
+    "tzIdentifier": "Atlantic/Jan_Mayen",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Berlin"
+  },
+  {
+    "countryCodes": [
+      "PT"
+    ],
+    "tzIdentifier": "Atlantic/Madeira",
+    "type": "canonical",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WET",
+    "abbreviationDst": "WEST"
+  },
+  {
+    "countryCodes": [
+      "IS"
+    ],
+    "tzIdentifier": "Atlantic/Reykjavik",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Africa/Abidjan"
+  },
+  {
+    "countryCodes": [
+      "GS"
+    ],
+    "tzIdentifier": "Atlantic/South_Georgia",
+    "type": "canonical",
+    "utcOffsetStandard": "−02:00",
+    "utcOffsetDst": "−02:00",
+    "abbreviationStandard": "-02",
+    "abbreviationDst": "-02"
+  },
+  {
+    "countryCodes": [
+      "SH"
+    ],
+    "tzIdentifier": "Atlantic/St_Helena",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Africa/Abidjan"
+  },
+  {
+    "countryCodes": [
+      "FK"
+    ],
+    "tzIdentifier": "Atlantic/Stanley",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/ACT",
+    "type": "alias",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "AEST",
+    "abbreviationDst": "AEDT",
+    "canonicalLink": "Australia/Sydney"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Adelaide",
+    "type": "canonical",
+    "utcOffsetStandard": "+09:30",
+    "utcOffsetDst": "+10:30",
+    "abbreviationStandard": "ACST",
+    "abbreviationDst": "ACDT"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Brisbane",
+    "type": "canonical",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+10:00",
+    "abbreviationStandard": "AEST",
+    "abbreviationDst": "AEST"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Broken_Hill",
+    "type": "canonical",
+    "utcOffsetStandard": "+09:30",
+    "utcOffsetDst": "+10:30",
+    "abbreviationStandard": "ACST",
+    "abbreviationDst": "ACDT"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Canberra",
+    "type": "alias",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "AEST",
+    "abbreviationDst": "AEDT",
+    "canonicalLink": "Australia/Sydney"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Currie",
+    "type": "alias",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "AEST",
+    "abbreviationDst": "AEDT",
+    "canonicalLink": "Australia/Hobart"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Darwin",
+    "type": "canonical",
+    "utcOffsetStandard": "+09:30",
+    "utcOffsetDst": "+09:30",
+    "abbreviationStandard": "ACST",
+    "abbreviationDst": "ACST"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Eucla",
+    "type": "canonical",
+    "utcOffsetStandard": "+08:45",
+    "utcOffsetDst": "+08:45",
+    "abbreviationStandard": "+0845",
+    "abbreviationDst": "+0845"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Hobart",
+    "type": "canonical",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "AEST",
+    "abbreviationDst": "AEDT"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/LHI",
+    "type": "alias",
+    "utcOffsetStandard": "+10:30",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "+1030",
+    "abbreviationDst": "+11",
+    "canonicalLink": "Australia/Lord_Howe"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Lindeman",
+    "type": "canonical",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+10:00",
+    "abbreviationStandard": "AEST",
+    "abbreviationDst": "AEST"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Lord_Howe",
+    "type": "canonical",
+    "utcOffsetStandard": "+10:30",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "+1030",
+    "abbreviationDst": "+11"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Melbourne",
+    "type": "canonical",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "AEST",
+    "abbreviationDst": "AEDT"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/North",
+    "type": "alias",
+    "utcOffsetStandard": "+09:30",
+    "utcOffsetDst": "+09:30",
+    "abbreviationStandard": "ACST",
+    "abbreviationDst": "ACST",
+    "canonicalLink": "Australia/Darwin"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/NSW",
+    "type": "alias",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "AEST",
+    "abbreviationDst": "AEDT",
+    "canonicalLink": "Australia/Sydney"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Perth",
+    "type": "canonical",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "AWST",
+    "abbreviationDst": "AWST"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Queensland",
+    "type": "alias",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+10:00",
+    "abbreviationStandard": "AEST",
+    "abbreviationDst": "AEST",
+    "canonicalLink": "Australia/Brisbane"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/South",
+    "type": "alias",
+    "utcOffsetStandard": "+09:30",
+    "utcOffsetDst": "+10:30",
+    "abbreviationStandard": "ACST",
+    "abbreviationDst": "ACDT",
+    "canonicalLink": "Australia/Adelaide"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Sydney",
+    "type": "canonical",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "AEST",
+    "abbreviationDst": "AEDT"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Tasmania",
+    "type": "alias",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "AEST",
+    "abbreviationDst": "AEDT",
+    "canonicalLink": "Australia/Hobart"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Victoria",
+    "type": "alias",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "AEST",
+    "abbreviationDst": "AEDT",
+    "canonicalLink": "Australia/Melbourne"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/West",
+    "type": "alias",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "AWST",
+    "abbreviationDst": "AWST",
+    "canonicalLink": "Australia/Perth"
+  },
+  {
+    "countryCodes": [
+      "AU"
+    ],
+    "tzIdentifier": "Australia/Yancowinna",
+    "type": "alias",
+    "utcOffsetStandard": "+09:30",
+    "utcOffsetDst": "+10:30",
+    "abbreviationStandard": "ACST",
+    "abbreviationDst": "ACDT",
+    "canonicalLink": "Australia/Broken_Hill"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "Brazil/Acre",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "-05",
+    "abbreviationDst": "-05",
+    "canonicalLink": "America/Rio_Branco"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "Brazil/DeNoronha",
+    "type": "alias",
+    "utcOffsetStandard": "−02:00",
+    "utcOffsetDst": "−02:00",
+    "abbreviationStandard": "-02",
+    "abbreviationDst": "-02",
+    "canonicalLink": "America/Noronha"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "Brazil/East",
+    "type": "alias",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03",
+    "canonicalLink": "America/Sao_Paulo"
+  },
+  {
+    "countryCodes": [
+      "BR"
+    ],
+    "tzIdentifier": "Brazil/West",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "-04",
+    "abbreviationDst": "-04",
+    "canonicalLink": "America/Manaus"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "Canada/Atlantic",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "AST",
+    "abbreviationDst": "ADT",
+    "canonicalLink": "America/Halifax"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "Canada/Central",
+    "type": "alias",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT",
+    "canonicalLink": "America/Winnipeg"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "Canada/Eastern",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT",
+    "canonicalLink": "America/Toronto"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "Canada/Mountain",
+    "type": "alias",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MDT",
+    "canonicalLink": "America/Edmonton"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "Canada/Newfoundland",
+    "type": "alias",
+    "utcOffsetStandard": "−03:30",
+    "utcOffsetDst": "−02:30",
+    "abbreviationStandard": "NST",
+    "abbreviationDst": "NDT",
+    "canonicalLink": "America/St_Johns"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "Canada/Pacific",
+    "type": "alias",
+    "utcOffsetStandard": "−08:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "PST",
+    "abbreviationDst": "PDT",
+    "canonicalLink": "America/Vancouver"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "Canada/Saskatchewan",
+    "type": "alias",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST",
+    "canonicalLink": "America/Regina"
+  },
+  {
+    "countryCodes": [
+      "CA"
+    ],
+    "tzIdentifier": "Canada/Yukon",
+    "type": "alias",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MST",
+    "canonicalLink": "America/Whitehorse"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "CET",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Brussels"
+  },
+  {
+    "countryCodes": [
+      "CL"
+    ],
+    "tzIdentifier": "Chile/Continental",
+    "type": "alias",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-04",
+    "abbreviationDst": "-03",
+    "canonicalLink": "America/Santiago"
+  },
+  {
+    "countryCodes": [
+      "CL"
+    ],
+    "tzIdentifier": "Chile/EasterIsland",
+    "type": "alias",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "-06",
+    "abbreviationDst": "-05",
+    "canonicalLink": "Pacific/Easter"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "CST6CDT",
+    "type": "alias",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT",
+    "canonicalLink": "America/Chicago"
+  },
+  {
+    "countryCodes": [
+      "CU"
+    ],
+    "tzIdentifier": "Cuba",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT",
+    "canonicalLink": "America/Havana"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "EET",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST",
+    "canonicalLink": "Europe/Athens"
+  },
+  {
+    "countryCodes": [
+      "EG"
+    ],
+    "tzIdentifier": "Egypt",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST",
+    "canonicalLink": "Africa/Cairo"
+  },
+  {
+    "countryCodes": [
+      "IE"
+    ],
+    "tzIdentifier": "Eire",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "IST",
+    "canonicalLink": "Europe/Dublin"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "EST",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EST",
+    "canonicalLink": "America/Panama"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "EST5EDT",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT",
+    "canonicalLink": "America/New_York"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT",
+    "type": "canonical",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT+0",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Etc/GMT"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT+1",
+    "type": "canonical",
+    "utcOffsetStandard": "−01:00",
+    "utcOffsetDst": "−01:00",
+    "abbreviationStandard": "-01",
+    "abbreviationDst": "-01"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT+10",
+    "type": "canonical",
+    "utcOffsetStandard": "−10:00",
+    "utcOffsetDst": "−10:00",
+    "abbreviationStandard": "-10",
+    "abbreviationDst": "-10"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT+11",
+    "type": "canonical",
+    "utcOffsetStandard": "−11:00",
+    "utcOffsetDst": "−11:00",
+    "abbreviationStandard": "-11",
+    "abbreviationDst": "-11"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT+12",
+    "type": "canonical",
+    "utcOffsetStandard": "−12:00",
+    "utcOffsetDst": "−12:00",
+    "abbreviationStandard": "-12",
+    "abbreviationDst": "-12"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT+2",
+    "type": "canonical",
+    "utcOffsetStandard": "−02:00",
+    "utcOffsetDst": "−02:00",
+    "abbreviationStandard": "-02",
+    "abbreviationDst": "-02"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT+3",
+    "type": "canonical",
+    "utcOffsetStandard": "−03:00",
+    "utcOffsetDst": "−03:00",
+    "abbreviationStandard": "-03",
+    "abbreviationDst": "-03"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT+4",
+    "type": "canonical",
+    "utcOffsetStandard": "−04:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "-04",
+    "abbreviationDst": "-04"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT+5",
+    "type": "canonical",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "-05",
+    "abbreviationDst": "-05"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT+6",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "-06",
+    "abbreviationDst": "-06"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT+7",
+    "type": "canonical",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "-07",
+    "abbreviationDst": "-07"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT+8",
+    "type": "canonical",
+    "utcOffsetStandard": "−08:00",
+    "utcOffsetDst": "−08:00",
+    "abbreviationStandard": "-08",
+    "abbreviationDst": "-08"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT+9",
+    "type": "canonical",
+    "utcOffsetStandard": "−09:00",
+    "utcOffsetDst": "−09:00",
+    "abbreviationStandard": "-09",
+    "abbreviationDst": "-09"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT-0",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Etc/GMT"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT-1",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "+01",
+    "abbreviationDst": "+01"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT-10",
+    "type": "canonical",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+10:00",
+    "abbreviationStandard": "+10",
+    "abbreviationDst": "+10"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT-11",
+    "type": "canonical",
+    "utcOffsetStandard": "+11:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "+11",
+    "abbreviationDst": "+11"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT-12",
+    "type": "canonical",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+12:00",
+    "abbreviationStandard": "+12",
+    "abbreviationDst": "+12"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT-13",
+    "type": "canonical",
+    "utcOffsetStandard": "+13:00",
+    "utcOffsetDst": "+13:00",
+    "abbreviationStandard": "+13",
+    "abbreviationDst": "+13"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT-14",
+    "type": "canonical",
+    "utcOffsetStandard": "+14:00",
+    "utcOffsetDst": "+14:00",
+    "abbreviationStandard": "+14",
+    "abbreviationDst": "+14"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT-2",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "+02",
+    "abbreviationDst": "+02"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT-3",
+    "type": "canonical",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "+03",
+    "abbreviationDst": "+03"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT-4",
+    "type": "canonical",
+    "utcOffsetStandard": "+04:00",
+    "utcOffsetDst": "+04:00",
+    "abbreviationStandard": "+04",
+    "abbreviationDst": "+04"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT-5",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT-6",
+    "type": "canonical",
+    "utcOffsetStandard": "+06:00",
+    "utcOffsetDst": "+06:00",
+    "abbreviationStandard": "+06",
+    "abbreviationDst": "+06"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT-7",
+    "type": "canonical",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "+07",
+    "abbreviationDst": "+07"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT-8",
+    "type": "canonical",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "+08",
+    "abbreviationDst": "+08"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT-9",
+    "type": "canonical",
+    "utcOffsetStandard": "+09:00",
+    "utcOffsetDst": "+09:00",
+    "abbreviationStandard": "+09",
+    "abbreviationDst": "+09"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/GMT0",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Etc/GMT"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/Greenwich",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Etc/GMT"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/UCT",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "UTC",
+    "abbreviationDst": "UTC",
+    "canonicalLink": "Etc/UTC"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/Universal",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "UTC",
+    "abbreviationDst": "UTC",
+    "canonicalLink": "Etc/UTC"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/UTC",
+    "type": "canonical",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "UTC",
+    "abbreviationDst": "UTC"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Etc/Zulu",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "UTC",
+    "abbreviationDst": "UTC",
+    "canonicalLink": "Etc/UTC"
+  },
+  {
+    "countryCodes": [
+      "NL"
+    ],
+    "tzIdentifier": "Europe/Amsterdam",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Brussels"
+  },
+  {
+    "countryCodes": [
+      "AD"
+    ],
+    "tzIdentifier": "Europe/Andorra",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Europe/Astrakhan",
+    "type": "canonical",
+    "utcOffsetStandard": "+04:00",
+    "utcOffsetDst": "+04:00",
+    "abbreviationStandard": "+04",
+    "abbreviationDst": "+04"
+  },
+  {
+    "countryCodes": [
+      "GR"
+    ],
+    "tzIdentifier": "Europe/Athens",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST"
+  },
+  {
+    "countryCodes": [
+      "GB"
+    ],
+    "tzIdentifier": "Europe/Belfast",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "BST",
+    "canonicalLink": "Europe/London"
+  },
+  {
+    "countryCodes": [
+      "RS",
+      "BA",
+      "HR",
+      "ME",
+      "MK",
+      "SI"
+    ],
+    "tzIdentifier": "Europe/Belgrade",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [
+      "DE",
+      "DK",
+      "NO",
+      "SE",
+      "SJ"
+    ],
+    "tzIdentifier": "Europe/Berlin",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [
+      "SK"
+    ],
+    "tzIdentifier": "Europe/Bratislava",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Prague"
+  },
+  {
+    "countryCodes": [
+      "BE",
+      "LU",
+      "NL"
+    ],
+    "tzIdentifier": "Europe/Brussels",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [
+      "RO"
+    ],
+    "tzIdentifier": "Europe/Bucharest",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST"
+  },
+  {
+    "countryCodes": [
+      "HU"
+    ],
+    "tzIdentifier": "Europe/Budapest",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [
+      "DE"
+    ],
+    "tzIdentifier": "Europe/Busingen",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Zurich"
+  },
+  {
+    "countryCodes": [
+      "MD"
+    ],
+    "tzIdentifier": "Europe/Chisinau",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST"
+  },
+  {
+    "countryCodes": [
+      "DK"
+    ],
+    "tzIdentifier": "Europe/Copenhagen",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Berlin"
+  },
+  {
+    "countryCodes": [
+      "IE"
+    ],
+    "tzIdentifier": "Europe/Dublin",
+    "type": "canonical",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "IST"
+  },
+  {
+    "countryCodes": [
+      "GI"
+    ],
+    "tzIdentifier": "Europe/Gibraltar",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [
+      "GG"
+    ],
+    "tzIdentifier": "Europe/Guernsey",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "BST",
+    "canonicalLink": "Europe/London"
+  },
+  {
+    "countryCodes": [
+      "FI",
+      "AX"
+    ],
+    "tzIdentifier": "Europe/Helsinki",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST"
+  },
+  {
+    "countryCodes": [
+      "IM"
+    ],
+    "tzIdentifier": "Europe/Isle_of_Man",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "BST",
+    "canonicalLink": "Europe/London"
+  },
+  {
+    "countryCodes": [
+      "TR"
+    ],
+    "tzIdentifier": "Europe/Istanbul",
+    "type": "canonical",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "+03",
+    "abbreviationDst": "+03"
+  },
+  {
+    "countryCodes": [
+      "JE"
+    ],
+    "tzIdentifier": "Europe/Jersey",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "BST",
+    "canonicalLink": "Europe/London"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Europe/Kaliningrad",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EET"
+  },
+  {
+    "countryCodes": [
+      "UA"
+    ],
+    "tzIdentifier": "Europe/Kiev",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST",
+    "canonicalLink": "Europe/Kyiv"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Europe/Kirov",
+    "type": "canonical",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "MSK",
+    "abbreviationDst": "MSK"
+  },
+  {
+    "countryCodes": [
+      "UA"
+    ],
+    "tzIdentifier": "Europe/Kyiv",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST"
+  },
+  {
+    "countryCodes": [
+      "PT"
+    ],
+    "tzIdentifier": "Europe/Lisbon",
+    "type": "canonical",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WET",
+    "abbreviationDst": "WEST"
+  },
+  {
+    "countryCodes": [
+      "SI"
+    ],
+    "tzIdentifier": "Europe/Ljubljana",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Belgrade"
+  },
+  {
+    "countryCodes": [
+      "GB",
+      "GG",
+      "IM",
+      "JE"
+    ],
+    "tzIdentifier": "Europe/London",
+    "type": "canonical",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "BST"
+  },
+  {
+    "countryCodes": [
+      "LU"
+    ],
+    "tzIdentifier": "Europe/Luxembourg",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Brussels"
+  },
+  {
+    "countryCodes": [
+      "ES"
+    ],
+    "tzIdentifier": "Europe/Madrid",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [
+      "MT"
+    ],
+    "tzIdentifier": "Europe/Malta",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [
+      "AX"
+    ],
+    "tzIdentifier": "Europe/Mariehamn",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST",
+    "canonicalLink": "Europe/Helsinki"
+  },
+  {
+    "countryCodes": [
+      "BY"
+    ],
+    "tzIdentifier": "Europe/Minsk",
+    "type": "canonical",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "+03",
+    "abbreviationDst": "+03"
+  },
+  {
+    "countryCodes": [
+      "MC"
+    ],
+    "tzIdentifier": "Europe/Monaco",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Paris"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Europe/Moscow",
+    "type": "canonical",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "MSK",
+    "abbreviationDst": "MSK"
+  },
+  {
+    "countryCodes": [
+      "CY"
+    ],
+    "tzIdentifier": "Europe/Nicosia",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST",
+    "canonicalLink": "Asia/Nicosia"
+  },
+  {
+    "countryCodes": [
+      "NO"
+    ],
+    "tzIdentifier": "Europe/Oslo",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Berlin"
+  },
+  {
+    "countryCodes": [
+      "FR",
+      "MC"
+    ],
+    "tzIdentifier": "Europe/Paris",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [
+      "ME"
+    ],
+    "tzIdentifier": "Europe/Podgorica",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Belgrade"
+  },
+  {
+    "countryCodes": [
+      "CZ",
+      "SK"
+    ],
+    "tzIdentifier": "Europe/Prague",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [
+      "LV"
+    ],
+    "tzIdentifier": "Europe/Riga",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST"
+  },
+  {
+    "countryCodes": [
+      "IT",
+      "SM",
+      "VA"
+    ],
+    "tzIdentifier": "Europe/Rome",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Europe/Samara",
+    "type": "canonical",
+    "utcOffsetStandard": "+04:00",
+    "utcOffsetDst": "+04:00",
+    "abbreviationStandard": "+04",
+    "abbreviationDst": "+04"
+  },
+  {
+    "countryCodes": [
+      "SM"
+    ],
+    "tzIdentifier": "Europe/San_Marino",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Rome"
+  },
+  {
+    "countryCodes": [
+      "BA"
+    ],
+    "tzIdentifier": "Europe/Sarajevo",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Belgrade"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Europe/Saratov",
+    "type": "canonical",
+    "utcOffsetStandard": "+04:00",
+    "utcOffsetDst": "+04:00",
+    "abbreviationStandard": "+04",
+    "abbreviationDst": "+04"
+  },
+  {
+    "countryCodes": [
+      "RU",
+      "UA"
+    ],
+    "tzIdentifier": "Europe/Simferopol",
+    "type": "canonical",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "MSK",
+    "abbreviationDst": "MSK"
+  },
+  {
+    "countryCodes": [
+      "MK"
+    ],
+    "tzIdentifier": "Europe/Skopje",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Belgrade"
+  },
+  {
+    "countryCodes": [
+      "BG"
+    ],
+    "tzIdentifier": "Europe/Sofia",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST"
+  },
+  {
+    "countryCodes": [
+      "SE"
+    ],
+    "tzIdentifier": "Europe/Stockholm",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Berlin"
+  },
+  {
+    "countryCodes": [
+      "EE"
+    ],
+    "tzIdentifier": "Europe/Tallinn",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST"
+  },
+  {
+    "countryCodes": [
+      "AL"
+    ],
+    "tzIdentifier": "Europe/Tirane",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [
+      "MD"
+    ],
+    "tzIdentifier": "Europe/Tiraspol",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST",
+    "canonicalLink": "Europe/Chisinau"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Europe/Ulyanovsk",
+    "type": "canonical",
+    "utcOffsetStandard": "+04:00",
+    "utcOffsetDst": "+04:00",
+    "abbreviationStandard": "+04",
+    "abbreviationDst": "+04"
+  },
+  {
+    "countryCodes": [
+      "UA"
+    ],
+    "tzIdentifier": "Europe/Uzhgorod",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST",
+    "canonicalLink": "Europe/Kyiv"
+  },
+  {
+    "countryCodes": [
+      "LI"
+    ],
+    "tzIdentifier": "Europe/Vaduz",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Zurich"
+  },
+  {
+    "countryCodes": [
+      "VA"
+    ],
+    "tzIdentifier": "Europe/Vatican",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Rome"
+  },
+  {
+    "countryCodes": [
+      "AT"
+    ],
+    "tzIdentifier": "Europe/Vienna",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [
+      "LT"
+    ],
+    "tzIdentifier": "Europe/Vilnius",
+    "type": "canonical",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "Europe/Volgograd",
+    "type": "canonical",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "MSK",
+    "abbreviationDst": "MSK"
+  },
+  {
+    "countryCodes": [
+      "PL"
+    ],
+    "tzIdentifier": "Europe/Warsaw",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [
+      "HR"
+    ],
+    "tzIdentifier": "Europe/Zagreb",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Belgrade"
+  },
+  {
+    "countryCodes": [
+      "UA"
+    ],
+    "tzIdentifier": "Europe/Zaporozhye",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EEST",
+    "canonicalLink": "Europe/Kyiv"
+  },
+  {
+    "countryCodes": [
+      "CH",
+      "DE",
+      "LI"
+    ],
+    "tzIdentifier": "Europe/Zurich",
+    "type": "canonical",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Factory",
+    "type": "canonical",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "-00",
+    "abbreviationDst": "-00"
+  },
+  {
+    "countryCodes": [
+      "GB"
+    ],
+    "tzIdentifier": "GB",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "BST",
+    "canonicalLink": "Europe/London"
+  },
+  {
+    "countryCodes": [
+      "GB"
+    ],
+    "tzIdentifier": "GB-Eire",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "BST",
+    "canonicalLink": "Europe/London"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "GMT",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Etc/GMT"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "GMT+0",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Etc/GMT"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "GMT-0",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Etc/GMT"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "GMT0",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Etc/GMT"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Greenwich",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Etc/GMT"
+  },
+  {
+    "countryCodes": [
+      "HK"
+    ],
+    "tzIdentifier": "Hongkong",
+    "type": "alias",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "HKT",
+    "abbreviationDst": "HKT",
+    "canonicalLink": "Asia/Hong_Kong"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "HST",
+    "type": "alias",
+    "utcOffsetStandard": "−10:00",
+    "utcOffsetDst": "−10:00",
+    "abbreviationStandard": "HST",
+    "abbreviationDst": "HST",
+    "canonicalLink": "Pacific/Honolulu"
+  },
+  {
+    "countryCodes": [
+      "IS"
+    ],
+    "tzIdentifier": "Iceland",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "GMT",
+    "abbreviationDst": "GMT",
+    "canonicalLink": "Africa/Abidjan"
+  },
+  {
+    "countryCodes": [
+      "MG"
+    ],
+    "tzIdentifier": "Indian/Antananarivo",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EAT",
+    "abbreviationDst": "EAT",
+    "canonicalLink": "Africa/Nairobi"
+  },
+  {
+    "countryCodes": [
+      "IO"
+    ],
+    "tzIdentifier": "Indian/Chagos",
+    "type": "canonical",
+    "utcOffsetStandard": "+06:00",
+    "utcOffsetDst": "+06:00",
+    "abbreviationStandard": "+06",
+    "abbreviationDst": "+06"
+  },
+  {
+    "countryCodes": [
+      "CX"
+    ],
+    "tzIdentifier": "Indian/Christmas",
+    "type": "alias",
+    "utcOffsetStandard": "+07:00",
+    "utcOffsetDst": "+07:00",
+    "abbreviationStandard": "+07",
+    "abbreviationDst": "+07",
+    "canonicalLink": "Asia/Bangkok"
+  },
+  {
+    "countryCodes": [
+      "CC"
+    ],
+    "tzIdentifier": "Indian/Cocos",
+    "type": "alias",
+    "utcOffsetStandard": "+06:30",
+    "utcOffsetDst": "+06:30",
+    "abbreviationStandard": "+0630",
+    "abbreviationDst": "+0630",
+    "canonicalLink": "Asia/Yangon"
+  },
+  {
+    "countryCodes": [
+      "KM"
+    ],
+    "tzIdentifier": "Indian/Comoro",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EAT",
+    "abbreviationDst": "EAT",
+    "canonicalLink": "Africa/Nairobi"
+  },
+  {
+    "countryCodes": [
+      "TF"
+    ],
+    "tzIdentifier": "Indian/Kerguelen",
+    "type": "alias",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05",
+    "canonicalLink": "Indian/Maldives"
+  },
+  {
+    "countryCodes": [
+      "SC"
+    ],
+    "tzIdentifier": "Indian/Mahe",
+    "type": "alias",
+    "utcOffsetStandard": "+04:00",
+    "utcOffsetDst": "+04:00",
+    "abbreviationStandard": "+04",
+    "abbreviationDst": "+04",
+    "canonicalLink": "Asia/Dubai"
+  },
+  {
+    "countryCodes": [
+      "MV",
+      "TF"
+    ],
+    "tzIdentifier": "Indian/Maldives",
+    "type": "canonical",
+    "utcOffsetStandard": "+05:00",
+    "utcOffsetDst": "+05:00",
+    "abbreviationStandard": "+05",
+    "abbreviationDst": "+05"
+  },
+  {
+    "countryCodes": [
+      "MU"
+    ],
+    "tzIdentifier": "Indian/Mauritius",
+    "type": "canonical",
+    "utcOffsetStandard": "+04:00",
+    "utcOffsetDst": "+04:00",
+    "abbreviationStandard": "+04",
+    "abbreviationDst": "+04"
+  },
+  {
+    "countryCodes": [
+      "YT"
+    ],
+    "tzIdentifier": "Indian/Mayotte",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "EAT",
+    "abbreviationDst": "EAT",
+    "canonicalLink": "Africa/Nairobi"
+  },
+  {
+    "countryCodes": [
+      "RE"
+    ],
+    "tzIdentifier": "Indian/Reunion",
+    "type": "alias",
+    "utcOffsetStandard": "+04:00",
+    "utcOffsetDst": "+04:00",
+    "abbreviationStandard": "+04",
+    "abbreviationDst": "+04",
+    "canonicalLink": "Asia/Dubai"
+  },
+  {
+    "countryCodes": [
+      "IR"
+    ],
+    "tzIdentifier": "Iran",
+    "type": "alias",
+    "utcOffsetStandard": "+03:30",
+    "utcOffsetDst": "+03:30",
+    "abbreviationStandard": "+0330",
+    "abbreviationDst": "+0330",
+    "canonicalLink": "Asia/Tehran"
+  },
+  {
+    "countryCodes": [
+      "IL"
+    ],
+    "tzIdentifier": "Israel",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "IST",
+    "abbreviationDst": "IDT",
+    "canonicalLink": "Asia/Jerusalem"
+  },
+  {
+    "countryCodes": [
+      "JM"
+    ],
+    "tzIdentifier": "Jamaica",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EST",
+    "canonicalLink": "America/Jamaica"
+  },
+  {
+    "countryCodes": [
+      "JP"
+    ],
+    "tzIdentifier": "Japan",
+    "type": "alias",
+    "utcOffsetStandard": "+09:00",
+    "utcOffsetDst": "+09:00",
+    "abbreviationStandard": "JST",
+    "abbreviationDst": "JST",
+    "canonicalLink": "Asia/Tokyo"
+  },
+  {
+    "countryCodes": [
+      "MH"
+    ],
+    "tzIdentifier": "Kwajalein",
+    "type": "alias",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+12:00",
+    "abbreviationStandard": "+12",
+    "abbreviationDst": "+12",
+    "canonicalLink": "Pacific/Kwajalein"
+  },
+  {
+    "countryCodes": [
+      "LY"
+    ],
+    "tzIdentifier": "Libya",
+    "type": "alias",
+    "utcOffsetStandard": "+02:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "EET",
+    "abbreviationDst": "EET",
+    "canonicalLink": "Africa/Tripoli"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "MET",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Brussels"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "Mexico/BajaNorte",
+    "type": "alias",
+    "utcOffsetStandard": "−08:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "PST",
+    "abbreviationDst": "PDT",
+    "canonicalLink": "America/Tijuana"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "Mexico/BajaSur",
+    "type": "alias",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MST",
+    "canonicalLink": "America/Mazatlan"
+  },
+  {
+    "countryCodes": [
+      "MX"
+    ],
+    "tzIdentifier": "Mexico/General",
+    "type": "alias",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST",
+    "canonicalLink": "America/Mexico_City"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "MST",
+    "type": "alias",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MST",
+    "canonicalLink": "America/Phoenix"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "MST7MDT",
+    "type": "alias",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MDT",
+    "canonicalLink": "America/Denver"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "Navajo",
+    "type": "alias",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MDT",
+    "canonicalLink": "America/Denver"
+  },
+  {
+    "countryCodes": [
+      "NZ"
+    ],
+    "tzIdentifier": "NZ",
+    "type": "alias",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+13:00",
+    "abbreviationStandard": "NZST",
+    "abbreviationDst": "NZDT",
+    "canonicalLink": "Pacific/Auckland"
+  },
+  {
+    "countryCodes": [
+      "NZ"
+    ],
+    "tzIdentifier": "NZ-CHAT",
+    "type": "alias",
+    "utcOffsetStandard": "+12:45",
+    "utcOffsetDst": "+13:45",
+    "abbreviationStandard": "+1245",
+    "abbreviationDst": "+1345",
+    "canonicalLink": "Pacific/Chatham"
+  },
+  {
+    "countryCodes": [
+      "WS"
+    ],
+    "tzIdentifier": "Pacific/Apia",
+    "type": "canonical",
+    "utcOffsetStandard": "+13:00",
+    "utcOffsetDst": "+13:00",
+    "abbreviationStandard": "+13",
+    "abbreviationDst": "+13"
+  },
+  {
+    "countryCodes": [
+      "NZ",
+      "AQ"
+    ],
+    "tzIdentifier": "Pacific/Auckland",
+    "type": "canonical",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+13:00",
+    "abbreviationStandard": "NZST",
+    "abbreviationDst": "NZDT"
+  },
+  {
+    "countryCodes": [
+      "PG"
+    ],
+    "tzIdentifier": "Pacific/Bougainville",
+    "type": "canonical",
+    "utcOffsetStandard": "+11:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "+11",
+    "abbreviationDst": "+11"
+  },
+  {
+    "countryCodes": [
+      "NZ"
+    ],
+    "tzIdentifier": "Pacific/Chatham",
+    "type": "canonical",
+    "utcOffsetStandard": "+12:45",
+    "utcOffsetDst": "+13:45",
+    "abbreviationStandard": "+1245",
+    "abbreviationDst": "+1345"
+  },
+  {
+    "countryCodes": [
+      "FM"
+    ],
+    "tzIdentifier": "Pacific/Chuuk",
+    "type": "alias",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+10:00",
+    "abbreviationStandard": "+10",
+    "abbreviationDst": "+10",
+    "canonicalLink": "Pacific/Port_Moresby"
+  },
+  {
+    "countryCodes": [
+      "CL"
+    ],
+    "tzIdentifier": "Pacific/Easter",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "-06",
+    "abbreviationDst": "-05"
+  },
+  {
+    "countryCodes": [
+      "VU"
+    ],
+    "tzIdentifier": "Pacific/Efate",
+    "type": "canonical",
+    "utcOffsetStandard": "+11:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "+11",
+    "abbreviationDst": "+11"
+  },
+  {
+    "countryCodes": [
+      "KI"
+    ],
+    "tzIdentifier": "Pacific/Enderbury",
+    "type": "alias",
+    "utcOffsetStandard": "+13:00",
+    "utcOffsetDst": "+13:00",
+    "abbreviationStandard": "+13",
+    "abbreviationDst": "+13",
+    "canonicalLink": "Pacific/Kanton"
+  },
+  {
+    "countryCodes": [
+      "TK"
+    ],
+    "tzIdentifier": "Pacific/Fakaofo",
+    "type": "canonical",
+    "utcOffsetStandard": "+13:00",
+    "utcOffsetDst": "+13:00",
+    "abbreviationStandard": "+13",
+    "abbreviationDst": "+13"
+  },
+  {
+    "countryCodes": [
+      "FJ"
+    ],
+    "tzIdentifier": "Pacific/Fiji",
+    "type": "canonical",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+12:00",
+    "abbreviationStandard": "+12",
+    "abbreviationDst": "+12"
+  },
+  {
+    "countryCodes": [
+      "TV"
+    ],
+    "tzIdentifier": "Pacific/Funafuti",
+    "type": "alias",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+12:00",
+    "abbreviationStandard": "+12",
+    "abbreviationDst": "+12",
+    "canonicalLink": "Pacific/Tarawa"
+  },
+  {
+    "countryCodes": [
+      "EC"
+    ],
+    "tzIdentifier": "Pacific/Galapagos",
+    "type": "canonical",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "-06",
+    "abbreviationDst": "-06"
+  },
+  {
+    "countryCodes": [
+      "PF"
+    ],
+    "tzIdentifier": "Pacific/Gambier",
+    "type": "canonical",
+    "utcOffsetStandard": "−09:00",
+    "utcOffsetDst": "−09:00",
+    "abbreviationStandard": "-09",
+    "abbreviationDst": "-09"
+  },
+  {
+    "countryCodes": [
+      "SB",
+      "FM"
+    ],
+    "tzIdentifier": "Pacific/Guadalcanal",
+    "type": "canonical",
+    "utcOffsetStandard": "+11:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "+11",
+    "abbreviationDst": "+11"
+  },
+  {
+    "countryCodes": [
+      "GU",
+      "MP"
+    ],
+    "tzIdentifier": "Pacific/Guam",
+    "type": "canonical",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+10:00",
+    "abbreviationStandard": "ChST",
+    "abbreviationDst": "ChST"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "Pacific/Honolulu",
+    "type": "canonical",
+    "utcOffsetStandard": "−10:00",
+    "utcOffsetDst": "−10:00",
+    "abbreviationStandard": "HST",
+    "abbreviationDst": "HST"
+  },
+  {
+    "countryCodes": [
+      "UM"
+    ],
+    "tzIdentifier": "Pacific/Johnston",
+    "type": "alias",
+    "utcOffsetStandard": "−10:00",
+    "utcOffsetDst": "−10:00",
+    "abbreviationStandard": "HST",
+    "abbreviationDst": "HST",
+    "canonicalLink": "Pacific/Honolulu"
+  },
+  {
+    "countryCodes": [
+      "KI"
+    ],
+    "tzIdentifier": "Pacific/Kanton",
+    "type": "canonical",
+    "utcOffsetStandard": "+13:00",
+    "utcOffsetDst": "+13:00",
+    "abbreviationStandard": "+13",
+    "abbreviationDst": "+13"
+  },
+  {
+    "countryCodes": [
+      "KI"
+    ],
+    "tzIdentifier": "Pacific/Kiritimati",
+    "type": "canonical",
+    "utcOffsetStandard": "+14:00",
+    "utcOffsetDst": "+14:00",
+    "abbreviationStandard": "+14",
+    "abbreviationDst": "+14"
+  },
+  {
+    "countryCodes": [
+      "FM"
+    ],
+    "tzIdentifier": "Pacific/Kosrae",
+    "type": "canonical",
+    "utcOffsetStandard": "+11:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "+11",
+    "abbreviationDst": "+11"
+  },
+  {
+    "countryCodes": [
+      "MH"
+    ],
+    "tzIdentifier": "Pacific/Kwajalein",
+    "type": "canonical",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+12:00",
+    "abbreviationStandard": "+12",
+    "abbreviationDst": "+12"
+  },
+  {
+    "countryCodes": [
+      "MH"
+    ],
+    "tzIdentifier": "Pacific/Majuro",
+    "type": "alias",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+12:00",
+    "abbreviationStandard": "+12",
+    "abbreviationDst": "+12",
+    "canonicalLink": "Pacific/Tarawa"
+  },
+  {
+    "countryCodes": [
+      "PF"
+    ],
+    "tzIdentifier": "Pacific/Marquesas",
+    "type": "canonical",
+    "utcOffsetStandard": "−09:30",
+    "utcOffsetDst": "−09:30",
+    "abbreviationStandard": "-0930",
+    "abbreviationDst": "-0930"
+  },
+  {
+    "countryCodes": [
+      "UM"
+    ],
+    "tzIdentifier": "Pacific/Midway",
+    "type": "alias",
+    "utcOffsetStandard": "−11:00",
+    "utcOffsetDst": "−11:00",
+    "abbreviationStandard": "SST",
+    "abbreviationDst": "SST",
+    "canonicalLink": "Pacific/Pago_Pago"
+  },
+  {
+    "countryCodes": [
+      "NR"
+    ],
+    "tzIdentifier": "Pacific/Nauru",
+    "type": "canonical",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+12:00",
+    "abbreviationStandard": "+12",
+    "abbreviationDst": "+12"
+  },
+  {
+    "countryCodes": [
+      "NU"
+    ],
+    "tzIdentifier": "Pacific/Niue",
+    "type": "canonical",
+    "utcOffsetStandard": "−11:00",
+    "utcOffsetDst": "−11:00",
+    "abbreviationStandard": "-11",
+    "abbreviationDst": "-11"
+  },
+  {
+    "countryCodes": [
+      "NF"
+    ],
+    "tzIdentifier": "Pacific/Norfolk",
+    "type": "canonical",
+    "utcOffsetStandard": "+11:00",
+    "utcOffsetDst": "+12:00",
+    "abbreviationStandard": "+11",
+    "abbreviationDst": "+12"
+  },
+  {
+    "countryCodes": [
+      "NC"
+    ],
+    "tzIdentifier": "Pacific/Noumea",
+    "type": "canonical",
+    "utcOffsetStandard": "+11:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "+11",
+    "abbreviationDst": "+11"
+  },
+  {
+    "countryCodes": [
+      "AS",
+      "UM"
+    ],
+    "tzIdentifier": "Pacific/Pago_Pago",
+    "type": "canonical",
+    "utcOffsetStandard": "−11:00",
+    "utcOffsetDst": "−11:00",
+    "abbreviationStandard": "SST",
+    "abbreviationDst": "SST"
+  },
+  {
+    "countryCodes": [
+      "PW"
+    ],
+    "tzIdentifier": "Pacific/Palau",
+    "type": "canonical",
+    "utcOffsetStandard": "+09:00",
+    "utcOffsetDst": "+09:00",
+    "abbreviationStandard": "+09",
+    "abbreviationDst": "+09"
+  },
+  {
+    "countryCodes": [
+      "PN"
+    ],
+    "tzIdentifier": "Pacific/Pitcairn",
+    "type": "canonical",
+    "utcOffsetStandard": "−08:00",
+    "utcOffsetDst": "−08:00",
+    "abbreviationStandard": "-08",
+    "abbreviationDst": "-08"
+  },
+  {
+    "countryCodes": [
+      "FM"
+    ],
+    "tzIdentifier": "Pacific/Pohnpei",
+    "type": "alias",
+    "utcOffsetStandard": "+11:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "+11",
+    "abbreviationDst": "+11",
+    "canonicalLink": "Pacific/Guadalcanal"
+  },
+  {
+    "countryCodes": [
+      "FM"
+    ],
+    "tzIdentifier": "Pacific/Ponape",
+    "type": "alias",
+    "utcOffsetStandard": "+11:00",
+    "utcOffsetDst": "+11:00",
+    "abbreviationStandard": "+11",
+    "abbreviationDst": "+11",
+    "canonicalLink": "Pacific/Guadalcanal"
+  },
+  {
+    "countryCodes": [
+      "PG",
+      "AQ",
+      "FM"
+    ],
+    "tzIdentifier": "Pacific/Port_Moresby",
+    "type": "canonical",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+10:00",
+    "abbreviationStandard": "+10",
+    "abbreviationDst": "+10"
+  },
+  {
+    "countryCodes": [
+      "CK"
+    ],
+    "tzIdentifier": "Pacific/Rarotonga",
+    "type": "canonical",
+    "utcOffsetStandard": "−10:00",
+    "utcOffsetDst": "−10:00",
+    "abbreviationStandard": "-10",
+    "abbreviationDst": "-10"
+  },
+  {
+    "countryCodes": [
+      "MP"
+    ],
+    "tzIdentifier": "Pacific/Saipan",
+    "type": "alias",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+10:00",
+    "abbreviationStandard": "ChST",
+    "abbreviationDst": "ChST",
+    "canonicalLink": "Pacific/Guam"
+  },
+  {
+    "countryCodes": [
+      "AS"
+    ],
+    "tzIdentifier": "Pacific/Samoa",
+    "type": "alias",
+    "utcOffsetStandard": "−11:00",
+    "utcOffsetDst": "−11:00",
+    "abbreviationStandard": "SST",
+    "abbreviationDst": "SST",
+    "canonicalLink": "Pacific/Pago_Pago"
+  },
+  {
+    "countryCodes": [
+      "PF"
+    ],
+    "tzIdentifier": "Pacific/Tahiti",
+    "type": "canonical",
+    "utcOffsetStandard": "−10:00",
+    "utcOffsetDst": "−10:00",
+    "abbreviationStandard": "-10",
+    "abbreviationDst": "-10"
+  },
+  {
+    "countryCodes": [
+      "KI",
+      "MH",
+      "TV",
+      "UM",
+      "WF"
+    ],
+    "tzIdentifier": "Pacific/Tarawa",
+    "type": "canonical",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+12:00",
+    "abbreviationStandard": "+12",
+    "abbreviationDst": "+12"
+  },
+  {
+    "countryCodes": [
+      "TO"
+    ],
+    "tzIdentifier": "Pacific/Tongatapu",
+    "type": "canonical",
+    "utcOffsetStandard": "+13:00",
+    "utcOffsetDst": "+13:00",
+    "abbreviationStandard": "+13",
+    "abbreviationDst": "+13"
+  },
+  {
+    "countryCodes": [
+      "FM"
+    ],
+    "tzIdentifier": "Pacific/Truk",
+    "type": "alias",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+10:00",
+    "abbreviationStandard": "+10",
+    "abbreviationDst": "+10",
+    "canonicalLink": "Pacific/Port_Moresby"
+  },
+  {
+    "countryCodes": [
+      "UM"
+    ],
+    "tzIdentifier": "Pacific/Wake",
+    "type": "alias",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+12:00",
+    "abbreviationStandard": "+12",
+    "abbreviationDst": "+12",
+    "canonicalLink": "Pacific/Tarawa"
+  },
+  {
+    "countryCodes": [
+      "WF"
+    ],
+    "tzIdentifier": "Pacific/Wallis",
+    "type": "alias",
+    "utcOffsetStandard": "+12:00",
+    "utcOffsetDst": "+12:00",
+    "abbreviationStandard": "+12",
+    "abbreviationDst": "+12",
+    "canonicalLink": "Pacific/Tarawa"
+  },
+  {
+    "countryCodes": [
+      "FM"
+    ],
+    "tzIdentifier": "Pacific/Yap",
+    "type": "alias",
+    "utcOffsetStandard": "+10:00",
+    "utcOffsetDst": "+10:00",
+    "abbreviationStandard": "+10",
+    "abbreviationDst": "+10",
+    "canonicalLink": "Pacific/Port_Moresby"
+  },
+  {
+    "countryCodes": [
+      "PL"
+    ],
+    "tzIdentifier": "Poland",
+    "type": "alias",
+    "utcOffsetStandard": "+01:00",
+    "utcOffsetDst": "+02:00",
+    "abbreviationStandard": "CET",
+    "abbreviationDst": "CEST",
+    "canonicalLink": "Europe/Warsaw"
+  },
+  {
+    "countryCodes": [
+      "PT"
+    ],
+    "tzIdentifier": "Portugal",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WET",
+    "abbreviationDst": "WEST",
+    "canonicalLink": "Europe/Lisbon"
+  },
+  {
+    "countryCodes": [
+      "CN"
+    ],
+    "tzIdentifier": "PRC",
+    "type": "alias",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST",
+    "canonicalLink": "Asia/Shanghai"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "PST8PDT",
+    "type": "alias",
+    "utcOffsetStandard": "−08:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "PST",
+    "abbreviationDst": "PDT",
+    "canonicalLink": "America/Los_Angeles"
+  },
+  {
+    "countryCodes": [
+      "TW"
+    ],
+    "tzIdentifier": "ROC",
+    "type": "alias",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CST",
+    "canonicalLink": "Asia/Taipei"
+  },
+  {
+    "countryCodes": [
+      "KR"
+    ],
+    "tzIdentifier": "ROK",
+    "type": "alias",
+    "utcOffsetStandard": "+09:00",
+    "utcOffsetDst": "+09:00",
+    "abbreviationStandard": "KST",
+    "abbreviationDst": "KST",
+    "canonicalLink": "Asia/Seoul"
+  },
+  {
+    "countryCodes": [
+      "SG"
+    ],
+    "tzIdentifier": "Singapore",
+    "type": "alias",
+    "utcOffsetStandard": "+08:00",
+    "utcOffsetDst": "+08:00",
+    "abbreviationStandard": "+08",
+    "abbreviationDst": "+08",
+    "canonicalLink": "Asia/Singapore"
+  },
+  {
+    "countryCodes": [
+      "TR"
+    ],
+    "tzIdentifier": "Turkey",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "+03",
+    "abbreviationDst": "+03",
+    "canonicalLink": "Europe/Istanbul"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "UCT",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "UTC",
+    "abbreviationDst": "UTC",
+    "canonicalLink": "Etc/UTC"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Universal",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "UTC",
+    "abbreviationDst": "UTC",
+    "canonicalLink": "Etc/UTC"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "US/Alaska",
+    "type": "alias",
+    "utcOffsetStandard": "−09:00",
+    "utcOffsetDst": "−08:00",
+    "abbreviationStandard": "AKST",
+    "abbreviationDst": "AKDT",
+    "canonicalLink": "America/Anchorage"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "US/Aleutian",
+    "type": "alias",
+    "utcOffsetStandard": "−10:00",
+    "utcOffsetDst": "−09:00",
+    "abbreviationStandard": "HST",
+    "abbreviationDst": "HDT",
+    "canonicalLink": "America/Adak"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "US/Arizona",
+    "type": "alias",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MST",
+    "canonicalLink": "America/Phoenix"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "US/Central",
+    "type": "alias",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT",
+    "canonicalLink": "America/Chicago"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "US/East-Indiana",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT",
+    "canonicalLink": "America/Indiana/Indianapolis"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "US/Eastern",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT",
+    "canonicalLink": "America/New_York"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "US/Hawaii",
+    "type": "alias",
+    "utcOffsetStandard": "−10:00",
+    "utcOffsetDst": "−10:00",
+    "abbreviationStandard": "HST",
+    "abbreviationDst": "HST",
+    "canonicalLink": "Pacific/Honolulu"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "US/Indiana-Starke",
+    "type": "alias",
+    "utcOffsetStandard": "−06:00",
+    "utcOffsetDst": "−05:00",
+    "abbreviationStandard": "CST",
+    "abbreviationDst": "CDT",
+    "canonicalLink": "America/Indiana/Knox"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "US/Michigan",
+    "type": "alias",
+    "utcOffsetStandard": "−05:00",
+    "utcOffsetDst": "−04:00",
+    "abbreviationStandard": "EST",
+    "abbreviationDst": "EDT",
+    "canonicalLink": "America/Detroit"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "US/Mountain",
+    "type": "alias",
+    "utcOffsetStandard": "−07:00",
+    "utcOffsetDst": "−06:00",
+    "abbreviationStandard": "MST",
+    "abbreviationDst": "MDT",
+    "canonicalLink": "America/Denver"
+  },
+  {
+    "countryCodes": [
+      "US"
+    ],
+    "tzIdentifier": "US/Pacific",
+    "type": "alias",
+    "utcOffsetStandard": "−08:00",
+    "utcOffsetDst": "−07:00",
+    "abbreviationStandard": "PST",
+    "abbreviationDst": "PDT",
+    "canonicalLink": "America/Los_Angeles"
+  },
+  {
+    "countryCodes": [
+      "AS"
+    ],
+    "tzIdentifier": "US/Samoa",
+    "type": "alias",
+    "utcOffsetStandard": "−11:00",
+    "utcOffsetDst": "−11:00",
+    "abbreviationStandard": "SST",
+    "abbreviationDst": "SST",
+    "canonicalLink": "Pacific/Pago_Pago"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "UTC",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "UTC",
+    "abbreviationDst": "UTC",
+    "canonicalLink": "Etc/UTC"
+  },
+  {
+    "countryCodes": [
+      "RU"
+    ],
+    "tzIdentifier": "W-SU",
+    "type": "alias",
+    "utcOffsetStandard": "+03:00",
+    "utcOffsetDst": "+03:00",
+    "abbreviationStandard": "MSK",
+    "abbreviationDst": "MSK",
+    "canonicalLink": "Europe/Moscow"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "WET",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+01:00",
+    "abbreviationStandard": "WET",
+    "abbreviationDst": "WEST",
+    "canonicalLink": "Europe/Lisbon"
+  },
+  {
+    "countryCodes": [],
+    "tzIdentifier": "Zulu",
+    "type": "alias",
+    "utcOffsetStandard": "+00:00",
+    "utcOffsetDst": "+00:00",
+    "abbreviationStandard": "UTC",
+    "abbreviationDst": "UTC",
+    "canonicalLink": "Etc/UTC"
+  }
+]
