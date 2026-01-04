@@ -40,7 +40,7 @@ onboard-group-title = 🏁 **Sélection de Groupe**
 
     Sélectionnez un groupe commun ou saisissez le vôtre :
 
-onboard-group-custom = 🏁 **Sélection du Groupe**
+onboard-group-custom = 🏁 **Sélection du Groupe (Optionnel)**
 
     Saisissez votre groupe dans l'un de ces formats :
     • **E** (Elite)
