@@ -21,8 +21,9 @@ logger = logging.getLogger(__name__)
 
 # Notification type labels - used across multiple commands
 NOTIFICATION_LABELS = {
-    '48h': '48h before quali closes',
-    '24h': '24h before quali closes',
+    '72h': '3d before quali closes',
+    '48h': '2d before quali closes',
+    '24h': '1d before quali closes',
     '2h': '2h before quali closes',
     '10min': '10min before quali closes',
     'opens_soon': 'Quali is open',
