@@ -1,4 +1,5 @@
 """Notifications module - handles user notifications and data management"""
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ from .user_data import (
     mark_quali_done,
     reset_user_status,
     LANGUAGE_OPTIONS,
-    DEFAULT_USER_LANG
+    DEFAULT_USER_LANG,
 )
 
 from .validation import (
@@ -31,7 +32,7 @@ from .validation import (
     get_custom_notifications,
     set_custom_notification,
     CUSTOM_NOTIF_MIN_HOURS,
-    CUSTOM_NOTIF_MAX_HOURS
+    CUSTOM_NOTIF_MAX_HOURS,
 )
 
 from .sender import (
@@ -39,7 +40,7 @@ from .sender import (
     send_race_live_notification,
     send_race_replay_notification,
     send_race_results_notification,
-    format_weather_data
+    format_weather_data,
 )
 
 from .checker import check_notifications

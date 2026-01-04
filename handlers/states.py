@@ -1,4 +1,5 @@
 """FSM state handlers and state group definitions"""
+
 import logging
 import re
 from aiogram import F
@@ -31,21 +32,18 @@ class TimezoneStates(StatesGroup):
     waiting_for_timezone_input = State()
 
 
-@router.message(SetGroupStates.waiting_for_group, F.text & ~F.text.startswith('/'))
+@router.message(SetGroupStates.waiting_for_group, F.text & ~F.text.startswith("/"))
 async def process_group_input(message: Message, state: FSMContext, i18n: I18nContext):
     """Process user's group input from settings"""
     group_input = message.text.strip().upper()
 
     # Validate format: E or M/P/A/R followed by 1-3 digits
-    if group_input == 'E':
+    if group_input == "E":
         valid = True
-    elif re.match(r'^[MPAR]\d{1,3}$', group_input):
+    elif re.match(r"^[MPAR]\d{1,3}$", group_input):
         valid = True
     else:
-        await message.answer(
-            i18n.get("error-invalid-format"),
-            parse_mode='Markdown'
-        )
+        await message.answer(i18n.get("error-invalid-format"), parse_mode="Markdown")
         return
 
     # Save the group
@@ -54,26 +52,37 @@ async def process_group_input(message: Message, state: FSMContext, i18n: I18nCon
     await state.clear()
 
     # Show success with back to settings button
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=i18n.get("button-back-to-settings"), callback_data="settings_main")]
-    ])
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-back-to-settings"),
+                    callback_data="settings_main",
+                )
+            ]
+        ]
+    )
 
     await message.answer(
         i18n.get("settings-group-set", group=group_display),
         reply_markup=keyboard,
-        parse_mode='Markdown'
+        parse_mode="Markdown",
     )
 
 
-@router.message(CustomNotificationStates.waiting_for_time, F.text & ~F.text.startswith('/'))
-async def process_custom_notification_time_input(message: Message, state: FSMContext, i18n: I18nContext):
+@router.message(
+    CustomNotificationStates.waiting_for_time, F.text & ~F.text.startswith("/")
+)
+async def process_custom_notification_time_input(
+    message: Message, state: FSMContext, i18n: I18nContext
+):
     """Process user's custom time input"""
     user_id = message.from_user.id
     time_input = message.text.strip()
 
     # Get slot index from state
     state_data = await state.get_data()
-    slot_idx = state_data.get('slot_index', 0)
+    slot_idx = state_data.get("slot_index", 0)
 
     # Parse time input
     hours, error_msg = parse_time_input(time_input, i18n)
@@ -81,7 +90,7 @@ async def process_custom_notification_time_input(message: Message, state: FSMCon
     if error_msg:
         await message.answer(
             i18n.get("custom-notif-error-parsing", error=error_msg),
-            parse_mode='Markdown'
+            parse_mode="Markdown",
         )
         return
 
@@ -92,43 +101,62 @@ async def process_custom_notification_time_input(message: Message, state: FSMCon
     await state.clear()
 
     if success:
-        keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text=i18n.get("button-back-custom-notif"), callback_data="custom_notif_menu")]
-        ])
+        keyboard = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text=i18n.get("button-back-custom-notif"),
+                        callback_data="custom_notif_menu",
+                    )
+                ]
+            ]
+        )
 
         await message.answer(
             i18n.get("custom-notif-success", message=result_msg),
             reply_markup=keyboard,
-            parse_mode='Markdown'
+            parse_mode="Markdown",
         )
     else:
-        keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text=i18n.get("button-try-again"), callback_data=f"custom_notif_input_{slot_idx}")],
-            [InlineKeyboardButton(text=i18n.get("button-back"), callback_data="custom_notif_menu")]
-        ])
+        keyboard = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text=i18n.get("button-try-again"),
+                        callback_data=f"custom_notif_input_{slot_idx}",
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        text=i18n.get("button-back"), callback_data="custom_notif_menu"
+                    )
+                ],
+            ]
+        )
 
         await message.answer(
             i18n.get("custom-notif-error-setting", error=result_msg),
             reply_markup=keyboard,
-            parse_mode='Markdown'
+            parse_mode="Markdown",
         )
 
 
-@router.message(OnboardingStates.waiting_for_group, F.text & ~F.text.startswith('/'))
-async def process_onboarding_group_input(message: Message, state: FSMContext, i18n: I18nContext):
+@router.message(OnboardingStates.waiting_for_group, F.text & ~F.text.startswith("/"))
+async def process_onboarding_group_input(
+    message: Message, state: FSMContext, i18n: I18nContext
+):
     """Process custom group input during onboarding"""
     user_id = message.from_user.id
     group_input = message.text.strip().upper()
 
     # Validate format
-    if group_input == 'E':
+    if group_input == "E":
         valid = True
-    elif re.match(r'^[MPAR]\d{1,3}$', group_input):
+    elif re.match(r"^[MPAR]\d{1,3}$", group_input):
         valid = True
     else:
         await message.answer(
-            i18n.get("error-invalid-format-onboarding"),
-            parse_mode='Markdown'
+            i18n.get("error-invalid-format-onboarding"), parse_mode="Markdown"
         )
         return
 
@@ -138,22 +166,48 @@ async def process_onboarding_group_input(message: Message, state: FSMContext, i1
     await state.clear()
 
     # Show welcome complete message with main menu buttons
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=i18n.get("button-main-menu-status"), callback_data="main_menu_status")],
-        [InlineKeyboardButton(text=i18n.get("button-main-menu-calendar"), callback_data="main_menu_calendar")],
-        [InlineKeyboardButton(text=i18n.get("button-main-menu-next"), callback_data="main_menu_next")],
-        [InlineKeyboardButton(text=i18n.get("button-main-menu-settings"), callback_data="main_menu_settings")]
-    ])
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-main-menu-status"),
+                    callback_data="main_menu_status",
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-main-menu-calendar"),
+                    callback_data="main_menu_calendar",
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-main-menu-next"),
+                    callback_data="main_menu_next",
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-main-menu-settings"),
+                    callback_data="main_menu_settings",
+                )
+            ],
+        ]
+    )
 
     await message.answer(
         i18n.get("onboard-complete-with-group", group=group_display),
         reply_markup=keyboard,
-        parse_mode='Markdown'
+        parse_mode="Markdown",
     )
 
 
-@router.message(TimezoneStates.waiting_for_timezone_input, F.text & ~F.text.startswith('/'))
-async def process_timezone_input(message: Message, state: FSMContext, i18n: I18nContext):
+@router.message(
+    TimezoneStates.waiting_for_timezone_input, F.text & ~F.text.startswith("/")
+)
+async def process_timezone_input(
+    message: Message, state: FSMContext, i18n: I18nContext
+):
     """Process user's timezone search input and show fuzzy-matched options"""
     from timezone_utils import fuzzy_search_timezones, get_timezone_display_name
     from zoneinfo import ZoneInfo
@@ -168,8 +222,7 @@ async def process_timezone_input(message: Message, state: FSMContext, i18n: I18n
     if not matches:
         # No matches found
         await message.answer(
-            i18n.get("error-timezone-not-found", query=query),
-            parse_mode='Markdown'
+            i18n.get("error-timezone-not-found", query=query), parse_mode="Markdown"
         )
         return
 
@@ -181,23 +234,29 @@ async def process_timezone_input(message: Message, state: FSMContext, i18n: I18n
         try:
             timezone_obj = ZoneInfo(tz_name)
             display_name = get_timezone_display_name(timezone_obj, now)
-            keyboard_buttons.append([InlineKeyboardButton(
-                text=display_name,
-                callback_data=f"tz_select_{tz_name}"
-            )])
+            keyboard_buttons.append(
+                [
+                    InlineKeyboardButton(
+                        text=display_name, callback_data=f"tz_select_{tz_name}"
+                    )
+                ]
+            )
         except Exception as e:
             logger.warning(f"Failed to create button for {tz_name}: {e}")
 
     # Add cancel button
-    keyboard_buttons.append([InlineKeyboardButton(
-        text=i18n.get("button-cancel"),
-        callback_data="settings_main"
-    )])
+    keyboard_buttons.append(
+        [
+            InlineKeyboardButton(
+                text=i18n.get("button-cancel"), callback_data="settings_main"
+            )
+        ]
+    )
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
 
     await message.answer(
         i18n.get("timezone-select-matches", query=query),
         reply_markup=keyboard,
-        parse_mode='Markdown'
+        parse_mode="Markdown",
     )

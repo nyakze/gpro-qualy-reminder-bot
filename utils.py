@@ -1,4 +1,5 @@
 """Shared utility functions for GPRO Bot"""
+
 import pycountry
 import math
 import re
@@ -11,7 +12,7 @@ UI_LANGUAGE_DISPLAY = {
     "br": "🇧🇷 Português",
     "it": "🇮🇹 Italiano",
     "es": "🇪🇸 Español",
-    "fr": "🇫🇷 Français"
+    "fr": "🇫🇷 Français",
 }
 
 
@@ -46,7 +47,9 @@ def country_code_to_flag(country_code: str) -> str:
     country_code = country_code.upper()
 
     try:
-        flag = "".join(chr(REGIONAL_INDICATOR_A + ord(char) - ord('A')) for char in country_code)
+        flag = "".join(
+            chr(REGIONAL_INDICATOR_A + ord(char) - ord("A")) for char in country_code
+        )
         return flag
     except (ValueError, TypeError):
         return ""
@@ -91,12 +94,12 @@ def add_flag_to_track(track: str) -> str:
         "Sakhir GP (Bahrain)" -> "Sakhir GP 🇧🇭"
         "Silverstone GP (United Kingdom)" -> "Silverstone GP 🇬🇧"
     """
-    if not track or '(' not in track:
+    if not track or "(" not in track:
         return track
 
     try:
-        track_name = track.split('(')[0].strip()
-        country = track.split('(')[1].split(')')[0].strip()
+        track_name = track.split("(")[0].strip()
+        country = track.split("(")[1].split(")")[0].strip()
 
         # Get ISO code automatically
         iso_code = get_country_iso_code(country)
@@ -124,20 +127,15 @@ def format_group_display(group: str) -> str:
         return "Not set"
 
     group = group.strip().upper()
-    if group == 'E':
+    if group == "E":
         return "Elite"
 
-    match = re.match(r'^([MPAR])(\d{1,3})$', group)
+    match = re.match(r"^([MPAR])(\d{1,3})$", group)
     if not match:
         return group  # Return as-is if invalid format
 
     letter, number = match.groups()
-    group_names = {
-        'M': 'Master',
-        'P': 'Pro',
-        'A': 'Amateur',
-        'R': 'Rookie'
-    }
+    group_names = {"M": "Master", "P": "Pro", "A": "Amateur", "R": "Rookie"}
 
     return f"{group_names[letter]} - {number}"
 
@@ -181,7 +179,7 @@ def format_time_until_quali(quali_close: datetime, i18n=None) -> str:
         else:
             text = get_text("time-minutes", minutes=minutes)
             return text if text else f"{minutes}m"
-    elif total_days >= 30:   # 30+ days → months + days
+    elif total_days >= 30:  # 30+ days → months + days
         months = math.floor(total_days / 30)
         remaining_days = math.floor(total_days % 30)
         if remaining_days > 0:
@@ -194,7 +192,7 @@ def format_time_until_quali(quali_close: datetime, i18n=None) -> str:
         days = math.floor(total_hours / 24)
         text = get_text("time-days", days=days)
         return text if text else f"{days}d"
-    elif total_hours >= 24:   # 1+ day → "1d 14h"
+    elif total_hours >= 24:  # 1+ day → "1d 14h"
         days = math.floor(total_hours / 24)
         remaining_hours = math.floor(total_hours % 24)
         if remaining_hours > 0:
@@ -214,10 +212,10 @@ def format_race_beautiful(race_data: dict) -> str:
     if not race_data:
         return "None"
 
-    track = race_data.get('track', 'Unknown')
+    track = race_data.get("track", "Unknown")
     track = add_flag_to_track(track)
-    hours_left = race_data.get('hours_left', 0)
-    quali_close = race_data.get('quali_close', datetime.utcnow())
+    hours_left = race_data.get("hours_left", 0)
+    quali_close = race_data.get("quali_close", datetime.utcnow())
 
     hours_display = math.floor(hours_left)
     deadline = quali_close.strftime("%d.%m %H:%M")
@@ -242,7 +240,7 @@ def get_localized_weekday(date: datetime, i18n=None) -> str:
         3: "weekday-thu",
         4: "weekday-fri",
         5: "weekday-sat",
-        6: "weekday-sun"
+        6: "weekday-sun",
     }
 
     weekday_key = weekday_map[date.weekday()]
@@ -254,7 +252,13 @@ def get_localized_weekday(date: datetime, i18n=None) -> str:
         return date.strftime("%a")
 
 
-def format_full_calendar(calendar_data: dict, title: str = "Full Season", is_current_season: bool = True, user_id: int = None, i18n=None) -> str:
+def format_full_calendar(
+    calendar_data: dict,
+    title: str = "Full Season",
+    is_current_season: bool = True,
+    user_id: int = None,
+    i18n=None,
+) -> str:
     """Generic formatter for current/next season
 
     Args:
@@ -278,28 +282,29 @@ def format_full_calendar(calendar_data: dict, title: str = "Full Season", is_cur
         for race_id in range(1, 18):
             if race_id in calendar_data and isinstance(calendar_data[race_id], dict):
                 race_data = calendar_data[race_id].copy()
-                race_data['race_id'] = race_id
+                race_data["race_id"] = race_id
                 race_list.append(race_data)
 
     # 🔥 Next race ТОЛЬКО для current season
     next_race_id = None
     if is_current_season:
         for race in race_list:
-            if race.get('quali_close', now) > now:
-                next_race_id = race['race_id']
+            if race.get("quali_close", now) > now:
+                next_race_id = race["race_id"]
                 break
 
     text = ""
     for race in race_list:
-        track = race.get('track', f'Race {race["race_id"]}')
+        track = race.get("track", f'Race {race["race_id"]}')
         track = add_flag_to_track(track)
-        race_date = race.get('date', now)
-        quali_close = race.get('quali_close', now)
-        race_id = race['race_id']
+        race_date = race.get("date", now)
+        quali_close = race.get("quali_close", now)
+        race_id = race["race_id"]
 
         # Convert to user timezone if user_id provided
         if user_id is not None:
             from timezone_utils import convert_to_user_tz
+
             race_date = convert_to_user_tz(race_date, user_id) or race_date
 
         # Get localized 2-letter weekday abbreviation

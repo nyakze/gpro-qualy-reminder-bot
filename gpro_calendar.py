@@ -15,12 +15,12 @@ next_season_calendar = {}
 
 # Date parsing formats (in order of priority)
 DATE_FORMATS = [
-    '%d.%m %Y',    # 05.12 2025
-    '%b %d, %Y',
-    '%b %d %Y',
-    '%d %b %Y',
-    '%Y-%m-%d',
-    '%d.%m.%Y'
+    "%d.%m %Y",  # 05.12 2025
+    "%b %d, %Y",
+    "%b %d %Y",
+    "%d %b %Y",
+    "%Y-%m-%d",
+    "%d.%m.%Y",
 ]
 
 # Race timing constants
@@ -36,21 +36,21 @@ def _load_calendar_from_file(filepath: str) -> dict:
         dict: Calendar data with datetime objects, or empty dict on error
     """
     try:
-        with open(filepath, 'r') as f:
+        with open(filepath, "r") as f:
             data = json.load(f)
             calendar = {}
             for race_id_str, race_data in data.items():
                 race_id = int(race_id_str)
                 race_entry = {
-                    'quali_close': datetime.fromisoformat(race_data['quali_close']),
-                    'track': race_data['track'],
-                    'date': datetime.fromisoformat(race_data['date']),
-                    'group': race_data.get('group', 'Pro')
+                    "quali_close": datetime.fromisoformat(race_data["quali_close"]),
+                    "track": race_data["track"],
+                    "date": datetime.fromisoformat(race_data["date"]),
+                    "group": race_data.get("group", "Pro"),
                 }
 
                 # Load weather data if available
-                if 'weather' in race_data:
-                    race_entry['weather'] = race_data['weather']
+                if "weather" in race_data:
+                    race_entry["weather"] = race_data["weather"]
 
                 calendar[race_id] = race_entry
             return calendar
@@ -75,21 +75,21 @@ def _save_calendar_to_file(calendar: dict, filepath: str):
     serializable = {}
     for k, v in calendar.items():
         race_data = {
-            'quali_close': v['quali_close'].isoformat(),
-            'track': v['track'],
-            'date': v['date'].isoformat(),
-            'group': v['group']
+            "quali_close": v["quali_close"].isoformat(),
+            "track": v["track"],
+            "date": v["date"].isoformat(),
+            "group": v["group"],
         }
 
         # Include weather data if available
-        if 'weather' in v:
-            race_data['weather'] = v['weather']
+        if "weather" in v:
+            race_data["weather"] = v["weather"]
 
         serializable[str(k)] = race_data
 
-    temp_file = filepath + '.tmp'
+    temp_file = filepath + ".tmp"
     try:
-        with open(temp_file, 'w') as f:
+        with open(temp_file, "w") as f:
             json.dump(serializable, f, indent=2)
             f.flush()
             os.fsync(f.fileno())
@@ -117,6 +117,7 @@ async def load_calendar_silent() -> bool:
         return True
     return False
 
+
 async def load_next_season_silent() -> bool:
     """Load next season from cache ONLY"""
     if not os.path.exists(NEXT_SEASON_FILE):
@@ -131,29 +132,30 @@ async def load_next_season_silent() -> bool:
         return True
     return False
 
+
 async def update_calendar() -> bool:
     """Update calendar from GPRO API - /update command"""
     if not GPRO_API_TOKEN:
         logger.error("❌ GPRO_API_TOKEN missing")
         return False
-        
+
     url = f"https://gpro.net/{GPRO_API_LANG}/backend/api/v2/Calendar"
     headers = {
         "Authorization": f"Bearer {GPRO_API_TOKEN}",
-        "User-Agent": "GPRO-QualiBot/1.0"
+        "User-Agent": "GPRO-QualiBot/1.0",
     }
-    
+
     try:
         logger.info("🔄 Updating calendar from GPRO API...")
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers) as resp:
                 if resp.status == 200:
                     raw_response = await resp.json()
-                    
+
                     # CURRENT SEASON
-                    data = raw_response.get('events', [])
+                    data = raw_response.get("events", [])
                     calendar = parse_gpro_events(data, is_next_season=False)
-                    
+
                     if calendar:
                         save_calendar(calendar)
                         global race_calendar
@@ -162,115 +164,135 @@ async def update_calendar() -> bool:
                         logger.info(f"✅ CURRENT SEASON: {len(calendar)} races!")
                     else:
                         logger.warning("No valid race events found")
-                    
+
                     # NEXT SEASON LOGIC
-                    next_season_published = raw_response.get("nextSeasonPublished", False)
+                    next_season_published = raw_response.get(
+                        "nextSeasonPublished", False
+                    )
                     logger.info(f"📊 API nextSeasonPublished: {next_season_published}")
-                    
+
                     if next_season_published:
                         next_events = raw_response.get("nextSeasonEvents", [])
                         logger.info(f"📊 Found {len(next_events)} nextSeasonEvents")
-                        
+
                         if next_events:
-                            next_calendar = parse_gpro_events(next_events, is_next_season=True)
+                            next_calendar = parse_gpro_events(
+                                next_events, is_next_season=True
+                            )
                             if next_calendar:
                                 save_next_season_calendar(next_calendar)
                                 global next_season_calendar
                                 next_season_calendar.clear()
                                 next_season_calendar.update(next_calendar)
-                                logger.info(f"🌟 NEXT SEASON: {len(next_calendar)} races populated!")
+                                logger.info(
+                                    f"🌟 NEXT SEASON: {len(next_calendar)} races populated!"
+                                )
                             else:
                                 logger.warning("No valid next season events")
                         else:
-                            logger.warning("nextSeasonPublished=true but no nextSeasonEvents")
+                            logger.warning(
+                                "nextSeasonPublished=true but no nextSeasonEvents"
+                            )
                     else:
                         # FORCE CLEANUP
                         next_season_calendar.clear()
-                        
+
                         if os.path.exists(NEXT_SEASON_FILE):
                             os.remove(NEXT_SEASON_FILE)
-                            logger.info("🗑️ Next season file REMOVED - API says not published")
+                            logger.info(
+                                "🗑️ Next season file REMOVED - API says not published"
+                            )
                         else:
                             logger.info("ℹ️ No next season file (already clean)")
-                    
+
                     return True
                 else:
                     logger.error(f"API {resp.status}")
     except Exception as e:
         logger.error(f"Calendar update error: {e}")
-    
+
     return False
+
 
 def parse_gpro_events(events: list, is_next_season: bool = False) -> dict:
     """Parse GPRO events - SEQUENTIAL RACE NUMBERS 1,2,3...!"""
     calendar = {}
     valid_races = []
     season_type = "🌟 NEXT" if is_next_season else "✅ CURRENT"
-    
+
     # **1. COLLECT ALL valid races first**
     for event in events:
-        if event.get('eventType') != 'R':  # Race only
+        if event.get("eventType") != "R":  # Race only
             continue
-            
-        idx = event.get('idxReal') or event.get('idx')
+
+        idx = event.get("idxReal") or event.get("idx")
         if not idx:
             continue
-            
-        date_str = event.get('dateEvent')
-        track = event.get('trackName', f"Race {idx}")
-        
+
+        date_str = event.get("dateEvent")
+        track = event.get("trackName", f"Race {idx}")
+
         try:
             race_date = parse_gpro_date_fixed(date_str)
             if not race_date:
                 continue
 
             # Set race start time
-            race_date = race_date.replace(hour=RACE_START_HOUR_UTC, minute=RACE_START_MINUTE_UTC, second=0)
+            race_date = race_date.replace(
+                hour=RACE_START_HOUR_UTC, minute=RACE_START_MINUTE_UTC, second=0
+            )
             quali_close = race_date - timedelta(hours=QUALI_CLOSES_BEFORE_RACE_HOURS)
-            
-            valid_races.append({
-                'orig_id': int(idx),
-                'quali_close': quali_close,
-                'track': track[:30],
-                'date': race_date,
-                'group': event.get('group', 'Pro')
-            })
+
+            valid_races.append(
+                {
+                    "orig_id": int(idx),
+                    "quali_close": quali_close,
+                    "track": track[:30],
+                    "date": race_date,
+                    "group": event.get("group", "Pro"),
+                }
+            )
         except Exception as e:
             logger.debug(f"Parse event {idx} error: {e}")
             continue
-    
+
     # **2. SORT by date + RE-NUMBER 1,2,3...**
-    valid_races.sort(key=lambda x: x['date'])
-    
+    valid_races.sort(key=lambda x: x["date"])
+
     for seq_num, race_data in enumerate(valid_races, 1):
         calendar[seq_num] = {
-            'quali_close': race_data['quali_close'],
-            'track': race_data['track'],
-            'date': race_data['date'],
-            'group': race_data['group']
+            "quali_close": race_data["quali_close"],
+            "track": race_data["track"],
+            "date": race_data["date"],
+            "group": race_data["group"],
         }
-        logger.info(f"{season_type} Race {seq_num}: {race_data['track']} → {race_data['date'].strftime('%d.%m %Y 19:00 UTC')}")
-    
-    logger.info(f"{season_type} Parsed {len(calendar)} sequential race events at 19:00 UTC")
+        logger.info(
+            f"{season_type} Race {seq_num}: {race_data['track']} → {race_data['date'].strftime('%d.%m %Y 19:00 UTC')}"
+        )
+
+    logger.info(
+        f"{season_type} Parsed {len(calendar)} sequential race events at 19:00 UTC"
+    )
     return calendar
+
 
 def parse_gpro_date_fixed(date_str: str) -> datetime:
     """Parse GPRO dates - Simple 'Today' handler!"""
     if not date_str:
         return None
-    
+
     # **SIMPLE "Today" = CURRENT DAY 00:00**
-    if 'Today' in date_str or '<font' in date_str or '<b>' in date_str:
+    if "Today" in date_str or "<font" in date_str or "<b>" in date_str:
         now = datetime.utcnow()
         today = now.replace(hour=0, minute=0, second=0, microsecond=0)
         logger.info(f"⏰ 'Today' → {today.strftime('%d.%m.%Y')} UTC 19:00")
         return today
-        
+
     # **CLEAN HTML + ordinals**
-    day_str = re.sub(r'<[^>]*>', '', date_str)
-    day_str = re.sub(r'(?i)(st|nd|rd|th)\b', '', day_str)
+    day_str = re.sub(r"<[^>]*>", "", date_str)
+    day_str = re.sub(r"(?i)(st|nd|rd|th)\b", "", day_str)
     day_str = day_str.strip()
-    
+
     now = datetime.utcnow()
 
     # Try all standard date formats
@@ -282,11 +304,11 @@ def parse_gpro_date_fixed(date_str: str) -> datetime:
             return dt
         except ValueError:
             continue
-    
+
     # Month/day only
-    if not re.search(r'\d{4}', day_str):
+    if not re.search(r"\d{4}", day_str):
         try:
-            dt = datetime.strptime(day_str, '%b %d')
+            dt = datetime.strptime(day_str, "%b %d")
             dt = dt.replace(year=now.year)
             if dt.date() < now.date():
                 dt = dt.replace(year=now.year + 1)
@@ -294,17 +316,20 @@ def parse_gpro_date_fixed(date_str: str) -> datetime:
         except (ValueError, AttributeError) as e:
             logger.debug(f"Failed to parse date format '{day_str}': {e}")
             pass
-    
+
     logger.warning(f"Cannot parse date: '{date_str}'")
     return None
+
 
 def save_calendar(calendar: dict):
     """Save current season calendar with atomic write to prevent corruption"""
     _save_calendar_to_file(calendar, CALENDAR_FILE)
 
+
 def save_next_season_calendar(calendar: dict):
     """Save next season calendar with atomic write to prevent corruption"""
     _save_calendar_to_file(calendar, NEXT_SEASON_FILE)
+
 
 async def check_quali_status_from_api() -> dict:
     """Check real-time qualification status from GPRO /office endpoint
@@ -318,7 +343,7 @@ async def check_quali_status_from_api() -> dict:
     url = f"https://gpro.net/{GPRO_API_LANG}/backend/api/v2/office"
     headers = {
         "Authorization": f"Bearer {GPRO_API_TOKEN}",
-        "User-Agent": "GPRO-QualiBot/1.0"
+        "User-Agent": "GPRO-QualiBot/1.0",
     }
 
     try:
@@ -326,7 +351,7 @@ async def check_quali_status_from_api() -> dict:
             async with session.get(url, headers=headers, timeout=10) as resp:
                 if resp.status == 200:
                     data = await resp.json()
-                    seconds_left = data.get('secondsLeftQual')
+                    seconds_left = data.get("secondsLeftQual")
 
                     if seconds_left and int(seconds_left) > 0:
                         # Figure out which race this quali is for
@@ -337,12 +362,20 @@ async def check_quali_status_from_api() -> dict:
 
                         # Find matching race (within 1 hour tolerance)
                         for race_id, race_data in race_calendar.items():
-                            time_diff = abs((race_data['quali_close'] - expected_close).total_seconds())
+                            time_diff = abs(
+                                (
+                                    race_data["quali_close"] - expected_close
+                                ).total_seconds()
+                            )
                             if time_diff < 3600:  # Within 1 hour
-                                logger.info(f"✅ API: Race {race_id} quali open, {seconds//3600}h remaining")
+                                logger.info(
+                                    f"✅ API: Race {race_id} quali open, {seconds//3600}h remaining"
+                                )
                                 return {race_id: seconds}
 
-                        logger.debug(f"API returned secondsLeftQual={seconds} but no matching race found")
+                        logger.debug(
+                            f"API returned secondsLeftQual={seconds} but no matching race found"
+                        )
                     else:
                         logger.debug("API: No active qualification")
                     return {}
@@ -355,6 +388,7 @@ async def check_quali_status_from_api() -> dict:
     except Exception as e:
         logger.error(f"Office API error: {e}")
         return {}
+
 
 async def fetch_weather_from_api(race_id: int) -> dict:
     """Fetch weather data from GPRO Practice API for a specific race
@@ -372,7 +406,7 @@ async def fetch_weather_from_api(race_id: int) -> dict:
     url = f"https://gpro.net/{GPRO_API_LANG}/backend/api/v2/Practice"
     headers = {
         "Authorization": f"Bearer {GPRO_API_TOKEN}",
-        "User-Agent": "GPRO-QualiBot/1.0"
+        "User-Agent": "GPRO-QualiBot/1.0",
     }
 
     try:
@@ -382,18 +416,24 @@ async def fetch_weather_from_api(race_id: int) -> dict:
                     data = await resp.json()
 
                     # Extract just the weather data from the response
-                    weather_data = data.get('weather', {})
+                    weather_data = data.get("weather", {})
 
                     if weather_data:
-                        logger.info(f"🌤️ Weather API: Successfully fetched data for race {race_id}")
+                        logger.info(
+                            f"🌤️ Weather API: Successfully fetched data for race {race_id}"
+                        )
                         # Store weather data in race_calendar
                         if race_id in race_calendar:
-                            race_calendar[race_id]['weather'] = weather_data
+                            race_calendar[race_id]["weather"] = weather_data
                             # Save to file to persist weather across restarts
                             save_calendar(race_calendar)
-                            logger.debug(f"Weather data persisted to file for race {race_id}")
+                            logger.debug(
+                                f"Weather data persisted to file for race {race_id}"
+                            )
                     else:
-                        logger.warning(f"Weather API returned data but no 'weather' key found for race {race_id}")
+                        logger.warning(
+                            f"Weather API returned data but no 'weather' key found for race {race_id}"
+                        )
 
                     return weather_data
                 else:
@@ -406,19 +446,22 @@ async def fetch_weather_from_api(race_id: int) -> dict:
         logger.error(f"Weather API error: {e}")
         return {}
 
+
 def get_races_closing_soon(hours_before: float = 720) -> dict:
     """Get races closing within 30 days - SORTED by time!"""
     now = datetime.utcnow()
     upcoming = {}
 
     for race_id, data in race_calendar.items():
-        time_to_close = (data['quali_close'] - now).total_seconds() / 3600
+        time_to_close = (data["quali_close"] - now).total_seconds() / 3600
         if 0 < time_to_close <= hours_before:
             data_copy = data.copy()
-            data_copy['hours_left'] = time_to_close
+            data_copy["hours_left"] = time_to_close
             upcoming[race_id] = data_copy
 
     # Sort by closest first
-    sorted_upcoming = dict(sorted(upcoming.items(), key=lambda x: x[1]['hours_left']))
-    logger.debug(f"Upcoming races ({len(sorted_upcoming)}): {list(sorted_upcoming.keys())}")
+    sorted_upcoming = dict(sorted(upcoming.items(), key=lambda x: x[1]["hours_left"]))
+    logger.debug(
+        f"Upcoming races ({len(sorted_upcoming)}): {list(sorted_upcoming.keys())}"
+    )
     return sorted_upcoming

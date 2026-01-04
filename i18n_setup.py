@@ -1,5 +1,5 @@
 """i18n setup for GPRO Bot using aiogram-i18n"""
-import os
+
 from pathlib import Path
 from typing import Any
 from aiogram_i18n import I18nMiddleware
@@ -7,12 +7,12 @@ from aiogram_i18n.cores import FluentRuntimeCore
 from aiogram_i18n.managers import BaseManager
 
 # Supported UI languages
-SUPPORTED_UI_LANGUAGES = ['en', 'ru', 'br', 'it', 'es', 'fr']
-DEFAULT_UI_LANGUAGE = 'en'
+SUPPORTED_UI_LANGUAGES = ["en", "ru", "br", "it", "es", "fr"]
+DEFAULT_UI_LANGUAGE = "en"
 
 # Get absolute path to locales directory
 _SCRIPT_DIR = Path(__file__).parent
-LOCALES_DIR = _SCRIPT_DIR / 'locales'
+LOCALES_DIR = _SCRIPT_DIR / "locales"
 
 
 class UserLanguageManager(BaseManager):
@@ -43,7 +43,7 @@ class UserLanguageManager(BaseManager):
         user_status = users_data[user_id]
 
         # Get UI language (separate from GPRO language)
-        ui_lang = user_status.get('ui_lang', DEFAULT_UI_LANGUAGE)
+        ui_lang = user_status.get("ui_lang", DEFAULT_UI_LANGUAGE)
 
         # Validate language
         if ui_lang not in SUPPORTED_UI_LANGUAGES:
@@ -51,7 +51,9 @@ class UserLanguageManager(BaseManager):
 
         return ui_lang
 
-    async def set_locale(self, locale: str, event_from_user: Any = None, data: dict = None) -> None:
+    async def set_locale(
+        self, locale: str, event_from_user: Any = None, data: dict = None
+    ) -> None:
         """Set user's UI language preference
 
         Args:
@@ -79,6 +81,7 @@ def setup_i18n() -> I18nMiddleware:
     """
     global _i18n_middleware
     import logging
+
     logger = logging.getLogger(__name__)
 
     # Create i18n middleware with Fluent core
@@ -91,10 +94,10 @@ def setup_i18n() -> I18nMiddleware:
     i18n_middleware = I18nMiddleware(
         core=FluentRuntimeCore(
             path=locales_path,
-            raise_key_error=False  # Gracefully handle missing keys, fall back to default locale
+            raise_key_error=False,  # Gracefully handle missing keys, fall back to default locale
         ),
         manager=UserLanguageManager(),
-        default_locale=DEFAULT_UI_LANGUAGE
+        default_locale=DEFAULT_UI_LANGUAGE,
     )
 
     _i18n_middleware = i18n_middleware
@@ -130,5 +133,8 @@ def get_translation(key: str, locale: str = None, **kwargs) -> str:
         return result if result else key
     except Exception as e:
         import logging
-        logging.getLogger(__name__).warning(f"Translation failed for key '{key}' in locale '{locale}': {e}")
+
+        logging.getLogger(__name__).warning(
+            f"Translation failed for key '{key}' in locale '{locale}': {e}"
+        )
         return key

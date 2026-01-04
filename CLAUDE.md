@@ -62,7 +62,7 @@ sudo journalctl -u gpro -f
 ### Core System Flow
 
 1. **Startup** (`bot.py`):
-   - Load environment config → Load user data → Load calendar cache → Setup i18n → Start handlers → Launch notification checker loop
+   - Load environment config → Load user data → Load timezone search index → Load calendar cache → Setup i18n → Start handlers → Launch notification checker loop
 
 2. **Notification System** (async background task):
    - Adaptive check interval: 5min normally, 1min when race approaching
@@ -113,7 +113,7 @@ sudo journalctl -u gpro -f
 - UI language separate from GPRO link language (31 languages)
 
 **`handlers/`** - Aiogram 3.x handlers
-- `commands.py`: /start, /status, /calendar, /next, /settings, /update, /weather, /users
+- `commands.py`: /start, /status, /calendar, /next, /settings, /update, /updatetz, /weather, /users
 - `callbacks.py`: Button interactions (quali done, weather, notifications toggle, settings)
 - `states.py`: FSM handlers for multi-step flows
 - `onboarding.py`: New user language + group selection flow
@@ -129,13 +129,16 @@ sudo journalctl -u gpro -f
 - Flag emoji generation, time formatting, URL builders, group name formatting
 
 **`timezone_utils.py`** - Timezone conversion & management
-- POPULAR_TIMEZONES: Curated list of ~100 major timezones with search aliases
+- **Timezone data source**: Downloaded from Geoapify (IANA + Wikipedia data) via `/updatetz` command
+- **timezone-info.json**: ~600 timezones with multi-language city names (auto-downloaded, committed to repo)
+- **Search index**: Built at startup from timezone-info.json, supports city names in multiple languages
 - get_user_timezone(): Get ZoneInfo object for user
 - convert_to_user_tz(): Convert UTC datetime to user's timezone
 - format_datetime_for_user(): Convert and format with timezone abbreviation
 - get_timezone_display_name(): Human-readable names like "New York (EST)"
-- fuzzy_search_timezones(): Rapidfuzz-based search with support for city names, abbreviations, UTC offsets
+- fuzzy_search_timezones(): Rapidfuzz-based search with city names (including Cyrillic/non-Latin), countries, UTC offsets
 - Automatic DST handling via Python's zoneinfo module
+- POPULAR_TIMEZONES: Deprecated fallback if timezone-info.json not available
 
 ### Important Implementation Details
 
@@ -158,6 +161,7 @@ sudo journalctl -u gpro -f
 
 **Admin Commands:**
 - `/update`: Fetch calendar from API (current + next season if published)
+- `/updatetz`: Download timezone metadata from Geoapify and rebuild search index
 - `/weather`: Manual weather fetch for testing
 - `/users`: List all users with completion status
 - Admin check: `user_id in ADMIN_USER_IDS` (set in config.py)
@@ -168,10 +172,12 @@ sudo journalctl -u gpro -f
 - All race times displayed in user's local timezone with abbreviation (e.g., "15.01 19:00 EST")
 - DST handled automatically via Python's `zoneinfo` module
 - Default timezone: UTC (backward compatible with existing users)
-- Fuzzy search supports:  city names ("new york"), abbreviations ("pst"), UTC offsets ("utc+3")
-- ~100 popular timezones in POPULAR_TIMEZONES dict (timezone_utils.py)
+- Fuzzy search supports: city names in multiple languages ("москва", "tbilisi"), countries, UTC offsets ("utc+3")
+- ~600 timezones from Geoapify dataset (downloaded via `/updatetz`, stored in timezone-info.json)
+- Search index built at startup for fast fuzzy matching
 - Conversion happens at display time, UTC stored in calendar
 - Migration auto-adds 'timezone': 'UTC' field to existing users
+- POPULAR_TIMEZONES fallback if timezone-info.json not available
 
 ### Testing Considerations
 

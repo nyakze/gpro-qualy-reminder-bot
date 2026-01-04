@@ -1,4 +1,5 @@
 """Handlers module - combines all command, callback, and state handlers"""
+
 import logging
 from aiogram import Router
 
