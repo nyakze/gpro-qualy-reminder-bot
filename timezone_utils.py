@@ -112,26 +112,57 @@ def build_timezone_search_index() -> dict:
             # Store full metadata
             timezone_info[tz_name] = entry
 
+            # Check if this is a canonical timezone (prefer canonical over aliases in duplicates)
+            is_canonical = entry.get("type") == "canonical"
+
             # Add timezone name itself
             search_corpus.append(tz_name)
             tz_name_map[tz_name] = tz_name
 
-            # Extract city name from timezone identifier (e.g., "America/New_York" → "New York")
+            # Extract region and city from timezone identifier
+            region = None
+            city = None
             if "/" in tz_name:
-                city_from_tz = tz_name.split("/")[-1].replace("_", " ")
-                search_corpus.append(city_from_tz)
-                tz_name_map[city_from_tz] = tz_name
+                parts = tz_name.split("/")
+                region = parts[0] if len(parts) > 0 else None
+                city = parts[-1].replace("_", " ")
 
-            # Add abbreviations for searching
+                # Add city name
+                search_corpus.append(city)
+                # Only overwrite if new entry is canonical and old is not, or if key doesn't exist
+                if city not in tz_name_map or is_canonical:
+                    tz_name_map[city] = tz_name
+
+                # Add region + city (e.g., "Europe Moscow", "Asia Tbilisi")
+                region_city = f"{region} {city}"
+                search_corpus.append(region_city)
+                tz_name_map[region_city] = tz_name
+
+            # Add abbreviations with city context to avoid duplicates
             abbr_standard = entry.get("abbreviationStandard")
             if abbr_standard:
-                search_corpus.append(abbr_standard)
-                tz_name_map[abbr_standard] = tz_name
+                # Add plain abbreviation, but prefer canonical timezones
+                if abbr_standard not in tz_name_map or is_canonical:
+                    search_corpus.append(abbr_standard)
+                    tz_name_map[abbr_standard] = tz_name
+
+                # Add city+abbreviation for better matching (e.g., "Moscow MSK", "Tbilisi +04")
+                if city and abbr_standard:
+                    city_abbr = f"{city} {abbr_standard}"
+                    search_corpus.append(city_abbr)
+                    tz_name_map[city_abbr] = tz_name
 
             abbr_dst = entry.get("abbreviationDst")
             if abbr_dst and abbr_dst != abbr_standard:
-                search_corpus.append(abbr_dst)
-                tz_name_map[abbr_dst] = tz_name
+                if abbr_dst not in tz_name_map or is_canonical:
+                    search_corpus.append(abbr_dst)
+                    tz_name_map[abbr_dst] = tz_name
+
+                # Add city+abbreviation for DST too
+                if city and abbr_dst:
+                    city_abbr_dst = f"{city} {abbr_dst}"
+                    search_corpus.append(city_abbr_dst)
+                    tz_name_map[city_abbr_dst] = tz_name
 
             # Add abbreviations (if we had them, but Geoapify doesn't provide them)
             # We could compute current abbreviation, but it changes with DST
@@ -440,16 +471,17 @@ def get_timezone_display_name(tz: ZoneInfo, dt: Optional[datetime] = None) -> st
 
 def parse_utc_offset(query: str) -> Optional[str]:
     """
-    Parse UTC offset queries like "UTC+3", "GMT-5" and find matching IANA timezone.
+    Parse UTC offset queries like "UTC+3", "GMT-5", "+04", "-5" and find matching IANA timezone.
 
     Args:
-        query: Query string like "UTC+3", "GMT-5", "UTC+5.5"
+        query: Query string like "UTC+3", "GMT-5", "UTC+5.5", "+04", "-5"
 
     Returns:
         IANA timezone name or None if not found
     """
-    # Match patterns: UTC+3, GMT-5, UTC+5.5, etc.
-    pattern = r"^(?:UTC|GMT)\s*([+-]?\d+(?:\.\d+)?)\s*$"
+    # Match patterns: UTC+3, GMT-5, UTC+5.5, +04, -5, etc.
+    # More flexible pattern that handles: UTC+3, GMT-5, +04, -5, +0400
+    pattern = r"^(?:UTC|GMT)?\s*([+-]?\d+(?:[:.]\d+)?)\s*$"
     match = re.match(pattern, query.upper().strip())
 
     if not match:
@@ -457,7 +489,24 @@ def parse_utc_offset(query: str) -> Optional[str]:
 
     try:
         offset_str = match.group(1)
-        offset_hours = float(offset_str)
+
+        # Handle different offset formats
+        if ":" in offset_str or "." in offset_str:
+            # Already in hour.decimal or hour:minute format
+            offset_hours = float(offset_str.replace(":", "."))
+        elif len(offset_str) >= 3 and offset_str[-2:].isdigit():
+            # Format like "+0400" or "-0530" (HHMM format)
+            sign = 1 if offset_str[0] != "-" else -1
+            offset_str = offset_str.lstrip("+-")
+            if len(offset_str) == 4:
+                hours = int(offset_str[:2])
+                minutes = int(offset_str[2:])
+                offset_hours = sign * (hours + minutes / 60.0)
+            else:
+                offset_hours = float(offset_str)
+        else:
+            # Simple format like "+4" or "-5"
+            offset_hours = float(offset_str)
 
         # Common UTC offset mappings to representative timezones
         offset_map = {
