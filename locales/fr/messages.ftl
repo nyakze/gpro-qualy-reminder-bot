@@ -550,9 +550,9 @@ timezone-menu-title = ⏰ **Paramètres de Fuseau Horaire**
 
     Fuseau horaire actuel: **{ $timezone }**
 
-    Tapez votre fuseau horaire (nom de ville, abréviation ou décalage UTC):
+    Tapez votre fuseau horaire (nom de ville en anglais, abréviation ou décalage UTC):
 
-    Exemples: `Paris`, `CET`, `UTC+1`, `New York`
+    Exemples: `Paris`, `New York`, `UTC+1`, `London`
 
 timezone-select-matches = 🌍 **Sélectionnez votre fuseau horaire:**
 
@@ -571,5 +571,5 @@ feedback-timezone-set = ✅ Fuseau horaire mis à jour
 feedback-timezone-reset = ✅ Fuseau horaire réinitialisé à UTC
 error-timezone-not-found = ❌ Aucun fuseau horaire trouvé pour "{ $query }"
 
-    Essayez: nom de ville (Paris), abréviation (CET), ou décalage UTC (UTC+1)
+    Essayez: nom de ville en anglais (Paris), abréviation (CET), ou décalage UTC (UTC+1)
 error-invalid-timezone = ❌ Fuseau horaire invalide

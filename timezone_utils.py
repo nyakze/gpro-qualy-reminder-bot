@@ -76,6 +76,77 @@ CITY_TRANSLATIONS = {
     # Add more as needed
 }
 
+# Friendly timezone abbreviations mapping (Geoapify data uses numeric abbreviations)
+# Maps: friendly abbreviation -> IANA timezone
+FRIENDLY_ABBREVIATIONS = {
+    # Americas - North America
+    "EST": "America/New_York",
+    "EDT": "America/New_York",
+    "CST": "America/Chicago",
+    "CDT": "America/Chicago",
+    "MST": "America/Denver",
+    "MDT": "America/Denver",
+    "PST": "America/Los_Angeles",
+    "PDT": "America/Los_Angeles",
+    "AKST": "America/Anchorage",
+    "AKDT": "America/Anchorage",
+    "HST": "Pacific/Honolulu",
+    # Americas - South America
+    "BRT": "America/Sao_Paulo",
+    "BRST": "America/Sao_Paulo",
+    "ART": "America/Argentina/Buenos_Aires",
+    "CLT": "America/Santiago",
+    "CLST": "America/Santiago",
+    "COT": "America/Bogota",
+    "PET": "America/Lima",
+    "VET": "America/Caracas",
+    # Europe - Western
+    "GMT": "Europe/London",
+    "BST": "Europe/London",
+    "WET": "Europe/Lisbon",
+    "WEST": "Europe/Lisbon",
+    "IST": "Europe/Dublin",  # Irish Standard Time
+    # Europe - Central
+    "CET": "Europe/Paris",
+    "CEST": "Europe/Paris",
+    # Europe - Eastern
+    "EET": "Europe/Athens",
+    "EEST": "Europe/Athens",
+    "MSK": "Europe/Moscow",
+    "TRT": "Europe/Istanbul",
+    # Asia - Middle East
+    "GST": "Asia/Dubai",
+    "AST": "Asia/Riyadh",  # Arabia Standard Time
+    "IRST": "Asia/Tehran",
+    "IRDT": "Asia/Tehran",
+    # Asia - South Asia
+    "PKT": "Asia/Karachi",
+    "BST": "Asia/Dhaka",  # Bangladesh Standard Time
+    "NPT": "Asia/Kathmandu",
+    # Asia - Southeast Asia
+    "ICT": "Asia/Bangkok",
+    "SGT": "Asia/Singapore",
+    "MYT": "Asia/Kuala_Lumpur",
+    "WIB": "Asia/Jakarta",
+    "PHT": "Asia/Manila",
+    # Asia - East Asia
+    "HKT": "Asia/Hong_Kong",
+    "JST": "Asia/Tokyo",
+    "KST": "Asia/Seoul",
+    # Pacific - Oceania
+    "NZST": "Pacific/Auckland",
+    "NZDT": "Pacific/Auckland",
+    "AEST": "Australia/Sydney",
+    "AEDT": "Australia/Sydney",
+    "AWST": "Australia/Perth",
+    "ACST": "Australia/Adelaide",
+    "ACDT": "Australia/Adelaide",
+    # Africa
+    "SAST": "Africa/Johannesburg",
+    "WAT": "Africa/Lagos",
+    "EAT": "Africa/Nairobi",
+}
+
 
 async def download_timezone_data() -> bool:
     """
@@ -222,6 +293,14 @@ def build_timezone_search_index() -> dict:
             if tz_name in timezone_info:  # Only add if timezone exists in our data
                 search_corpus.append(translated_name)
                 tz_name_map[translated_name] = tz_name
+
+        # Add friendly timezone abbreviations (BRT, EST, PST, etc.)
+        for abbr, tz_name in FRIENDLY_ABBREVIATIONS.items():
+            if tz_name in timezone_info:  # Only add if timezone exists in our data
+                search_corpus.append(abbr)
+                # Don't overwrite if abbreviation already exists (prioritize Geoapify data)
+                if abbr not in tz_name_map:
+                    tz_name_map[abbr] = tz_name
 
         logger.info(
             f"✅ Built search index: {len(timezone_info)} timezones, {len(search_corpus)} search terms"
@@ -603,6 +682,52 @@ def parse_utc_offset(query: str) -> Optional[str]:
         return None
 
 
+def search_timezones_by_utc_offset(offset_hours: float, limit: int = 10) -> list[str]:
+    """
+    Search for all timezones with a specific UTC offset.
+
+    Args:
+        offset_hours: UTC offset in hours (e.g., 3.0 for UTC+3, -5.0 for UTC-5)
+        limit: Maximum number of results to return
+
+    Returns:
+        List of IANA timezone names with that offset
+    """
+    if not _timezone_search_index or "timezone_info" not in _timezone_search_index:
+        logger.warning("Timezone search index not available")
+        return []
+
+    timezone_info = _timezone_search_index["timezone_info"]
+
+    # Format offset as "+HH:MM" or "-HH:MM"
+    sign = "+" if offset_hours >= 0 else "-"
+    abs_hours = abs(offset_hours)
+    hours = int(abs_hours)
+    minutes = int((abs_hours - hours) * 60)
+    offset_str = f"{sign}{hours:02d}:{minutes:02d}"
+
+    logger.debug(f"Searching for timezones with UTC offset {offset_str}")
+
+    matching_tzs = []
+    seen_cities = set()  # To avoid duplicate city names
+
+    for tz_name, tz_data in timezone_info.items():
+        # Check both standard and DST offsets
+        if tz_data.get("utcOffsetStandard") == offset_str:
+            # Prefer canonical timezones and avoid duplicates
+            if tz_data.get("type") == "canonical":
+                # Extract city name to avoid duplicates
+                city = tz_name.split("/")[-1] if "/" in tz_name else tz_name
+                if city not in seen_cities:
+                    matching_tzs.append(tz_name)
+                    seen_cities.add(city)
+                    if len(matching_tzs) >= limit:
+                        break
+
+    logger.debug(f"Found {len(matching_tzs)} timezones with offset {offset_str}")
+    return matching_tzs
+
+
 def fuzzy_search_timezones(query: str, limit: int = 5) -> list[tuple[str, float]]:
     """
     Fuzzy search timezones by city name, country, or UTC offset.
@@ -620,11 +745,57 @@ def fuzzy_search_timezones(query: str, limit: int = 5) -> list[tuple[str, float]
     if not query:
         return []
 
+    # Check for UTC offset query first (e.g., "UTC+3", "GMT-5", "+4")
+    # Match patterns: UTC+3, GMT-5, UTC+5.5, +04, -5, etc.
+    offset_pattern = r"^(?:UTC|GMT)?\s*([+-]?\d+(?:[:.]\d+)?)\s*$"
+    offset_match = re.match(offset_pattern, query.upper().strip())
+
+    if offset_match:
+        logger.debug(f"Detected UTC offset query: '{query}'")
+        try:
+            offset_str = offset_match.group(1)
+
+            # Handle different offset formats
+            if ":" in offset_str or "." in offset_str:
+                offset_hours = float(offset_str.replace(":", "."))
+            elif len(offset_str) >= 3 and offset_str[-2:].isdigit():
+                # Format like "+0400" or "-0530" (HHMM format)
+                sign = 1 if offset_str[0] != "-" else -1
+                offset_str_clean = offset_str.lstrip("+-")
+                if len(offset_str_clean) == 4:
+                    hours = int(offset_str_clean[:2])
+                    minutes = int(offset_str_clean[2:])
+                    offset_hours = sign * (hours + minutes / 60.0)
+                else:
+                    offset_hours = float(offset_str)
+            else:
+                # Simple format like "+4" or "-5"
+                offset_hours = float(offset_str)
+
+            # Search for all timezones with this offset
+            matching_tzs = search_timezones_by_utc_offset(offset_hours, limit=limit)
+
+            if matching_tzs:
+                # Return with high confidence scores
+                return [(tz, 100.0) for tz in matching_tzs]
+            else:
+                logger.warning(f"No timezones found for UTC offset {offset_hours}")
+        except Exception as e:
+            logger.warning(f"Failed to parse UTC offset '{query}': {e}")
+            # Fall through to regular search
+
     # Check for exact match in translation dictionary first (for non-Latin scripts)
     query_lower = query.lower()
     if query_lower in CITY_TRANSLATIONS:
         tz_name = CITY_TRANSLATIONS[query_lower]
         logger.debug(f"Found exact translation match for '{query}' -> {tz_name}")
+        return [(tz_name, 100.0)]
+
+    # Check for friendly abbreviation match (BRT, EST, PST, etc.)
+    query_upper = query.upper()
+    if query_upper in FRIENDLY_ABBREVIATIONS:
+        tz_name = FRIENDLY_ABBREVIATIONS[query_upper]
+        logger.debug(f"Found friendly abbreviation match for '{query}' -> {tz_name}")
         return [(tz_name, 100.0)]
 
     # Try to use new search index if available

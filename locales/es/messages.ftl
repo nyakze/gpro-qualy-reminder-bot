@@ -550,9 +550,9 @@ timezone-menu-title = ⏰ **Configuración de Zona Horaria**
 
     Zona horaria actual: **{ $timezone }**
 
-    Escribe tu zona horaria (nombre de ciudad, abreviatura o desplazamiento UTC):
+    Escribe tu zona horaria (nombre de ciudad en inglés, abreviatura o desplazamiento UTC):
 
-    Ejemplos: `Madrid`, `CET`, `UTC+1`, `Buenos Aires`
+    Ejemplos: `Madrid`, `New York`, `UTC+1`, `London`
 
 timezone-select-matches = 🌍 **Selecciona tu zona horaria:**
 
@@ -571,5 +571,5 @@ feedback-timezone-set = ✅ Zona horaria actualizada
 feedback-timezone-reset = ✅ Zona horaria restablecida a UTC
 error-timezone-not-found = ❌ No se encontró zona horaria para "{ $query }"
 
-    Intenta: nombre de ciudad (Madrid), abreviatura (CET), o desplazamiento UTC (UTC+1)
+    Intenta: nombre de ciudad en inglés (Madrid), abreviatura (CET), o desplazamiento UTC (UTC+1)
 error-invalid-timezone = ❌ Zona horaria inválida
