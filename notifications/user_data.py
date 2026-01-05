@@ -13,12 +13,18 @@ try:
 except ImportError:
     # Fallback if import fails (shouldn't happen in normal operation)
     UI_LANGUAGE_DISPLAY = {
-        "en": "English",
+        "gb": "English",
         "ru": "Русский",
         "br": "Português",
         "it": "Italiano",
         "es": "Español",
         "fr": "Français",
+        "nl": "Nederlands",
+        "bg": "Български",
+        "cz": "Čeština",
+        "in": "हिन्दी",
+        "ua": "Українська",
+        "pt": "Português",
     }
 
 users_data: Dict[int, Dict] = {}
@@ -142,7 +148,7 @@ def get_user_status(user_id: int) -> Dict:
             "notifications": get_default_notification_preferences(),
             "custom_notifications": get_default_custom_notifications(),
             "gpro_lang": DEFAULT_USER_LANG,
-            "ui_lang": "en",  # Default UI language (separate from GPRO links language)
+            "ui_lang": "gb",  # Default UI language (separate from GPRO links language)
             "timezone": "UTC",  # Default timezone
         }
         save_users_data()
@@ -171,8 +177,13 @@ def get_user_status(user_id: int) -> Dict:
             logger.debug(f"Added 'gpro_lang' field to user {user_id}")
             needs_save = True
         if "ui_lang" not in users_data[user_id]:
-            users_data[user_id]["ui_lang"] = "en"
+            users_data[user_id]["ui_lang"] = "gb"
             logger.debug(f"Added 'ui_lang' field to user {user_id}")
+            needs_save = True
+        # Migration: Convert old "en" to "gb" for GPRO consistency
+        elif users_data[user_id]["ui_lang"] == "en":
+            users_data[user_id]["ui_lang"] = "gb"
+            logger.debug(f"Migrated user {user_id} from 'en' to 'gb'")
             needs_save = True
         # Migration: Add 72h notification preference for existing users
         if "72h" not in users_data[user_id]["notifications"]:
@@ -288,10 +299,10 @@ def get_user_ui_language(user_id: int) -> str:
         user_id: Telegram user ID
 
     Returns:
-        str: Language code (defaults to 'en' if not set)
+        str: Language code (defaults to 'gb' if not set)
     """
     user_status = get_user_status(user_id)
-    return user_status.get("ui_lang", "en")
+    return user_status.get("ui_lang", "gb")
 
 
 def get_user_timezone(user_id: int) -> str:

@@ -7,8 +7,8 @@ from aiogram_i18n.cores import FluentRuntimeCore
 from aiogram_i18n.managers import BaseManager
 
 # Supported UI languages
-SUPPORTED_UI_LANGUAGES = ["en", "ru", "br", "it", "es", "fr"]
-DEFAULT_UI_LANGUAGE = "en"
+SUPPORTED_UI_LANGUAGES = ["gb", "ru", "br", "it", "es", "fr", "nl", "bg", "cz", "in", "ua", "pt"]
+DEFAULT_UI_LANGUAGE = "gb"
 
 # Get absolute path to locales directory
 _SCRIPT_DIR = Path(__file__).parent

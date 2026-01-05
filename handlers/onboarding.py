@@ -37,8 +37,14 @@ async def handle_onboarding_ui_language_select(
         logger.debug(f"User {user_id} selected UI language: {ui_lang}")
 
         # Map UI language to GPRO language
-        # en -> gb, others stay the same
-        gpro_lang = "gb" if ui_lang == "en" else ui_lang
+        # ua -> gb (Ukrainian not in GPRO), all others use same code
+        if ui_lang == "ua":
+            # Ukrainian not available in GPRO, use English (gb)
+            gpro_lang = "gb"
+        else:
+            # All other UI languages match their GPRO language code
+            gpro_lang = ui_lang
+
         set_user_language(user_id, gpro_lang)
         logger.debug(f"User {user_id} GPRO language auto-set to: {gpro_lang}")
 

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-GPRO Telegram bot that sends automatic qualification deadline notifications and provides race status/schedule commands for Grand Prix Racing Online (GPRO). Built with Aiogram 3.x, supports dual-language UI (English/Russian) and 31 GPRO languages for personalized race links.
+GPRO Telegram bot that sends automatic qualification deadline notifications and provides race status/schedule commands for Grand Prix Racing Online (GPRO). Built with Aiogram 3.x, supports 12-language UI (English, Russian, Brazilian Portuguese, Italian, Spanish, French, Dutch, Bulgarian, Czech, Hindi, Ukrainian, European Portuguese) and 31 GPRO languages for personalized race links.
 
 ## Development Commands
 
@@ -109,8 +109,9 @@ sudo journalctl -u gpro -f
 
 **`i18n_setup.py`** - Internationalization
 - FluentRuntimeCore with custom UserLanguageManager
-- Locales in `locales/{en,ru}/*.ftl`
-- UI language separate from GPRO link language (31 languages)
+- Locales in `locales/{en,ru,br,it,es,fr,nl,bg,cz,in,ua,pt}/*.ftl`
+- UI language (12 languages for bot interface) separate from GPRO link language (31 languages for race links)
+- UI language menu is paginated (2 pages, 6 languages each)
 
 **`handlers/`** - Aiogram 3.x handlers
 - `commands.py`: /start, /status, /calendar, /next, /settings, /update, /updatetz, /weather, /users, /deluser
@@ -155,9 +156,12 @@ sudo journalctl -u gpro -f
 - Available via Weather button in status message
 
 **Onboarding Flow:**
-- New users: Language selection → Group selection → Settings confirmation
+- New users: UI language selection (paginated, 12 languages) → Group selection → Settings confirmation
 - Uses FSM states (OnboardingStates.choosing_language, choosing_group)
 - Sets both `ui_lang` (bot interface) and `gpro_lang` (GPRO links)
+- Language codes use GPRO format consistently (gb for English, not en)
+- Special handling: Ukrainian (ua) UI language maps to English (gb) for GPRO links since Ukrainian is not available in GPRO
+- Mapping: `ua` → `gb` (GPRO), all others map directly (e.g., `gb` → `gb`, `nl` → `nl`, `bg` → `bg`)
 
 **Admin Commands:**
 - `/update`: Fetch calendar from API (current + next season if published)

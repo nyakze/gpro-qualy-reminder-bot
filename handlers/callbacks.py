@@ -618,15 +618,46 @@ async def handle_language_reset(callback: CallbackQuery, i18n: I18nContext):
 
 @router.callback_query(F.data == "ui_lang_menu")
 async def handle_ui_language_menu(callback: CallbackQuery, i18n: I18nContext):
-    """Show bot UI language selection menu"""
+    """Show bot UI language selection menu (paginated)"""
     user_id = callback.from_user.id
     current_ui_lang = get_user_ui_language(user_id)
 
-    # Build UI language selection keyboard
+    keyboard = build_ui_language_keyboard(page=1, current_ui_lang=current_ui_lang, i18n=i18n)
+
+    await callback.message.edit_text(
+        i18n.get("ui-lang-menu-title"), reply_markup=keyboard, parse_mode="HTML"
+    )
+    await callback.answer()
+
+
+def build_ui_language_keyboard(page: int = 1, current_ui_lang: str = "gb", i18n=None) -> InlineKeyboardMarkup:
+    """Build paginated UI language selection keyboard
+
+    Args:
+        page: Page number (1-2)
+        current_ui_lang: User's current UI language code
+        i18n: I18n context for translations (optional)
+
+    Returns:
+        InlineKeyboardMarkup with UI language options and navigation
+    """
+    # Split 12 UI languages across 2 pages (6 per page)
+    # Page 1: Original 6 languages
+    # Page 2: New 6 languages
+    ui_lang_pages = [
+        ["gb", "ru", "br", "it", "es", "fr"],  # Page 1
+        ["nl", "bg", "cz", "in", "ua", "pt"],  # Page 2
+    ]
+
+    # Validate page number
+    if page < 1 or page > len(ui_lang_pages):
+        page = 1
+
     keyboard_buttons = []
 
-    # Build language buttons dynamically from UI_LANGUAGE_DISPLAY
-    for lang_code, lang_display in UI_LANGUAGE_DISPLAY.items():
+    # Build language buttons for current page
+    for lang_code in ui_lang_pages[page - 1]:
+        lang_display = UI_LANGUAGE_DISPLAY.get(lang_code, lang_code)
         prefix = "✅ " if current_ui_lang == lang_code else ""
         keyboard_buttons.append(
             [
@@ -637,20 +668,55 @@ async def handle_ui_language_menu(callback: CallbackQuery, i18n: I18nContext):
             ]
         )
 
+    # Navigation footer
+    footer = []
+    if page > 1:
+        prev_text = i18n.get("button-previous") if i18n else "◀ Previous"
+        footer.append(
+            InlineKeyboardButton(
+                text=prev_text, callback_data=f"ui_lang_page_{page-1}"
+            )
+        )
+
+    if page < len(ui_lang_pages):
+        next_text = i18n.get("button-next") if i18n else "Next ▶"
+        footer.append(
+            InlineKeyboardButton(
+                text=next_text, callback_data=f"ui_lang_page_{page+1}"
+            )
+        )
+
+    if footer:
+        keyboard_buttons.append(footer)
+
     # Back button
+    back_text = i18n.get("button-back") if i18n else "◀ Back"
     keyboard_buttons.append(
         [
             InlineKeyboardButton(
-                text=i18n.get("button-back"), callback_data="settings_main"
+                text=back_text, callback_data="settings_main"
             )
         ]
     )
 
-    keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
+    return InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
 
-    await callback.message.edit_text(
-        i18n.get("ui-lang-menu-title"), reply_markup=keyboard, parse_mode="HTML"
-    )
+
+@router.callback_query(F.data.startswith("ui_lang_page_"))
+async def handle_ui_language_page(callback: CallbackQuery, i18n: I18nContext):
+    """Handle UI language pagination"""
+    user_id = callback.from_user.id
+    current_ui_lang = get_user_ui_language(user_id)
+
+    try:
+        page = int(callback.data.split("_")[3])
+    except (ValueError, IndexError):
+        await callback.answer(i18n.get("error-invalid-page"), show_alert=True)
+        return
+
+    keyboard = build_ui_language_keyboard(page=page, current_ui_lang=current_ui_lang, i18n=i18n)
+
+    await callback.message.edit_reply_markup(reply_markup=keyboard)
     await callback.answer()
 
 
