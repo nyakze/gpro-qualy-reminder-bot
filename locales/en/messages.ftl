@@ -3,11 +3,11 @@
 # =======================
 # Commands & General
 # =======================
-start-welcome-new = 👋 **Welcome to GPRO Bot!**
+start-welcome-new = 👋 <b>Welcome to GPRO Bot!</b>
 
     Let's get you set up. First, choose your preferred language for GPRO race links:
 
-    🌍 **Select your language** (or skip to use English):
+    🌍 <b>Select your language</b> (or skip to use English):
 
 start-welcome-existing = 🏁 GPRO Bot LIVE!
     /status - Next race
@@ -15,63 +15,63 @@ start-welcome-existing = 🏁 GPRO Bot LIVE!
     /next - Next season
     /settings - Preferences
 
-start-welcome-existing-buttons = 🏁 **GPRO Bot**
+start-welcome-existing-buttons = 🏁 <b>GPRO Bot</b>
 
     What would you like to do?
 
-bot-live = 🏁 **GPRO Bot**
+bot-live = 🏁 <b>GPRO Bot</b>
 
 # =======================
 # Status & Calendar
 # =======================
 no-races-scheduled = 🔔 No races scheduled
 no-upcoming-qualifications = 🔔 No upcoming qualifications
-next-season-not-published = 🌟 **Next season not published yet**
+next-season-not-published = 🌟 <b>Next season not published yet</b>
 
-calendar-title-full = 🏁 *Full Season*
-calendar-title-next = 🌟 *NEXT SEASON* ({ $count } races)
+calendar-title-full = 🏁 <i>Full Season</i>
+calendar-title-next = 🌟 <i>NEXT SEASON</i> ({ $count } races)
 
 # =======================
 # Onboarding
 # =======================
-onboard-group-title = 🏁 **Group Selection**
+onboard-group-title = 🏁 <b>Group Selection</b>
 
     Choose your GPRO group to get personalized race links:
 
     Select a common group or enter your own:
 
-onboard-group-custom = 🏁 **Group Selection (Optional)**
+onboard-group-custom = 🏁 <b>Group Selection (Optional)</b>
 
     Enter your group in one of these formats:
-    • **E** (Elite)
-    • **M3** (Master 3)
-    • **P15** (Pro 15)
-    • **A42** (Amateur 42)
-    • **R11** (Rookie 11)
+    • <b>E</b> (Elite)
+    • <b>M3</b> (Master 3)
+    • <b>P15</b> (Pro 15)
+    • <b>A42</b> (Amateur 42)
+    • <b>R11</b> (Rookie 11)
 
     Numbers can be 1-3 digits.
 
-    💡 *Your GPRO website language has been set to match your bot language. You can change it later in /settings*
+    💡 <i>Your GPRO website language has been set to match your bot language. You can change it later in /settings</i>
 
-onboard-complete = ✅ **Setup Complete!**
+onboard-complete = ✅ <b>Setup Complete!</b>
 
-    🏁 **GPRO Bot is ready!**
+    🏁 <b>GPRO Bot is ready!</b>
 
-    **Available commands:**
+    <b>Available commands:</b>
     /status - Next race
     /calendar - Full season
     /next - Next season
     /settings - Preferences
 
-    💡 *You can change these settings anytime using /settings*
+    💡 <i>You can change these settings anytime using /settings</i>
 
-onboard-complete-with-group = ✅ **Setup Complete!**
+onboard-complete-with-group = ✅ <b>Setup Complete!</b>
 
-    Group: **{ $group }**
+    Group: <b>{ $group }</b>
 
-    🏁 **GPRO Bot is ready!**
+    🏁 <b>GPRO Bot is ready!</b>
 
-    **Available commands:**
+    <b>Available commands:</b>
     /status - Next race
     /calendar - Full season
     /next - Next season
@@ -80,45 +80,45 @@ onboard-complete-with-group = ✅ **Setup Complete!**
 # =======================
 # Settings
 # =======================
-settings-title = ⚙️ **Settings**
+settings-title = ⚙️ <b>Settings</b>
 
     Configure your preferences:
 
-settings-language-title = 🌍 **Language Settings**
+settings-language-title = 🌍 <b>Language Settings</b>
 
     Current: { $language }
 
     Select your preferred language for GPRO race links:
 
-ui-lang-menu-title = 💬 **Bot Language**
+ui-lang-menu-title = 💬 <b>Bot Language</b>
 
     Select bot interface language:
 
-settings-group-title = 🏁 **Group Settings**
+settings-group-title = 🏁 <b>Group Settings</b>
 
-    Current group: **{ $group }**
+    Current group: <b>{ $group }</b>
 
     Enter your group in one of these formats:
-    • **E** (Elite)
-    • **M3** (Master 3)
-    • **P15** (Pro 15)
-    • **A42** (Amateur 42)
-    • **R11** (Rookie 11)
+    • <b>E</b> (Elite)
+    • <b>M3</b> (Master 3)
+    • <b>P15</b> (Pro 15)
+    • <b>A42</b> (Amateur 42)
+    • <b>R11</b> (Rookie 11)
 
     Numbers can be 1-3 digits.
 
-settings-group-set = ✅ **Group set to: { $group }**
+settings-group-set = ✅ <b>Group set to: { $group }</b>
 
     Race and replay notifications will include direct links to your group!
 
-settings-notifications-title = 🔔 **Notification Settings**
+settings-notifications-title = 🔔 <b>Notification Settings</b>
 
     Click to toggle notifications on/off:
     ✅ = Enabled | ❌ = Disabled
 
-    ℹ️ *These are global switches for all races. Use the 'Quali Done' button in notifications to disable a specific race.*
+    ℹ️ <i>These are global switches for all races. Use the 'Quali Done' button in notifications to disable a specific race.</i>
 
-settings-custom-notif-title = ⏱️ **Custom Notifications**
+settings-custom-notif-title = ⏱️ <b>Custom Notifications</b>
 
     Set your own notification times ({ $min }m - { $max }h before quali closes).
 
@@ -126,23 +126,23 @@ settings-custom-notif-title = ⏱️ **Custom Notifications**
 
     Click a slot to set or edit it.
 
-settings-custom-notif-edit = ⏱️ **Custom Notification { $slot }**{ $current }
+settings-custom-notif-edit = ⏱️ <b>Custom Notification { $slot }</b>{ $current }
 
     Select a preset time or enter a custom time:
 
-settings-custom-notif-input = ⏱️ **Custom Notification { $slot }**
+settings-custom-notif-input = ⏱️ <b>Custom Notification { $slot }</b>
 
     Enter your custom notification time.
 
-    **Accepted formats:**
-    • `20m` or `45 minutes` (20m-70h)
-    • `2h` or `12 hours`
-    • `1h 30m` or `2h30m`
+    <b>Accepted formats:</b>
+    • <code>20m</code> or <code>45 minutes</code> (20m-70h)
+    • <code>2h</code> or <code>12 hours</code>
+    • <code>1h 30m</code> or <code>2h30m</code>
 
-    **Examples:**
-    • `20m` - 20 minutes before
-    • `6h` - 6 hours before
-    • `1h 30m` - 1 hour 30 minutes before
+    <b>Examples:</b>
+    • <code>20m</code> - 20 minutes before
+    • <code>6h</code> - 6 hours before
+    • <code>1h 30m</code> - 1 hour 30 minutes before
 
 # =======================
 # Buttons
@@ -205,106 +205,106 @@ notif-label-replay = Race replay available
 notif-label-live = Race is live
 notif-label-results = Race results available
 
-notif-quali-closes = **Quali closes in { $time }!**
-notif-quali-opens = **Quali is open (or is opening soon)**
+notif-quali-closes = <b>Quali closes in { $time }!</b>
+notif-quali-opens = <b>Quali is open (or is opening soon)</b>
 
 notif-quali-message = { $emoji } { $title }
 
-    🏁 **Race #{ $raceId }**
-    📍 **{ $track }**
-    📅 **Quali: { $qualiDeadline } | Race: { $raceTime }**
+    🏁 <b>Race #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    📅 <b>Quali: { $qualiDeadline } | Race: { $raceTime }</b>
 
-    🔗 [Go to Qualifying]({ $qualiLink })
+    🔗 <a href="{ $qualiLink }">Go to Qualifying</a>
 
     Click button to disable notifications for this race
 
 notif-quali-message-disabled = { $emoji } { $title }
 
-    🏁 **Race #{ $raceId }**
-    📍 **{ $track }**
-    📅 **Quali: { $qualiDeadline } | Race: { $raceTime }**
+    🏁 <b>Race #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    📅 <b>Quali: { $qualiDeadline } | Race: { $raceTime }</b>
 
-    🔗 [Go to Qualifying]({ $qualiLink })
+    🔗 <a href="{ $qualiLink }">Go to Qualifying</a>
 
-    ℹ️ **Automatic notifications disabled** for this race
+    ℹ️ <b>Automatic notifications disabled</b> for this race
     Click button to re-enable notifications
 
-notif-race-live = 🏁 **Race #{ $raceId } is LIVE!**
+notif-race-live = 🏁 <b>Race #{ $raceId } is LIVE!</b>
 
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
 
-    🔗 [Watch Live Race]({ $raceLink })
+    🔗 <a href="{ $raceLink }">Watch Live Race</a>
 
-notif-race-live-no-group = 🏁 **Race #{ $raceId } is LIVE!**
+notif-race-live-no-group = 🏁 <b>Race #{ $raceId } is LIVE!</b>
 
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
 
     ⚠️ Set your group in /settings for a direct link!
 
-    🔗 [Watch Live Race]({ $raceLink })
+    🔗 <a href="{ $raceLink }">Watch Live Race</a>
 
-notif-race-replay = 📺 **Race #{ $raceId } Replay Available**
+notif-race-replay = 📺 <b>Race #{ $raceId } Replay Available</b>
 
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
 
     If the race has already been calculated, replay is available here:
 
-    🔗 [Watch Replay]({ $replayLink })
+    🔗 <a href="{ $replayLink }">Watch Replay</a>
 
-notif-race-replay-no-group = 📺 **Race #{ $raceId } Replay Available**
+notif-race-replay-no-group = 📺 <b>Race #{ $raceId } Replay Available</b>
 
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
 
     If the race has already been calculated, replay is available here:
 
     ⚠️ For personalized links, set your group in /settings!
 
-    🔗 [Watch Replay]({ $replayLink })
+    🔗 <a href="{ $replayLink }">Watch Replay</a>
 
-notif-race-results = 📊 **Race #{ $raceId } Results Available**
+notif-race-results = 📊 <b>Race #{ $raceId } Results Available</b>
 
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
-
-    Race results are now available:
-
-    🔗 [Race Analysis]({ $analysisLink })
-    🔗 [Race Summary]({ $summaryLink })
-
-notif-race-results-no-group = 📊 **Race #{ $raceId } Results Available**
-
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
 
     Race results are now available:
 
-    🔗 [Race Analysis]({ $analysisLink })
+    🔗 <a href="{ $analysisLink }">Race Analysis</a>
+    🔗 <a href="{ $summaryLink }">Race Summary</a>
+
+notif-race-results-no-group = 📊 <b>Race #{ $raceId } Results Available</b>
+
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
+
+    Race results are now available:
+
+    🔗 <a href="{ $analysisLink }">Race Analysis</a>
 
     ⚠️ For personalized Race Summary, set your group in /settings!
 
 # =======================
 # Weather
 # =======================
-weather-title = 🌤️ **Race Weather Forecast**
-weather-practice-q1 = **Practice / Qualify 1:** { $weather }
+weather-title = 🌤️ <b>Race Weather Forecast</b>
+weather-practice-q1 = <b>Practice / Qualify 1:</b> { $weather }
 weather-temp-hum = Temp: { $temp }°C • Humidity: { $hum }%
-weather-q2-start = **Qualify 2 / Race Start:** { $weather }
-weather-race-conditions = **Race Conditions:**
-weather-quarter = **{ $label }:**
+weather-q2-start = <b>Qualify 2 / Race Start:</b> { $weather }
+weather-race-conditions = <b>Race Conditions:</b>
+weather-quarter = <b>{ $label }:</b>
 weather-race-quarter = Temp: { $temp } • Humidity: { $hum }
     Rain probability: { $rain }
 weather-not-available = ⚠️ Weather data not available
-weather-cached = ℹ️ Weather already cached for **Race #{ $raceId }: { $track }**
+weather-cached = ℹ️ Weather already cached for <b>Race #{ $raceId }: { $track }</b>
 
-    Use `/weather force` to force update.
+    Use <code>/weather force</code> to force update.
     Use /status to see the notification with weather button.
-weather-fetching = 🔄 Fetching weather for **Race #{ $raceId }: { $track }**...
-weather-force-updating = 🔄 Force updating weather for **Race #{ $raceId }: { $track }**...
-weather-success = ✅ Weather data fetched for **Race #{ $raceId }: { $track }**
+weather-fetching = 🔄 Fetching weather for <b>Race #{ $raceId }: { $track }</b>...
+weather-force-updating = 🔄 Force updating weather for <b>Race #{ $raceId }: { $track }</b>...
+weather-success = ✅ Weather data fetched for <b>Race #{ $raceId }: { $track }</b>
 
     Use /status to test the notification with weather button!
 weather-failed = ❌ Failed to fetch weather data
@@ -315,13 +315,13 @@ weather-failed = ❌ Failed to fetch weather data
 # Admin
 # =======================
 admin-only = ❌ Admin only
-admin-calendar-updated = ✅ **Calendar**: { $count } races
-    🔄 **{ $userCount } users** reset
-admin-next-season-ready = 🌟 **Next season ready!** { $count } races
+admin-calendar-updated = ✅ <b>Calendar</b>: { $count } races
+    🔄 <b>{ $userCount } users</b> reset
+admin-next-season-ready = 🌟 <b>Next season ready!</b> { $count } races
     Use /next to view
-admin-next-season-not-published = ℹ️ **Next season not published**
-admin-users-count = 📊 **{ $count } users**:
-admin-users-none = 📊 **0 users** in database
+admin-next-season-not-published = ℹ️ <b>Next season not published</b>
+admin-users-count = 📊 <b>{ $count } users</b>:
+admin-users-none = 📊 <b>0 users</b> in database
 admin-no-races = ❌ No races in calendar
 admin-no-upcoming-races = ❌ No upcoming races found
 
@@ -331,26 +331,26 @@ admin-no-upcoming-races = ❌ No upcoming races found
 error-invalid-format = ❌ Invalid format!
 
     Please use:
-    • **E** for Elite
-    • **M3** (Master 3)
-    • **P15**, **A42**, **R11** etc.
+    • <b>E</b> for Elite
+    • <b>M3</b> (Master 3)
+    • <b>P15</b>, <b>A42</b>, <b>R11</b> etc.
 
     Try again:
 
 error-invalid-format-onboarding = ❌ Invalid format!
 
     Please use:
-    • **E** for Elite
-    • **M3** (Master 3)
-    • **P15**, **A42**, **R11** etc.
+    • <b>E</b> for Elite
+    • <b>M3</b> (Master 3)
+    • <b>P15</b>, <b>A42</b>, <b>R11</b> etc.
 
     Try again or use /start to restart:
 
-error-invalid-time = ❌ **Error:** { $error }
+error-invalid-time = ❌ <b>Error:</b> { $error }
 
-    Please try again with a valid format like: `2h`, `30m`, or `1h 30m`
+    Please try again with a valid format like: <code>2h</code>, <code>30m</code>, or <code>1h 30m</code>
 
-error-custom-notif-failed = ❌ **Error:** { $error }
+error-custom-notif-failed = ❌ <b>Error:</b> { $error }
 
     Please try again.
 
@@ -372,11 +372,11 @@ feedback-all-disabled = ✅ All notifications disabled!
 feedback-notif-enabled = ✅ { $label } enabled!
 feedback-notif-disabled = ✅ { $label } disabled!
 feedback-quali-done = ✅ Done!
-feedback-race-marked-done = ✅ *Race marked done!*
+feedback-race-marked-done = ✅ <i>Race marked done!</i>
 feedback-reset = 🔄 Reset!
-feedback-notifications-reset = 🔄 *Notifications reset!*
+feedback-notifications-reset = 🔄 <i>Notifications reset!</i>
 feedback-reenabled = 🔄 Re-enabled!
-feedback-notifications-reenabled = 🔄 *Notifications re-enabled!*
+feedback-notifications-reenabled = 🔄 <i>Notifications re-enabled!</i>
 feedback-language-set = ✅ Language set to { $language }
 feedback-language-reset = ✅ Language reset to English
 feedback-ui-language-set = ✅ Bot language set to { $language }
@@ -461,13 +461,13 @@ custom-notif-invalid-slot = Invalid slot (must be 0-{ $max })
 custom-notif-empty-error = Time cannot be empty
 custom-notif-invalid-format = Invalid format. Use: 2h, 30m, or 1h 30m
 custom-notif-enter-time = Please enter a time
-custom-notif-error-parsing = ❌ **Error:** { $error }
+custom-notif-error-parsing = ❌ <b>Error:</b> { $error }
 
-    Please try again with a valid format like: `2h`, `30m`, or `1h 30m`
-custom-notif-success = ✅ **{ $message }**
+    Please try again with a valid format like: <code>2h</code>, <code>30m</code>, or <code>1h 30m</code>
+custom-notif-success = ✅ <b>{ $message }</b>
 
     Your custom notification has been set!
-custom-notif-error-setting = ❌ **Error:** { $error }
+custom-notif-error-setting = ❌ <b>Error:</b> { $error }
 
     Please try again.
 
@@ -497,26 +497,26 @@ notif-label-race-results = Race results available
 # =======================
 # Notification Menu
 # =======================
-notif-menu-title = 🔔 **Notification Settings**
+notif-menu-title = 🔔 <b>Notification Settings</b>
 
     Click to toggle notifications on/off:
     ✅ = Enabled | ❌ = Disabled
 
-    ℹ️ *These are global switches for all races. Use the 'Quali Done' button in notifications to disable a specific race.*
+    ℹ️ <i>These are global switches for all races. Use the 'Quali Done' button in notifications to disable a specific race.</i>
 
 # =======================
 # Group Menu
 # =======================
-group-menu-title = 🏁 **Group Settings**
+group-menu-title = 🏁 <b>Group Settings</b>
 
-    Current group: **{ $groupDisplay }**
+    Current group: <b>{ $groupDisplay }</b>
 
     Enter your group in one of these formats:
-    • **E** (Elite)
-    • **M3** (Master 3)
-    • **P15** (Pro 15)
-    • **A42** (Amateur 42)
-    • **R11** (Rookie 11)
+    • <b>E</b> (Elite)
+    • <b>M3</b> (Master 3)
+    • <b>P15</b> (Pro 15)
+    • <b>A42</b> (Amateur 42)
+    • <b>R11</b> (Rookie 11)
 
     Numbers can be 1-3 digits.
 group-reset-success = ✅ Group reset successfully
@@ -524,7 +524,7 @@ group-reset-success = ✅ Group reset successfully
 # =======================
 # Language Menu
 # =======================
-lang-menu-title = 🌍 **Language Settings**
+lang-menu-title = 🌍 <b>Language Settings</b>
 
     Current: { $currentLang }
 
@@ -533,7 +533,7 @@ lang-menu-title = 🌍 **Language Settings**
 # =======================
 # Custom Notification Menu
 # =======================
-custom-notif-menu-title = ⏱️ **Custom Notifications**
+custom-notif-menu-title = ⏱️ <b>Custom Notifications</b>
 
     Set your own notification times ({ $minTime }m - { $maxTime }h before quali closes).
 
@@ -545,15 +545,15 @@ custom-notif-menu-title = ⏱️ **Custom Notifications**
 # Weather
 # =======================
 weather-unavailable = ⚠️ Weather data not available
-weather-title = 🌤️ **Race Weather Forecast**
-weather-practice-q1 = **Practice / Qualify 1:** { $weather }
+weather-title = 🌤️ <b>Race Weather Forecast</b>
+weather-practice-q1 = <b>Practice / Qualify 1:</b> { $weather }
 weather-temp-hum = Temp: { $temp }°C • Humidity: { $hum }%
-weather-q2-race-start = **Qualify 2 / Race Start:** { $weather }
-weather-race-conditions = **Race Conditions:**
-weather-start-0h30m = **Start - 0h30m:**
-weather-0h30m-1h00m = **0h30m - 1h00m:**
-weather-1h00m-1h30m = **1h00m - 1h30m:**
-weather-1h30m-2h00m = **1h30m - 2h00m:**
+weather-q2-race-start = <b>Qualify 2 / Race Start:</b> { $weather }
+weather-race-conditions = <b>Race Conditions:</b>
+weather-start-0h30m = <b>Start - 0h30m:</b>
+weather-0h30m-1h00m = <b>0h30m - 1h00m:</b>
+weather-1h00m-1h30m = <b>1h00m - 1h30m:</b>
+weather-1h30m-2h00m = <b>1h30m - 2h00m:</b>
 weather-temp-hum-range = Temp: { $temp } • Humidity: { $hum }
 weather-rain-prob = Rain probability: { $rain }
 
@@ -561,27 +561,27 @@ weather-rain-prob = Rain probability: { $rain }
 # Timezone Settings
 # =======================
 button-timezone = ⏰ Timezone: { $timezone }
-timezone-menu-title = ⏰ **Timezone Settings**
+timezone-menu-title = ⏰ <b>Timezone Settings</b>
 
-    Current timezone: **{ $timezone }**
+    Current timezone: <b>{ $timezone }</b>
 
     Type your timezone (city name, abbreviation, or UTC offset):
 
-    Examples: `New York`, `PST`, `UTC+3`, `London`
+    Examples: <code>New York</code>, <code>PST</code>, <code>UTC+3</code>, <code>London</code>
 
-timezone-select-matches = 🌍 **Select your timezone:**
+timezone-select-matches = 🌍 <b>Select your timezone:</b>
 
     Matches for "{ $query }":
 
-timezone-select-matches-paginated = 🌍 **Select your timezone:**
+timezone-select-matches-paginated = 🌍 <b>Select your timezone:</b>
 
     Matches for "{ $query }" (Page { $page }/{ $total }):
 
-timezone-set-success = ✅ **Timezone set!**
+timezone-set-success = ✅ <b>Timezone set!</b>
 
     { $timezone }
 
-    Current time in your timezone: **{ $localTime }**
+    Current time in your timezone: <b>{ $localTime }</b>
 
     All race times will now be shown in your local time.
 

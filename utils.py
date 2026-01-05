@@ -220,7 +220,7 @@ def format_race_beautiful(race_data: dict) -> str:
     hours_display = math.floor(hours_left)
     deadline = quali_close.strftime("%d.%m %H:%M")
 
-    return f"Qualification closes in {hours_display}h\n**({deadline})** - {track}"
+    return f"Qualification closes in {hours_display}h\n<b>({deadline})</b> - {track}"
 
 
 def get_localized_weekday(date: datetime, i18n=None) -> str:
@@ -333,11 +333,11 @@ def format_full_calendar(
         if time_text:
             time_info += f" • {time_text}"
 
-        # Build race line - format: #N Flag *Track Name* (Markdown single asterisk)
+        # Build race line - format: #N Flag <i>Track Name</i> (HTML italic)
         if flag:
-            race_line = f"#{race_id} {flag} *{track_name}*"
+            race_line = f"#{race_id} {flag} <i>{track_name}</i>"
         else:
-            race_line = f"#{race_id} *{track_name}*"
+            race_line = f"#{race_id} <i>{track_name}</i>"
 
         # 🔥 ONLY для current season next race
         if next_race_id and race_id == next_race_id:

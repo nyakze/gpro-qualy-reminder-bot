@@ -204,7 +204,7 @@ async def send_race_live_notification(
         )
 
     try:
-        await bot.send_message(user_id, message, parse_mode="Markdown")
+        await bot.send_message(user_id, message, parse_mode="HTML")
         logger.info(f"🏁 Sent race live notification to {user_id} for race {race_id}")
     except Exception as e:
         logger.error(f"Race live notify {user_id} failed: {e}")
@@ -259,7 +259,7 @@ async def send_race_replay_notification(
         )
 
     try:
-        await bot.send_message(user_id, message, parse_mode="Markdown")
+        await bot.send_message(user_id, message, parse_mode="HTML")
         logger.info(f"📺 Sent race replay notification to {user_id} for race {race_id}")
     except Exception as e:
         logger.error(f"Race replay notify {user_id} failed: {e}")
@@ -322,7 +322,7 @@ async def send_race_results_notification(
         )
 
     try:
-        await bot.send_message(user_id, message, parse_mode="Markdown")
+        await bot.send_message(user_id, message, parse_mode="HTML")
         logger.info(
             f"📊 Sent race results notification to {user_id} for race {race_id}"
         )
@@ -468,7 +468,7 @@ async def send_quali_notification(
 
     try:
         await bot.send_message(
-            user_id, message, reply_markup=keyboard, parse_mode="Markdown"
+            user_id, message, reply_markup=keyboard, parse_mode="HTML"
         )
         logger.info(f"✅ Sent {notification_type} to {user_id} for race {race_id}")
     except Exception as e:

@@ -3,11 +3,11 @@
 # =======================
 # Comandos & General
 # =======================
-start-welcome-new = 👋 **Benvenuto in GPRO Bot!**
+start-welcome-new = 👋 <b>Benvenuto in GPRO Bot!</b>
 
     Iniziamo la configurazione. Prima scegli la tua lingua preferita per i link delle gare GPRO:
 
-    🌍 **Seleziona la tua lingua** (o salta per usare l'inglese):
+    🌍 <b>Seleziona la tua lingua</b> (o salta per usare l'inglese):
 
 start-welcome-existing = 🏁 GPRO Bot ATTIVO!
     /status - Prossima gara
@@ -15,63 +15,63 @@ start-welcome-existing = 🏁 GPRO Bot ATTIVO!
     /next - Prossima stagione
     /settings - Preferenze
 
-start-welcome-existing-buttons = 🏁 **GPRO Bot**
+start-welcome-existing-buttons = 🏁 <b>GPRO Bot</b>
 
     Cosa vorresti fare?
 
-bot-live = 🏁 **GPRO Bot**
+bot-live = 🏁 <b>GPRO Bot</b>
 
 # =======================
 # Status & Calendario
 # =======================
 no-races-scheduled = 🔔 Nessuna gara programmata
 no-upcoming-qualifications = 🔔 Nessuna qualifica programmata
-next-season-not-published = 🌟 **La prossima stagione non è ancora stata pubblicata**
+next-season-not-published = 🌟 <b>La prossima stagione non è ancora stata pubblicata</b>
 
-calendar-title-full = 🏁 **Stagione Completa**
-calendar-title-next = 🌟 **PROSSIMA STAGIONE** ({ $count } gare)
+calendar-title-full = 🏁 <b>Stagione Completa</b>
+calendar-title-next = 🌟 <b>PROSSIMA STAGIONE</b> ({ $count } gare)
 
 # =======================
 # Onboarding
 # =======================
-onboard-group-title = 🏁 **Selezione Gruppo**
+onboard-group-title = 🏁 <b>Selezione Gruppo</b>
 
     Scegli il tuo gruppo GPRO per ricevere link personalizzati delle gare:
 
     Seleziona un gruppo comune o inserisci il tuo:
 
-onboard-group-custom = 🏁 **Selezione Gruppo (Opzionale)**
+onboard-group-custom = 🏁 <b>Selezione Gruppo (Opzionale)</b>
 
     Inserisci il tuo gruppo in uno di questi formati:
-    • **E** (Elite)
-    • **M3** (Master 3)
-    • **P15** (Pro 15)
-    • **A42** (Amateur 42)
-    • **R11** (Rookie 11)
+    • <b>E</b> (Elite)
+    • <b>M3</b> (Master 3)
+    • <b>P15</b> (Pro 15)
+    • <b>A42</b> (Amateur 42)
+    • <b>R11</b> (Rookie 11)
 
     I numeri possono avere da 1 a 3 cifre.
 
-    💡 *La lingua del sito GPRO è stata impostata per corrispondere alla lingua del bot. Puoi cambiarla in seguito in /settings*
+    💡 <i>La lingua del sito GPRO è stata impostata per corrispondere alla lingua del bot. Puoi cambiarla in seguito in /settings</i>
 
-onboard-complete = ✅ **Configurazione Completata!**
+onboard-complete = ✅ <b>Configurazione Completata!</b>
 
-    🏁 **GPRO Bot è pronto!**
+    🏁 <b>GPRO Bot è pronto!</b>
 
-    **Comandi disponibili:**
+    <b>Comandi disponibili:</b>
     /status - Prossima gara
     /calendar - Stagione completa
     /next - Prossima stagione
     /settings - Preferenze
 
-    💡 *Puoi modificare queste impostazioni in qualsiasi momento usando /settings*
+    💡 <i>Puoi modificare queste impostazioni in qualsiasi momento usando /settings</i>
 
-onboard-complete-with-group = ✅ **Configurazione Completata!**
+onboard-complete-with-group = ✅ <b>Configurazione Completata!</b>
 
-    Gruppo: **{ $group }**
+    Gruppo: <b>{ $group }</b>
 
-    🏁 **GPRO Bot è pronto!**
+    🏁 <b>GPRO Bot è pronto!</b>
 
-    **Comandi disponibili:**
+    <b>Comandi disponibili:</b>
     /status - Prossima gara
     /calendar - Stagione completa
     /next - Prossima stagione
@@ -80,45 +80,45 @@ onboard-complete-with-group = ✅ **Configurazione Completata!**
 # =======================
 # Impostazioni
 # =======================
-settings-title = ⚙️ **Impostazioni**
+settings-title = ⚙️ <b>Impostazioni</b>
 
     Configura le tue preferenze:
 
-settings-language-title = 🌍 **Impostazioni Lingua**
+settings-language-title = 🌍 <b>Impostazioni Lingua</b>
 
     Attuale: { $language }
 
     Seleziona la tua lingua preferita per i link delle gare GPRO:
 
-ui-lang-menu-title = 💬 **Lingua del Bot**
+ui-lang-menu-title = 💬 <b>Lingua del Bot</b>
 
     Seleziona la lingua dell'interfaccia del bot:
 
-settings-group-title = 🏁 **Impostazioni Gruppo**
+settings-group-title = 🏁 <b>Impostazioni Gruppo</b>
 
-    Gruppo attuale: **{ $group }**
+    Gruppo attuale: <b>{ $group }</b>
 
     Inserisci il tuo gruppo in uno di questi formati:
-    • **E** (Elite)
-    • **M3** (Master 3)
-    • **P15** (Pro 15)
-    • **A42** (Amateur 42)
-    • **R11** (Rookie 11)
+    • <b>E</b> (Elite)
+    • <b>M3</b> (Master 3)
+    • <b>P15</b> (Pro 15)
+    • <b>A42</b> (Amateur 42)
+    • <b>R11</b> (Rookie 11)
 
     I numeri possono avere da 1 a 3 cifre.
 
-settings-group-set = ✅ **Gruppo impostato su: { $group }**
+settings-group-set = ✅ <b>Gruppo impostato su: { $group }</b>
 
     Le notifiche delle gare e dei replay includeranno link diretti al tuo gruppo!
 
-settings-notifications-title = 🔔 **Impostazioni Notifiche**
+settings-notifications-title = 🔔 <b>Impostazioni Notifiche</b>
 
     Clicca per attivare/disattivare le notifiche:
     ✅ = Attivo | ❌ = Disattivo
 
-    ℹ️ *Questi sono interruttori globali per tutte le gare. Usa il pulsante 'Qualifica Completata' nelle notifiche per disabilitare una gara specifica.*
+    ℹ️ <i>Questi sono interruttori globali per tutte le gare. Usa il pulsante 'Qualifica Completata' nelle notifiche per disabilitare una gara specifica.</i>
 
-settings-custom-notif-title = ⏱️ **Notifiche Personalizzate**
+settings-custom-notif-title = ⏱️ <b>Notifiche Personalizzate</b>
 
     Imposta i tuoi orari di notifica ({ $min }m - { $max }h prima della chiusura delle qualifiche).
 
@@ -126,23 +126,23 @@ settings-custom-notif-title = ⏱️ **Notifiche Personalizzate**
 
     Clicca su uno slot per impostarlo o modificarlo.
 
-settings-custom-notif-edit = ⏱️ **Notifica Personalizzata { $slot }**{ $current }
+settings-custom-notif-edit = ⏱️ <b>Notifica Personalizzata { $slot }</b>{ $current }
 
     Seleziona un orario predefinito o inserisci un orario personalizzato:
 
-settings-custom-notif-input = ⏱️ **Notifica Personalizzata { $slot }**
+settings-custom-notif-input = ⏱️ <b>Notifica Personalizzata { $slot }</b>
 
     Inserisci il tuo orario di notifica personalizzato.
 
-    **Formati accettati:**
-    • `20m` o `45 minuti` (20m-70h)
-    • `2h` o `12 ore`
-    • `1h 30m` o `2h30m`
+    <b>Formati accettati:</b>
+    • <code>20m</code> o <code>45 minuti</code> (20m-70h)
+    • <code>2h</code> o <code>12 ore</code>
+    • <code>1h 30m</code> o <code>2h30m</code>
 
-    **Esempi:**
-    • `20m` - 20 minuti prima
-    • `6h` - 6 ore prima
-    • `1h 30m` - 1 ora e 30 minuti prima
+    <b>Esempi:</b>
+    • <code>20m</code> - 20 minuti prima
+    • <code>6h</code> - 6 ore prima
+    • <code>1h 30m</code> - 1 ora e 30 minuti prima
 
 # =======================
 # Pulsanti
@@ -210,118 +210,118 @@ notif-label-race-replay = Replay della gara disponibile
 notif-label-race-live = Gara in diretta
 notif-label-race-results = Risultati della gara disponibili
 
-notif-quali-closes = **Le qualifiche chiudono tra { $time }!**
-notif-quali-opens = **Le qualifiche sono aperte (o si apriranno presto)**
+notif-quali-closes = <b>Le qualifiche chiudono tra { $time }!</b>
+notif-quali-opens = <b>Le qualifiche sono aperte (o si apriranno presto)</b>
 
 notif-quali-message = { $emoji } { $title }
 
-    🏁 **Gara #{ $raceId }**
-    📍 **{ $track }**
-    📅 **Qualifiche: { $qualiDeadline } | Gara: { $raceTime }**
+    🏁 <b>Gara #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    📅 <b>Qualifiche: { $qualiDeadline } | Gara: { $raceTime }</b>
 
-    🔗 [Vai alle Qualifiche]({ $qualiLink })
+    🔗 <a href="{ $qualiLink }">Vai alle Qualifiche</a>
 
     Clicca sul pulsante per disabilitare le notifiche per questa gara
 
 notif-quali-message-disabled = { $emoji } { $title }
 
-    🏁 **Gara #{ $raceId }**
-    📍 **{ $track }**
-    📅 **Qualifiche: { $qualiDeadline } | Gara: { $raceTime }**
+    🏁 <b>Gara #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    📅 <b>Qualifiche: { $qualiDeadline } | Gara: { $raceTime }</b>
 
-    🔗 [Vai alle Qualifiche]({ $qualiLink })
+    🔗 <a href="{ $qualiLink }">Vai alle Qualifiche</a>
 
-    ℹ️ **Notifiche automatiche disabilitate** per questa gara
+    ℹ️ <b>Notifiche automatiche disabilitate</b> per questa gara
     Clicca sul pulsante per riattivare le notifiche
 
-notif-race-live = 🏁 **Gara #{ $raceId } è IN DIRETTA!**
+notif-race-live = 🏁 <b>Gara #{ $raceId } è IN DIRETTA!</b>
 
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
 
-    🔗 [Guarda la Gara in Diretta]({ $raceLink })
+    🔗 <a href="{ $raceLink }">Guarda la Gara in Diretta</a>
 
-notif-race-live-no-group = 🏁 **Gara #{ $raceId } è IN DIRETTA!**
+notif-race-live-no-group = 🏁 <b>Gara #{ $raceId } è IN DIRETTA!</b>
 
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
 
     ⚠️ Imposta il tuo gruppo in /settings per un link diretto!
 
-    🔗 [Guarda la Gara in Diretta]({ $raceLink })
+    🔗 <a href="{ $raceLink }">Guarda la Gara in Diretta</a>
 
-notif-race-replay = 📺 **Replay Gara #{ $raceId } Disponibile**
+notif-race-replay = 📺 <b>Replay Gara #{ $raceId } Disponibile</b>
 
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
 
     Se la gara è già stata calcolata, il replay è disponibile qui:
 
-    🔗 [Guarda il Replay]({ $replayLink })
+    🔗 <a href="{ $replayLink }">Guarda il Replay</a>
 
-notif-race-replay-no-group = 📺 **Replay Gara #{ $raceId } Disponibile**
+notif-race-replay-no-group = 📺 <b>Replay Gara #{ $raceId } Disponibile</b>
 
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
 
     Se la gara è già stata calcolata, il replay è disponibile qui:
 
     ⚠️ Per link personalizzati, imposta il tuo gruppo in /settings!
 
-    🔗 [Guarda il Replay]({ $replayLink })
+    🔗 <a href="{ $replayLink }">Guarda il Replay</a>
 
-notif-race-results = 📊 **Risultati Gara #{ $raceId } Disponibili**
+notif-race-results = 📊 <b>Risultati Gara #{ $raceId } Disponibili</b>
 
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
-
-    I risultati della gara sono ora disponibili:
-
-    🔗 [Analisi della Gara]({ $analysisLink })
-    🔗 [Riepilogo della Gara]({ $summaryLink })
-
-notif-race-results-no-group = 📊 **Risultati Gara #{ $raceId } Disponibili**
-
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
 
     I risultati della gara sono ora disponibili:
 
-    🔗 [Analisi della Gara]({ $analysisLink })
+    🔗 <a href="{ $analysisLink }">Analisi della Gara</a>
+    🔗 <a href="{ $summaryLink }">Riepilogo della Gara</a>
+
+notif-race-results-no-group = 📊 <b>Risultati Gara #{ $raceId } Disponibili</b>
+
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
+
+    I risultati della gara sono ora disponibili:
+
+    🔗 <a href="{ $analysisLink }">Analisi della Gara</a>
 
     ⚠️ Per il Riepilogo Gara personalizzato, imposta il tuo gruppo in /settings!
 
 # =======================
 # Meteo
 # =======================
-weather-title = 🌤️ **Previsioni Meteo Gara**
-weather-practice-q1 = **Prova / Qualifica 1:** { $weather }
+weather-title = 🌤️ <b>Previsioni Meteo Gara</b>
+weather-practice-q1 = <b>Prova / Qualifica 1:</b> { $weather }
 weather-temp-hum = Temp: { $temp }°C • Umidità: { $hum }%
-weather-q2-start = **Qualifica 2 / Partenza Gara:** { $weather }
-weather-q2-race-start = **Qualifica 2 / Partenza Gara:** { $weather }
-weather-race-conditions = **Condizioni di Gara:**
-weather-quarter = **{ $label }:**
+weather-q2-start = <b>Qualifica 2 / Partenza Gara:</b> { $weather }
+weather-q2-race-start = <b>Qualifica 2 / Partenza Gara:</b> { $weather }
+weather-race-conditions = <b>Condizioni di Gara:</b>
+weather-quarter = <b>{ $label }:</b>
 weather-race-quarter = Temp: { $temp } • Umidità: { $hum }
     Probabilità di pioggia: { $rain }
 weather-not-available = ⚠️ Dati meteo non disponibili
 weather-unavailable = ⚠️ Dati meteo non disponibili
-weather-cached = ℹ️ Meteo già in cache per **Gara #{ $raceId }: { $track }**
+weather-cached = ℹ️ Meteo già in cache per <b>Gara #{ $raceId }: { $track }</b>
 
-    Usa `/weather force` per forzare l'aggiornamento.
+    Usa <code>/weather force</code> per forzare l'aggiornamento.
     Usa /status per vedere la notifica con il pulsante meteo.
-weather-fetching = 🔄 Recupero meteo per **Gara #{ $raceId }: { $track }**...
-weather-force-updating = 🔄 Aggiornamento forzato meteo per **Gara #{ $raceId }: { $track }**...
-weather-success = ✅ Dati meteo recuperati per **Gara #{ $raceId }: { $track }**
+weather-fetching = 🔄 Recupero meteo per <b>Gara #{ $raceId }: { $track }</b>...
+weather-force-updating = 🔄 Aggiornamento forzato meteo per <b>Gara #{ $raceId }: { $track }</b>...
+weather-success = ✅ Dati meteo recuperati per <b>Gara #{ $raceId }: { $track }</b>
 
     Usa /status per testare la notifica con il pulsante meteo!
 weather-failed = ❌ Impossibile recuperare i dati meteo
 
     Verifica che il token API GPRO sia valido e che l'API di Prova sia disponibile.
 
-weather-start-0h30m = **Partenza - 0h30m:**
-weather-0h30m-1h00m = **0h30m - 1h00m:**
-weather-1h00m-1h30m = **1h00m - 1h30m:**
-weather-1h30m-2h00m = **1h30m - 2h00m:**
+weather-start-0h30m = <b>Partenza - 0h30m:</b>
+weather-0h30m-1h00m = <b>0h30m - 1h00m:</b>
+weather-1h00m-1h30m = <b>1h00m - 1h30m:</b>
+weather-1h30m-2h00m = <b>1h30m - 2h00m:</b>
 weather-temp-hum-range = Temp: { $temp } • Umidità: { $hum }
 weather-rain-prob = Probabilità di pioggia: { $rain }
 
@@ -329,13 +329,13 @@ weather-rain-prob = Probabilità di pioggia: { $rain }
 # Admin
 # =======================
 admin-only = ❌ Solo admin
-admin-calendar-updated = ✅ **Calendario**: { $count } gare
-    🔄 **{ $userCount } utenti** reimpostati
-admin-next-season-ready = 🌟 **Prossima stagione pronta!** { $count } gare
+admin-calendar-updated = ✅ <b>Calendario</b>: { $count } gare
+    🔄 <b>{ $userCount } utenti</b> reimpostati
+admin-next-season-ready = 🌟 <b>Prossima stagione pronta!</b> { $count } gare
     Usa /next per visualizzare
-admin-next-season-not-published = ℹ️ **Prossima stagione non pubblicata**
-admin-users-count = 📊 **{ $count } utenti**:
-admin-users-none = 📊 **0 utenti** nel database
+admin-next-season-not-published = ℹ️ <b>Prossima stagione non pubblicata</b>
+admin-users-count = 📊 <b>{ $count } utenti</b>:
+admin-users-none = 📊 <b>0 utenti</b> nel database
 admin-no-races = ❌ Nessuna gara nel calendario
 admin-no-upcoming-races = ❌ Nessuna gara futura trovata
 
@@ -345,26 +345,26 @@ admin-no-upcoming-races = ❌ Nessuna gara futura trovata
 error-invalid-format = ❌ Formato non valido!
 
     Per favore usa:
-    • **E** per Elite
-    • **M3** (Master 3)
-    • **P15**, **A42**, **R11** ecc.
+    • <b>E</b> per Elite
+    • <b>M3</b> (Master 3)
+    • <b>P15</b>, <b>A42</b>, <b>R11</b> ecc.
 
     Riprova:
 
 error-invalid-format-onboarding = ❌ Formato non valido!
 
     Per favore usa:
-    • **E** per Elite
-    • **M3** (Master 3)
-    • **P15**, **A42**, **R11** ecc.
+    • <b>E</b> per Elite
+    • <b>M3</b> (Master 3)
+    • <b>P15</b>, <b>A42</b>, <b>R11</b> ecc.
 
     Riprova o usa /start per ricominciare:
 
-error-invalid-time = ❌ **Errore:** { $error }
+error-invalid-time = ❌ <b>Errore:</b> { $error }
 
-    Per favore riprova con un formato valido come: `2h`, `30m`, o `1h 30m`
+    Per favore riprova con un formato valido come: <code>2h</code>, <code>30m</code>, o <code>1h 30m</code>
 
-error-custom-notif-failed = ❌ **Errore:** { $error }
+error-custom-notif-failed = ❌ <b>Errore:</b> { $error }
 
     Per favore riprova.
 
@@ -386,11 +386,11 @@ feedback-all-disabled = ✅ Tutte le notifiche disattivate!
 feedback-notif-enabled = ✅ { $label } attivata!
 feedback-notif-disabled = ✅ { $label } disattivata!
 feedback-quali-done = ✅ Fatto!
-feedback-race-marked-done = ✅ *Gara segnata come completata!*
+feedback-race-marked-done = ✅ <i>Gara segnata come completata!</i>
 feedback-reset = 🔄 Reimpostato!
-feedback-notifications-reset = 🔄 *Notifiche reimpostate!*
+feedback-notifications-reset = 🔄 <i>Notifiche reimpostate!</i>
 feedback-reenabled = 🔄 Riattivato!
-feedback-notifications-reenabled = 🔄 *Notifiche riattivate!*
+feedback-notifications-reenabled = 🔄 <i>Notifiche riattivate!</i>
 feedback-language-set = ✅ Lingua impostata su { $language }
 feedback-language-reset = ✅ Lingua reimpostata su inglese
 feedback-ui-language-set = ✅ Lingua del bot impostata su { $language }
@@ -475,13 +475,13 @@ custom-notif-invalid-slot = Slot non valido (deve essere 0-{ $max })
 custom-notif-empty-error = Il tempo non può essere vuoto
 custom-notif-invalid-format = Formato non valido. Usa: 2h, 30m, o 1h 30m
 custom-notif-enter-time = Per favore inserisci un tempo
-custom-notif-error-parsing = ❌ **Errore:** { $error }
+custom-notif-error-parsing = ❌ <b>Errore:</b> { $error }
 
-    Per favore riprova con un formato valido come: `2h`, `30m`, o `1h 30m`
-custom-notif-success = ✅ **{ $message }**
+    Per favore riprova con un formato valido come: <code>2h</code>, <code>30m</code>, o <code>1h 30m</code>
+custom-notif-success = ✅ <b>{ $message }</b>
 
     La tua notifica personalizzata è stata impostata!
-custom-notif-error-setting = ❌ **Errore:** { $error }
+custom-notif-error-setting = ❌ <b>Errore:</b> { $error }
 
     Per favore riprova.
 
@@ -498,26 +498,26 @@ validation-invalid-slot = Slot non valido (deve essere 0-{ $maxSlots })
 # =======================
 # Menu Notifiche
 # =======================
-notif-menu-title = 🔔 **Impostazioni Notifiche**
+notif-menu-title = 🔔 <b>Impostazioni Notifiche</b>
 
     Clicca per attivare/disattivare le notifiche:
     ✅ = Attivo | ❌ = Disattivo
 
-    ℹ️ *Questi sono interruttori globali per tutte le gare. Usa il pulsante 'Qualifica Completata' nelle notifiche per disabilitare una gara specifica.*
+    ℹ️ <i>Questi sono interruttori globali per tutte le gare. Usa il pulsante 'Qualifica Completata' nelle notifiche per disabilitare una gara specifica.</i>
 
 # =======================
 # Menu Gruppo
 # =======================
-group-menu-title = 🏁 **Impostazioni Gruppo**
+group-menu-title = 🏁 <b>Impostazioni Gruppo</b>
 
-    Gruppo attuale: **{ $groupDisplay }**
+    Gruppo attuale: <b>{ $groupDisplay }</b>
 
     Inserisci il tuo gruppo in uno di questi formati:
-    • **E** (Elite)
-    • **M3** (Master 3)
-    • **P15** (Pro 15)
-    • **A42** (Amateur 42)
-    • **R11** (Rookie 11)
+    • <b>E</b> (Elite)
+    • <b>M3</b> (Master 3)
+    • <b>P15</b> (Pro 15)
+    • <b>A42</b> (Amateur 42)
+    • <b>R11</b> (Rookie 11)
 
     I numeri possono avere da 1 a 3 cifre.
 group-reset-success = ✅ Gruppo reimpostato con successo
@@ -525,7 +525,7 @@ group-reset-success = ✅ Gruppo reimpostato con successo
 # =======================
 # Menu Lingua
 # =======================
-lang-menu-title = 🌍 **Impostazioni Lingua**
+lang-menu-title = 🌍 <b>Impostazioni Lingua</b>
 
     Attuale: { $currentLang }
 
@@ -534,7 +534,7 @@ lang-menu-title = 🌍 **Impostazioni Lingua**
 # =======================
 # Menu Notifiche Personalizzate
 # =======================
-custom-notif-menu-title = ⏱️ **Notifiche Personalizzate**
+custom-notif-menu-title = ⏱️ <b>Notifiche Personalizzate</b>
 
     Imposta i tuoi orari di notifica ({ $minTime }m - { $maxTime }h prima della chiusura delle qualifiche).
 
@@ -546,27 +546,27 @@ custom-notif-menu-title = ⏱️ **Notifiche Personalizzate**
 # Impostazioni Fuso Orario
 # =======================
 button-timezone = ⏰ Fuso orario: { $timezone }
-timezone-menu-title = ⏰ **Impostazioni Fuso Orario**
+timezone-menu-title = ⏰ <b>Impostazioni Fuso Orario</b>
 
-    Fuso orario attuale: **{ $timezone }**
+    Fuso orario attuale: <b>{ $timezone }</b>
 
     Digita il tuo fuso orario (nome città in inglese, abbreviazione o offset UTC):
 
-    Esempi: `Rome`, `New York`, `UTC+1`, `London`
+    Esempi: <code>Rome</code>, <code>New York</code>, <code>UTC+1</code>, <code>London</code>
 
-timezone-select-matches = 🌍 **Seleziona il tuo fuso orario:**
+timezone-select-matches = 🌍 <b>Seleziona il tuo fuso orario:</b>
 
     Corrispondenze per "{ $query }":
 
-timezone-select-matches-paginated = 🌍 **Seleziona il tuo fuso orario:**
+timezone-select-matches-paginated = 🌍 <b>Seleziona il tuo fuso orario:</b>
 
     Corrispondenze per "{ $query }" (Pagina { $page }/{ $total }):
 
-timezone-set-success = ✅ **Fuso orario impostato!**
+timezone-set-success = ✅ <b>Fuso orario impostato!</b>
 
     { $timezone }
 
-    Ora attuale nel tuo fuso orario: **{ $localTime }**
+    Ora attuale nel tuo fuso orario: <b>{ $localTime }</b>
 
     Tutti gli orari delle gare saranno mostrati nel tuo orario locale.
 

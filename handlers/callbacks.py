@@ -292,7 +292,7 @@ async def handle_main_menu_calendar(callback: CallbackQuery, i18n: I18nContext):
     )
     title = i18n.get("calendar-title-full")
     text = f"{title}\n\n{calendar_text}"
-    await callback.message.answer(text, parse_mode="Markdown")
+    await callback.message.answer(text, parse_mode="HTML")
 
 
 @router.callback_query(F.data == "main_menu_next")
@@ -318,7 +318,7 @@ async def handle_main_menu_next(callback: CallbackQuery, i18n: I18nContext):
     )
     title = i18n.get("calendar-title-next", count=len(next_season_calendar))
     text = f"{title}\n\n{calendar_text}"
-    await callback.message.answer(text, parse_mode="Markdown")
+    await callback.message.answer(text, parse_mode="HTML")
 
 
 @router.callback_query(F.data == "main_menu_settings")
@@ -332,7 +332,7 @@ async def handle_main_menu_settings(
     keyboard = build_settings_keyboard(user_id, i18n)
 
     await callback.message.answer(
-        i18n.get("settings-title"), reply_markup=keyboard, parse_mode="Markdown"
+        i18n.get("settings-title"), reply_markup=keyboard, parse_mode="HTML"
     )
 
 
@@ -505,7 +505,7 @@ async def handle_weather(callback: CallbackQuery, i18n: I18nContext):
     full_message = f"**Race #{race_id}: {track}**\n\n{weather_message}"
 
     try:
-        await callback.message.answer(full_message, parse_mode="Markdown")
+        await callback.message.answer(full_message, parse_mode="HTML")
         await callback.answer(i18n.get("feedback-weather-sent"))
     except Exception as e:
         logger.error(f"Failed to send weather for race {race_id}: {e}")
@@ -526,7 +526,7 @@ async def handle_language_menu(callback: CallbackQuery, i18n: I18nContext):
             currentLang=LANGUAGE_OPTIONS.get(current_lang, current_lang),
         ),
         reply_markup=keyboard,
-        parse_mode="Markdown",
+        parse_mode="HTML",
     )
     await callback.answer()
 
@@ -590,7 +590,7 @@ async def handle_language_select(callback: CallbackQuery, i18n: I18nContext):
         await callback.message.edit_text(
             i18n.get("lang-menu-title", currentLang=lang_display),
             reply_markup=keyboard,
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
         await callback.answer(i18n.get("feedback-language-set", language=lang_display))
     else:
@@ -608,7 +608,7 @@ async def handle_language_reset(callback: CallbackQuery, i18n: I18nContext):
         await callback.message.edit_text(
             i18n.get("lang-menu-title", currentLang=LANGUAGE_OPTIONS["gb"]),
             reply_markup=keyboard,
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
         await callback.answer(i18n.get("feedback-language-reset"))
     else:
@@ -648,7 +648,7 @@ async def handle_ui_language_menu(callback: CallbackQuery, i18n: I18nContext):
     keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
 
     await callback.message.edit_text(
-        i18n.get("ui-lang-menu-title"), reply_markup=keyboard, parse_mode="Markdown"
+        i18n.get("ui-lang-menu-title"), reply_markup=keyboard, parse_mode="HTML"
     )
     await callback.answer()
 
@@ -680,7 +680,7 @@ async def handle_settings_main(callback: CallbackQuery, i18n: I18nContext):
     keyboard = build_settings_keyboard(user_id, i18n)
 
     await callback.message.edit_text(
-        i18n.get("settings-title"), reply_markup=keyboard, parse_mode="Markdown"
+        i18n.get("settings-title"), reply_markup=keyboard, parse_mode="HTML"
     )
     await callback.answer()
 
@@ -758,7 +758,7 @@ async def handle_notifications_menu(callback: CallbackQuery, i18n: I18nContext):
     keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
 
     await callback.message.edit_text(
-        i18n.get("notif-menu-title"), reply_markup=keyboard, parse_mode="Markdown"
+        i18n.get("notif-menu-title"), reply_markup=keyboard, parse_mode="HTML"
     )
     await callback.answer()
 
@@ -810,7 +810,7 @@ async def handle_custom_notifications_menu(callback: CallbackQuery, i18n: I18nCo
     await callback.message.edit_text(
         i18n.get("custom-notif-menu-title", minTime=min_time, maxTime=max_time),
         reply_markup=keyboard,
-        parse_mode="Markdown",
+        parse_mode="HTML",
     )
     await callback.answer()
 
@@ -901,7 +901,7 @@ async def handle_custom_notification_edit(
             "settings-custom-notif-edit", slot=slot_idx + 1, current=current_status
         ),
         reply_markup=keyboard,
-        parse_mode="Markdown",
+        parse_mode="HTML",
     )
     await callback.answer()
 
@@ -982,7 +982,7 @@ async def handle_custom_notification_input_prompt(
     await callback.message.edit_text(
         i18n.get("settings-custom-notif-input", slot=slot_idx + 1),
         reply_markup=keyboard,
-        parse_mode="Markdown",
+        parse_mode="HTML",
     )
     await callback.answer()
 
@@ -1024,7 +1024,7 @@ async def handle_group_menu(
     await callback.message.edit_text(
         i18n.get("group-menu-title", groupDisplay=group_display),
         reply_markup=keyboard,
-        parse_mode="Markdown",
+        parse_mode="HTML",
     )
     await callback.answer()
 
@@ -1089,7 +1089,7 @@ async def handle_timezone_menu(
     await callback.message.edit_text(
         i18n.get("timezone-menu-title", timezone=tz_display),
         reply_markup=keyboard,
-        parse_mode="Markdown",
+        parse_mode="HTML",
     )
     await callback.answer()
 
@@ -1153,7 +1153,7 @@ async def handle_timezone_select(
                 "timezone-set-success", timezone=tz_display, localTime=local_time_str
             ),
             reply_markup=keyboard,
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
         await callback.answer(i18n.get("feedback-timezone-set"))
     else:

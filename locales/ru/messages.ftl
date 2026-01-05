@@ -3,11 +3,11 @@
 # =======================
 # Команды и общее
 # =======================
-start-welcome-new = 👋 **Добро пожаловать в GPRO Bot!**
+start-welcome-new = 👋 <b>Добро пожаловать в GPRO Bot!</b>
 
     Давайте настроим бота. Сначала выберите предпочитаемый язык для ссылок на GPRO:
 
-    🌍 **Выберите язык** (или пропустите для английского):
+    🌍 <b>Выберите язык</b> (или пропустите для английского):
 
 start-welcome-existing = 🏁 GPRO Bot РАБОТАЕТ!
     /status - Следующая гонка
@@ -15,63 +15,63 @@ start-welcome-existing = 🏁 GPRO Bot РАБОТАЕТ!
     /next - Следующий сезон
     /settings - Настройки
 
-start-welcome-existing-buttons = 🏁 **GPRO Bot**
+start-welcome-existing-buttons = 🏁 <b>GPRO Bot</b>
 
     Что хотите сделать?
 
-bot-live = 🏁 **GPRO Bot**
+bot-live = 🏁 <b>GPRO Bot</b>
 
 # =======================
 # Статус и календарь
 # =======================
 no-races-scheduled = 🔔 Нет запланированных гонок
 no-upcoming-qualifications = 🔔 Нет предстоящих квалификаций
-next-season-not-published = 🌟 **Следующий сезон ещё не опубликован**
+next-season-not-published = 🌟 <b>Следующий сезон ещё не опубликован</b>
 
-calendar-title-full = 🏁 **Весь сезон**
-calendar-title-next = 🌟 **СЛЕДУЮЩИЙ СЕЗОН** ({ $count } гонок)
+calendar-title-full = 🏁 <b>Весь сезон</b>
+calendar-title-next = 🌟 <b>СЛЕДУЮЩИЙ СЕЗОН</b> ({ $count } гонок)
 
 # =======================
 # Онбординг
 # =======================
-onboard-group-title = 🏁 **Выбор группы**
+onboard-group-title = 🏁 <b>Выбор группы</b>
 
     Выберите вашу группу в GPRO для персонализированных ссылок:
 
     Выберите готовый вариант или введите свой:
 
-onboard-group-custom = 🏁 **Выбор группы (Необязательно)**
+onboard-group-custom = 🏁 <b>Выбор группы (Необязательно)</b>
 
     Введите группу в одном из этих форматов:
-    • **E** (Elite)
-    • **M3** (Master 3)
-    • **P15** (Pro 15)
-    • **A42** (Amateur 42)
-    • **R11** (Rookie 11)
+    • <b>E</b> (Elite)
+    • <b>M3</b> (Master 3)
+    • <b>P15</b> (Pro 15)
+    • <b>A42</b> (Amateur 42)
+    • <b>R11</b> (Rookie 11)
 
     Номер может быть от 1 до 3 цифр.
 
-    💡 *Язык сайта GPRO установлен соответствующим языку бота. Вы можете изменить его позже в /settings*
+    💡 <i>Язык сайта GPRO установлен соответствующим языку бота. Вы можете изменить его позже в /settings</i>
 
-onboard-complete = ✅ **Настройка завершена!**
+onboard-complete = ✅ <b>Настройка завершена!</b>
 
-    🏁 **GPRO Bot готов к работе!**
+    🏁 <b>GPRO Bot готов к работе!</b>
 
-    **Доступные команды:**
+    <b>Доступные команды:</b>
     /status - Следующая гонка
     /calendar - Весь сезон
     /next - Следующий сезон
     /settings - Настройки
 
-    💡 *Вы можете изменить эти настройки в любое время через /settings*
+    💡 <i>Вы можете изменить эти настройки в любое время через /settings</i>
 
-onboard-complete-with-group = ✅ **Настройка завершена!**
+onboard-complete-with-group = ✅ <b>Настройка завершена!</b>
 
-    Группа: **{ $group }**
+    Группа: <b>{ $group }</b>
 
-    🏁 **GPRO Bot готов к работе!**
+    🏁 <b>GPRO Bot готов к работе!</b>
 
-    **Доступные команды:**
+    <b>Доступные команды:</b>
     /status - Следующая гонка
     /calendar - Весь сезон
     /next - Следующий сезон
@@ -80,45 +80,45 @@ onboard-complete-with-group = ✅ **Настройка завершена!**
 # =======================
 # Настройки
 # =======================
-settings-title = ⚙️ **Настройки**
+settings-title = ⚙️ <b>Настройки</b>
 
     Настройте ваши предпочтения:
 
-settings-language-title = 🌍 **Настройки языка**
+settings-language-title = 🌍 <b>Настройки языка</b>
 
     Текущий: { $language }
 
     Выберите предпочитаемый язык для ссылок на GPRO:
 
-ui-lang-menu-title = 💬 **Язык бота**
+ui-lang-menu-title = 💬 <b>Язык бота</b>
 
     Выберите язык интерфейса бота:
 
-settings-group-title = 🏁 **Настройки группы**
+settings-group-title = 🏁 <b>Настройки группы</b>
 
-    Текущая группа: **{ $group }**
+    Текущая группа: <b>{ $group }</b>
 
     Введите группу в одном из этих форматов:
-    • **E** (Elite)
-    • **M3** (Master 3)
-    • **P15** (Pro 15)
-    • **A42** (Amateur 42)
-    • **R11** (Rookie 11)
+    • <b>E</b> (Elite)
+    • <b>M3</b> (Master 3)
+    • <b>P15</b> (Pro 15)
+    • <b>A42</b> (Amateur 42)
+    • <b>R11</b> (Rookie 11)
 
     Номер может быть от 1 до 3 цифр.
 
-settings-group-set = ✅ **Группа установлена: { $group }**
+settings-group-set = ✅ <b>Группа установлена: { $group }</b>
 
     Уведомления о гонках и реплеях будут содержать прямые ссылки на вашу группу!
 
-settings-notifications-title = 🔔 **Настройки уведомлений**
+settings-notifications-title = 🔔 <b>Настройки уведомлений</b>
 
     Нажмите для включения/отключения уведомлений:
     ✅ = Включено | ❌ = Отключено
 
-    ℹ️ *Это глобальные переключатели для всех гонок. Используйте кнопку 'Проехал квалификацию' в уведомлениях для отключения конкретной гонки.*
+    ℹ️ <i>Это глобальные переключатели для всех гонок. Используйте кнопку 'Проехал квалификацию' в уведомлениях для отключения конкретной гонки.</i>
 
-settings-custom-notif-title = ⏱️ **Кастомные уведомления**
+settings-custom-notif-title = ⏱️ <b>Кастомные уведомления</b>
 
     Установите свои времена уведомлений ({ $min }м - { $max }ч до закрытия квалификации).
 
@@ -126,23 +126,23 @@ settings-custom-notif-title = ⏱️ **Кастомные уведомления
 
     Нажмите на слот для настройки.
 
-settings-custom-notif-edit = ⏱️ **Кастомное уведомление { $slot }**{ $current }
+settings-custom-notif-edit = ⏱️ <b>Кастомное уведомление { $slot }</b>{ $current }
 
     Выберите готовое время или введите своё:
 
-settings-custom-notif-input = ⏱️ **Кастомное уведомление { $slot }**
+settings-custom-notif-input = ⏱️ <b>Кастомное уведомление { $slot }</b>
 
     Введите время для уведомления.
 
-    **Поддерживаемые форматы:**
-    • `20m` или `45 минут` (20м-70ч)
-    • `2h` или `12 часов`
-    • `1h 30m` или `2ч30м`
+    <b>Поддерживаемые форматы:</b>
+    • <code>20m</code> или <code>45 минут</code> (20м-70ч)
+    • <code>2h</code> или <code>12 часов</code>
+    • <code>1h 30m</code> или <code>2ч30м</code>
 
-    **Примеры:**
-    • `20m` - за 20 минут
-    • `6h` - за 6 часов
-    • `1h 30m` - за 1 час 30 минут
+    <b>Примеры:</b>
+    • <code>20m</code> - за 20 минут
+    • <code>6h</code> - за 6 часов
+    • <code>1h 30m</code> - за 1 час 30 минут
 
 # =======================
 # Кнопки
@@ -205,106 +205,106 @@ notif-label-replay = Доступен реплей гонки
 notif-label-live = Гонка в прямом эфире
 notif-label-results = Доступны результаты гонки
 
-notif-quali-closes = **Квалификация закроется через { $time }!**
-notif-quali-opens = **Квалификация открыта (или скоро откроется)**
+notif-quali-closes = <b>Квалификация закроется через { $time }!</b>
+notif-quali-opens = <b>Квалификация открыта (или скоро откроется)</b>
 
 notif-quali-message = { $emoji } { $title }
 
-    🏁 **Гонка #{ $raceId }**
-    📍 **{ $track }**
-    📅 **Квалификация: { $qualiDeadline } | Гонка: { $raceTime }**
+    🏁 <b>Гонка #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    📅 <b>Квалификация: { $qualiDeadline } | Гонка: { $raceTime }</b>
 
-    🔗 [Перейти к квалификации]({ $qualiLink })
+    🔗 <a href="{ $qualiLink }">Перейти к квалификации</a>
 
     Нажмите кнопку для отключения уведомлений об этой гонке
 
 notif-quali-message-disabled = { $emoji } { $title }
 
-    🏁 **Гонка #{ $raceId }**
-    📍 **{ $track }**
-    📅 **Квалификация: { $qualiDeadline } | Гонка: { $raceTime }**
+    🏁 <b>Гонка #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    📅 <b>Квалификация: { $qualiDeadline } | Гонка: { $raceTime }</b>
 
-    🔗 [Перейти к квалификации]({ $qualiLink })
+    🔗 <a href="{ $qualiLink }">Перейти к квалификации</a>
 
-    ℹ️ **Автоматические уведомления отключены** для этой гонки
+    ℹ️ <b>Автоматические уведомления отключены</b> для этой гонки
     Нажмите кнопку для включения
 
-notif-race-live = 🏁 **Гонка #{ $raceId } в ПРЯМОМ ЭФИРЕ!**
+notif-race-live = 🏁 <b>Гонка #{ $raceId } в ПРЯМОМ ЭФИРЕ!</b>
 
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
 
-    🔗 [Смотреть гонку]({ $raceLink })
+    🔗 <a href="{ $raceLink }">Смотреть гонку</a>
 
-notif-race-live-no-group = 🏁 **Гонка #{ $raceId } в ПРЯМОМ ЭФИРЕ!**
+notif-race-live-no-group = 🏁 <b>Гонка #{ $raceId } в ПРЯМОМ ЭФИРЕ!</b>
 
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
 
     ⚠️ Укажите группу в /settings для прямой ссылки!
 
-    🔗 [Смотреть гонку]({ $raceLink })
+    🔗 <a href="{ $raceLink }">Смотреть гонку</a>
 
-notif-race-replay = 📺 **Доступен реплей гонки #{ $raceId }**
+notif-race-replay = 📺 <b>Доступен реплей гонки #{ $raceId }</b>
 
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
 
     Если гонка уже рассчитана, реплей доступен здесь:
 
-    🔗 [Смотреть реплей]({ $replayLink })
+    🔗 <a href="{ $replayLink }">Смотреть реплей</a>
 
-notif-race-replay-no-group = 📺 **Доступен реплей гонки #{ $raceId }**
+notif-race-replay-no-group = 📺 <b>Доступен реплей гонки #{ $raceId }</b>
 
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
 
     Если гонка уже рассчитана, реплей доступен здесь:
 
     ⚠️ Для персональных ссылок укажите группу в /settings!
 
-    🔗 [Смотреть реплей]({ $replayLink })
+    🔗 <a href="{ $replayLink }">Смотреть реплей</a>
 
-notif-race-results = 📊 **Доступны результаты гонки #{ $raceId }**
+notif-race-results = 📊 <b>Доступны результаты гонки #{ $raceId }</b>
 
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
-
-    Результаты гонки доступны:
-
-    🔗 [Анализ гонки]({ $analysisLink })
-    🔗 [Сводка гонки]({ $summaryLink })
-
-notif-race-results-no-group = 📊 **Доступны результаты гонки #{ $raceId }**
-
-    📍 **{ $track }**
-    🕐 **{ $raceTime }**
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
 
     Результаты гонки доступны:
 
-    🔗 [Анализ гонки]({ $analysisLink })
+    🔗 <a href="{ $analysisLink }">Анализ гонки</a>
+    🔗 <a href="{ $summaryLink }">Сводка гонки</a>
+
+notif-race-results-no-group = 📊 <b>Доступны результаты гонки #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    🕐 <b>{ $raceTime }</b>
+
+    Результаты гонки доступны:
+
+    🔗 <a href="{ $analysisLink }">Анализ гонки</a>
 
     ⚠️ Для персональной сводки укажите группу в /settings!
 
 # =======================
 # Погода
 # =======================
-weather-title = 🌤️ **Прогноз погоды на гонку**
-weather-practice-q1 = **Практика / Квалификация 1:** { $weather }
+weather-title = 🌤️ <b>Прогноз погоды на гонку</b>
+weather-practice-q1 = <b>Практика / Квалификация 1:</b> { $weather }
 weather-temp-hum = Темп: { $temp }°C • Влажность: { $hum }%
-weather-q2-start = **Квалификация 2 / Старт гонки:** { $weather }
-weather-race-conditions = **Условия гонки:**
-weather-quarter = **{ $label }:**
+weather-q2-start = <b>Квалификация 2 / Старт гонки:</b> { $weather }
+weather-race-conditions = <b>Условия гонки:</b>
+weather-quarter = <b>{ $label }:</b>
 weather-race-quarter = Темп: { $temp } • Влажность: { $hum }
     Вероятность дождя: { $rain }
 weather-not-available = ⚠️ Данные о погоде недоступны
-weather-cached = ℹ️ Погода уже загружена для **Гонки #{ $raceId }: { $track }**
+weather-cached = ℹ️ Погода уже загружена для <b>Гонки #{ $raceId }: { $track }</b>
 
-    Используйте `/weather force` для принудительного обновления.
+    Используйте <code>/weather force</code> для принудительного обновления.
     Используйте /status для просмотра уведомления с кнопкой погоды.
-weather-fetching = 🔄 Загрузка погоды для **Гонки #{ $raceId }: { $track }**...
-weather-force-updating = 🔄 Принудительное обновление погоды для **Гонки #{ $raceId }: { $track }**...
-weather-success = ✅ Погода загружена для **Гонки #{ $raceId }: { $track }**
+weather-fetching = 🔄 Загрузка погоды для <b>Гонки #{ $raceId }: { $track }</b>...
+weather-force-updating = 🔄 Принудительное обновление погоды для <b>Гонки #{ $raceId }: { $track }</b>...
+weather-success = ✅ Погода загружена для <b>Гонки #{ $raceId }: { $track }</b>
 
     Используйте /status для проверки уведомления с кнопкой погоды!
 weather-failed = ❌ Не удалось загрузить погоду
@@ -315,13 +315,13 @@ weather-failed = ❌ Не удалось загрузить погоду
 # Админ
 # =======================
 admin-only = ❌ Только для админов
-admin-calendar-updated = ✅ **Календарь**: { $count } гонок
-    🔄 **{ $userCount } пользователей** сброшено
-admin-next-season-ready = 🌟 **Следующий сезон готов!** { $count } гонок
+admin-calendar-updated = ✅ <b>Календарь</b>: { $count } гонок
+    🔄 <b>{ $userCount } пользователей</b> сброшено
+admin-next-season-ready = 🌟 <b>Следующий сезон готов!</b> { $count } гонок
     Используйте /next для просмотра
-admin-next-season-not-published = ℹ️ **Следующий сезон не опубликован**
-admin-users-count = 📊 **{ $count } пользователей**:
-admin-users-none = 📊 **0 пользователей** в базе
+admin-next-season-not-published = ℹ️ <b>Следующий сезон не опубликован</b>
+admin-users-count = 📊 <b>{ $count } пользователей</b>:
+admin-users-none = 📊 <b>0 пользователей</b> в базе
 admin-no-races = ❌ Нет гонок в календаре
 admin-no-upcoming-races = ❌ Нет предстоящих гонок
 
@@ -331,26 +331,26 @@ admin-no-upcoming-races = ❌ Нет предстоящих гонок
 error-invalid-format = ❌ Неверный формат!
 
     Используйте:
-    • **E** для Elite
-    • **M3** (Master 3)
-    • **P15**, **A42**, **R11** и т.д.
+    • <b>E</b> для Elite
+    • <b>M3</b> (Master 3)
+    • <b>P15</b>, <b>A42</b>, <b>R11</b> и т.д.
 
     Попробуйте снова:
 
 error-invalid-format-onboarding = ❌ Неверный формат!
 
     Используйте:
-    • **E** для Elite
-    • **M3** (Master 3)
-    • **P15**, **A42**, **R11** и т.д.
+    • <b>E</b> для Elite
+    • <b>M3</b> (Master 3)
+    • <b>P15</b>, <b>A42</b>, <b>R11</b> и т.д.
 
     Попробуйте снова или используйте /start для перезапуска:
 
-error-invalid-time = ❌ **Ошибка:** { $error }
+error-invalid-time = ❌ <b>Ошибка:</b> { $error }
 
-    Попробуйте снова с правильным форматом: `2h`, `30m` или `1h 30m`
+    Попробуйте снова с правильным форматом: <code>2h</code>, <code>30m</code> или <code>1h 30m</code>
 
-error-custom-notif-failed = ❌ **Ошибка:** { $error }
+error-custom-notif-failed = ❌ <b>Ошибка:</b> { $error }
 
     Попробуйте снова.
 
@@ -372,11 +372,11 @@ feedback-all-disabled = ✅ Все уведомления отключены!
 feedback-notif-enabled = ✅ { $label } включено!
 feedback-notif-disabled = ✅ { $label } отключено!
 feedback-quali-done = ✅ Готово!
-feedback-race-marked-done = ✅ *Гонка отмечена как завершенная!*
+feedback-race-marked-done = ✅ <i>Гонка отмечена как завершенная!</i>
 feedback-reset = 🔄 Сброшено!
-feedback-notifications-reset = 🔄 *Уведомления сброшены!*
+feedback-notifications-reset = 🔄 <i>Уведомления сброшены!</i>
 feedback-reenabled = 🔄 Включено заново!
-feedback-notifications-reenabled = 🔄 *Уведомления включены заново!*
+feedback-notifications-reenabled = 🔄 <i>Уведомления включены заново!</i>
 feedback-language-set = ✅ Язык установлен: { $language }
 feedback-language-reset = ✅ Язык сброшен на английский
 feedback-ui-language-set = ✅ Язык бота установлен: { $language }
@@ -471,13 +471,13 @@ custom-notif-invalid-slot = Неверный слот (должен быть 0-{
 custom-notif-empty-error = Время не может быть пустым
 custom-notif-invalid-format = Неверный формат. Используйте: 2ч, 30м или 1ч 30м
 custom-notif-enter-time = Пожалуйста, введите время
-custom-notif-error-parsing = ❌ **Ошибка:** { $error }
+custom-notif-error-parsing = ❌ <b>Ошибка:</b> { $error }
 
-    Пожалуйста, попробуйте снова с корректным форматом: `2ч`, `30м` или `1ч 30м`
-custom-notif-success = ✅ **{ $message }**
+    Пожалуйста, попробуйте снова с корректным форматом: <code>2ч</code>, <code>30м</code> или <code>1ч 30м</code>
+custom-notif-success = ✅ <b>{ $message }</b>
 
     Ваше кастомное уведомление установлено!
-custom-notif-error-setting = ❌ **Ошибка:** { $error }
+custom-notif-error-setting = ❌ <b>Ошибка:</b> { $error }
 
     Пожалуйста, попробуйте снова.
 
@@ -507,26 +507,26 @@ notif-label-race-results = Доступны результаты гонки
 # =======================
 # Меню уведомлений
 # =======================
-notif-menu-title = 🔔 **Настройки уведомлений**
+notif-menu-title = 🔔 <b>Настройки уведомлений</b>
 
     Нажмите, чтобы включить/выключить уведомления:
     ✅ = Включено | ❌ = Выключено
 
-    ℹ️ *Это глобальные переключатели для всех гонок. Используйте кнопку 'Проехал квалификацию' в уведомлениях, чтобы отключить конкретную гонку.*
+    ℹ️ <i>Это глобальные переключатели для всех гонок. Используйте кнопку 'Проехал квалификацию' в уведомлениях, чтобы отключить конкретную гонку.</i>
 
 # =======================
 # Меню группы
 # =======================
-group-menu-title = 🏁 **Настройки группы**
+group-menu-title = 🏁 <b>Настройки группы</b>
 
-    Текущая группа: **{ $groupDisplay }**
+    Текущая группа: <b>{ $groupDisplay }</b>
 
     Введите вашу группу в одном из форматов:
-    • **E** (Elite)
-    • **M3** (Master 3)
-    • **P15** (Pro 15)
-    • **A42** (Amateur 42)
-    • **R11** (Rookie 11)
+    • <b>E</b> (Elite)
+    • <b>M3</b> (Master 3)
+    • <b>P15</b> (Pro 15)
+    • <b>A42</b> (Amateur 42)
+    • <b>R11</b> (Rookie 11)
 
     Номер может быть 1-3 цифры.
 group-reset-success = ✅ Группа успешно сброшена
@@ -534,7 +534,7 @@ group-reset-success = ✅ Группа успешно сброшена
 # =======================
 # Меню языка
 # =======================
-lang-menu-title = 🌍 **Настройки языка**
+lang-menu-title = 🌍 <b>Настройки языка</b>
 
     Текущий: { $currentLang }
 
@@ -543,7 +543,7 @@ lang-menu-title = 🌍 **Настройки языка**
 # =======================
 # Меню кастомных уведомлений
 # =======================
-custom-notif-menu-title = ⏱️ **Кастомные уведомления**
+custom-notif-menu-title = ⏱️ <b>Кастомные уведомления</b>
 
     Установите свои времена уведомлений ({ $minTime }м - { $maxTime }ч до закрытия квалификации).
 
@@ -555,15 +555,15 @@ custom-notif-menu-title = ⏱️ **Кастомные уведомления**
 # Погода
 # =======================
 weather-unavailable = ⚠️ Данные о погоде недоступны
-weather-title = 🌤️ **Прогноз погоды на гонку**
-weather-practice-q1 = **Практика / Квалификация 1:** { $weather }
+weather-title = 🌤️ <b>Прогноз погоды на гонку</b>
+weather-practice-q1 = <b>Практика / Квалификация 1:</b> { $weather }
 weather-temp-hum = Температура: { $temp }°C • Влажность: { $hum }%
-weather-q2-race-start = **Квалификация 2 / Старт гонки:** { $weather }
-weather-race-conditions = **Условия гонки:**
-weather-start-0h30m = **Старт - 0ч30м:**
-weather-0h30m-1h00m = **0ч30м - 1ч00м:**
-weather-1h00m-1h30m = **1ч00м - 1ч30м:**
-weather-1h30m-2h00m = **1ч30м - 2ч00м:**
+weather-q2-race-start = <b>Квалификация 2 / Старт гонки:</b> { $weather }
+weather-race-conditions = <b>Условия гонки:</b>
+weather-start-0h30m = <b>Старт - 0ч30м:</b>
+weather-0h30m-1h00m = <b>0ч30м - 1ч00м:</b>
+weather-1h00m-1h30m = <b>1ч00м - 1ч30м:</b>
+weather-1h30m-2h00m = <b>1ч30м - 2ч00м:</b>
 weather-temp-hum-range = Температура: { $temp } • Влажность: { $hum }
 weather-rain-prob = Вероятность дождя: { $rain }
 
@@ -571,27 +571,27 @@ weather-rain-prob = Вероятность дождя: { $rain }
 # Настройки часового пояса
 # =======================
 button-timezone = ⏰ Часовой пояс: { $timezone }
-timezone-menu-title = ⏰ **Настройки часового пояса**
+timezone-menu-title = ⏰ <b>Настройки часового пояса</b>
 
-    Текущий часовой пояс: **{ $timezone }**
+    Текущий часовой пояс: <b>{ $timezone }</b>
 
     Введите ваш часовой пояс (название города на английском, аббревиатуру или смещение UTC):
 
-    Примеры: `Moscow`, `New York`, `UTC+3`, `London`
+    Примеры: <code>Moscow</code>, <code>New York</code>, <code>UTC+3</code>, <code>London</code>
 
-timezone-select-matches = 🌍 **Выберите ваш часовой пояс:**
+timezone-select-matches = 🌍 <b>Выберите ваш часовой пояс:</b>
 
     Найдено для "{ $query }":
 
-timezone-select-matches-paginated = 🌍 **Выберите ваш часовой пояс:**
+timezone-select-matches-paginated = 🌍 <b>Выберите ваш часовой пояс:</b>
 
     Найдено для "{ $query }" (Страница { $page }/{ $total }):
 
-timezone-set-success = ✅ **Часовой пояс установлен!**
+timezone-set-success = ✅ <b>Часовой пояс установлен!</b>
 
     { $timezone }
 
-    Текущее время в вашем часовом поясе: **{ $localTime }**
+    Текущее время в вашем часовом поясе: <b>{ $localTime }</b>
 
     Все времена гонок теперь будут отображаться в вашем местном времени.
 
