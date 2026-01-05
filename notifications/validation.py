@@ -57,6 +57,7 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
     - "2d", "2 days" -> days (converted to hours)
     - "1h 30m", "2h30m" -> hours + minutes
     - "2d 12h", "2d12h" -> days + hours
+    - "2d 12h 30m", "2d12h30m" -> days + hours + minutes
 
     Supports multiple languages:
     - English: d, day, days, h, hours, m, min, minutes
@@ -119,6 +120,18 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
     # French: m, min, minute, minutes
     # Italian: m, min, minuto, minuti
     minute_pattern = r"(?:m(?:in(?:ute|utes|uto|utos|uti)?)?|м(?:ин(?:ут(?:а|ы)?)?)?)"
+
+    # Try to match "Xd Yh Zm" or "XdYhZm" format (days + hours + minutes)
+    match = re.match(
+        rf"^(\d+)\s*{day_pattern}\s*(\d+)\s*{hour_pattern}\s*(\d+)\s*{minute_pattern}$",
+        time_str,
+    )
+    if match:
+        days = int(match.group(1))
+        hours = int(match.group(2))
+        minutes = int(match.group(3))
+        total_hours = days * 24 + hours + minutes / 60
+        return float(total_hours), ""
 
     # Try to match "Xd Yh" or "XdYh" format (days + hours)
     match = re.match(rf"^(\d+)\s*{day_pattern}\s*(\d+)\s*{hour_pattern}$", time_str)
