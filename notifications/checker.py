@@ -75,14 +75,17 @@ def _is_tuesday_race(race_data: dict) -> bool:
     return race_date.weekday() == 1  # 0=Monday, 1=Tuesday, etc.
 
 
-def _check_quali_closing_notifications(now: datetime) -> list:
+def _check_quali_closing_notifications(now: datetime, races_closing: dict) -> list:
     """Check for races with qualifying closing soon
+
+    Args:
+        now: Current datetime
+        races_closing: Pre-fetched dict of upcoming races
 
     Returns:
         list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
     """
     notifications = []
-    races_closing = get_races_closing_soon(72)  # Extended to 72h for Tuesday races
 
     for race_id, race_data in races_closing.items():
         quali_close = race_data["quali_close"]
@@ -121,16 +124,17 @@ def _check_quali_closing_notifications(now: datetime) -> list:
     return notifications
 
 
-def _check_custom_notifications(now: datetime) -> list:
+def _check_custom_notifications(now: datetime, races_closing: dict) -> list:
     """Check for custom notification times
+
+    Args:
+        now: Current datetime
+        races_closing: Pre-fetched dict of upcoming races
 
     Returns:
         list: Notifications to send [(type, race_id, race_data, label, history_key, user_id), ...]
     """
     notifications = []
-    races_closing = get_races_closing_soon(
-        72
-    )  # Check up to 72 hours (max custom time + buffer)
 
     # Check each user's custom notifications
     for user_id, user_data in users_data.items():
@@ -492,12 +496,15 @@ async def check_notifications(bot: Bot):
             async with notification_lock:
                 now = datetime.utcnow()
 
+                # Fetch upcoming races once for efficiency (used by multiple checks)
+                races_closing = get_races_closing_soon(72)  # Extended to 72h for Tuesday races
+
                 # Check all notification types
                 notifications_to_send = []
-                notifications_to_send.extend(_check_quali_closing_notifications(now))
+                notifications_to_send.extend(_check_quali_closing_notifications(now, races_closing))
                 notifications_to_send.extend(await _check_quali_open_notifications(now))
                 notifications_to_send.extend(_check_race_live_notifications(now))
-                notifications_to_send.extend(_check_custom_notifications(now))
+                notifications_to_send.extend(_check_custom_notifications(now, races_closing))
 
                 # Clean old history entries
                 cutoff = now - timedelta(days=NOTIFICATION_HISTORY_RETENTION_DAYS)
