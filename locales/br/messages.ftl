@@ -218,7 +218,7 @@ notif-quali-message = { $emoji } { $title }
 
     🏁 <b>Corrida #{ $raceId }</b>
     📍 <b>{ $track }</b>
-    📅 <b>Classificação (fecha): { $qualiDeadline }</b>
+    📅 <b>Classificação fecha: { $qualiDeadline }</b>
     🏎 <b>Corrida: { $raceTime }</b>
 
     🔗 <a href="{ $qualiLink }">Ir para Classificação</a>
@@ -229,7 +229,7 @@ notif-quali-message-disabled = { $emoji } { $title }
 
     🏁 <b>Corrida #{ $raceId }</b>
     📍 <b>{ $track }</b>
-    📅 <b>Classificação (fecha): { $qualiDeadline }</b>
+    📅 <b>Classificação fecha: { $qualiDeadline }</b>
     🏎 <b>Corrida: { $raceTime }</b>
 
     🔗 <a href="{ $qualiLink }">Ir para Classificação</a>

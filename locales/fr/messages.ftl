@@ -218,7 +218,7 @@ notif-quali-message = { $emoji } { $title }
 
     🏁 <b>Course #{ $raceId }</b>
     📍 <b>{ $track }</b>
-    📅 <b>Qualifications (ferment) : { $qualiDeadline }</b>
+    📅 <b>Qualifications ferment : { $qualiDeadline }</b>
     🏎 <b>Course : { $raceTime }</b>
 
     🔗 <a href="{ $qualiLink }">Aller aux Qualifications</a>
@@ -229,7 +229,7 @@ notif-quali-message-disabled = { $emoji } { $title }
 
     🏁 <b>Course #{ $raceId }</b>
     📍 <b>{ $track }</b>
-    📅 <b>Qualifications (ferment) : { $qualiDeadline }</b>
+    📅 <b>Qualifications ferment : { $qualiDeadline }</b>
     🏎 <b>Course : { $raceTime }</b>
 
     🔗 <a href="{ $qualiLink }">Aller aux Qualifications</a>
