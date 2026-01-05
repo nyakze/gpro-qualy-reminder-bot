@@ -109,9 +109,10 @@ sudo journalctl -u gpro -f
 
 **`i18n_setup.py`** - Internationalization
 - FluentRuntimeCore with custom UserLanguageManager
-- Locales in `locales/{en,ru,br,it,es,fr,nl,bg,cz,in,ua,pt}/*.ftl`
+- Locales in `locales/{gb,ru,br,it,es,fr,nl,bg,cz,in,ua,pt}/messages.ftl` (12 UI languages)
 - UI language (12 languages for bot interface) separate from GPRO link language (31 languages for race links)
 - UI language menu is paginated (2 pages, 6 languages each)
+- Note: Uses `gb` (not `en`) for consistency with GPRO language codes
 
 **`handlers/`** - Aiogram 3.x handlers
 - `commands.py`: /start, /status, /calendar, /next, /settings, /update, /updatetz, /weather, /users, /deluser

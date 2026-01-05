@@ -119,19 +119,8 @@ gpro-qualy-reminder-bot/
 │   ├── validation.py          # Custom notification validation
 │   ├── sender.py              # Notification sending functions
 │   └── checker.py             # Main notification loop
-├── locales/                    # i18n translations
-│   ├── en/                    # English
-│   ├── ru/                    # Russian
-│   ├── br/                    # Portuguese (Brazilian)
-│   ├── it/                    # Italian
-│   ├── es/                    # Spanish
-│   ├── fr/                    # French
-│   ├── nl/                    # Dutch (Nederlands)
-│   ├── bg/                    # Bulgarian (Български)
-│   ├── cz/                    # Czech (Čeština)
-│   ├── in/                    # Hindi (हिन्दी)
-│   ├── ua/                    # Ukrainian (Українська)
-│   └── pt/                    # Portuguese (Portugal)
+├── locales/                    # i18n translations (12 languages)
+│   └── {gb,ru,br,it,es,fr,nl,bg,cz,in,ua,pt}/messages.ftl
 ├── requirements.txt            # Python dependencies
 ├── .env.example               # Rename to .env and fill in your data
 ├── CLAUDE.md                  # Architecture docs for AI assistance
