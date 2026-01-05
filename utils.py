@@ -7,12 +7,18 @@ from datetime import datetime
 
 # UI Language Display Names
 UI_LANGUAGE_DISPLAY = {
-    "en": "🇬🇧 English",
+    "gb": "🇬🇧 English",
     "ru": "🇷🇺 Русский",
     "br": "🇧🇷 Português",
     "it": "🇮🇹 Italiano",
     "es": "🇪🇸 Español",
     "fr": "🇫🇷 Français",
+    "nl": "🇳🇱 Nederlands",
+    "bg": "🇧🇬 Български",
+    "cz": "🇨🇿 Čeština",
+    "in": "🇮🇳 हिन्दी",
+    "ua": "🇺🇦 Українська",
+    "pt": "🇵🇹 Português",
 }
 
 
