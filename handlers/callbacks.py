@@ -292,7 +292,7 @@ async def handle_main_menu_calendar(callback: CallbackQuery, i18n: I18nContext):
     )
     title = i18n.get("calendar-title-full")
     text = f"{title}\n\n{calendar_text}"
-    await callback.message.answer(text, parse_mode="HTML")
+    await callback.message.answer(text, parse_mode="Markdown")
 
 
 @router.callback_query(F.data == "main_menu_next")
@@ -318,7 +318,7 @@ async def handle_main_menu_next(callback: CallbackQuery, i18n: I18nContext):
     )
     title = i18n.get("calendar-title-next", count=len(next_season_calendar))
     text = f"{title}\n\n{calendar_text}"
-    await callback.message.answer(text, parse_mode="HTML")
+    await callback.message.answer(text, parse_mode="Markdown")
 
 
 @router.callback_query(F.data == "main_menu_settings")
