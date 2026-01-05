@@ -327,6 +327,13 @@ weather-1h30m-2h00m = <b>1h30m - 2h00m:</b>
 weather-temp-hum-range = Temp: { $temp } • Umidità: { $hum }
 weather-rain-prob = Probabilità di pioggia: { $rain }
 
+# Condizioni Meteorologiche
+weather-condition-sunny = Soleggiato
+weather-condition-partially-cloudy = Parzialmente Nuvoloso
+weather-condition-cloudy = Nuvoloso
+weather-condition-very-cloudy = Molto Nuvoloso
+weather-condition-rain = Pioggia
+
 # =======================
 # Admin
 # =======================

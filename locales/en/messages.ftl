@@ -564,6 +564,13 @@ weather-1h30m-2h00m = <b>1h30m - 2h00m:</b>
 weather-temp-hum-range = Temp: { $temp } • Humidity: { $hum }
 weather-rain-prob = Rain probability: { $rain }
 
+# Weather Conditions
+weather-condition-sunny = Sunny
+weather-condition-partially-cloudy = Partially Cloudy
+weather-condition-cloudy = Cloudy
+weather-condition-very-cloudy = Very Cloudy
+weather-condition-rain = Rain
+
 # =======================
 # Timezone Settings
 # =======================
