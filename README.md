@@ -95,19 +95,21 @@ ADMIN_USER_ID=your_telegram_id # to use admin commands
 | `/updatetz` | Download timezone data and rebuild search index (admin only) |
 | `/weather` | Manually fetch weather data for testing (admin only) |
 | `/users` | See user list (admin only) |
+| `/deluser` | Delete a user from database - for testing onboarding (admin only) |
 
 ## File Structure
 
 ```
-gpro-bot/
+gpro-qualy-reminder-bot/
 ├── bot.py                      # Main Aiogram bot entry point
 ├── config.py                   # Environment configuration
 ├── gpro_calendar.py            # GPRO API integration & caching
 ├── i18n_setup.py               # i18n middleware setup
 ├── utils.py                    # Shared utilities (flags, formatting)
+├── timezone_utils.py           # Timezone conversion & search
 ├── handlers/                   # Command & callback handlers
 │   ├── __init__.py            # Router initialization
-│   ├── commands.py            # /start, /status, /calendar, etc.
+│   ├── commands.py            # /start, /status, /calendar, /deluser, etc.
 │   ├── callbacks.py           # Button interaction handlers
 │   ├── states.py              # FSM state handlers
 │   └── onboarding.py          # New user onboarding flow
@@ -124,11 +126,13 @@ gpro-bot/
 │   ├── it/                    # Italian
 │   ├── es/                    # Spanish
 │   └── fr/                    # French
-├── requirements.txt
+├── requirements.txt            # Python dependencies
 ├── .env.example               # Rename to .env and fill in your data
 ├── CLAUDE.md                  # Architecture docs for AI assistance
+├── timezone-info.json         # Timezone metadata (auto-downloaded)
 ├── users_data.json            # User settings (auto-generated)
-└── gpro_calendar.json         # Race calendar cache (auto-generated)
+├── gpro_calendar.json         # Current season calendar cache (auto-generated)
+└── next_season_calendar.json  # Next season calendar cache (auto-generated)
 ```
 
 ## Deployment (Ubuntu/Systemd)
