@@ -301,25 +301,31 @@ def format_full_calendar(
         quali_close = race.get("quali_close", now)
         race_id = race["race_id"]
 
-        # Convert to user timezone if user_id provided
+        # Format datetime with timezone if user_id provided
         if user_id is not None:
-            from timezone_utils import convert_to_user_tz
+            from timezone_utils import format_datetime_for_user, convert_to_user_tz
 
+            # Get localized datetime with timezone abbreviation
+            date_time_tz = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
+            # Also convert race_date for weekday calculation
             race_date = convert_to_user_tz(race_date, user_id) or race_date
+        else:
+            # Fallback to UTC if no user_id
+            date_time_tz = race_date.strftime("%d.%m %H:%M UTC")
 
         # Get localized 2-letter weekday abbreviation
         weekday = get_localized_weekday(race_date, i18n)
-        date_str = f"{weekday} {race_date.strftime('%d.%m')}"
         time_text = format_time_until_quali(quali_close, i18n)
 
-        time_info = date_str
+        # Build time info with weekday, date, time, and timezone
+        time_info = f"{weekday} {date_time_tz}"
         if time_text:
             time_info += f" • {time_text}"
 
         # 🔥 ONLY для current season next race
         if next_race_id and race_id == next_race_id:
-            text += f"🔥 **#{race_id} {track}** - {time_info}\n"
+            text += f"🔥 **#{race_id} {track}**\n{time_info}\n"
         else:
-            text += f"**#{race_id} {track}** - {time_info}\n"
+            text += f"**#{race_id} {track}**\n{time_info}\n"
 
     return text.rstrip()
