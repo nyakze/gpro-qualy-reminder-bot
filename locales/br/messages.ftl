@@ -127,6 +127,7 @@ settings-custom-notif-title = ⏱️ <b>Notificações Personalizadas</b>
     Clique em um slot para configurar ou editar.
 
 settings-custom-notif-edit = ⏱️ <b>Notificação Personalizada { $slot }</b>{ $current }
+settings-custom-notif-current = Current:
 
     Selecione um horário predefinido ou informe um horário personalizado:
 
@@ -295,6 +296,7 @@ notif-race-results-no-group = 📊 <b>Resultados da Corrida #{ $raceId } Dispon�
 # Clima
 # =======================
 weather-title = 🌤️ <b>Previsão do Clima da Corrida</b>
+weather-race-header = Race #{ $raceId }: { $track }
 weather-practice-q1 = <b>Treino / Classificação 1:</b> { $weather }
 weather-temp-hum = Temp: { $temp }°C • Umidade: { $hum }%
 weather-q2-start = <b>Classificação 2 / Largada da Corrida:</b> { $weather }

@@ -130,6 +130,8 @@ settings-custom-notif-edit = ⏱️ <b>Custom Notification { $slot }</b>{ $curre
 
     Select a preset time or enter a custom time:
 
+settings-custom-notif-current = Current:
+
 settings-custom-notif-input = ⏱️ <b>Custom Notification { $slot }</b>
 
     Enter your custom notification time.
@@ -546,6 +548,7 @@ custom-notif-menu-title = ⏱️ <b>Custom Notifications</b>
 # =======================
 weather-unavailable = ⚠️ Weather data not available
 weather-title = 🌤️ <b>Race Weather Forecast</b>
+weather-race-header = Race #{ $raceId }: { $track }
 weather-practice-q1 = <b>Practice / Qualify 1:</b> { $weather }
 weather-temp-hum = Temp: { $temp }°C • Humidity: { $hum }%
 weather-q2-race-start = <b>Qualify 2 / Race Start:</b> { $weather }
