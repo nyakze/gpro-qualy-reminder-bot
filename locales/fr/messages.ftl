@@ -434,6 +434,8 @@ time-hours-minutes = { $hours ->
 time-hours-minutes-short = { $hours }h{ $minutes }m
 time-hours-short = { $hours }h
 time-minutes-short = { $minutes }m
+time-days-hours-short = { $days }j{ $hours }h
+time-days-hours-minutes-short = { $days }j{ $hours }h{ $minutes }m
 time-days = { $days ->
     [one] { $days } jour
    *[other] { $days } jours

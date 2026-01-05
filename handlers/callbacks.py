@@ -832,28 +832,34 @@ async def handle_custom_notification_edit(
     custom_notifs = get_custom_notifications(user_id)
     custom_notif = custom_notifs[slot_idx]
 
-    # Build preset buttons with localized labels
+    # Build preset buttons with localized labels (sorted from lowest to highest)
     preset_configs = [
-        (1.5, "combined"),   # 1h 30m (replaces 20m)
-        (0.5, "minutes"),    # 30m
-        (1, "hours"),        # 1h
-        (2.5, "combined"),   # 2h 30m (replaces 70h)
-        (3, "hours"),        # 3h
-        (6, "hours"),        # 6h
-        (12, "hours"),       # 12h
-        (18, "hours"),       # 18h
-        (60, "hours"),       # 60h
+        (0.5, "minutes"),      # 30m
+        (1, "hours"),          # 1h
+        (1.5, "combined_hm"),  # 1h 30m (replaces 20m)
+        (2.5, "combined_hm"),  # 2h 30m (replaces 70h)
+        (6, "hours"),          # 6h
+        (12, "hours"),         # 12h
+        (18, "hours"),         # 18h
+        (32, "combined_dh"),   # 1d 8h (replaces 3h)
+        (60, "hours"),         # 60h
     ]
 
     preset_times = []
     for hours_val, time_type in preset_configs:
-        h = int(hours_val)
-        m = int((hours_val * 60) % 60)
+        # Calculate days, hours, and minutes components
+        total_minutes = int(hours_val * 60)
+        d = total_minutes // (24 * 60)
+        remaining_minutes = total_minutes % (24 * 60)
+        h = remaining_minutes // 60
+        m = remaining_minutes % 60
 
-        if time_type == "combined" and m > 0:
+        if time_type == "combined_dh" and d > 0:
+            label = i18n.get("time-days-hours-short", days=d, hours=h)
+        elif time_type == "combined_hm" and m > 0:
             label = i18n.get("time-hours-minutes-short", hours=h, minutes=m)
-        elif h > 0:
-            label = i18n.get("time-hours-short", hours=h)
+        elif h > 0 or d > 0:
+            label = i18n.get("time-hours-short", hours=int(hours_val))
         else:
             label = i18n.get("time-minutes-short", minutes=m)
 
