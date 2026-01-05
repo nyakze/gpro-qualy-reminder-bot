@@ -14,4 +14,4 @@ from . import callbacks
 from . import states
 from . import onboarding
 
-logger.info("✅ handlers module loaded - Aiogram 3.x Router ready")
+logger.debug("✅ handlers module loaded - Aiogram 3.x Router ready")

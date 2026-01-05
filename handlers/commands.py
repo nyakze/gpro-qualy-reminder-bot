@@ -238,10 +238,10 @@ async def cmd_users(message: Message, i18n: I18nContext):
         await message.answer(i18n.get("admin-only"))
         return
 
-    logger.info("USERS: Admin access granted")
+    logger.debug("USERS: Admin access granted")
 
     try:
-        logger.info(f"USERS: Loaded {len(users_data)} users from notifications")
+        logger.debug(f"USERS: Loaded {len(users_data)} users from notifications")
 
         if not users_data:
             await message.answer(i18n.get("admin-users-none"), parse_mode="HTML")

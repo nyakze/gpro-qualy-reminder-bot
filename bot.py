@@ -41,13 +41,13 @@ async def main():
 
     # CRITICAL: Load users BEFORE anything
     load_users_data()
-    logger.info("✅ users_data loaded at startup")
+    logger.debug("✅ users_data loaded at startup")
 
     # Load timezone search index (if available)
     from timezone_utils import load_timezone_search_index
 
     if load_timezone_search_index():
-        logger.info("✅ Timezone search index loaded")
+        logger.debug("✅ Timezone search index loaded")
     else:
         logger.warning(
             "⚠️ Timezone search index not available, using fallback. Run /updatetz to download."
@@ -60,12 +60,12 @@ async def main():
     i18n = setup_i18n()
     await i18n.core.startup()  # Manually start the i18n core to load translations
     dp.update.middleware(i18n)
-    logger.info("✅ i18n middleware loaded")
+    logger.debug("✅ i18n middleware loaded")
 
     from handlers import router
 
     dp.include_router(router)
-    logger.info("✅ Handlers router loaded")
+    logger.debug("✅ Handlers router loaded")
 
     await load_calendar_silent()
     asyncio.create_task(check_notifications(bot))

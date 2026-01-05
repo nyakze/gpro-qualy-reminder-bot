@@ -96,7 +96,7 @@ def load_users_data():
                 # TYPE FIX: Convert string keys → int keys
                 clean_data = {int(k_str): status for k_str, status in raw_data.items()}
                 users_data.update(clean_data)
-                logger.info(f"✅ Loaded {len(users_data)} users (int keys)")
+                logger.debug(f"✅ Loaded {len(users_data)} users (int keys)")
         except Exception as e:
             logger.error(f"Load failed: {e}")
 

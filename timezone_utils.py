@@ -160,7 +160,7 @@ async def download_timezone_data() -> bool:
     url = "https://www.geoapify.com/data-share/timezones/timezone-info.json"
 
     try:
-        logger.info(f"Downloading timezone data from {url}...")
+        logger.debug(f"Downloading timezone data from {url}...")
 
         async with aiohttp.ClientSession() as session:
             async with session.get(
@@ -208,7 +208,7 @@ def build_timezone_search_index() -> dict:
         with open(TIMEZONE_DATA_FILE, "r", encoding="utf-8") as f:
             timezone_data = json.load(f)
 
-        logger.info(
+        logger.debug(
             f"Loaded timezone data: type={type(timezone_data).__name__}, "
             f"length={len(timezone_data) if isinstance(timezone_data, (list, dict)) else 'N/A'}"
         )

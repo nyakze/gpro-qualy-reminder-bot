@@ -209,9 +209,7 @@ async def process_timezone_input(
     message: Message, state: FSMContext, i18n: I18nContext
 ):
     """Process user's timezone search input and show fuzzy-matched options"""
-    from timezone_utils import fuzzy_search_timezones, get_timezone_display_name
-    from zoneinfo import ZoneInfo
-    from datetime import datetime, timezone as tz
+    from timezone_utils import fuzzy_search_timezones
 
     user_id = message.from_user.id
     query = message.text.strip()

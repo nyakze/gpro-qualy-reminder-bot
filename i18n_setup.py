@@ -87,9 +87,9 @@ def setup_i18n() -> I18nMiddleware:
     # Create i18n middleware with Fluent core
     # Note: path must be a string, not a Path object
     locales_path = str(LOCALES_DIR)
-    logger.info(f"Loading i18n from path: {locales_path}")
-    logger.info(f"Path exists: {LOCALES_DIR.exists()}")
-    logger.info(f"Path contents: {list(LOCALES_DIR.glob('*.ftl'))}")
+    logger.debug(f"Loading i18n from path: {locales_path}")
+    logger.debug(f"Path exists: {LOCALES_DIR.exists()}")
+    logger.debug(f"Path contents: {list(LOCALES_DIR.glob('*.ftl'))}")
 
     i18n_middleware = I18nMiddleware(
         core=FluentRuntimeCore(
