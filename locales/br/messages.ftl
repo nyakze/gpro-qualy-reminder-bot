@@ -331,7 +331,7 @@ weather-rain-prob = Probabilidade de chuva: { $rain }
 weather-condition-sunny = Ensolarado
 weather-condition-partially-cloudy = Parcialmente Nublado
 weather-condition-cloudy = Nublado
-weather-condition-very-cloudy = Muito Nublado
+weather-condition-very-cloudy = Encoberto
 weather-condition-rain = Chuva
 
 # =======================
