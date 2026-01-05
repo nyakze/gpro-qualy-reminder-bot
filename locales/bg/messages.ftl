@@ -1,3 +1,4 @@
+
 # GPRO Bot - Български превод
 
 # =======================
@@ -214,7 +215,7 @@ notif-quali-message = { $emoji } { $title }
 
     🏁 <b>Състезание #{ $raceId }</b>
     📍 <b>{ $track }</b>
-    📅 <b>Краен срок за квалификация: { $qualiDeadline }</b>
+    📅 <b>Краен срок за квал.: { $qualiDeadline }</b>
     🏎 <b>Състезание: { $raceTime }</b>
 
     🔗 <a href="{ $qualiLink }">Към квалификацията</a>
@@ -225,7 +226,7 @@ notif-quali-message-disabled = { $emoji } { $title }
 
     🏁 <b>Състезание #{ $raceId }</b>
     📍 <b>{ $track }</b>
-    📅 <b>Краен срок за квалификация: { $qualiDeadline }</b>
+    📅 <b>Краен срок за квал.: { $qualiDeadline }</b>
     🏎 <b>Състезание: { $raceTime }</b>
 
     🔗 <a href="{ $qualiLink }">Към квалификацията</a>
