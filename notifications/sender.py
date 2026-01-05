@@ -82,6 +82,9 @@ def translate_weather_condition(weather_condition: str, get_text_func) -> str:
     Returns:
         str: Translated weather condition
     """
+    # Normalize the weather condition (title case for consistent lookup)
+    normalized_condition = weather_condition.strip().title()
+
     # Map English weather conditions to translation keys
     weather_map = {
         "Sunny": "weather-condition-sunny",
@@ -92,7 +95,7 @@ def translate_weather_condition(weather_condition: str, get_text_func) -> str:
     }
 
     # Get translation key, fallback to original if not found
-    translation_key = weather_map.get(weather_condition)
+    translation_key = weather_map.get(normalized_condition)
     if translation_key:
         return get_text_func(translation_key)
     else:
