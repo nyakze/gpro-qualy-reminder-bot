@@ -223,7 +223,7 @@ notif-quali-message = { $emoji } { $title }
 
     🔗 <a href="{ $qualiLink }">Vai alle Qualifiche</a>
 
-    Clicca sul pulsante per disabilitare le notifiche per questa gara
+    <i>Clicca sul pulsante '✅ Qualifica Completata' per disattivare le notifiche di questa gara</i>
 
 notif-quali-message-disabled = { $emoji } { $title }
 
@@ -235,7 +235,7 @@ notif-quali-message-disabled = { $emoji } { $title }
     🔗 <a href="{ $qualiLink }">Vai alle Qualifiche</a>
 
     ℹ️ <b>Notifiche automatiche disabilitate</b> per questa gara
-    Clicca sul pulsante per riattivare le notifiche
+    <i>Clicca sul pulsante '🔄 Riattiva' per riattivare le notifiche</i>
 
 notif-race-live = 🏁 <b>Gara #{ $raceId } è IN DIRETTA!</b>
 

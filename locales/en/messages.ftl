@@ -219,7 +219,7 @@ notif-quali-message = { $emoji } { $title }
 
     🔗 <a href="{ $qualiLink }">Go to Qualifying</a>
 
-    Click button to disable notifications for this race
+    <i>Click the '✅ Quali Done' button to disable notifications for this race</i>
 
 notif-quali-message-disabled = { $emoji } { $title }
 
@@ -231,7 +231,7 @@ notif-quali-message-disabled = { $emoji } { $title }
     🔗 <a href="{ $qualiLink }">Go to Qualifying</a>
 
     ℹ️ <b>Automatic notifications disabled</b> for this race
-    Click button to re-enable notifications
+    <i>Click the '🔄 Re-enable' button to re-enable notifications</i>
 
 notif-race-live = 🏁 <b>Race #{ $raceId } is LIVE!</b>
 
