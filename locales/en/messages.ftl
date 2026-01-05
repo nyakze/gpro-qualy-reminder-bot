@@ -28,8 +28,8 @@ no-races-scheduled = 🔔 No races scheduled
 no-upcoming-qualifications = 🔔 No upcoming qualifications
 next-season-not-published = 🌟 <b>Next season not published yet</b>
 
-calendar-title-full = 🏁 <i>Full Season</i>
-calendar-title-next = 🌟 <i>NEXT SEASON</i> ({ $count } races)
+calendar-title-full = 🏁 <b>Full Season</b>
+calendar-title-next = 🌟 <b>NEXT SEASON</b> ({ $count } races)
 
 # =======================
 # Onboarding

@@ -333,11 +333,11 @@ def format_full_calendar(
         if time_text:
             time_info += f" • {time_text}"
 
-        # Build race line - format: #N Flag <i>Track Name</i> (HTML italic)
+        # Build race line - format: #N Flag <b>Track Name</b> (HTML)
         if flag:
-            race_line = f"#{race_id} {flag} <i>{track_name}</i>"
+            race_line = f"#{race_id} {flag} <b>{track_name}</b>"
         else:
-            race_line = f"#{race_id} <i>{track_name}</i>"
+            race_line = f"#{race_id} <b>{track_name}</b>"
 
         # 🔥 ONLY для current season next race
         if next_race_id and race_id == next_race_id:
