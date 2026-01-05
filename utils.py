@@ -324,8 +324,8 @@ def format_full_calendar(
 
         # 🔥 ONLY для current season next race
         if next_race_id and race_id == next_race_id:
-            text += f"🔥 **#{race_id} {track}**\n{time_info}\n"
+            text += f"🔥 #{race_id} **{track}**\n{time_info}\n"
         else:
-            text += f"**#{race_id} {track}**\n{time_info}\n"
+            text += f"#{race_id} **{track}**\n{time_info}\n"
 
     return text.rstrip()
