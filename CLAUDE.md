@@ -113,7 +113,7 @@ sudo journalctl -u gpro -f
 - UI language separate from GPRO link language (31 languages)
 
 **`handlers/`** - Aiogram 3.x handlers
-- `commands.py`: /start, /status, /calendar, /next, /settings, /update, /updatetz, /weather, /users
+- `commands.py`: /start, /status, /calendar, /next, /settings, /update, /updatetz, /weather, /users, /deluser
 - `callbacks.py`: Button interactions (quali done, weather, notifications toggle, settings)
 - `states.py`: FSM handlers for multi-step flows
 - `onboarding.py`: New user language + group selection flow
@@ -164,6 +164,7 @@ sudo journalctl -u gpro -f
 - `/updatetz`: Download timezone metadata from Geoapify and rebuild search index
 - `/weather`: Manual weather fetch for testing
 - `/users`: List all users with completion status
+- `/deluser`: Delete a user from database (for testing onboarding flow)
 - Admin check: `user_id in ADMIN_USER_IDS` (set in config.py)
 
 **Timezone Support:**
