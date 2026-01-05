@@ -251,7 +251,7 @@ async def cmd_users(message: Message, i18n: I18nContext):
         text = f"{header}\n\n"
         for uid, status in users_data.items():
             quali = status.get("completed_quali", "None")
-            text += f"• `{uid}`: Race {quali}\n"
+            text += f"• <code>{uid}</code>: Race {quali}\n"
 
         await message.answer(text, parse_mode="HTML")
 
