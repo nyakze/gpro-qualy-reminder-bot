@@ -128,8 +128,24 @@ def get_translation(key: str, locale: str = None, **kwargs) -> str:
         locale = DEFAULT_UI_LANGUAGE
 
     try:
-        # Use the core's render method to get translation
-        result = _i18n_middleware.core.render(key=key, locale=locale, **kwargs)
+        # Get translator bundle for the locale
+        translator = _i18n_middleware.core.get_translator(locale=locale)
+
+        # Get the message
+        message = translator.get_message(key)
+        if not message or not message.value:
+            return key
+
+        # Format the pattern with parameters
+        result, errors = translator.format_pattern(message.value, kwargs)
+
+        # Log any formatting errors
+        if errors:
+            import logging
+            logging.getLogger(__name__).debug(
+                f"Translation formatting errors for key '{key}': {errors}"
+            )
+
         return result if result else key
     except Exception as e:
         import logging
