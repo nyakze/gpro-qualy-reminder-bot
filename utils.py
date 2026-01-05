@@ -334,10 +334,11 @@ def format_full_calendar(
             time_info += f" • {time_text}"
 
         # Build race line: #N Flag **Track Name**
+        # Escape # to prevent Markdown heading interpretation
         if flag:
-            race_line = f"#{race_id} {flag} **{track_name}**"
+            race_line = f"\\#{race_id} {flag} **{track_name}**"
         else:
-            race_line = f"#{race_id} **{track_name}**"
+            race_line = f"\\#{race_id} **{track_name}**"
 
         # 🔥 ONLY для current season next race
         if next_race_id and race_id == next_race_id:
