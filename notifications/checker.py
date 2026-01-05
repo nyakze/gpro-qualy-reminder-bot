@@ -436,7 +436,8 @@ async def _send_notifications_to_users(bot: Bot, notifications_to_send: list):
                 )
         else:
             # Regular notifications - send to all users with that notification enabled
-            for user_id in users_data:
+            # Use list() to avoid "dictionary changed size during iteration" error
+            for user_id in list(users_data):
                 if is_notification_enabled(user_id, label):
                     try:
                         if notif_type == "quali" or notif_type == "opens":
