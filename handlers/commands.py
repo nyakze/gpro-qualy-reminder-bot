@@ -164,7 +164,7 @@ async def cmd_calendar(message: Message, state: FSMContext, i18n: I18nContext):
     )
     title = i18n.get("calendar-title-full")
     text = f"{title}\n\n{calendar_text}"
-    await message.answer(text, parse_mode="Markdown")
+    await message.answer(text, parse_mode="HTML")
 
 
 @router.message(Command("next"))
@@ -185,7 +185,7 @@ async def cmd_next(message: Message, i18n: I18nContext):
     )
     title = i18n.get("calendar-title-next", count=len(next_season_calendar))
     text = f"{title}\n\n{calendar_text}"
-    await message.answer(text, parse_mode="Markdown")
+    await message.answer(text, parse_mode="HTML")
 
 
 @router.message(Command("schedule"))
