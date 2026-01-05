@@ -573,6 +573,10 @@ timezone-select-matches = 🌍 **Select your timezone:**
 
     Matches for "{ $query }":
 
+timezone-select-matches-paginated = 🌍 **Select your timezone:**
+
+    Matches for "{ $query }" (Page { $page }/{ $total }):
+
 timezone-set-success = ✅ **Timezone set!**
 
     { $timezone }

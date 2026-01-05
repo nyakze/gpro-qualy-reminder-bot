@@ -583,6 +583,10 @@ timezone-select-matches = 🌍 **Выберите ваш часовой пояс
 
     Найдено для "{ $query }":
 
+timezone-select-matches-paginated = 🌍 **Выберите ваш часовой пояс:**
+
+    Найдено для "{ $query }" (Страница { $page }/{ $total }):
+
 timezone-set-success = ✅ **Часовой пояс установлен!**
 
     { $timezone }

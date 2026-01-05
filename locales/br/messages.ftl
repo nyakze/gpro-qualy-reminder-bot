@@ -558,6 +558,10 @@ timezone-select-matches = 🌍 **Selecione seu fuso horário:**
 
     Correspondências para "{ $query }":
 
+timezone-select-matches-paginated = 🌍 **Selecione seu fuso horário:**
+
+    Correspondências para "{ $query }" (Página { $page }/{ $total }):
+
 timezone-set-success = ✅ **Fuso horário definido!**
 
     { $timezone }

@@ -216,8 +216,8 @@ async def process_timezone_input(
     user_id = message.from_user.id
     query = message.text.strip()
 
-    # Fuzzy search timezones
-    matches = fuzzy_search_timezones(query, limit=5)
+    # Fuzzy search timezones (increased limit to 30)
+    matches = fuzzy_search_timezones(query, limit=30)
 
     if not matches:
         # No matches found
@@ -226,11 +226,34 @@ async def process_timezone_input(
         )
         return
 
-    # Build inline keyboard with top matches
+    # Store matches in state for pagination
+    await state.update_data(tz_matches=matches, tz_query=query)
+
+    # Show first page
+    await show_timezone_page(message, state, i18n, page=0)
+
+
+async def build_timezone_page_keyboard(
+    matches: list, query: str, page: int, i18n: I18nContext
+) -> tuple[InlineKeyboardMarkup, str]:
+    """Build keyboard and message text for a timezone search results page"""
+    from timezone_utils import get_timezone_display_name
+    from zoneinfo import ZoneInfo
+    from datetime import datetime, timezone as tz
+
+    RESULTS_PER_PAGE = 10
+    total_pages = (len(matches) + RESULTS_PER_PAGE - 1) // RESULTS_PER_PAGE
+    page = max(0, min(page, total_pages - 1))  # Clamp page number
+
+    start_idx = page * RESULTS_PER_PAGE
+    end_idx = min(start_idx + RESULTS_PER_PAGE, len(matches))
+    page_matches = matches[start_idx:end_idx]
+
+    # Build inline keyboard with matches for this page
     keyboard_buttons = []
     now = datetime.now(tz.utc)
 
-    for tz_name, score in matches:
+    for tz_name, score in page_matches:
         try:
             timezone_obj = ZoneInfo(tz_name)
             display_name = get_timezone_display_name(timezone_obj, now)
@@ -244,6 +267,24 @@ async def process_timezone_input(
         except Exception as e:
             logger.warning(f"Failed to create button for {tz_name}: {e}")
 
+    # Add pagination buttons if needed
+    if total_pages > 1:
+        nav_buttons = []
+        if page > 0:
+            nav_buttons.append(
+                InlineKeyboardButton(
+                    text=i18n.get("button-previous"), callback_data=f"tz_page_{page-1}"
+                )
+            )
+        if page < total_pages - 1:
+            nav_buttons.append(
+                InlineKeyboardButton(
+                    text=i18n.get("button-next"), callback_data=f"tz_page_{page+1}"
+                )
+            )
+        if nav_buttons:
+            keyboard_buttons.append(nav_buttons)
+
     # Add cancel button
     keyboard_buttons.append(
         [
@@ -255,8 +296,47 @@ async def process_timezone_input(
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
 
+    # Format message with page indicator if multiple pages
+    if total_pages > 1:
+        message_text = i18n.get("timezone-select-matches-paginated",
+                               query=query,
+                               page=page+1,
+                               total=total_pages)
+    else:
+        message_text = i18n.get("timezone-select-matches", query=query)
+
+    return keyboard, message_text
+
+
+async def show_timezone_page(
+    message: Message, state: FSMContext, i18n: I18nContext, page: int = 0
+):
+    """Display a page of timezone search results with pagination (send new message)"""
+    data = await state.get_data()
+    matches = data.get("tz_matches", [])
+    query = data.get("tz_query", "")
+
+    keyboard, message_text = await build_timezone_page_keyboard(matches, query, page, i18n)
+
     await message.answer(
-        i18n.get("timezone-select-matches", query=query),
+        message_text,
+        reply_markup=keyboard,
+        parse_mode="Markdown",
+    )
+
+
+async def show_timezone_page_edit(
+    message: Message, state: FSMContext, i18n: I18nContext, page: int = 0
+):
+    """Display a page of timezone search results with pagination (edit existing message)"""
+    data = await state.get_data()
+    matches = data.get("tz_matches", [])
+    query = data.get("tz_query", "")
+
+    keyboard, message_text = await build_timezone_page_keyboard(matches, query, page, i18n)
+
+    await message.edit_text(
+        message_text,
         reply_markup=keyboard,
         parse_mode="Markdown",
     )
