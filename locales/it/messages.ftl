@@ -550,9 +550,9 @@ timezone-menu-title = ⏰ **Impostazioni Fuso Orario**
 
     Fuso orario attuale: **{ $timezone }**
 
-    Digita il tuo fuso orario (nome città, abbreviazione o offset UTC):
+    Digita il tuo fuso orario (nome città in inglese, abbreviazione o offset UTC):
 
-    Esempi: `Roma`, `CET`, `UTC+1`, `New York`
+    Esempi: `Rome`, `New York`, `UTC+1`, `London`
 
 timezone-select-matches = 🌍 **Seleziona il tuo fuso orario:**
 
@@ -571,5 +571,5 @@ feedback-timezone-set = ✅ Fuso orario aggiornato
 feedback-timezone-reset = ✅ Fuso orario ripristinato a UTC
 error-timezone-not-found = ❌ Nessun fuso orario trovato per "{ $query }"
 
-    Prova: nome città (Roma), abbreviazione (CET), o offset UTC (UTC+1)
+    Prova: nome città in inglese (Rome), abbreviazione (CET), o offset UTC (UTC+1)
 error-invalid-timezone = ❌ Fuso orario non valido

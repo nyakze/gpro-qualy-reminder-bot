@@ -550,9 +550,9 @@ timezone-menu-title = ⏰ **Configurações de Fuso Horário**
 
     Fuso horário atual: **{ $timezone }**
 
-    Digite seu fuso horário (nome da cidade, abreviação ou deslocamento UTC):
+    Digite seu fuso horário (nome da cidade em inglês, abreviação ou deslocamento UTC):
 
-    Exemplos: `São Paulo`, `BRT`, `UTC-3`, `Lisboa`
+    Exemplos: `Sao Paulo`, `New York`, `UTC-3`, `London`
 
 timezone-select-matches = 🌍 **Selecione seu fuso horário:**
 
@@ -571,5 +571,5 @@ feedback-timezone-set = ✅ Fuso horário atualizado
 feedback-timezone-reset = ✅ Fuso horário redefinido para UTC
 error-timezone-not-found = ❌ Nenhum fuso horário encontrado para "{ $query }"
 
-    Tente: nome da cidade (São Paulo), abreviação (BRT), ou deslocamento UTC (UTC-3)
+    Tente: nome da cidade em inglês (Sao Paulo), abreviação (BRT), ou deslocamento UTC (UTC-3)
 error-invalid-timezone = ❌ Fuso horário inválido
