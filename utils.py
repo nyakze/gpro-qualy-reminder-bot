@@ -295,11 +295,22 @@ def format_full_calendar(
 
     text = ""
     for race in race_list:
-        track = race.get("track", f'Race {race["race_id"]}')
-        track = add_flag_to_track(track)
+        track_raw = race.get("track", f'Race {race["race_id"]}')
+        track_with_flag = add_flag_to_track(track_raw)
         race_date = race.get("date", now)
         quali_close = race.get("quali_close", now)
         race_id = race["race_id"]
+
+        # Extract flag and track name separately
+        # add_flag_to_track returns "Track Name 🇦🇪" format
+        parts = track_with_flag.rsplit(" ", 1)
+        if len(parts) == 2 and len(parts[1]) > 0:
+            # Check if last part is an emoji (flag)
+            track_name = parts[0]
+            flag = parts[1]
+        else:
+            track_name = track_with_flag
+            flag = ""
 
         # Format datetime with timezone if user_id provided
         if user_id is not None:
@@ -322,10 +333,16 @@ def format_full_calendar(
         if time_text:
             time_info += f" • {time_text}"
 
+        # Build race line: #N Flag **Track Name**
+        if flag:
+            race_line = f"#{race_id} {flag} **{track_name}**"
+        else:
+            race_line = f"#{race_id} **{track_name}**"
+
         # 🔥 ONLY для current season next race
         if next_race_id and race_id == next_race_id:
-            text += f"🔥 #{race_id} **{track}**\n{time_info}\n"
+            text += f"🔥 {race_line}\n{time_info}\n\n"
         else:
-            text += f"#{race_id} **{track}**\n{time_info}\n"
+            text += f"{race_line}\n{time_info}\n\n"
 
     return text.rstrip()
