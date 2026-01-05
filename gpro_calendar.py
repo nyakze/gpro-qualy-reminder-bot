@@ -95,7 +95,7 @@ def _save_calendar_to_file(calendar: dict, filepath: str):
             os.fsync(f.fileno())
 
         os.replace(temp_file, filepath)
-        logger.info(f"💾 Saved calendar to {filepath}")
+        logger.debug(f"💾 Saved calendar to {filepath}")
     except Exception as e:
         logger.error(f"Failed to save calendar to {filepath}: {e}")
         if os.path.exists(temp_file):
@@ -113,7 +113,7 @@ async def load_calendar_silent() -> bool:
         global race_calendar
         race_calendar.clear()
         race_calendar.update(calendar)
-        logger.info(f"✅ Loaded {len(calendar)} races from cache")
+        logger.debug(f"✅ Loaded {len(calendar)} races from cache")
         return True
     return False
 
@@ -128,7 +128,7 @@ async def load_next_season_silent() -> bool:
         global next_season_calendar
         next_season_calendar.clear()
         next_season_calendar.update(calendar)
-        logger.info(f"✅ Loaded {len(calendar)} next season races from cache")
+        logger.debug(f"✅ Loaded {len(calendar)} next season races from cache")
         return True
     return False
 

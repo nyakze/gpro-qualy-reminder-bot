@@ -45,4 +45,4 @@ from .sender import (
 
 from .checker import check_notifications
 
-logger.info("✅ notifications module loaded")
+logger.debug("✅ notifications module loaded")
