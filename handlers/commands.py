@@ -260,13 +260,14 @@ async def cmd_users(message: Message, i18n: I18nContext):
         await message.answer(i18n.get("error-invalid-data"), parse_mode="HTML")
 
 
-@router.message(Command("deleteuser"))
+@router.message(Command("deleteuser", "deluser"))
 async def cmd_deleteuser(message: Message, i18n: I18nContext):
     """Admin command to delete a user from the database (for testing onboarding)
 
     Usage:
         /deleteuser USER_ID - Delete specified user
         /deleteuser - Delete yourself
+        /deluser - Alias for /deleteuser
     """
     if message.from_user.id not in ADMIN_USER_IDS:
         await message.answer(i18n.get("admin-only"))
