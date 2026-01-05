@@ -130,6 +130,8 @@ settings-custom-notif-edit = ⏱️ <b>Кастомное уведомление
 
     Выберите готовое время или введите своё:
 
+settings-custom-notif-current = Текущее:
+
 settings-custom-notif-input = ⏱️ <b>Кастомное уведомление { $slot }</b>
 
     Введите время для уведомления.
@@ -556,6 +558,7 @@ custom-notif-menu-title = ⏱️ <b>Кастомные уведомления</b
 # =======================
 weather-unavailable = ⚠️ Данные о погоде недоступны
 weather-title = 🌤️ <b>Прогноз погоды на гонку</b>
+weather-race-header = Гонка #{ $raceId }: { $track }
 weather-practice-q1 = <b>Практика / Квалификация 1:</b> { $weather }
 weather-temp-hum = Температура: { $temp }°C • Влажность: { $hum }%
 weather-q2-race-start = <b>Квалификация 2 / Старт гонки:</b> { $weather }

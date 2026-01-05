@@ -502,7 +502,8 @@ async def handle_weather(callback: CallbackQuery, i18n: I18nContext):
     weather_message = format_weather_data(weather_data, i18n)
     track = add_flag_to_track(race_data.get("track", f"Race {race_id}"))
 
-    full_message = f"**Race #{race_id}: {track}**\n\n{weather_message}"
+    race_header = i18n.get("weather-race-header", raceId=race_id, track=track)
+    full_message = f"<b>{race_header}</b>\n\n{weather_message}"
 
     try:
         await callback.message.answer(full_message, parse_mode="HTML")
@@ -894,7 +895,8 @@ async def handle_custom_notification_edit(
         time_str = format_custom_notification_time(
             custom_notif.get("hours_before"), i18n
         )
-        current_status = f"\n\n**Current:** {time_str}"
+        current_label = i18n.get("settings-custom-notif-current")
+        current_status = f"\n\n<b>{current_label}</b> {time_str}"
 
     await callback.message.edit_text(
         i18n.get(
