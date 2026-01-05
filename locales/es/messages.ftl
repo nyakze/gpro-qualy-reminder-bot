@@ -558,6 +558,10 @@ timezone-select-matches = 🌍 **Selecciona tu zona horaria:**
 
     Coincidencias para "{ $query }":
 
+timezone-select-matches-paginated = 🌍 **Selecciona tu zona horaria:**
+
+    Coincidencias para "{ $query }" (Página { $page }/{ $total }):
+
 timezone-set-success = ✅ **¡Zona horaria configurada!**
 
     { $timezone }

@@ -1094,6 +1094,21 @@ async def handle_timezone_menu(
     await callback.answer()
 
 
+@router.callback_query(F.data.startswith("tz_page_"))
+async def handle_timezone_page(
+    callback: CallbackQuery, state: FSMContext, i18n: I18nContext
+):
+    """Handle timezone search results pagination"""
+    from handlers.states import show_timezone_page_edit
+
+    # Extract page number from callback data
+    page = int(callback.data.replace("tz_page_", ""))
+
+    # Show the requested page (edit existing message)
+    await show_timezone_page_edit(callback.message, state, i18n, page)
+    await callback.answer()
+
+
 @router.callback_query(F.data.startswith("tz_select_"))
 async def handle_timezone_select(
     callback: CallbackQuery, state: FSMContext, i18n: I18nContext

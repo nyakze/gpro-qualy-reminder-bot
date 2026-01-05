@@ -682,7 +682,7 @@ def parse_utc_offset(query: str) -> Optional[str]:
         return None
 
 
-def search_timezones_by_utc_offset(offset_hours: float, limit: int = 10) -> list[str]:
+def search_timezones_by_utc_offset(offset_hours: float, limit: int = 30) -> list[str]:
     """
     Search for all timezones with a specific UTC offset.
 
