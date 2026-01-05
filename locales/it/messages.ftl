@@ -218,7 +218,8 @@ notif-quali-message = { $emoji } { $title }
 
     🏁 <b>Gara #{ $raceId }</b>
     📍 <b>{ $track }</b>
-    📅 <b>Qualifiche chiudono: { $qualiDeadline } | Gara: { $raceTime }</b>
+    📅 <b>Qualifiche (chiudono): { $qualiDeadline }</b>
+    🏎 <b>Gara: { $raceTime }</b>
 
     🔗 <a href="{ $qualiLink }">Vai alle Qualifiche</a>
 
@@ -228,7 +229,8 @@ notif-quali-message-disabled = { $emoji } { $title }
 
     🏁 <b>Gara #{ $raceId }</b>
     📍 <b>{ $track }</b>
-    📅 <b>Qualifiche chiudono: { $qualiDeadline } | Gara: { $raceTime }</b>
+    📅 <b>Qualifiche (chiudono): { $qualiDeadline }</b>
+    🏎 <b>Gara: { $raceTime }</b>
 
     🔗 <a href="{ $qualiLink }">Vai alle Qualifiche</a>
 
