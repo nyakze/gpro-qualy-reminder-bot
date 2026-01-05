@@ -218,22 +218,24 @@ notif-quali-message = { $emoji } { $title }
 
     🏁 <b>Course #{ $raceId }</b>
     📍 <b>{ $track }</b>
-    📅 <b>Qualifications ferment : { $qualiDeadline } | Course : { $raceTime }</b>
+    📅 <b>Qualifications ferment : { $qualiDeadline }</b>
+    🏎 <b>Course : { $raceTime }</b>
 
     🔗 <a href="{ $qualiLink }">Aller aux Qualifications</a>
 
-    Cliquez sur le bouton pour désactiver les notifications pour cette course
+    <i>Cliquez sur le bouton '✅ Qualifications Terminées' pour désactiver les notifications de cette course</i>
 
 notif-quali-message-disabled = { $emoji } { $title }
 
     🏁 <b>Course #{ $raceId }</b>
     📍 <b>{ $track }</b>
-    📅 <b>Qualifications ferment : { $qualiDeadline } | Course : { $raceTime }</b>
+    📅 <b>Qualifications ferment : { $qualiDeadline }</b>
+    🏎 <b>Course : { $raceTime }</b>
 
     🔗 <a href="{ $qualiLink }">Aller aux Qualifications</a>
 
     ℹ️ <b>Notifications automatiques désactivées</b> pour cette course
-    Cliquez sur le bouton pour réactiver les notifications
+    <i>Cliquez sur le bouton '🔄 Réactiver' pour réactiver les notifications</i>
 
 notif-race-live = 🏁 <b>La Course #{ $raceId } est EN DIRECT !</b>
 

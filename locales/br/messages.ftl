@@ -218,22 +218,24 @@ notif-quali-message = { $emoji } { $title }
 
     🏁 <b>Corrida #{ $raceId }</b>
     📍 <b>{ $track }</b>
-    📅 <b>Classificação fecha: { $qualiDeadline } | Corrida: { $raceTime }</b>
+    📅 <b>Classificação fecha: { $qualiDeadline }</b>
+    🏎 <b>Corrida: { $raceTime }</b>
 
     🔗 <a href="{ $qualiLink }">Ir para Classificação</a>
 
-    Clique no botão para desativar notificações desta corrida
+    <i>Clique no botão '✅ Classificação Concluída' para desativar as notificações desta corrida</i>
 
 notif-quali-message-disabled = { $emoji } { $title }
 
     🏁 <b>Corrida #{ $raceId }</b>
     📍 <b>{ $track }</b>
-    📅 <b>Classificação fecha: { $qualiDeadline } | Corrida: { $raceTime }</b>
+    📅 <b>Classificação fecha: { $qualiDeadline }</b>
+    🏎 <b>Corrida: { $raceTime }</b>
 
     🔗 <a href="{ $qualiLink }">Ir para Classificação</a>
 
     ℹ️ <b>Notificações automáticas desativadas</b> para esta corrida
-    Clique no botão para reativar notificações
+    <i>Clique no botão '🔄 Reativar' para reativar as notificações</i>
 
 notif-race-live = 🏁 <b>Corrida #{ $raceId } está AO VIVO!</b>
 
