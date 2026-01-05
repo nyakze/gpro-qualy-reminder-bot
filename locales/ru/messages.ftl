@@ -574,6 +574,13 @@ weather-1h30m-2h00m = <b>1ч30м - 2ч00м:</b>
 weather-temp-hum-range = Температура: { $temp } • Влажность: { $hum }
 weather-rain-prob = Вероятность дождя: { $rain }
 
+# Погодные условия
+weather-condition-sunny = Солнечно
+weather-condition-partially-cloudy = Переменная облачность
+weather-condition-cloudy = Облачно
+weather-condition-very-cloudy = Пасмурно
+weather-condition-rain = Дождь
+
 # =======================
 # Настройки часового пояса
 # =======================

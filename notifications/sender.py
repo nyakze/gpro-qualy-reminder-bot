@@ -72,6 +72,34 @@ def generate_replay_link(group: str, lang: str = "gb") -> str:
     return generate_gpro_link(group, lang, "replay")
 
 
+def translate_weather_condition(weather_condition: str, get_text_func) -> str:
+    """Translate weather condition from English to user's language
+
+    Args:
+        weather_condition: Weather condition in English (e.g., "Sunny", "Rain")
+        get_text_func: Function to get translated text
+
+    Returns:
+        str: Translated weather condition
+    """
+    # Map English weather conditions to translation keys
+    weather_map = {
+        "Sunny": "weather-condition-sunny",
+        "Partially Cloudy": "weather-condition-partially-cloudy",
+        "Cloudy": "weather-condition-cloudy",
+        "Very Cloudy": "weather-condition-very-cloudy",
+        "Rain": "weather-condition-rain",
+    }
+
+    # Get translation key, fallback to original if not found
+    translation_key = weather_map.get(weather_condition)
+    if translation_key:
+        return get_text_func(translation_key)
+    else:
+        # Return original if no translation found (for unknown conditions)
+        return weather_condition
+
+
 def format_weather_data(weather: dict, i18n=None, user_id: int = None) -> str:
     """Format weather data into human-readable text
 
@@ -106,12 +134,14 @@ def format_weather_data(weather: dict, i18n=None, user_id: int = None) -> str:
         return get_text("weather-unavailable")
 
     # Practice / Qualify 1
-    q1_weather = weather.get("q1WeatherTransl", weather.get("q1Weather", "Unknown"))
+    q1_weather_raw = weather.get("q1WeatherTransl", "Unknown")
+    q1_weather = translate_weather_condition(q1_weather_raw, get_text)
     q1_temp = weather.get("q1Temp", "?")
     q1_hum = weather.get("q1Hum", "?")
 
     # Qualify 2 / Race Start
-    q2_weather = weather.get("q2WeatherTransl", weather.get("q2Weather", "Unknown"))
+    q2_weather_raw = weather.get("q2WeatherTransl", "Unknown")
+    q2_weather = translate_weather_condition(q2_weather_raw, get_text)
     q2_temp = weather.get("q2Temp", "?")
     q2_hum = weather.get("q2Hum", "?")
 
