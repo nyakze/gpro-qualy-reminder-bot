@@ -840,8 +840,8 @@ async def handle_custom_notification_edit(
         ("3h", 3),
         ("6h", 6),
         ("12h", 12),
-        ("24h", 24),
-        ("48h", 48),
+        ("18h", 18),
+        ("60h", 60),
         ("70h", 70),
     ]
 
