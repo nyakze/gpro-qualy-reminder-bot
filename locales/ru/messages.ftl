@@ -578,7 +578,7 @@ weather-rain-prob = Вероятность дождя: { $rain }
 weather-condition-sunny = Солнечно
 weather-condition-partially-cloudy = Переменная облачность
 weather-condition-cloudy = Облачно
-weather-condition-very-cloudy = Очень облачно
+weather-condition-very-cloudy = Пасмурно
 weather-condition-rain = Дождь
 
 # =======================
