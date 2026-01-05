@@ -169,19 +169,72 @@ def _check_custom_notifications(now: datetime, races_closing: dict) -> list:
     return notifications
 
 
-async def _check_quali_open_notifications(now: datetime) -> list:
-    """Check for qualifications that just opened using API when appropriate
+async def _fetch_weather_with_retry(race_id: int) -> None:
+    """Fetch weather data for a race with retry logic
+
+    Args:
+        race_id: The race ID to fetch weather for
+    """
+    if "weather" in race_calendar[race_id]:
+        logger.debug(f"Weather data already cached for race {race_id}")
+        return
+
+    weather_data = await fetch_weather_from_api(race_id)
+
+    # Retry once if failed
+    if not weather_data:
+        logger.warning(f"Weather fetch failed for race {race_id}, retrying in 5s...")
+        await asyncio.sleep(5)
+        weather_data = await fetch_weather_from_api(race_id)
+
+        if not weather_data:
+            logger.error(f"Weather fetch failed after retry for race {race_id}")
+        else:
+            logger.info(f"Weather fetch succeeded on retry for race {race_id}")
+
+
+def _add_replay_and_results_notifications(
+    notifications: list, prev_race_id: int
+) -> None:
+    """Add replay and results notifications for a previous race
+
+    Args:
+        notifications: List to append notifications to
+        prev_race_id: ID of the previous race
+    """
+    # Add race replay notification
+    replay_history_key = (prev_race_id, "race_replay")
+    if replay_history_key not in notify_history:
+        prev_race_data = race_calendar[prev_race_id]
+        notifications.append(
+            ("replay", prev_race_id, prev_race_data, "race_replay", replay_history_key)
+        )
+
+    # Add race results notification
+    results_history_key = (prev_race_id, "race_results")
+    if results_history_key not in notify_history:
+        prev_race_data = race_calendar[prev_race_id]
+        notifications.append(
+            (
+                "results",
+                prev_race_id,
+                prev_race_data,
+                "race_results",
+                results_history_key,
+            )
+        )
+
+
+def _get_races_for_polling(now: datetime) -> list:
+    """Get races that are in the API polling window (2-3.5 hours after previous race)
+
+    Args:
+        now: Current datetime
 
     Returns:
-        list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
+        list: Races to check via API [(race_id, race_data, prev_race_id, hours_since), ...]
     """
-    global last_api_check_time
-    notifications = []
-
-    # Determine if we should check the API
-    should_check_api = False
-    races_in_polling_window = []
-    races_for_fallback = []
+    races = []
 
     for race_id, race_data in race_calendar.items():
         # Skip race 1 (no previous race)
@@ -201,24 +254,67 @@ async def _check_quali_open_notifications(now: datetime) -> list:
         prev_race_time = race_calendar[prev_race_id]["date"]
         hours_since_race = (now - prev_race_time).total_seconds() / 3600
 
-        # Check if we're in the API polling window (2-3.5 hours after race)
+        # Check if we're in the API polling window
         if API_CHECK_START_HOURS <= hours_since_race <= API_CHECK_END_HOURS:
-            races_in_polling_window.append(
-                (race_id, race_data, prev_race_id, hours_since_race)
-            )
-            should_check_api = True
-        # Check if we've reached fallback time (3.5 hours, within tolerance)
-        elif hours_since_race > API_CHECK_END_HOURS:
+            races.append((race_id, race_data, prev_race_id, hours_since_race))
+
+    return races
+
+
+def _get_races_for_fallback(now: datetime) -> list:
+    """Get races that have reached fallback time (3.5 hours after previous race)
+
+    Args:
+        now: Current datetime
+
+    Returns:
+        list: Races for fallback notification [(race_id, race_data, prev_race_id, hours_since), ...]
+    """
+    races = []
+
+    for race_id, race_data in race_calendar.items():
+        # Skip race 1 (no previous race)
+        if race_id == 1:
+            continue
+
+        # Check if already notified
+        history_key = (race_id, "opens_soon")
+        if history_key in notify_history:
+            continue
+
+        # Find previous race
+        prev_race_id = race_id - 1
+        if prev_race_id not in race_calendar:
+            continue
+
+        prev_race_time = race_calendar[prev_race_id]["date"]
+        hours_since_race = (now - prev_race_time).total_seconds() / 3600
+
+        # Check if we've reached fallback time (within tolerance)
+        if hours_since_race > API_CHECK_END_HOURS:
             minutes_since_fallback = (hours_since_race - API_CHECK_END_HOURS) * 60
             if minutes_since_fallback <= FALLBACK_TOLERANCE_MINUTES:
-                races_for_fallback.append(
-                    (race_id, race_data, prev_race_id, hours_since_race)
-                )
+                races.append((race_id, race_data, prev_race_id, hours_since_race))
 
-    # Check API if needed (rate limited to every 10 minutes)
+    return races
+
+
+async def _check_quali_open_notifications(now: datetime) -> list:
+    """Check for qualifications that just opened using API when appropriate
+
+    Returns:
+        list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
+    """
+    global last_api_check_time
+    notifications = []
+
+    # Get races to check via API and races for fallback
+    races_in_polling_window = _get_races_for_polling(now)
+    races_for_fallback = _get_races_for_fallback(now)
+
+    # Check API if we have races in polling window (rate limited to every 10 minutes)
     api_result = {}
-    if should_check_api:
-        # Only call API every 10 minutes
+    if races_in_polling_window:
         if (
             last_api_check_time is None
             or (now - last_api_check_time).total_seconds()
@@ -236,123 +332,38 @@ async def _check_quali_open_notifications(now: datetime) -> list:
             )
             logger.debug(f"API check skipped (next in {int(time_until_next)}s)")
 
-    # Process results from API
+    # Process API-confirmed races
     for race_id, race_data, prev_race_id, hours_since in races_in_polling_window:
         if race_id in api_result:
-            # API confirmed quali is open!
             logger.info(f"🆕 API confirmed: Race {race_id} quali opened!")
 
-            # Fetch weather data with retry (if not already fetched)
-            if "weather" not in race_calendar[race_id]:
-                weather_data = await fetch_weather_from_api(race_id)
+            # Fetch weather data with retry
+            await _fetch_weather_with_retry(race_id)
 
-                # Retry once if failed
-                if not weather_data:
-                    logger.warning(
-                        f"Weather fetch failed for race {race_id}, retrying in 5s..."
-                    )
-                    await asyncio.sleep(5)
-                    weather_data = await fetch_weather_from_api(race_id)
-
-                    if not weather_data:
-                        logger.error(
-                            f"Weather fetch failed after retry for race {race_id}"
-                        )
-                    else:
-                        logger.info(
-                            f"Weather fetch succeeded on retry for race {race_id}"
-                        )
-            else:
-                logger.debug(f"Weather data already cached for race {race_id}")
-
+            # Add quali open notification
             history_key = (race_id, "opens_soon")
             notifications.append(
                 ("opens", race_id, race_data, "opens_soon", history_key)
             )
 
-            # Also send race replay notification for the previous race
-            replay_history_key = (prev_race_id, "race_replay")
-            if replay_history_key not in notify_history:
-                prev_race_data = race_calendar[prev_race_id]
-                notifications.append(
-                    (
-                        "replay",
-                        prev_race_id,
-                        prev_race_data,
-                        "race_replay",
-                        replay_history_key,
-                    )
-                )
+            # Add replay and results notifications for previous race
+            _add_replay_and_results_notifications(notifications, prev_race_id)
 
-            # Also send race results notification for the previous race
-            results_history_key = (prev_race_id, "race_results")
-            if results_history_key not in notify_history:
-                prev_race_data = race_calendar[prev_race_id]
-                notifications.append(
-                    (
-                        "results",
-                        prev_race_id,
-                        prev_race_data,
-                        "race_results",
-                        results_history_key,
-                    )
-                )
-
-    # Fallback: Send notification if we've reached 3.5h without API detection
+    # Process fallback races (3.5h without API detection)
     for race_id, race_data, prev_race_id, hours_since in races_for_fallback:
         logger.info(
             f"⏰ Fallback: Sending quali open for race {race_id} at {hours_since:.1f}h (API didn't detect)"
         )
 
-        # Fetch weather data with retry (if not already fetched)
-        if "weather" not in race_calendar[race_id]:
-            weather_data = await fetch_weather_from_api(race_id)
+        # Fetch weather data with retry
+        await _fetch_weather_with_retry(race_id)
 
-            # Retry once if failed
-            if not weather_data:
-                logger.warning(
-                    f"Weather fetch failed for race {race_id}, retrying in 5s..."
-                )
-                await asyncio.sleep(5)
-                weather_data = await fetch_weather_from_api(race_id)
-
-                if not weather_data:
-                    logger.error(f"Weather fetch failed after retry for race {race_id}")
-                else:
-                    logger.info(f"Weather fetch succeeded on retry for race {race_id}")
-        else:
-            logger.debug(f"Weather data already cached for race {race_id}")
-
+        # Add quali open notification
         history_key = (race_id, "opens_soon")
         notifications.append(("opens", race_id, race_data, "opens_soon", history_key))
 
-        # Also send race replay notification for the previous race
-        replay_history_key = (prev_race_id, "race_replay")
-        if replay_history_key not in notify_history:
-            prev_race_data = race_calendar[prev_race_id]
-            notifications.append(
-                (
-                    "replay",
-                    prev_race_id,
-                    prev_race_data,
-                    "race_replay",
-                    replay_history_key,
-                )
-            )
-
-        # Also send race results notification for the previous race
-        results_history_key = (prev_race_id, "race_results")
-        if results_history_key not in notify_history:
-            prev_race_data = race_calendar[prev_race_id]
-            notifications.append(
-                (
-                    "results",
-                    prev_race_id,
-                    prev_race_data,
-                    "race_results",
-                    results_history_key,
-                )
-            )
+        # Add replay and results notifications for previous race
+        _add_replay_and_results_notifications(notifications, prev_race_id)
 
     return notifications
 
@@ -497,14 +508,20 @@ async def check_notifications(bot: Bot):
                 now = datetime.utcnow()
 
                 # Fetch upcoming races once for efficiency (used by multiple checks)
-                races_closing = get_races_closing_soon(72)  # Extended to 72h for Tuesday races
+                races_closing = get_races_closing_soon(
+                    72
+                )  # Extended to 72h for Tuesday races
 
                 # Check all notification types
                 notifications_to_send = []
-                notifications_to_send.extend(_check_quali_closing_notifications(now, races_closing))
+                notifications_to_send.extend(
+                    _check_quali_closing_notifications(now, races_closing)
+                )
                 notifications_to_send.extend(await _check_quali_open_notifications(now))
                 notifications_to_send.extend(_check_race_live_notifications(now))
-                notifications_to_send.extend(_check_custom_notifications(now, races_closing))
+                notifications_to_send.extend(
+                    _check_custom_notifications(now, races_closing)
+                )
 
                 # Clean old history entries
                 cutoff = now - timedelta(days=NOTIFICATION_HISTORY_RETENTION_DAYS)
