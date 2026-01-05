@@ -43,7 +43,7 @@ async def process_group_input(message: Message, state: FSMContext, i18n: I18nCon
     elif re.match(r"^[MPAR]\d{1,3}$", group_input):
         valid = True
     else:
-        await message.answer(i18n.get("error-invalid-format"), parse_mode="Markdown")
+        await message.answer(i18n.get("error-invalid-format"), parse_mode="HTML")
         return
 
     # Save the group
@@ -66,7 +66,7 @@ async def process_group_input(message: Message, state: FSMContext, i18n: I18nCon
     await message.answer(
         i18n.get("settings-group-set", group=group_display),
         reply_markup=keyboard,
-        parse_mode="Markdown",
+        parse_mode="HTML",
     )
 
 
@@ -90,7 +90,7 @@ async def process_custom_notification_time_input(
     if error_msg:
         await message.answer(
             i18n.get("custom-notif-error-parsing", error=error_msg),
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
         return
 
@@ -115,7 +115,7 @@ async def process_custom_notification_time_input(
         await message.answer(
             i18n.get("custom-notif-success", message=result_msg),
             reply_markup=keyboard,
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
     else:
         keyboard = InlineKeyboardMarkup(
@@ -137,7 +137,7 @@ async def process_custom_notification_time_input(
         await message.answer(
             i18n.get("custom-notif-error-setting", error=result_msg),
             reply_markup=keyboard,
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
 
 
@@ -156,7 +156,7 @@ async def process_onboarding_group_input(
         valid = True
     else:
         await message.answer(
-            i18n.get("error-invalid-format-onboarding"), parse_mode="Markdown"
+            i18n.get("error-invalid-format-onboarding"), parse_mode="HTML"
         )
         return
 
@@ -198,7 +198,7 @@ async def process_onboarding_group_input(
     await message.answer(
         i18n.get("onboard-complete-with-group", group=group_display),
         reply_markup=keyboard,
-        parse_mode="Markdown",
+        parse_mode="HTML",
     )
 
 
@@ -222,7 +222,7 @@ async def process_timezone_input(
     if not matches:
         # No matches found
         await message.answer(
-            i18n.get("error-timezone-not-found", query=query), parse_mode="Markdown"
+            i18n.get("error-timezone-not-found", query=query), parse_mode="HTML"
         )
         return
 
@@ -321,7 +321,7 @@ async def show_timezone_page(
     await message.answer(
         message_text,
         reply_markup=keyboard,
-        parse_mode="Markdown",
+        parse_mode="HTML",
     )
 
 
@@ -338,5 +338,5 @@ async def show_timezone_page_edit(
     await message.edit_text(
         message_text,
         reply_markup=keyboard,
-        parse_mode="Markdown",
+        parse_mode="HTML",
     )

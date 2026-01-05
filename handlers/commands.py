@@ -54,7 +54,7 @@ async def cmd_start(message: Message, state: FSMContext, i18n: I18nContext):
         await message.answer(
             "👋 **Welcome to GPRO Bot!**\n\n" "Choose your preferred bot language:",
             reply_markup=keyboard,
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
     else:
         logger.debug(f"👤 Existing user {user_id} used /start")
@@ -90,7 +90,7 @@ async def cmd_start(message: Message, state: FSMContext, i18n: I18nContext):
         await message.answer(
             i18n.get("start-welcome-existing-buttons"),
             reply_markup=keyboard,
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
 
 
@@ -107,7 +107,7 @@ async def cmd_settings(message: Message, state: FSMContext, i18n: I18nContext):
     keyboard = build_settings_keyboard(user_id, i18n)
 
     await message.answer(
-        i18n.get("settings-title"), reply_markup=keyboard, parse_mode="Markdown"
+        i18n.get("settings-title"), reply_markup=keyboard, parse_mode="HTML"
     )
 
 
@@ -164,7 +164,7 @@ async def cmd_calendar(message: Message, state: FSMContext, i18n: I18nContext):
     )
     title = i18n.get("calendar-title-full")
     text = f"{title}\n\n{calendar_text}"
-    await message.answer(text, parse_mode="Markdown")
+    await message.answer(text, parse_mode="HTML")
 
 
 @router.message(Command("next"))
@@ -185,7 +185,7 @@ async def cmd_next(message: Message, i18n: I18nContext):
     )
     title = i18n.get("calendar-title-next", count=len(next_season_calendar))
     text = f"{title}\n\n{calendar_text}"
-    await message.answer(text, parse_mode="Markdown")
+    await message.answer(text, parse_mode="HTML")
 
 
 @router.message(Command("schedule"))
@@ -211,19 +211,19 @@ async def cmd_update(message: Message, i18n: I18nContext):
         i18n.get(
             "admin-calendar-updated", count=len(race_calendar), userCount=reset_count
         ),
-        parse_mode="Markdown",
+        parse_mode="HTML",
     )
 
     # Next season status
     if next_season_calendar:
         await message.answer(
             i18n.get("admin-next-season-ready", count=len(next_season_calendar)),
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
     else:
         await message.answer(
             i18n.get("admin-next-season-not-published"),
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
 
 
@@ -244,7 +244,7 @@ async def cmd_users(message: Message, i18n: I18nContext):
         logger.info(f"USERS: Loaded {len(users_data)} users from notifications")
 
         if not users_data:
-            await message.answer(i18n.get("admin-users-none"), parse_mode="Markdown")
+            await message.answer(i18n.get("admin-users-none"), parse_mode="HTML")
             return
 
         header = i18n.get("admin-users-count", count=len(users_data))
@@ -253,11 +253,11 @@ async def cmd_users(message: Message, i18n: I18nContext):
             quali = status.get("completed_quali", "None")
             text += f"• `{uid}`: Race {quali}\n"
 
-        await message.answer(text, parse_mode="Markdown")
+        await message.answer(text, parse_mode="HTML")
 
     except Exception as e:
         logger.error(f"USERS ERROR: {e}")
-        await message.answer(i18n.get("error-invalid-data"), parse_mode="Markdown")
+        await message.answer(i18n.get("error-invalid-data"), parse_mode="HTML")
 
 
 @router.message(Command("deleteuser"))
@@ -279,7 +279,7 @@ async def cmd_deleteuser(message: Message, i18n: I18nContext):
         except ValueError:
             await message.answer(
                 "❌ Invalid user ID. Usage: `/deleteuser USER_ID`",
-                parse_mode="Markdown",
+                parse_mode="HTML",
             )
             return
     else:
@@ -292,12 +292,12 @@ async def cmd_deleteuser(message: Message, i18n: I18nContext):
         await message.answer(
             f"✅ Deleted user `{target_user_id}` from database.\n\n"
             f"They will see onboarding on next /start",
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
         logger.info(f"Admin {message.from_user.id} deleted user {target_user_id}")
     else:
         await message.answer(
-            f"❌ User `{target_user_id}` not found in database", parse_mode="Markdown"
+            f"❌ User `{target_user_id}` not found in database", parse_mode="HTML"
         )
 
 
@@ -317,7 +317,7 @@ async def cmd_weather(message: Message, i18n: I18nContext):
         return
 
     if not race_calendar:
-        await message.answer(i18n.get("admin-no-races"), parse_mode="Markdown")
+        await message.answer(i18n.get("admin-no-races"), parse_mode="HTML")
         return
 
     # Check for "force" argument
@@ -339,7 +339,7 @@ async def cmd_weather(message: Message, i18n: I18nContext):
             break
 
     if not next_race_id:
-        await message.answer(i18n.get("admin-no-upcoming-races"), parse_mode="Markdown")
+        await message.answer(i18n.get("admin-no-upcoming-races"), parse_mode="HTML")
         return
 
     track = add_flag_to_track(next_race_data.get("track", f"Race {next_race_id}"))
@@ -348,7 +348,7 @@ async def cmd_weather(message: Message, i18n: I18nContext):
     if "weather" in next_race_data and not force_update:
         await message.answer(
             i18n.get("weather-cached", raceId=next_race_id, track=track),
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
         return
 
@@ -356,14 +356,14 @@ async def cmd_weather(message: Message, i18n: I18nContext):
     if force_update and "weather" in next_race_data:
         await message.answer(
             i18n.get("weather-force-updating", raceId=next_race_id, track=track),
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
         # Clear cached weather to force fresh fetch
         del race_calendar[next_race_id]["weather"]
     else:
         await message.answer(
             i18n.get("weather-fetching", raceId=next_race_id, track=track),
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
 
     weather_data = await fetch_weather_from_api(next_race_id)
@@ -371,10 +371,10 @@ async def cmd_weather(message: Message, i18n: I18nContext):
     if weather_data:
         await message.answer(
             i18n.get("weather-success", raceId=next_race_id, track=track),
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
     else:
-        await message.answer(i18n.get("weather-failed"), parse_mode="Markdown")
+        await message.answer(i18n.get("weather-failed"), parse_mode="HTML")
 
 
 @router.message(Command("notify"))
@@ -443,7 +443,7 @@ async def cmd_updatetz(message: Message, i18n: I18nContext):
         return
 
     await message.answer(
-        "⏳ Downloading timezone data from Geoapify...", parse_mode="Markdown"
+        "⏳ Downloading timezone data from Geoapify...", parse_mode="HTML"
     )
 
     # Download timezone data
@@ -453,7 +453,7 @@ async def cmd_updatetz(message: Message, i18n: I18nContext):
         await message.answer(
             "❌ **Failed to download timezone data**\n\n"
             "Please check logs for details.",
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
         return
 
@@ -464,7 +464,7 @@ async def cmd_updatetz(message: Message, i18n: I18nContext):
         f"✅ **Downloaded timezone data**\n"
         f"File size: {file_size:.1f} KB\n\n"
         f"Building search index...",
-        parse_mode="Markdown",
+        parse_mode="HTML",
     )
 
     # Build and load search index
@@ -472,7 +472,7 @@ async def cmd_updatetz(message: Message, i18n: I18nContext):
         await message.answer(
             "✅ **Timezone search index ready**\n\n"
             "Users can now search for timezones in multiple languages!",
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )
         logger.info(
             f"Admin {message.from_user.id} updated timezone data and search index"
@@ -480,5 +480,5 @@ async def cmd_updatetz(message: Message, i18n: I18nContext):
     else:
         await message.answer(
             "❌ **Failed to build search index**\n\n" "Please check logs for details.",
-            parse_mode="Markdown",
+            parse_mode="HTML",
         )

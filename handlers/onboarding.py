@@ -70,7 +70,7 @@ async def show_onboarding_group_menu(
     )
 
     await message.edit_text(
-        i18n.get("onboard-group-custom"), reply_markup=keyboard, parse_mode="Markdown"
+        i18n.get("onboard-group-custom"), reply_markup=keyboard, parse_mode="HTML"
     )
 
 
@@ -124,7 +124,7 @@ async def show_onboarding_complete(message: Message, i18n: I18nContext):
     )
 
     await message.edit_text(
-        i18n.get("onboard-complete"), reply_markup=keyboard, parse_mode="Markdown"
+        i18n.get("onboard-complete"), reply_markup=keyboard, parse_mode="HTML"
     )
 
 
