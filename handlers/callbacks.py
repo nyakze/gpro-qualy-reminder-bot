@@ -134,41 +134,97 @@ NOTIFICATION_TYPES = (
 def build_language_keyboard(
     page: int = 1, current_lang: str = "gb", onboarding: bool = False, i18n=None
 ) -> InlineKeyboardMarkup:
-    """Build paginated language selection keyboard
+    """Build paginated GPRO language selection keyboard with 2-column layout
 
     Args:
-        page: Page number (1-4)
-        current_lang: User's current language code
+        page: Page number (1-based)
+        current_lang: User's current GPRO language code
         onboarding: If True, use onboarding callbacks and add Skip button
         i18n: I18n context for translations (optional)
 
     Returns:
-        InlineKeyboardMarkup with language options and navigation
+        InlineKeyboardMarkup with GPRO language options in 2-column layout (12 per page)
     """
-    # Language codes distributed across 4 pages (31 total)
-    # All bot UI languages (gb, ru, br, it, es, fr) appear first on page 1
-    pages = [
-        ["gb", "ru", "br", "it", "es", "fr", "de", "pt"],
-        ["ro", "pl", "bg", "mk", "nl", "fi", "hu", "tr"],
-        ["gr", "dk", "rs", "se", "lt", "ee", "al", "hr"],
-        ["ch", "my", "in", "pi", "be", "cz", "sk"],
+    # All 31 GPRO language codes in order
+    # UI languages appear first for convenience
+    all_gpro_langs = [
+        "gb",
+        "ru",
+        "br",
+        "it",
+        "es",
+        "fr",
+        "de",
+        "pt",
+        "ro",
+        "pl",
+        "bg",
+        "mk",
+        "nl",
+        "fi",
+        "hu",
+        "tr",
+        "gr",
+        "dk",
+        "rs",
+        "se",
+        "lt",
+        "ee",
+        "al",
+        "hr",
+        "ch",
+        "my",
+        "in",
+        "pi",
+        "be",
+        "cz",
+        "sk",
     ]
+
+    # Split into pages (12 languages per page)
+    items_per_page = 12
+    pages = [
+        all_gpro_langs[i : i + items_per_page]
+        for i in range(0, len(all_gpro_langs), items_per_page)
+    ]
+
+    # Validate page number
+    if page < 1 or page > len(pages):
+        page = 1
 
     buttons = []
     callback_prefix = "onboard_lang_" if onboarding else "lang_"
 
-    # Language selection buttons
-    for lang_code in pages[page - 1]:
-        is_current = lang_code == current_lang
-        prefix = "✅ " if is_current else ""
-        button_text = f"{prefix}{LANGUAGE_OPTIONS[lang_code]}"
-        buttons.append(
-            [
-                InlineKeyboardButton(
-                    text=button_text, callback_data=f"{callback_prefix}{lang_code}"
-                )
-            ]
+    # Build language buttons in 2-column layout
+    current_page_langs = pages[page - 1]
+    for i in range(0, len(current_page_langs), 2):
+        row = []
+        # Left column
+        lang_code_left = current_page_langs[i]
+        is_current_left = lang_code_left == current_lang
+        prefix_left = "✅ " if is_current_left else ""
+        button_text_left = f"{prefix_left}{LANGUAGE_OPTIONS[lang_code_left]}"
+        row.append(
+            InlineKeyboardButton(
+                text=button_text_left,
+                callback_data=f"{callback_prefix}{lang_code_left}",
+            )
         )
+
+        # Right column (if exists)
+        if i + 1 < len(current_page_langs):
+            lang_code_right = current_page_langs[i + 1]
+            is_current_right = lang_code_right == current_lang
+            prefix_right = "✅ " if is_current_right else ""
+            button_text_right = f"{prefix_right}{LANGUAGE_OPTIONS[lang_code_right]}"
+            row.append(
+                InlineKeyboardButton(
+                    text=button_text_right,
+                    callback_data=f"{callback_prefix}{lang_code_right}",
+                )
+            )
+
+        buttons.append(row)
 
     # Add reset button on last page (only in settings, not onboarding)
     if page == len(pages) and not onboarding:
@@ -185,18 +241,10 @@ def build_language_keyboard(
     footer = []
     if page > 1:
         prev_text = i18n.get("button-previous") if i18n else "◀ Previous"
-        if onboarding:
-            footer.append(
-                InlineKeyboardButton(
-                    text=prev_text, callback_data=f"onboard_lang_page_{page-1}"
-                )
-            )
-        else:
-            footer.append(
-                InlineKeyboardButton(
-                    text=prev_text, callback_data=f"lang_page_{page-1}"
-                )
-            )
+        callback_data = (
+            f"onboard_lang_page_{page-1}" if onboarding else f"lang_page_{page-1}"
+        )
+        footer.append(InlineKeyboardButton(text=prev_text, callback_data=callback_data))
 
     if onboarding:
         skip_text = i18n.get("button-skip") if i18n else "⏭️ Skip"
@@ -211,18 +259,10 @@ def build_language_keyboard(
 
     if page < len(pages):
         next_text = i18n.get("button-next") if i18n else "Next ▶"
-        if onboarding:
-            footer.append(
-                InlineKeyboardButton(
-                    text=next_text, callback_data=f"onboard_lang_page_{page+1}"
-                )
-            )
-        else:
-            footer.append(
-                InlineKeyboardButton(
-                    text=next_text, callback_data=f"lang_page_{page+1}"
-                )
-            )
+        callback_data = (
+            f"onboard_lang_page_{page+1}" if onboarding else f"lang_page_{page+1}"
+        )
+        footer.append(InlineKeyboardButton(text=next_text, callback_data=callback_data))
 
     buttons.append(footer)
 
@@ -622,7 +662,9 @@ async def handle_ui_language_menu(callback: CallbackQuery, i18n: I18nContext):
     user_id = callback.from_user.id
     current_ui_lang = get_user_ui_language(user_id)
 
-    keyboard = build_ui_language_keyboard(page=1, current_ui_lang=current_ui_lang, i18n=i18n)
+    keyboard = build_ui_language_keyboard(
+        page=1, current_ui_lang=current_ui_lang, i18n=i18n
+    )
 
     await callback.message.edit_text(
         i18n.get("ui-lang-menu-title"), reply_markup=keyboard, parse_mode="HTML"
@@ -630,23 +672,41 @@ async def handle_ui_language_menu(callback: CallbackQuery, i18n: I18nContext):
     await callback.answer()
 
 
-def build_ui_language_keyboard(page: int = 1, current_ui_lang: str = "gb", i18n=None) -> InlineKeyboardMarkup:
-    """Build paginated UI language selection keyboard
+def build_ui_language_keyboard(
+    page: int = 1, current_ui_lang: str = "gb", i18n=None, onboarding: bool = False
+) -> InlineKeyboardMarkup:
+    """Build paginated UI language selection keyboard with 2-column layout
 
     Args:
-        page: Page number (1-2)
+        page: Page number (1-based)
         current_ui_lang: User's current UI language code
         i18n: I18n context for translations (optional)
+        onboarding: If True, use onboarding callbacks instead of settings callbacks
 
     Returns:
-        InlineKeyboardMarkup with UI language options and navigation
+        InlineKeyboardMarkup with UI language options in 2-column layout (12 per page)
     """
-    # Split 12 UI languages across 2 pages (6 per page)
-    # Page 1: Original 6 languages
-    # Page 2: New 6 languages
+    # All 12 UI languages in order (12 per page for future additions)
+    all_ui_langs = [
+        "gb",
+        "ru",
+        "br",
+        "it",
+        "es",
+        "fr",
+        "nl",
+        "bg",
+        "cz",
+        "in",
+        "ua",
+        "pt",
+    ]
+
+    # Split into pages (12 languages per page)
+    items_per_page = 12
     ui_lang_pages = [
-        ["gb", "ru", "br", "it", "es", "fr"],  # Page 1
-        ["nl", "bg", "cz", "in", "ua", "pt"],  # Page 2
+        all_ui_langs[i : i + items_per_page]
+        for i in range(0, len(all_ui_langs), items_per_page)
     ]
 
     # Validate page number
@@ -654,50 +714,69 @@ def build_ui_language_keyboard(page: int = 1, current_ui_lang: str = "gb", i18n=
         page = 1
 
     keyboard_buttons = []
+    callback_prefix = "onboard_ui_lang_" if onboarding else "set_ui_lang_"
 
-    # Build language buttons for current page
-    for lang_code in ui_lang_pages[page - 1]:
-        lang_display = UI_LANGUAGE_DISPLAY.get(lang_code, lang_code)
-        prefix = "✅ " if current_ui_lang == lang_code else ""
-        keyboard_buttons.append(
-            [
-                InlineKeyboardButton(
-                    text=f"{prefix}{lang_display}",
-                    callback_data=f"set_ui_lang_{lang_code}",
-                )
-            ]
+    # Build language buttons in 2-column layout
+    current_page_langs = ui_lang_pages[page - 1]
+    for i in range(0, len(current_page_langs), 2):
+        row = []
+        # Left column
+        lang_code_left = current_page_langs[i]
+        lang_display_left = UI_LANGUAGE_DISPLAY.get(lang_code_left, lang_code_left)
+        prefix_left = "✅ " if current_ui_lang == lang_code_left else ""
+        row.append(
+            InlineKeyboardButton(
+                text=f"{prefix_left}{lang_display_left}",
+                callback_data=f"{callback_prefix}{lang_code_left}",
+            )
         )
+
+        # Right column (if exists)
+        if i + 1 < len(current_page_langs):
+            lang_code_right = current_page_langs[i + 1]
+            lang_display_right = UI_LANGUAGE_DISPLAY.get(
+                lang_code_right, lang_code_right
+            )
+            prefix_right = "✅ " if current_ui_lang == lang_code_right else ""
+            row.append(
+                InlineKeyboardButton(
+                    text=f"{prefix_right}{lang_display_right}",
+                    callback_data=f"{callback_prefix}{lang_code_right}",
+                )
+            )
+
+        keyboard_buttons.append(row)
 
     # Navigation footer
     footer = []
     if page > 1:
         prev_text = i18n.get("button-previous") if i18n else "◀ Previous"
-        footer.append(
-            InlineKeyboardButton(
-                text=prev_text, callback_data=f"ui_lang_page_{page-1}"
-            )
+        callback_data = (
+            f"onboard_ui_lang_page_{page-1}" if onboarding else f"ui_lang_page_{page-1}"
         )
+        footer.append(InlineKeyboardButton(text=prev_text, callback_data=callback_data))
 
     if page < len(ui_lang_pages):
         next_text = i18n.get("button-next") if i18n else "Next ▶"
-        footer.append(
-            InlineKeyboardButton(
-                text=next_text, callback_data=f"ui_lang_page_{page+1}"
-            )
+        callback_data = (
+            f"onboard_ui_lang_page_{page+1}" if onboarding else f"ui_lang_page_{page+1}"
         )
+        footer.append(InlineKeyboardButton(text=next_text, callback_data=callback_data))
 
     if footer:
         keyboard_buttons.append(footer)
 
-    # Back button
-    back_text = i18n.get("button-back") if i18n else "◀ Back"
-    keyboard_buttons.append(
-        [
-            InlineKeyboardButton(
-                text=back_text, callback_data="settings_main"
-            )
-        ]
-    )
+    # Back/Skip button
+    if onboarding:
+        skip_text = i18n.get("button-skip") if i18n else "⏭️ Skip"
+        keyboard_buttons.append(
+            [InlineKeyboardButton(text=skip_text, callback_data="onboard_skip_ui_lang")]
+        )
+    else:
+        back_text = i18n.get("button-back") if i18n else "◀ Back"
+        keyboard_buttons.append(
+            [InlineKeyboardButton(text=back_text, callback_data="settings_main")]
+        )
 
     return InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
 
@@ -714,7 +793,9 @@ async def handle_ui_language_page(callback: CallbackQuery, i18n: I18nContext):
         await callback.answer(i18n.get("error-invalid-page"), show_alert=True)
         return
 
-    keyboard = build_ui_language_keyboard(page=page, current_ui_lang=current_ui_lang, i18n=i18n)
+    keyboard = build_ui_language_keyboard(
+        page=page, current_ui_lang=current_ui_lang, i18n=i18n
+    )
 
     await callback.message.edit_reply_markup(reply_markup=keyboard)
     await callback.answer()
@@ -900,15 +981,15 @@ async def handle_custom_notification_edit(
 
     # Build preset buttons with localized labels (sorted from lowest to highest)
     preset_configs = [
-        (0.5, "minutes"),      # 30m
-        (1, "hours"),          # 1h
+        (0.5, "minutes"),  # 30m
+        (1, "hours"),  # 1h
         (1.5, "combined_hm"),  # 1h 30m (replaces 20m)
         (2.5, "combined_hm"),  # 2h 30m (replaces 70h)
-        (6, "hours"),          # 6h
-        (12, "hours"),         # 12h
-        (18, "hours"),         # 18h
-        (32, "combined_dh"),   # 1d 8h (replaces 3h)
-        (60, "hours"),         # 60h
+        (6, "hours"),  # 6h
+        (12, "hours"),  # 12h
+        (18, "hours"),  # 18h
+        (32, "combined_dh"),  # 1d 8h (replaces 3h)
+        (60, "hours"),  # 60h
     ]
 
     preset_times = []
