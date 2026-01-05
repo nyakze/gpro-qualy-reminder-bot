@@ -15,6 +15,7 @@ from notifications import (
     set_user_language,
     set_user_ui_language,
     get_user_status,
+    get_user_ui_language,
 )
 from .states import OnboardingStates
 from . import router
@@ -22,14 +23,58 @@ from . import router
 logger = logging.getLogger(__name__)
 
 
-@router.callback_query(F.data.startswith("onboard_ui_lang_"))
+@router.callback_query(F.data.startswith("onboard_ui_lang_page_"))
+async def handle_onboarding_ui_language_page(
+    callback: CallbackQuery, i18n: I18nContext
+):
+    """Handle UI language pagination during onboarding"""
+    user_id = callback.from_user.id
+
+    try:
+        page = int(callback.data.split("_")[4])
+    except (ValueError, IndexError):
+        await callback.answer("Invalid page", show_alert=True)
+        return
+
+    from .callbacks import build_ui_language_keyboard
+
+    # Get current UI language or default to 'gb'
+    current_ui_lang = get_user_ui_language(user_id) or "gb"
+    keyboard = build_ui_language_keyboard(
+        page=page, current_ui_lang=current_ui_lang, i18n=i18n, onboarding=True
+    )
+
+    await callback.message.edit_reply_markup(reply_markup=keyboard)
+    await callback.answer()
+
+
+@router.callback_query(F.data == "onboard_skip_ui_lang")
+async def handle_onboarding_skip_ui_lang(
+    callback: CallbackQuery, state: FSMContext, i18n: I18nContext
+):
+    """Skip UI language selection during onboarding"""
+    user_id = callback.from_user.id
+
+    # Set default UI language to English (gb)
+    set_user_ui_language(user_id, "gb")
+    set_user_language(user_id, "gb")
+    logger.debug(f"User {user_id} skipped UI language selection, defaults set to 'gb'")
+
+    # Show group selection menu
+    await show_onboarding_group_menu(callback.message, user_id, i18n, state)
+    await callback.answer()
+
+
+@router.callback_query(
+    F.data.startswith("onboard_ui_lang_") & ~F.data.startswith("onboard_ui_lang_page_")
+)
 async def handle_onboarding_ui_language_select(
     callback: CallbackQuery, state: FSMContext, i18n: I18nContext
 ):
     """Handle bot UI language selection at start of onboarding"""
     user_id = callback.from_user.id
 
-    # Extract language code (en, ru, br, it, es, fr)
+    # Extract language code (gb, ru, br, it, es, fr, etc.)
     ui_lang = callback.data.replace("onboard_ui_lang_", "")
 
     # Set UI language

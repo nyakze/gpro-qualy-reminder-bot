@@ -20,7 +20,7 @@ from notifications import (
     save_users_data,
     users_data,
 )
-from utils import format_full_calendar, UI_LANGUAGE_DISPLAY
+from utils import format_full_calendar
 from config import ADMIN_USER_IDS
 from . import router
 
@@ -40,19 +40,15 @@ async def cmd_start(message: Message, state: FSMContext, i18n: I18nContext):
 
     if was_new:
         logger.info(f"🆕 NEW user {user_id} registered via /start")
-        # Show bot UI language selection - dynamically built from available languages
-        keyboard_buttons = [
-            [
-                InlineKeyboardButton(
-                    text=display_name, callback_data=f"onboard_ui_lang_{lang_code}"
-                )
-            ]
-            for lang_code, display_name in UI_LANGUAGE_DISPLAY.items()
-        ]
-        keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
+        # Show bot UI language selection with 2-column layout
+        from .callbacks import build_ui_language_keyboard
+
+        keyboard = build_ui_language_keyboard(
+            page=1, current_ui_lang="gb", i18n=None, onboarding=True
+        )
 
         await message.answer(
-            "👋 **Welcome to GPRO Bot!**\n\n" "Choose your preferred bot language:",
+            "👋 <b>Welcome to GPRO Bot!</b>\n\n" "Choose your preferred bot language:",
             reply_markup=keyboard,
             parse_mode="HTML",
         )
