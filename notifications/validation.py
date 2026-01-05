@@ -56,6 +56,14 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
     - "2h", "12 hours" -> hours
     - "1h 30m", "2h30m" -> hours + minutes
 
+    Supports multiple languages:
+    - English: h, hours, m, min, minutes
+    - Russian: ч, час, часа, часов, м, мин, минут, минуты, минута
+    - Portuguese: h, hora, horas, m, min, minuto, minutos
+    - Spanish: h, hora, horas, m, min, minuto, minutos
+    - French: h, heure, heures, m, min, minute, minutes
+    - Italian: h, ora, ore, m, min, minuto, minuti
+
     Args:
         time_str: User input time string
         i18n: I18n context for translations (optional)
@@ -83,22 +91,40 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
 
     time_str = time_str.strip().lower()
 
+    # Hour patterns (multi-language support)
+    # English: h, hour, hours
+    # Russian: ч, час, часа, часов
+    # Portuguese: h, hora, horas
+    # Spanish: h, hora, horas
+    # French: h, heure, heures
+    # Italian: h, ora, ore (note: "ore" standalone is also common)
+    hour_pattern = r"(?:h(?:our|ours|ora|oras|eure|eures)?|ore|ч(?:ас(?:а|ов)?)?)"
+
+    # Minute patterns (multi-language support)
+    # English: m, min, minute, minutes
+    # Russian: м, мин, минут, минуты, минута
+    # Portuguese: m, min, minuto, minutos
+    # Spanish: m, min, minuto, minutos
+    # French: m, min, minute, minutes
+    # Italian: m, min, minuto, minuti
+    minute_pattern = r"(?:m(?:in(?:ute|utes|uto|utos|uti)?)?|м(?:ин(?:ут(?:а|ы)?)?)?)"
+
     # Try to match "Xh Ym" or "XhYm" format
-    match = re.match(r"^(\d+)\s*h(?:ours?)?\s*(\d+)\s*m(?:in(?:utes?)?)?$", time_str)
+    match = re.match(rf"^(\d+)\s*{hour_pattern}\s*(\d+)\s*{minute_pattern}$", time_str)
     if match:
         hours = int(match.group(1))
         minutes = int(match.group(2))
         total_hours = hours + minutes / 60
         return total_hours, ""
 
-    # Try to match hours only: "Xh" or "X hours"
-    match = re.match(r"^(\d+)\s*h(?:ours?)?$", time_str)
+    # Try to match hours only: "Xh" or "X hours" or "Xч" or "X часа"
+    match = re.match(rf"^(\d+)\s*{hour_pattern}$", time_str)
     if match:
         hours = int(match.group(1))
         return float(hours), ""
 
-    # Try to match minutes only: "Xm" or "X minutes"
-    match = re.match(r"^(\d+)\s*m(?:in(?:utes?)?)?$", time_str)
+    # Try to match minutes only: "Xm" or "X minutes" or "Xм" or "X минут"
+    match = re.match(rf"^(\d+)\s*{minute_pattern}$", time_str)
     if match:
         minutes = int(match.group(1))
         return minutes / 60, ""
