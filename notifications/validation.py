@@ -54,15 +54,17 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
     Supported formats:
     - "20m", "30min", "45 minutes" -> minutes
     - "2h", "12 hours" -> hours
+    - "2d", "2 days" -> days (converted to hours)
     - "1h 30m", "2h30m" -> hours + minutes
+    - "2d 12h", "2d12h" -> days + hours
 
     Supports multiple languages:
-    - English: h, hours, m, min, minutes
-    - Russian: ч, час, часа, часов, м, мин, минут, минуты, минута
-    - Portuguese: h, hora, horas, m, min, minuto, minutos
-    - Spanish: h, hora, horas, m, min, minuto, minutos
-    - French: h, heure, heures, m, min, minute, minutes
-    - Italian: h, ora, ore, m, min, minuto, minuti
+    - English: d, day, days, h, hours, m, min, minutes
+    - Russian: д, день, дня, дней, ч, час, часа, часов, м, мин, минут, минуты, минута
+    - Portuguese: d, dia, dias, h, hora, horas, m, min, minuto, minutos
+    - Spanish: d, día, días, h, hora, horas, m, min, minuto, minutos
+    - French: d, j, jour, jours, h, heure, heures, m, min, minute, minutes
+    - Italian: d, g, giorno, giorni, h, ora, ore, m, min, minuto, minuti
 
     Args:
         time_str: User input time string
@@ -91,6 +93,15 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
 
     time_str = time_str.strip().lower()
 
+    # Day patterns (multi-language support)
+    # English: d, day, days
+    # Russian: д, день, дня, дней
+    # Portuguese: d, dia, dias
+    # Spanish: d, día, días
+    # French: d, j, jour, jours
+    # Italian: d, g, giorno, giorni
+    day_pattern = r"(?:d(?:ay|ays|ia|ias|ía|ías)?|j(?:our|ours)?|g(?:iorno|iorni)?|д(?:ень|ня|ней)?)"
+
     # Hour patterns (multi-language support)
     # English: h, hour, hours
     # Russian: ч, час, часа, часов
@@ -109,13 +120,27 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
     # Italian: m, min, minuto, minuti
     minute_pattern = r"(?:m(?:in(?:ute|utes|uto|utos|uti)?)?|м(?:ин(?:ут(?:а|ы)?)?)?)"
 
-    # Try to match "Xh Ym" or "XhYm" format
+    # Try to match "Xd Yh" or "XdYh" format (days + hours)
+    match = re.match(rf"^(\d+)\s*{day_pattern}\s*(\d+)\s*{hour_pattern}$", time_str)
+    if match:
+        days = int(match.group(1))
+        hours = int(match.group(2))
+        total_hours = days * 24 + hours
+        return float(total_hours), ""
+
+    # Try to match "Xh Ym" or "XhYm" format (hours + minutes)
     match = re.match(rf"^(\d+)\s*{hour_pattern}\s*(\d+)\s*{minute_pattern}$", time_str)
     if match:
         hours = int(match.group(1))
         minutes = int(match.group(2))
         total_hours = hours + minutes / 60
         return total_hours, ""
+
+    # Try to match days only: "Xd" or "X days" or "Xд" or "X дней"
+    match = re.match(rf"^(\d+)\s*{day_pattern}$", time_str)
+    if match:
+        days = int(match.group(1))
+        return float(days * 24), ""
 
     # Try to match hours only: "Xh" or "X hours" or "Xч" or "X часа"
     match = re.match(rf"^(\d+)\s*{hour_pattern}$", time_str)

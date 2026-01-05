@@ -422,6 +422,8 @@ time-hours-minutes = { $hours } { $hours ->
    *[many] минут
 }
 time-hours-minutes-short = { $hours }ч{ $minutes }м
+time-hours-short = { $hours }ч
+time-minutes-short = { $minutes }м
 time-days = { $days } { $days ->
     [one] день
     [few] дня

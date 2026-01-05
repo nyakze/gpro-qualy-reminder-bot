@@ -832,18 +832,32 @@ async def handle_custom_notification_edit(
     custom_notifs = get_custom_notifications(user_id)
     custom_notif = custom_notifs[slot_idx]
 
-    # Build preset buttons
-    preset_times = [
-        ("20m", 20 / 60),
-        ("30m", 30 / 60),
-        ("1h", 1),
-        ("3h", 3),
-        ("6h", 6),
-        ("12h", 12),
-        ("18h", 18),
-        ("60h", 60),
-        ("70h", 70),
+    # Build preset buttons with localized labels
+    preset_configs = [
+        (1.5, "combined"),   # 1h 30m (replaces 20m)
+        (0.5, "minutes"),    # 30m
+        (1, "hours"),        # 1h
+        (2.5, "combined"),   # 2h 30m (replaces 70h)
+        (3, "hours"),        # 3h
+        (6, "hours"),        # 6h
+        (12, "hours"),       # 12h
+        (18, "hours"),       # 18h
+        (60, "hours"),       # 60h
     ]
+
+    preset_times = []
+    for hours_val, time_type in preset_configs:
+        h = int(hours_val)
+        m = int((hours_val * 60) % 60)
+
+        if time_type == "combined" and m > 0:
+            label = i18n.get("time-hours-minutes-short", hours=h, minutes=m)
+        elif h > 0:
+            label = i18n.get("time-hours-short", hours=h)
+        else:
+            label = i18n.get("time-minutes-short", minutes=m)
+
+        preset_times.append((label, hours_val))
 
     keyboard_buttons = []
 
