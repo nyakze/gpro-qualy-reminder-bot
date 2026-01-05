@@ -8,8 +8,7 @@ Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadli
 ## Features
 
 ### Notifications
-- **Automatic quali notifications:** 48h, 24h, 2h, 10min before quali closes
-- **Extended Tuesday reminder:** 72h notification for Tuesday races (longer gap between races)
+- **Automatic quali notifications:** 3d, 2d, 1d, 2h, 10min before quali closes
 - **Custom notification times:** Set up to 2 custom notification times (20m-70h)
 - **Quali open detection:** API-based detection when qualification opens (2-3.5h after race)
 - **Race live notifications:** Get notified when race goes live
@@ -20,7 +19,7 @@ Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadli
 ### Personalization
 - **Interactive onboarding:** New users select language and group during /start
 - **Multi-language support:** Bot UI in 6 languages (English, Russian, Portuguese, Italian, Spanish, French) + 31 languages for GPRO links
-- **Group settings:** Personalized race/replay links (Elite, Master, Pro, Amateur, Rookie)
+- **Group settings:** Personalized race/replay links (set your group in settings)
 - **Notification preferences:** Toggle individual notification types on/off
 - **Timezone support:** Set your timezone for local time display with automatic DST handling (fuzzy search supports city names, abbreviations, UTC offsets)
 
