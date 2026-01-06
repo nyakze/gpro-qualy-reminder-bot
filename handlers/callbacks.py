@@ -446,9 +446,8 @@ async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext)
 
         # Return to category menu if called from there, otherwise main notif menu
         if category_id:
-            # Simulate callback to refresh category menu
-            callback.data = f"notif_category_{category_id}"
-            await handle_notification_category(callback, i18n)
+            # Refresh category menu by passing category_id directly
+            await handle_notification_category(callback, i18n, category_id=category_id)
         else:
             await handle_notifications_menu(callback, i18n)
 
@@ -893,14 +892,17 @@ async def handle_notifications_menu(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data.startswith("notif_category_"))
-async def handle_notification_category(callback: CallbackQuery, i18n: I18nContext):
+async def handle_notification_category(
+    callback: CallbackQuery, i18n: I18nContext, category_id: str = None
+):
     """Show individual notification toggles for a category"""
     user_id = callback.from_user.id
     user_status = get_user_status(user_id)
     notifications = user_status.get("notifications", {})
 
-    # Extract category ID from callback data
-    category_id = callback.data.replace("notif_category_", "")
+    # Extract category ID from callback data if not provided
+    if category_id is None:
+        category_id = callback.data.replace("notif_category_", "")
 
     if category_id not in NOTIFICATION_CATEGORIES:
         await callback.answer(i18n.get("error-invalid-category"), show_alert=True)
@@ -1007,7 +1009,7 @@ async def handle_toggle_category(callback: CallbackQuery, i18n: I18nContext):
     await callback.answer(feedback_text)
 
     # Refresh the category menu to show updated states
-    await handle_notification_category(callback, i18n)
+    await handle_notification_category(callback, i18n, category_id=category_id)
 
 
 @router.callback_query(F.data == "custom_notif_menu")
