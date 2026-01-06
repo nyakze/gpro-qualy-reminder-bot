@@ -619,7 +619,6 @@ notif-quali-results = 🏁 <b>Resultados da Classificação - Corrida #{ $raceId
 
     Resultados da classificação disponíveis:
 
-    🔗 <a href="{ $q12Link }">Classificação Q1 e Q2</a>
     🔗 <a href="{ $gridLink }">Grid de Largada</a>
 
 notif-quali-results-no-group = 🏁 <b>Resultados da Classificação - Corrida #{ $raceId }</b>
@@ -632,5 +631,4 @@ notif-quali-results-no-group = 🏁 <b>Resultados da Classificação - Corrida #
 
     ⚠️ Para links personalizados, configure seu grupo em /settings!
 
-    🔗 <a href="{ $q12Link }">Classificação Q1 e Q2</a>
     🔗 <a href="{ $gridLink }">Grid de Largada</a>

@@ -635,7 +635,6 @@ notif-quali-results = 🏁 <b>Resultados da Qualificação - Corrida #{ $raceId 
 
     Resultados da qualificação disponíveis:
 
-    🔗 <a href="{ $q12Link }">Classificação Q1 e Q2</a>
     🔗 <a href="{ $gridLink }">Grelha de Partida</a>
 
 notif-quali-results-no-group = 🏁 <b>Resultados da Qualificação - Corrida #{ $raceId }</b>
@@ -648,5 +647,4 @@ notif-quali-results-no-group = 🏁 <b>Resultados da Qualificação - Corrida #{
 
     ⚠️ Para ligações personalizadas, configure o seu grupo em /settings!
 
-    🔗 <a href="{ $q12Link }">Classificação Q1 e Q2</a>
     🔗 <a href="{ $gridLink }">Grelha de Partida</a>

@@ -307,7 +307,6 @@ notif-quali-results = 🏁 <b>Race #{ $raceId } Qualifying Results</b>
 
     Qualifying results are now available:
 
-    🔗 <a href="{ $q12Link }">Q1 Q2 Standings</a>
     🔗 <a href="{ $gridLink }">Starting Grid</a>
 
 notif-quali-results-no-group = 🏁 <b>Race #{ $raceId } Qualifying Results</b>
@@ -320,7 +319,6 @@ notif-quali-results-no-group = 🏁 <b>Race #{ $raceId } Qualifying Results</b>
 
     ⚠️ For personalized links, set your group in /settings!
 
-    🔗 <a href="{ $q12Link }">Q1 Q2 Standings</a>
     🔗 <a href="{ $gridLink }">Starting Grid</a>
 
 # =======================

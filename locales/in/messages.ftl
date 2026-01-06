@@ -639,7 +639,6 @@ notif-quali-results = 🏁 <b>क्वालीफाइंग परिणा�
 
     क्वालीफाइंग परिणाम उपलब्ध हैं:
 
-    🔗 <a href="{ $q12Link }">Q1 Q2 स्टैंडिंग्स</a>
     🔗 <a href="{ $gridLink }">स्टार्टिंग ग्रिड</a>
 
 notif-quali-results-no-group = 🏁 <b>क्वालीफाइंग परिणाम - रेस #{ $raceId }</b>
@@ -652,5 +651,4 @@ notif-quali-results-no-group = 🏁 <b>क्वालीफाइंग पर�
 
     ⚠️ व्यक्तिगत लिंक के लिए, /settings में अपना समूह सेट करें!
 
-    🔗 <a href="{ $q12Link }">Q1 Q2 स्टैंडिंग्स</a>
     🔗 <a href="{ $gridLink }">स्टार्टिंग ग्रिड</a>

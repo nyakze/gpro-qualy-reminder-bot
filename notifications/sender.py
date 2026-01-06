@@ -72,49 +72,6 @@ def generate_replay_link(group: str, gpro_lang: str = "gb") -> str:
     return generate_gpro_link(group, gpro_lang, "replay")
 
 
-def generate_quali_standings_link(group: str, gpro_lang: str = "gb") -> str:
-    """Generate Q1 Q2 Standings link with user's group
-
-    Args:
-        group: User's GPRO group (E, M3, R11, etc.)
-        gpro_lang: GPRO language code for URL (e.g., 'gb', 'de', 'fr')
-
-    Returns:
-        str: URL to Q1 Q2 Standings page
-    """
-    from .user_data import is_valid_language
-
-    # Validate and fallback for language
-    if not is_valid_language(gpro_lang):
-        logger.warning(f"Invalid language code '{gpro_lang}', falling back to 'gb'")
-        gpro_lang = "gb"
-
-    base_url = f"https://gpro.net/{gpro_lang}/Qualify12Standings.asp?Group="
-
-    if not group:
-        return base_url
-
-    group = group.strip().upper()
-
-    # Elite has no number
-    if group == "E":
-        return f"{base_url}Elite"
-
-    # Parse group letter and number (e.g., M3, R11, P15, A42)
-    match = re.match(r"^([MPAR])(\d{1,3})$", group)
-    if not match:
-        # Invalid format, return default
-        return base_url
-
-    letter, number = match.groups()
-    group_names = {"M": "Master", "P": "Pro", "A": "Amateur", "R": "Rookie"}
-
-    group_name = group_names[letter]
-    # URL encode: "Rookie - 11" → "Rookie%20-%2011"
-    encoded = f"{group_name}%20-%20{number}"
-    return f"{base_url}{encoded}"
-
-
 def generate_starting_grid_link(group: str, gpro_lang: str = "gb") -> str:
     """Generate Starting Grid link with user's group
 
@@ -264,21 +221,13 @@ def generate_app_starting_grid_link(group: str = None) -> str:
         return base_url
 
 
-def generate_app_race_live_link(group: str = None, gpro_lang: str = "gb") -> str:
+def generate_app_race_live_link() -> str:
     """Generate APP race live link
 
-    NOTE: APP live race link not found yet, using classic fallback
-
-    Args:
-        group: User's GPRO group (E, M3, R11, etc.)
-        gpro_lang: GPRO language code for fallback classic URL
-
     Returns:
-        str: URL to race live page (currently returns classic URL)
+        str: URL to APP race live page (no group or language support)
     """
-    # TODO: Replace with APP link when found
-    # For now, use classic link as fallback
-    return generate_race_link(group, gpro_lang)
+    return "https://app.gpro.net/liverace"
 
 
 def generate_app_race_replay_link() -> str:
@@ -454,11 +403,14 @@ async def send_race_live_notification(
 
     # Generate race live link based on website mode
     if website_mode == "app":
-        race_link = generate_app_race_live_link(group, gpro_lang)
-        logger.debug(f"User {user_id} using APP mode - Race live: {race_link} (classic fallback)")
+        race_link = generate_app_race_live_link()
+        # APP live doesn't support group, always use no-group message
+        has_group_support = False
+        logger.debug(f"User {user_id} using APP mode - Live: {race_link} (no group support)")
     else:
         race_link = generate_race_link(group, gpro_lang)
-        logger.debug(f"User {user_id} using Classic mode - Race live: {race_link}")
+        has_group_support = True
+        logger.debug(f"User {user_id} using Classic mode - Live: {race_link}")
 
     # Import i18n context if not provided
     if i18n is None:
@@ -473,8 +425,10 @@ async def send_race_live_notification(
         def get_text(key, **kwargs):
             return i18n.get(key, **kwargs)
 
-    # Build message based on whether group is set
-    if group:
+    # Build message based on website mode and group
+    # APP mode: always use simple message (no group warning needed)
+    # Classic mode: show warning only if group not set
+    if website_mode == "app" or group:
         message = get_text(
             "notif-race-live",
             raceId=race_id,
@@ -538,8 +492,10 @@ async def send_race_replay_notification(
         def get_text(key, **kwargs):
             return i18n.get(key, **kwargs)
 
-    # Build message based on whether group is set AND mode supports group
-    if group and has_group_support:
+    # Build message based on website mode and group
+    # APP mode: always use simple message (no group warning needed)
+    # Classic mode: show warning only if group not set
+    if website_mode == "app" or group:
         message = get_text(
             "notif-race-replay",
             raceId=race_id,
