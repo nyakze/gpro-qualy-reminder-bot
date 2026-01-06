@@ -623,8 +623,8 @@ timezone-set-success = ✅ <b>Tijdzone ingesteld!</b>
 button-reset-timezone = 🔄 Reset naar UTC
 feedback-timezone-set = ✅ Tijdzone bijgewerkt
 feedback-timezone-reset = ✅ Tijdzone gereset naar UTC
-feedback-switched-to-app = Overgeschakeld naar APP-modus. GPRO-taalinstelling wordt niet toegepast op URL's.
-feedback-switched-to-classic = Overgeschakeld naar Klassieke modus. GPRO-taal wordt gebruikt.
+feedback-switched-to-app = APP-modus ingeschakeld
+feedback-switched-to-classic = Klassieke modus ingeschakeld
 error-mode-switch-failed = ❌ Kon websitemodus niet wijzigen
 error-timezone-not-found = ❌ Geen tijdzone gevonden voor "{ $query }"
 

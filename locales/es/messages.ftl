@@ -601,8 +601,8 @@ timezone-set-success = ✅ <b>¡Zona horaria configurada!</b>
 button-reset-timezone = 🔄 Restablecer a UTC
 feedback-timezone-set = ✅ Zona horaria actualizada
 feedback-timezone-reset = ✅ Zona horaria restablecida a UTC
-feedback-switched-to-app = Cambiado al modo APP. La configuración de idioma GPRO no se aplicará a las URLs.
-feedback-switched-to-classic = Cambiado al modo Clásico. Se usará el idioma GPRO.
+feedback-switched-to-app = Modo APP activado
+feedback-switched-to-classic = Modo Clásico activado
 error-mode-switch-failed = ❌ Error al cambiar el modo del sitio web
 error-timezone-not-found = ❌ No se encontró zona horaria para "{ $query }"
 

@@ -601,8 +601,8 @@ timezone-set-success = ✅ <b>Fuseau horaire défini!</b>
 button-reset-timezone = 🔄 Réinitialiser à UTC
 feedback-timezone-set = ✅ Fuseau horaire mis à jour
 feedback-timezone-reset = ✅ Fuseau horaire réinitialisé à UTC
-feedback-switched-to-app = Basculé en mode APP. Le paramètre de langue GPRO ne sera pas appliqué aux URL.
-feedback-switched-to-classic = Basculé en mode Classique. La langue GPRO sera utilisée.
+feedback-switched-to-app = Mode APP activé
+feedback-switched-to-classic = Mode Classique activé
 error-mode-switch-failed = ❌ Échec du changement de mode de site web
 error-timezone-not-found = ❌ Aucun fuseau horaire trouvé pour "{ $query }"
 
