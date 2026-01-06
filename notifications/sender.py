@@ -455,8 +455,10 @@ async def send_race_live_notification(
     # Generate race live link based on website mode
     if website_mode == "app":
         race_link = generate_app_race_live_link(group, gpro_lang)
+        logger.debug(f"User {user_id} using APP mode - Race live: {race_link} (classic fallback)")
     else:
         race_link = generate_race_link(group, gpro_lang)
+        logger.debug(f"User {user_id} using Classic mode - Race live: {race_link}")
 
     # Import i18n context if not provided
     if i18n is None:
@@ -517,9 +519,11 @@ async def send_race_replay_notification(
         replay_link = generate_app_race_replay_link()
         # APP replay doesn't support group, always use no-group message
         has_group_support = False
+        logger.debug(f"User {user_id} using APP mode - Replay: {replay_link} (no group support)")
     else:
         replay_link = generate_replay_link(group, gpro_lang)
         has_group_support = True
+        logger.debug(f"User {user_id} using Classic mode - Replay: {replay_link}")
 
     # Import i18n context if not provided
     if i18n is None:
@@ -579,6 +583,7 @@ async def send_race_results_notification(
     if website_mode == "app":
         analysis_link = generate_app_race_analysis_link()
         summary_link = generate_app_race_summary_link(group)
+        logger.debug(f"User {user_id} using APP mode - Analysis: {analysis_link}, Summary: {summary_link}")
     else:
         # Race Analysis link (same for everyone, just language)
         analysis_link = generate_race_analysis_link(gpro_lang)
@@ -587,6 +592,7 @@ async def send_race_results_notification(
             group, gpro_lang, "replay"
         )  # Use same format as replay
         summary_link = summary_link.replace("racescreen.asp", "RaceSummary.asp")
+        logger.debug(f"User {user_id} using Classic mode - Analysis: {analysis_link}, Summary: {summary_link}")
 
     # Import i18n context if not provided
     if i18n is None:
@@ -650,8 +656,10 @@ async def send_quali_results_notification(
     # Generate starting grid link based on website mode (Q1/Q2 links removed)
     if website_mode == "app":
         starting_grid_link = generate_app_starting_grid_link(group)
+        logger.debug(f"User {user_id} using APP mode - Starting grid: {starting_grid_link}")
     else:
         starting_grid_link = generate_starting_grid_link(group, gpro_lang)
+        logger.debug(f"User {user_id} using Classic mode - Starting grid: {starting_grid_link}")
 
     # Import i18n context if not provided
     if i18n is None:
@@ -721,8 +729,10 @@ async def send_quali_notification(
     # Generate qualifying link based on website mode
     if website_mode == "app":
         quali_link = generate_app_quali_link()
+        logger.debug(f"User {user_id} using APP mode - Quali link: {quali_link}")
     else:
         quali_link = generate_quali_link(gpro_lang)
+        logger.debug(f"User {user_id} using Classic mode - Quali link: {quali_link}")
 
     # Import i18n context if not provided
     if i18n is None:
