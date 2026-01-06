@@ -116,11 +116,11 @@ settings-notifications-title = 🔔 <b>Notification Settings</b>
     Click to toggle notifications on/off:
     ✅ = Enabled | ❌ = Disabled
 
-    ℹ️ <i>These are global switches for all races. Use the 'Quali Done' button in notifications to disable a specific race.</i>
+    ℹ️ <i>These are global switches for all races. Use the 'Qualifying Done' button in notifications to disable a specific race.</i>
 
 settings-custom-notif-title = ⏱️ <b>Custom Notifications</b>
 
-    Set your own notification times ({ $min }m - { $max }h before quali closes).
+    Set your own notification times ({ $min }m - { $max }h before qualifying closes).
 
     You can have up to 2 custom notifications.
 
@@ -172,7 +172,7 @@ button-enable-all = 🔔 Enable All Notifications
 button-disable-all = 🔕 Disable All Notifications
 button-enable-category = 🔔 Enable Category
 button-disable-category = 🔕 Disable Category
-button-quali-done = ✅ Quali Done
+button-quali-done = ✅ Qualifying Done
 button-reenable-race = 🔄 Re-enable Race { $raceId } notifications
 button-weather = 🌤️ Show Weather
 button-enter-custom-group = ✏️ Enter Custom Group
@@ -205,19 +205,19 @@ notif-category-qualifying-events = Qualifying Events
 notif-category-race-events = Race Events
 
 # Individual notification labels
-notif-label-72h = 3d before quali closes
-notif-label-48h = 2d before quali closes
-notif-label-24h = 1d before quali closes
-notif-label-2h = 2h before quali closes
-notif-label-10min = 10min before quali closes
-notif-label-opens = Quali is open
+notif-label-72h = 3d before qualifying closes
+notif-label-48h = 2d before qualifying closes
+notif-label-24h = 1d before qualifying closes
+notif-label-2h = 2h before qualifying closes
+notif-label-10min = 10min before qualifying closes
+notif-label-opens = Qualifying is open
 notif-label-quali-results = Qualifying results available
 notif-label-replay = Race replay available
 notif-label-live = Race is live
 notif-label-results = Race results available
 
-notif-quali-closes = <b>Quali closes in { $time }!</b>
-notif-quali-opens = <b>Quali is open (or is opening soon)</b>
+notif-quali-closes = <b>Qualifying closes in { $time }!</b>
+notif-quali-opens = <b>Qualifying is open (or is opening soon)</b>
 
 notif-quali-message = { $emoji } { $title }
 
@@ -228,7 +228,7 @@ notif-quali-message = { $emoji } { $title }
 
     🔗 <a href="{ $qualiLink }">Go to Qualifying</a>
 
-    <i>Click the '✅ Quali Done' button to disable notifications for this race</i>
+    <i>Click the '✅ Qualifying Done' button to disable notifications for this race</i>
 
 notif-quali-message-disabled = { $emoji } { $title }
 
@@ -302,7 +302,7 @@ notif-race-results-no-group = 📊 <b>Race #{ $raceId } Results Available</b>
 notif-quali-results = 🏁 <b>Race #{ $raceId } Qualifying Results</b>
 
     📍 <b>{ $track }</b>
-    ✅ <b>Quali closed: { $qualiClose }</b>
+    ✅ <b>Qualifying closed: { $qualiClose }</b>
     🏎 <b>Race: { $raceTime }</b>
 
     Qualifying results are now available:
@@ -313,7 +313,7 @@ notif-quali-results = 🏁 <b>Race #{ $raceId } Qualifying Results</b>
 notif-quali-results-no-group = 🏁 <b>Race #{ $raceId } Qualifying Results</b>
 
     📍 <b>{ $track }</b>
-    ✅ <b>Quali closed: { $qualiClose }</b>
+    ✅ <b>Qualifying closed: { $qualiClose }</b>
     🏎 <b>Race: { $raceTime }</b>
 
     Qualifying results are now available:
@@ -528,12 +528,12 @@ validation-invalid-slot = Invalid slot (must be 0-{ $maxSlots })
 # =======================
 # Notification Labels
 # =======================
-notif-label-72h = 3d before quali closes
-notif-label-48h = 2d before quali closes
-notif-label-24h = 1d before quali closes
-notif-label-2h = 2h before quali closes
-notif-label-10min = 10min before quali closes
-notif-label-opens-soon = Quali is open
+notif-label-72h = 3d before qualifying closes
+notif-label-48h = 2d before qualifying closes
+notif-label-24h = 1d before qualifying closes
+notif-label-2h = 2h before qualifying closes
+notif-label-10min = 10min before qualifying closes
+notif-label-opens-soon = Qualifying is open
 notif-label-quali-results = Qualifying results available
 notif-label-race-replay = Race replay available
 notif-label-race-live = Race is live
@@ -547,7 +547,7 @@ notif-menu-title = 🔔 <b>Notification Settings</b>
     Click to toggle notifications on/off:
     ✅ = Enabled | ❌ = Disabled
 
-    ℹ️ <i>These are global switches for all races. Use the 'Quali Done' button in notifications to disable a specific race.</i>
+    ℹ️ <i>These are global switches for all races. Use the 'Qualifying Done' button in notifications to disable a specific race.</i>
 
 # =======================
 # Group Menu
@@ -580,7 +580,7 @@ lang-menu-title = 🌍 <b>Language Settings</b>
 # =======================
 custom-notif-menu-title = ⏱️ <b>Custom Notifications</b>
 
-    Set your own notification times ({ $minTime }m - { $maxTime }h before quali closes).
+    Set your own notification times ({ $minTime }m - { $maxTime }h before qualifying closes).
 
     You can have up to 2 custom notifications.
 
