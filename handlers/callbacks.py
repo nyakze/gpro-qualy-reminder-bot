@@ -393,14 +393,49 @@ async def handle_main_menu_settings(
     )
 
 
+@router.callback_query(F.data.startswith("toggle_category_"))
+async def handle_toggle_category(callback: CallbackQuery, i18n: I18nContext):
+    """Enable or disable all notifications in a category"""
+    user_id = callback.from_user.id
+    user_status = get_user_status(user_id)
+
+    # Extract action and category from callback data
+    # Format: toggle_category_on_CATEGORY or toggle_category_off_CATEGORY
+    parts = callback.data.split("_")
+    action = parts[2]  # "on" or "off"
+    category_id = "_".join(parts[3:])  # Handle category IDs with underscores
+
+    if category_id not in NOTIFICATION_CATEGORIES:
+        await callback.answer(i18n.get("error-invalid-category"), show_alert=True)
+        return
+
+    category_types = NOTIFICATION_CATEGORIES[category_id]["types"]
+    new_state = action == "on"
+
+    # Toggle all notifications in the category
+    for notif_type in category_types:
+        user_status["notifications"][notif_type] = new_state
+
+    save_users_data()
+
+    # Get category name for feedback
+    category_name = i18n.get(f"notif-category-{category_id.replace('_', '-')}")
+
+    if new_state:
+        feedback_text = i18n.get("feedback-category-enabled", category=category_name)
+    else:
+        feedback_text = i18n.get("feedback-category-disabled", category=category_name)
+
+    await callback.answer(feedback_text)
+
+    # Refresh the category menu to show updated states
+    await handle_notification_category(callback, i18n, category_id=category_id)
+
+
 @router.callback_query(F.data.startswith("toggle_"))
 async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext):
     """Handle notification toggle button clicks"""
     user_id = callback.from_user.id
-
-    # Check if this is a category toggle (handled by separate handler)
-    if callback.data.startswith("toggle_category_"):
-        return
 
     # Handle "Enable All" / "Disable All"
     if callback.data == "toggle_all_on":
@@ -971,45 +1006,6 @@ async def handle_notification_category(
 
     await callback.message.edit_text(title, reply_markup=keyboard, parse_mode="HTML")
     await callback.answer()
-
-
-@router.callback_query(F.data.startswith("toggle_category_"))
-async def handle_toggle_category(callback: CallbackQuery, i18n: I18nContext):
-    """Enable or disable all notifications in a category"""
-    user_id = callback.from_user.id
-    user_status = get_user_status(user_id)
-
-    # Extract action and category from callback data
-    # Format: toggle_category_on_CATEGORY or toggle_category_off_CATEGORY
-    parts = callback.data.split("_")
-    action = parts[2]  # "on" or "off"
-    category_id = "_".join(parts[3:])  # Handle category IDs with underscores
-
-    if category_id not in NOTIFICATION_CATEGORIES:
-        await callback.answer(i18n.get("error-invalid-category"), show_alert=True)
-        return
-
-    category_types = NOTIFICATION_CATEGORIES[category_id]["types"]
-    new_state = action == "on"
-
-    # Toggle all notifications in the category
-    for notif_type in category_types:
-        user_status["notifications"][notif_type] = new_state
-
-    save_users_data()
-
-    # Get category name for feedback
-    category_name = i18n.get(f"notif-category-{category_id.replace('_', '-')}")
-
-    if new_state:
-        feedback_text = i18n.get("feedback-category-enabled", category=category_name)
-    else:
-        feedback_text = i18n.get("feedback-category-disabled", category=category_name)
-
-    await callback.answer(feedback_text)
-
-    # Refresh the category menu to show updated states
-    await handle_notification_category(callback, i18n, category_id=category_id)
 
 
 @router.callback_query(F.data == "custom_notif_menu")
