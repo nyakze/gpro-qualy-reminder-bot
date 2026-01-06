@@ -153,6 +153,41 @@ def generate_race_analysis_link(gpro_lang: str = "gb") -> str:
     return f"https://gpro.net/{gpro_lang}/RaceAnalysis.asp"
 
 
+def is_qualifying_closed(race_id: int, race_data: dict) -> bool:
+    """Check if qualifying is currently closed (between deadline and opens_soon)
+
+    Qualifying is closed when:
+    - Current time is after the quali_close deadline
+    - AND the "opens_soon" notification hasn't been sent yet for this race
+
+    Args:
+        race_id: The race ID to check
+        race_data: The race data dict
+
+    Returns:
+        bool: True if qualifying is closed and waiting for race to be calculated
+    """
+    from .checker import notify_history
+
+    now = datetime.utcnow()
+    quali_close = race_data.get("quali_close")
+
+    if not quali_close:
+        return False
+
+    # Check if qualifying deadline has passed
+    if now <= quali_close:
+        return False
+
+    # Check if "opens_soon" notification was already sent (meaning quali is open)
+    history_key = (race_id, "opens_soon")
+    if history_key in notify_history:
+        return False
+
+    # Qualifying is closed if deadline passed and opens_soon not sent yet
+    return True
+
+
 # ==========================================
 # APP Website URL Generators
 # ==========================================
@@ -703,7 +738,16 @@ async def send_quali_notification(
         def get_text(key, **kwargs):
             return i18n.get(key, **kwargs)
 
-    if notification_type == "opens_soon":
+    # Check if qualifying is currently closed (between deadline and opens_soon)
+    quali_is_closed = is_qualifying_closed(race_id, race_data)
+
+    if quali_is_closed:
+        # Qualifying is closed, waiting for race to be calculated
+        emoji = "🔒"
+        title = get_text("notif-quali-closed-title")
+        deadline = format_datetime_for_user(quali_close, user_id, "%d.%m %H:%M")
+        race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
+    elif notification_type == "opens_soon":
         emoji = "🆕"
         title = get_text("notif-quali-opens")
         deadline = format_datetime_for_user(quali_close, user_id, "%d.%m %H:%M")
@@ -749,7 +793,31 @@ async def send_quali_notification(
     # Check if weather data is available
     has_weather = race_id in race_calendar and "weather" in race_calendar[race_id]
 
-    if is_marked_done:
+    # Special message format when qualifying is closed
+    if quali_is_closed:
+        # Only show weather button if available (no "Done" button when closed)
+        keyboard_buttons = []
+        if has_weather:
+            keyboard_buttons.append(
+                [
+                    InlineKeyboardButton(
+                        text=get_text("button-weather"),
+                        callback_data=f"weather_{race_id}",
+                    )
+                ]
+            )
+
+        keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons) if keyboard_buttons else None
+        message = get_text(
+            "notif-quali-closed-message",
+            emoji=emoji,
+            title=title,
+            raceId=race_id,
+            track=track,
+            qualiDeadline=deadline,
+            raceTime=race_time,
+        )
+    elif is_marked_done:
         keyboard_buttons = [
             [
                 InlineKeyboardButton(

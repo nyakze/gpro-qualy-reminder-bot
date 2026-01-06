@@ -240,6 +240,17 @@ notif-quali-message-disabled = { $emoji } { $title }
     ℹ️ <b>Automatická oznámení vypnuta</b> pro tento závod
     <i>Klikněte na tlačítko '🔄 Znovu zapnout' pro zapnutí oznámení</i>
 
+notif-quali-closed-title = <b>Kvalifikace je momentálně uzavřena</b>
+
+notif-quali-closed-message = { $emoji } { $title }
+
+    🏁 <b>Závod č. { $raceId }</b>
+    📍 <b>{ $track }</b>
+    ⏰ <b>Kvalifikace uzavřena: { $qualiDeadline }</b>
+    🏎 <b>Závod: { $raceTime }</b>
+
+    ⏳ <i>Kvalifikace je momentálně uzavřena. Další kvalifikační session se otevře po dokončení aktuálního závodu. Počkejte prosím na vyhodnocení závodu.</i>
+
 notif-race-live = 🏁 <b>Závod č. { $raceId } PROBÍHÁ!</b>
 
     📍 <b>{ $track }</b>

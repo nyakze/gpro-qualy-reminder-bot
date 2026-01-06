@@ -240,6 +240,17 @@ notif-quali-message-disabled = { $emoji } { $title }
     ℹ️ <b>Automatische notificaties uitgeschakeld</b> voor deze race
     <i>Klik op de '🔄 Opnieuw inschakelen' knop om notificaties opnieuw in te schakelen</i>
 
+notif-quali-closed-title = <b>Kwalificatie is momenteel gesloten</b>
+
+notif-quali-closed-message = { $emoji } { $title }
+
+    🏁 <b>Race #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    ⏰ <b>Kwalificatie gesloten: { $qualiDeadline }</b>
+    🏎 <b>Race: { $raceTime }</b>
+
+    ⏳ <i>De kwalificatie is momenteel gesloten. De volgende kwalificatiesessie gaat open na afloop van de huidige race. Wacht tot de race is berekend.</i>
+
 notif-race-live = 🏁 <b>Race #{ $raceId } is LIVE!</b>
 
     📍 <b>{ $track }</b>
