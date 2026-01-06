@@ -202,7 +202,7 @@ def build_language_keyboard(
         "ee",
         "al",
         "hr",
-        "ch",
+        "cn",
         "my",
         "in",
         "pi",

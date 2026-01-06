@@ -54,7 +54,7 @@ LANGUAGE_OPTIONS = {
     "ee": "🇪🇪 Eesti",
     "al": "🇦🇱 Shqip",
     "hr": "🇭🇷 Hrvatski",
-    "ch": "🇨🇳 中文",
+    "cn": "🇨🇳 中文",
     "my": "🇲🇾 Bahasa Melayu",
     "in": "🇮🇳 हिन्दी",
     "pi": "🏴‍☠️ Pirate",
