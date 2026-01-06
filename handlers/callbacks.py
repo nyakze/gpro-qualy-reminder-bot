@@ -202,7 +202,7 @@ def build_language_keyboard(
         "ee",
         "al",
         "hr",
-        "ch",
+        "cn",
         "my",
         "in",
         "pi",
@@ -680,32 +680,10 @@ async def handle_language_select(callback: CallbackQuery, i18n: I18nContext):
     # Set user language
     if set_user_language(user_id, lang_code):
         lang_display = LANGUAGE_OPTIONS.get(lang_code, lang_code)
-
-        # Get current page to rebuild keyboard with updated selection
-        current_lang = get_user_language(user_id)
-        # Determine which page this language is on (all bot UI languages on page 1)
-        pages = [
-            ["gb", "ru", "br", "it", "es", "fr", "de", "pt"],
-            ["ro", "pl", "bg", "mk", "nl", "fi", "hu", "tr"],
-            ["gr", "dk", "rs", "se", "lt", "ee", "al", "hr"],
-            ["ch", "my", "in", "pi", "be", "cz", "sk"],
-        ]
-        current_page = 1
-        for i, page_langs in enumerate(pages, 1):
-            if lang_code in page_langs:
-                current_page = i
-                break
-
-        keyboard = build_language_keyboard(
-            page=current_page, current_lang=current_lang, i18n=i18n
-        )
-
-        await callback.message.edit_text(
-            i18n.get("lang-menu-title", currentLang=lang_display),
-            reply_markup=keyboard,
-            parse_mode="HTML",
-        )
         await callback.answer(i18n.get("feedback-language-set", language=lang_display))
+
+        # Return to main settings menu
+        await handle_settings_main(callback, i18n)
     else:
         await callback.answer(i18n.get("error-invalid-language"), show_alert=True)
 

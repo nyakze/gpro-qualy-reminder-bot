@@ -623,8 +623,8 @@ timezone-set-success = ✅ <b>टाइम ज़ोन सेट किया �
 button-reset-timezone = 🔄 UTC पर रीसेट करें
 feedback-timezone-set = ✅ टाइम ज़ोन अपडेट किया गया
 feedback-timezone-reset = ✅ टाइम ज़ोन UTC पर रीसेट किया गया
-feedback-switched-to-app = APP मोड में स्विच किया गया। GPRO भाषा सेटिंग URL पर लागू नहीं होगी।
-feedback-switched-to-classic = क्लासिक मोड में स्विच किया गया। GPRO भाषा का उपयोग किया जाएगा।
+feedback-switched-to-app = APP मोड सक्रिय
+feedback-switched-to-classic = क्लासिक मोड सक्रिय
 error-mode-switch-failed = ❌ वेबसाइट मोड बदलने में विफल
 error-timezone-not-found = ❌ "{ $query }" के लिए कोई टाइम ज़ोन नहीं मिला
 

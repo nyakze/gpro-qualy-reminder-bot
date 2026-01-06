@@ -633,8 +633,8 @@ timezone-set-success = ✅ <b>Часовий пояс встановлено!</b
 button-reset-timezone = 🔄 Скинути до UTC
 feedback-timezone-set = ✅ Часовий пояс оновлено
 feedback-timezone-reset = ✅ Часовий пояс скинуто до UTC
-feedback-switched-to-app = Перемкнуто в режим APP. Налаштування мови GPRO не застосовуватиметься до URL-адрес.
-feedback-switched-to-classic = Перемкнуто в класичний режим. Буде використано мову GPRO.
+feedback-switched-to-app = Режим APP увімкнено
+feedback-switched-to-classic = Класичний режим увімкнено
 error-mode-switch-failed = ❌ Не вдалося перемкнути режим веб-сайту
 error-timezone-not-found = ❌ Не знайдено часовий пояс для "{ $query }"
 

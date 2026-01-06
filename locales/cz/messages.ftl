@@ -633,8 +633,8 @@ timezone-set-success = ✅ <b>Časové pásmo nastaveno!</b>
 button-reset-timezone = 🔄 Resetovat na UTC
 feedback-timezone-set = ✅ Časové pásmo aktualizováno
 feedback-timezone-reset = ✅ Časové pásmo resetováno na UTC
-feedback-switched-to-app = Přepnuto do režimu APP. Nastavení jazyka GPRO se neuplatní na URL adresy.
-feedback-switched-to-classic = Přepnuto do klasického režimu. Bude použit jazyk GPRO.
+feedback-switched-to-app = Režim APP aktivován
+feedback-switched-to-classic = Klasický režim aktivován
 error-mode-switch-failed = ❌ Nelze přepnout režim webové stránky
 error-timezone-not-found = ❌ Nenalezeno žádné časové pásmo pro "{ $query }"
 

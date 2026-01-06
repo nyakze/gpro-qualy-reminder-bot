@@ -643,8 +643,8 @@ timezone-set-success = ✅ <b>Timezone set!</b>
 button-reset-timezone = 🔄 Reset to UTC
 feedback-timezone-set = ✅ Timezone updated
 feedback-timezone-reset = ✅ Timezone reset to UTC
-feedback-switched-to-app = Switched to APP mode. GPRO Language setting will not be applied for URLs.
-feedback-switched-to-classic = Switched to Classic mode. GPRO Language will be used.
+feedback-switched-to-app = APP mode enabled
+feedback-switched-to-classic = Classic mode enabled
 error-mode-switch-failed = ❌ Failed to switch website mode
 error-timezone-not-found = ❌ No timezone found for "{ $query }"
 
