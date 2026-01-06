@@ -269,25 +269,25 @@ notif-race-live-no-group = 🏁 <b>Гонка #{ $raceId } в ПРЯМОМ ЭФ�
 
     🔗 <a href="{ $raceLink }">Смотреть гонку</a>
 
-notif-race-replay = 📺 <b>Доступен реплей гонки #{ $raceId }</b>
+notif-race-replay = 📺 <b>Доступен потвтор гонки #{ $raceId }</b>
 
     📍 <b>{ $track }</b>
     🕐 <b>{ $raceTime }</b>
 
-    Смотрите реплей гонки:
+    Смотрите запись гонки:
 
-    🔗 <a href="{ $replayLink }">Смотреть реплей</a>
+    🔗 <a href="{ $replayLink }">Смотреть повтор</a>
 
-notif-race-replay-no-group = 📺 <b>Доступен реплей гонки #{ $raceId }</b>
+notif-race-replay-no-group = 📺 <b>Доступен повтор гонки #{ $raceId }</b>
 
     📍 <b>{ $track }</b>
     🕐 <b>{ $raceTime }</b>
 
-    Смотрите реплей гонки:
+    Смотрите запись гонки:
 
     ⚠️ Для персональных ссылок укажите группу в /settings!
 
-    🔗 <a href="{ $replayLink }">Смотреть реплей</a>
+    🔗 <a href="{ $replayLink }">Смотреть повтор</a>
 
 notif-race-results = 📊 <b>Доступны результаты гонки #{ $raceId }</b>
 
@@ -297,7 +297,7 @@ notif-race-results = 📊 <b>Доступны результаты гонки #{
     Результаты гонки доступны:
 
     🔗 <a href="{ $analysisLink }">Анализ гонки</a>
-    🔗 <a href="{ $summaryLink }">Сводка гонки</a>
+    🔗 <a href="{ $summaryLink }">Итоги гонки</a>
 
 notif-race-results-no-group = 📊 <b>Доступны результаты гонки #{ $raceId }</b>
 
@@ -308,7 +308,7 @@ notif-race-results-no-group = 📊 <b>Доступны результаты го
 
     🔗 <a href="{ $analysisLink }">Анализ гонки</a>
 
-    ⚠️ Для персональной сводки укажите группу в /settings!
+    ⚠️ Для персональной ссылки на итоги, укажите группу в /settings!
 
 # =======================
 # Погода
