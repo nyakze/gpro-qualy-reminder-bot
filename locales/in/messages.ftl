@@ -215,7 +215,7 @@ notif-label-live = रेस लाइव है
 notif-label-results = रेस परिणाम उपलब्ध हैं
 
 notif-quali-closes = <b>क्वालीफाइंग { $time } में बंद हो रही है!</b>
-notif-quali-opens = <b>क्वालीफाइंग खुली है (या जल्द ही खुल रही है)</b>
+notif-quali-opens = <b>क्वालीफाइंग खुली है</b>
 
 notif-quali-message = { $emoji } { $title }
 
@@ -272,7 +272,7 @@ notif-race-replay = 📺 <b>रेस #{ $raceId } रिप्ले उपल�
     📍 <b>{ $track }</b>
     🕐 <b>{ $raceTime }</b>
 
-    यदि रेस की गणना पहले से हो चुकी है, तो रिप्ले यहां उपलब्ध है:
+    रेस रिप्ले देखें:
 
     🔗 <a href="{ $replayLink }">रिप्ले देखें</a>
 
@@ -281,7 +281,7 @@ notif-race-replay-no-group = 📺 <b>रेस #{ $raceId } रिप्ले �
     📍 <b>{ $track }</b>
     🕐 <b>{ $raceTime }</b>
 
-    यदि रेस की गणना पहले से हो चुकी है, तो रिप्ले यहां उपलब्ध है:
+    रेस रिप्ले देखें:
 
     ⚠️ वैयक्तिकृत लिंक्स के लिए, /settings में अपना ग्रुप सेट करें!
 
@@ -645,7 +645,7 @@ error-invalid-timezone = ❌ अमान्य टाइम ज़ोन
 notif-quali-results = 🏁 <b>क्वालीफाइंग परिणाम - रेस #{ $raceId }</b>
 
     📍 <b>{ $track }</b>
-    ✅ <b>क्वालीफाइंग बंद: { $qualiClose }</b>
+    ✅ <b>क्वालीफाइंग बंद</b>
     🏎 <b>रेस: { $raceTime }</b>
 
     क्वालीफाइंग परिणाम उपलब्ध हैं:
@@ -655,7 +655,7 @@ notif-quali-results = 🏁 <b>क्वालीफाइंग परिणा�
 notif-quali-results-no-group = 🏁 <b>क्वालीफाइंग परिणाम - रेस #{ $raceId }</b>
 
     📍 <b>{ $track }</b>
-    ✅ <b>क्वालीफाइंग बंद: { $qualiClose }</b>
+    ✅ <b>क्वालीफाइंग बंद</b>
     🏎 <b>रेस: { $raceTime }</b>
 
     क्वालीफाइंग परिणाम उपलब्ध हैं:

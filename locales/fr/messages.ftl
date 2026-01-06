@@ -220,7 +220,7 @@ notif-label-race-live = Course en direct
 notif-label-race-results = Résultats de la course disponibles
 
 notif-quali-closes = <b>Les qualifications ferment dans { $time } !</b>
-notif-quali-opens = <b>Les qualifications sont ouvertes (ou vont s'ouvrir bientôt)</b>
+notif-quali-opens = <b>Les qualifications sont ouvertes</b>
 
 notif-quali-message = { $emoji } { $title }
 
@@ -277,7 +277,7 @@ notif-race-replay = 📺 <b>Rediffusion de la Course #{ $raceId } Disponible</b>
     📍 <b>{ $track }</b>
     🕐 <b>{ $raceTime }</b>
 
-    Si la course a déjà été calculée, la rediffusion est disponible ici :
+    Regardez la rediffusion de la course :
 
     🔗 <a href="{ $replayLink }">Regarder la Rediffusion</a>
 
@@ -286,7 +286,7 @@ notif-race-replay-no-group = 📺 <b>Rediffusion de la Course #{ $raceId } Dispo
     📍 <b>{ $track }</b>
     🕐 <b>{ $raceTime }</b>
 
-    Si la course a déjà été calculée, la rediffusion est disponible ici :
+    Regardez la rediffusion de la course :
 
     ⚠️ Pour des liens personnalisés, définissez votre groupe dans /settings !
 
@@ -625,7 +625,7 @@ error-invalid-timezone = ❌ Fuseau horaire invalide
 notif-quali-results = 🏁 <b>Résultats des Qualifications - Course #{ $raceId }</b>
 
     📍 <b>{ $track }</b>
-    ✅ <b>Qualifications fermées: { $qualiClose }</b>
+    ✅ <b>Qualifications fermées</b>
     🏎 <b>Course: { $raceTime }</b>
 
     Résultats des qualifications disponibles:
@@ -635,7 +635,7 @@ notif-quali-results = 🏁 <b>Résultats des Qualifications - Course #{ $raceId 
 notif-quali-results-no-group = 🏁 <b>Résultats des Qualifications - Course #{ $raceId }</b>
 
     📍 <b>{ $track }</b>
-    ✅ <b>Qualifications fermées: { $qualiClose }</b>
+    ✅ <b>Qualifications fermées</b>
     🏎 <b>Course: { $raceTime }</b>
 
     Résultats des qualifications disponibles:
