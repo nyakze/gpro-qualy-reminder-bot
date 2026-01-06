@@ -245,6 +245,17 @@ notif-quali-message-disabled = { $emoji } { $title }
     ℹ️ <b>Notifiche automatiche disabilitate</b> per questa gara
     <i>Clicca sul pulsante '🔄 Riattiva' per riattivare le notifiche</i>
 
+notif-quali-closed-title = <b>Le qualifiche sono attualmente chiuse</b>
+
+notif-quali-closed-message = { $emoji } { $title }
+
+    🏁 <b>Gara #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    ⏰ <b>Qualifiche chiuse: { $qualiDeadline }</b>
+    🏎 <b>Gara: { $raceTime }</b>
+
+    ⏳ <i>Le qualifiche sono attualmente chiuse. La prossima sessione di qualifica si aprirà dopo il completamento della gara attuale. Attendere il calcolo della gara.</i>
+
 notif-race-live = 🏁 <b>Gara #{ $raceId } è IN DIRETTA!</b>
 
     📍 <b>{ $track }</b>

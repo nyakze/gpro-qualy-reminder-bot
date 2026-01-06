@@ -53,7 +53,7 @@ QUALI_RESULTS_NOTIFICATION_AFTER_MINUTES = (
 NOTIFICATION_HISTORY_RETENTION_DAYS = 30  # Keep notification history for 30 days
 
 # API polling configuration for quali opening detection
-API_CHECK_START_HOURS = 2  # Start checking API 2 hours after race
+API_CHECK_START_HOURS = 1.68  # Start checking API 1h41m (101 minutes) after race
 API_CHECK_END_HOURS = 3.5  # Stop checking and send fallback at 3.5 hours
 API_CHECK_INTERVAL_MINUTES = 10  # Check API every 10 minutes
 FALLBACK_TOLERANCE_MINUTES = 15  # Send fallback within 15min of reaching 3.5h

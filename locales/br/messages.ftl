@@ -245,6 +245,17 @@ notif-quali-message-disabled = { $emoji } { $title }
     ℹ️ <b>Notificações automáticas desativadas</b> para esta corrida
     <i>Clique no botão '🔄 Reativar' para reativar as notificações</i>
 
+notif-quali-closed-title = <b>Classificação está fechada atualmente</b>
+
+notif-quali-closed-message = { $emoji } { $title }
+
+    🏁 <b>Corrida #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    ⏰ <b>Classificação fechada: { $qualiDeadline }</b>
+    🏎 <b>Corrida: { $raceTime }</b>
+
+    ⏳ <i>A classificação está fechada atualmente. A próxima sessão de classificação abrirá após a conclusão da corrida atual. Aguarde o cálculo da corrida.</i>
+
 notif-race-live = 🏁 <b>Corrida #{ $raceId } está AO VIVO!</b>
 
     📍 <b>{ $track }</b>
