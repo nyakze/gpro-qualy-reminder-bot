@@ -761,11 +761,19 @@ async def send_quali_notification(
 
         if hours_left >= 24:
             hours = int(hours_left)
-            time_text = get_text("time-hours", hours=hours)
+            minutes = int((hours_left - hours) * 60)
+            if minutes > 0:
+                time_text = get_text("time-hours-minutes", hours=hours, minutes=minutes)
+            else:
+                time_text = get_text("time-hours", hours=hours)
             emoji = "🔔"
         elif hours_left >= 2:
             hours = int(hours_left)
-            time_text = get_text("time-hours", hours=hours)
+            minutes = int((hours_left - hours) * 60)
+            if minutes > 0:
+                time_text = get_text("time-hours-minutes", hours=hours, minutes=minutes)
+            else:
+                time_text = get_text("time-hours", hours=hours)
             emoji = "⏰"
         elif hours_left >= 0.333:
             time_text = get_text("time-minutes", minutes=10)
