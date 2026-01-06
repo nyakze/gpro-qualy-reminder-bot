@@ -131,6 +131,22 @@ NOTIFICATION_TYPES = (
     "race_results",
 )
 
+# Notification categories for better organization
+NOTIFICATION_CATEGORIES = {
+    "before_qualifying": {
+        "types": ["72h", "48h", "24h", "2h", "10min"],
+        "icon": "⏰",
+    },
+    "qualifying_events": {
+        "types": ["opens_soon", "quali_results"],
+        "icon": "🏁",
+    },
+    "race_events": {
+        "types": ["race_live", "race_replay", "race_results"],
+        "icon": "🏎️",
+    },
+}
+
 
 def build_language_keyboard(
     page: int = 1, current_lang: str = "gb", onboarding: bool = False, i18n=None
@@ -382,6 +398,10 @@ async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext)
     """Handle notification toggle button clicks"""
     user_id = callback.from_user.id
 
+    # Check if this is a category toggle (handled by separate handler)
+    if callback.data.startswith("toggle_category_"):
+        return
+
     # Handle "Enable All" / "Disable All"
     if callback.data == "toggle_all_on":
         user_status = get_user_status(user_id)
@@ -389,15 +409,28 @@ async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext)
             user_status["notifications"][notif_type] = True
         save_users_data()
         feedback_text = i18n.get("feedback-all-enabled")
+        # Refresh main notifications menu
+        await callback.answer(feedback_text)
+        await handle_notifications_menu(callback, i18n)
+        return
     elif callback.data == "toggle_all_off":
         user_status = get_user_status(user_id)
         for notif_type in user_status["notifications"].keys():
             user_status["notifications"][notif_type] = False
         save_users_data()
         feedback_text = i18n.get("feedback-all-disabled")
+        # Refresh main notifications menu
+        await callback.answer(feedback_text)
+        await handle_notifications_menu(callback, i18n)
+        return
     else:
+        # Parse callback data to check if called from category menu
+        # Format: toggle_NOTIF_TYPE or toggle_NOTIF_TYPE_cat_CATEGORY_ID
+        callback_parts = callback.data.replace("toggle_", "").split("_cat_")
+        notification_type = callback_parts[0]
+        category_id = callback_parts[1] if len(callback_parts) > 1 else None
+
         # Toggle individual notification
-        notification_type = callback.data.replace("toggle_", "")
         new_state = toggle_notification(user_id, notification_type)
 
         # Get translated label for feedback
@@ -409,73 +442,15 @@ async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext)
         else:
             feedback_text = i18n.get("feedback-notif-disabled", label=label_text)
 
-        # Get updated status after toggle
-        user_status = get_user_status(user_id)
+        await callback.answer(feedback_text)
 
-    # Rebuild the notification sub-menu with updated states (user_status already fetched above)
-    notifications = user_status.get("notifications", {})
-
-    keyboard_buttons = []
-    for notif_type in NOTIFICATION_TYPES:
-        enabled = notifications.get(notif_type, True)
-        icon = "✅" if enabled else "❌"
-        # Get translated label
-        label_key = f"notif-label-{notif_type.replace('_', '-')}"
-        label_text = i18n.get(label_key)
-        button_text = f"{icon} {label_text}"
-        keyboard_buttons.append(
-            [
-                InlineKeyboardButton(
-                    text=button_text, callback_data=f"toggle_{notif_type}"
-                )
-            ]
-        )
-
-    # Custom notifications button
-    keyboard_buttons.append(
-        [
-            InlineKeyboardButton(
-                text=i18n.get("button-custom-notifications"),
-                callback_data="custom_notif_menu",
-            )
-        ]
-    )
-
-    # Add "Enable All" / "Disable All" button
-    all_enabled = all(notifications.get(t, True) for t in NOTIFICATION_TYPES)
-    if all_enabled:
-        keyboard_buttons.append(
-            [
-                InlineKeyboardButton(
-                    text=i18n.get("button-disable-all"), callback_data="toggle_all_off"
-                )
-            ]
-        )
-    else:
-        keyboard_buttons.append(
-            [
-                InlineKeyboardButton(
-                    text=i18n.get("button-enable-all"), callback_data="toggle_all_on"
-                )
-            ]
-        )
-
-    # Back button
-    keyboard_buttons.append(
-        [
-            InlineKeyboardButton(
-                text=i18n.get("button-back"), callback_data="settings_main"
-            )
-        ]
-    )
-
-    keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
-
-    # Update the message
-    await callback.message.edit_reply_markup(reply_markup=keyboard)
-
-    # Show feedback
-    await callback.answer(feedback_text)
+        # Return to category menu if called from there, otherwise main notif menu
+        if category_id:
+            # Simulate callback to refresh category menu
+            callback.data = f"notif_category_{category_id}"
+            await handle_notification_category(callback, i18n)
+        else:
+            await handle_notifications_menu(callback, i18n)
 
 
 @router.callback_query(F.data.startswith("done_"))
@@ -843,25 +818,30 @@ async def handle_language_back(callback: CallbackQuery, i18n: I18nContext):
 
 @router.callback_query(F.data == "notif_menu")
 async def handle_notifications_menu(callback: CallbackQuery, i18n: I18nContext):
-    """Show notifications sub-menu"""
+    """Show notifications menu with categories"""
     user_id = callback.from_user.id
     user_status = get_user_status(user_id)
     notifications = user_status.get("notifications", {})
 
-    # Build notification toggles keyboard
     keyboard_buttons = []
 
-    for notif_type in NOTIFICATION_TYPES:
-        enabled = notifications.get(notif_type, True)
-        icon = "✅" if enabled else "❌"
-        # Get translated label
-        label_key = f"notif-label-{notif_type.replace('_', '-')}"
-        label_text = i18n.get(label_key)
-        button_text = f"{icon} {label_text}"
+    # Build category buttons with status
+    for category_id, category_data in NOTIFICATION_CATEGORIES.items():
+        category_types = category_data["types"]
+        icon = category_data["icon"]
+
+        # Count enabled notifications in this category
+        enabled_count = sum(1 for t in category_types if notifications.get(t, True))
+        total_count = len(category_types)
+
+        # Get translated category name
+        category_name = i18n.get(f"notif-category-{category_id.replace('_', '-')}")
+        button_text = f"{icon} {category_name} ({enabled_count}/{total_count})"
+
         keyboard_buttons.append(
             [
                 InlineKeyboardButton(
-                    text=button_text, callback_data=f"toggle_{notif_type}"
+                    text=button_text, callback_data=f"notif_category_{category_id}"
                 )
             ]
         )
@@ -910,6 +890,124 @@ async def handle_notifications_menu(callback: CallbackQuery, i18n: I18nContext):
         i18n.get("notif-menu-title"), reply_markup=keyboard, parse_mode="HTML"
     )
     await callback.answer()
+
+
+@router.callback_query(F.data.startswith("notif_category_"))
+async def handle_notification_category(callback: CallbackQuery, i18n: I18nContext):
+    """Show individual notification toggles for a category"""
+    user_id = callback.from_user.id
+    user_status = get_user_status(user_id)
+    notifications = user_status.get("notifications", {})
+
+    # Extract category ID from callback data
+    category_id = callback.data.replace("notif_category_", "")
+
+    if category_id not in NOTIFICATION_CATEGORIES:
+        await callback.answer(i18n.get("error-invalid-category"), show_alert=True)
+        return
+
+    category_data = NOTIFICATION_CATEGORIES[category_id]
+    category_types = category_data["types"]
+    icon = category_data["icon"]
+
+    keyboard_buttons = []
+
+    # Build individual notification toggles
+    for notif_type in category_types:
+        enabled = notifications.get(notif_type, True)
+        toggle_icon = "✅" if enabled else "❌"
+        # Get translated label
+        label_key = f"notif-label-{notif_type.replace('_', '-')}"
+        label_text = i18n.get(label_key)
+        button_text = f"{toggle_icon} {label_text}"
+        keyboard_buttons.append(
+            [
+                InlineKeyboardButton(
+                    text=button_text,
+                    callback_data=f"toggle_{notif_type}_cat_{category_id}",
+                )
+            ]
+        )
+
+    # Enable/Disable category button
+    category_all_enabled = all(
+        notifications.get(t, True) for t in category_types
+    )
+    if category_all_enabled:
+        keyboard_buttons.append(
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-disable-category"),
+                    callback_data=f"toggle_category_off_{category_id}",
+                )
+            ]
+        )
+    else:
+        keyboard_buttons.append(
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-enable-category"),
+                    callback_data=f"toggle_category_on_{category_id}",
+                )
+            ]
+        )
+
+    # Back button
+    keyboard_buttons.append(
+        [
+            InlineKeyboardButton(
+                text=i18n.get("button-back-to-notifications"), callback_data="notif_menu"
+            )
+        ]
+    )
+
+    keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
+
+    # Get translated category name for title
+    category_name = i18n.get(f"notif-category-{category_id.replace('_', '-')}")
+    title = f"{icon} <b>{category_name}</b>"
+
+    await callback.message.edit_text(title, reply_markup=keyboard, parse_mode="HTML")
+    await callback.answer()
+
+
+@router.callback_query(F.data.startswith("toggle_category_"))
+async def handle_toggle_category(callback: CallbackQuery, i18n: I18nContext):
+    """Enable or disable all notifications in a category"""
+    user_id = callback.from_user.id
+    user_status = get_user_status(user_id)
+
+    # Extract action and category from callback data
+    # Format: toggle_category_on_CATEGORY or toggle_category_off_CATEGORY
+    parts = callback.data.split("_")
+    action = parts[2]  # "on" or "off"
+    category_id = "_".join(parts[3:])  # Handle category IDs with underscores
+
+    if category_id not in NOTIFICATION_CATEGORIES:
+        await callback.answer(i18n.get("error-invalid-category"), show_alert=True)
+        return
+
+    category_types = NOTIFICATION_CATEGORIES[category_id]["types"]
+    new_state = action == "on"
+
+    # Toggle all notifications in the category
+    for notif_type in category_types:
+        user_status["notifications"][notif_type] = new_state
+
+    save_users_data()
+
+    # Get category name for feedback
+    category_name = i18n.get(f"notif-category-{category_id.replace('_', '-')}")
+
+    if new_state:
+        feedback_text = i18n.get("feedback-category-enabled", category=category_name)
+    else:
+        feedback_text = i18n.get("feedback-category-disabled", category=category_name)
+
+    await callback.answer(feedback_text)
+
+    # Refresh the category menu to show updated states
+    await handle_notification_category(callback, i18n)
 
 
 @router.callback_query(F.data == "custom_notif_menu")

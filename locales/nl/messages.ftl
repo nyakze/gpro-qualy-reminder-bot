@@ -170,6 +170,8 @@ button-skip = ⏭️ Overslaan
 button-reset-language = 🔄 Reset naar Standaard (Engels)
 button-enable-all = 🔔 Alle Notificaties Inschakelen
 button-disable-all = 🔕 Alle Notificaties Uitschakelen
+button-enable-category = 🔔 Categorie Inschakelen
+button-disable-category = 🔕 Categorie Uitschakelen
 button-quali-done = ✅ Kwal Klaar
 button-reenable-race = 🔄 Race { $raceId } notificaties opnieuw inschakelen
 button-weather = 🌤️ Toon Weer
@@ -197,6 +199,10 @@ button-custom-notif-time = ⏱️ Aangepast { $slot }: { $time }
 # =======================
 # Notifications
 # =======================
+notif-category-before-qualifying = Voor Kwalificatie
+notif-category-qualifying-events = Kwalificatie Evenementen
+notif-category-race-events = Race Evenementen
+
 notif-label-72h = 3d voor sluiting kwalificatie
 notif-label-48h = 2d voor sluiting kwalificatie
 notif-label-24h = 1d voor sluiting kwalificatie
@@ -365,6 +371,7 @@ error-custom-notif-failed = ❌ <b>Fout:</b> { $error }
 error-invalid-race = ❌ Ongeldig race ID
 error-invalid-page = ❌ Ongeldige pagina
 error-invalid-language = ❌ Ongeldige taal
+error-invalid-category = ❌ Ongeldige categorie
 error-invalid-slot = ❌ Ongeldig slot
 error-invalid-data = ❌ Ongeldige gegevens
 error-reset-failed = ❌ Reset mislukt
@@ -377,6 +384,8 @@ error-weather-send-failed = ❌ Verzenden weer mislukt
 # =======================
 feedback-all-enabled = ✅ Alle notificaties ingeschakeld!
 feedback-all-disabled = ✅ Alle notificaties uitgeschakeld!
+feedback-category-enabled = ✅ { $category } ingeschakeld!
+feedback-category-disabled = ✅ { $category } uitgeschakeld!
 feedback-notif-enabled = ✅ { $label } ingeschakeld!
 feedback-notif-disabled = ✅ { $label } uitgeschakeld!
 feedback-quali-done = ✅ Klaar!

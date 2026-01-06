@@ -170,6 +170,8 @@ button-skip = ⏭️ Пропустить
 button-reset-language = 🔄 Сбросить на английский
 button-enable-all = 🔔 Включить все уведомления
 button-disable-all = 🔕 Отключить все уведомления
+button-enable-category = 🔔 Включить категорию
+button-disable-category = 🔕 Отключить категорию
 button-quali-done = ✅ Проехал квалификацию
 button-reenable-race = 🔄 Включить уведомления для гонки { $raceId }
 button-weather = 🌤️ Показать погоду
@@ -197,6 +199,12 @@ button-custom-notif-time = ⏱️ Кастом { $slot }: { $time }
 # =======================
 # Уведомления
 # =======================
+# Категории уведомлений
+notif-category-before-qualifying = Перед квалификацией
+notif-category-qualifying-events = События квалификации
+notif-category-race-events = События гонки
+
+# Отдельные уведомления
 notif-label-72h = За 3 дня до закрытия квалификации
 notif-label-48h = За 2 дня до закрытия квалификации
 notif-label-24h = За 1 день до закрытия квалификации
@@ -362,6 +370,7 @@ error-custom-notif-failed = ❌ <b>Ошибка:</b> { $error }
 error-invalid-race = ❌ Неверный ID гонки
 error-invalid-page = ❌ Неверная страница
 error-invalid-language = ❌ Неверный язык
+error-invalid-category = ❌ Неверная категория
 error-invalid-slot = ❌ Неверный слот
 error-invalid-data = ❌ Неверные данные
 error-reset-failed = ❌ Сброс не удался
@@ -374,6 +383,8 @@ error-weather-send-failed = ❌ Не удалось отправить пого�
 # =======================
 feedback-all-enabled = ✅ Все уведомления включены!
 feedback-all-disabled = ✅ Все уведомления отключены!
+feedback-category-enabled = ✅ { $category } включена!
+feedback-category-disabled = ✅ { $category } отключена!
 feedback-notif-enabled = ✅ { $label } включено!
 feedback-notif-disabled = ✅ { $label } отключено!
 feedback-quali-done = ✅ Готово!
