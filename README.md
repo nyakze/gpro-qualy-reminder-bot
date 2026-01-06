@@ -18,7 +18,7 @@ Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadli
 
 ### Personalization
 - **Interactive onboarding:** New users select language and group during /start
-- **Multi-language support:** Bot UI in 12 languages (English, Russian, Brazilian Portuguese, Italian, Spanish, French, Dutch, Bulgarian, Czech, Hindi, Ukrainian, European Portuguese) + 31 languages for GPRO links
+- **Multi-language support:** Bot UI in 12 languages (English, Russian, Brazilian Portuguese, Italian, Spanish, French, Dutch, Bulgarian, Czech, Hindi, Ukrainian, Portuguese) + 31 languages for GPRO links
 - **Group settings:** Personalized race/replay links (set your group in settings)
 - **Notification preferences:** Toggle individual notification types on/off
 - **Timezone support:** Set your timezone for local time display with automatic DST handling (fuzzy search supports city names, abbreviations, UTC offsets)
@@ -38,7 +38,7 @@ Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadli
 
 ## Planned features
 
-(No features currently planned - suggestions welcome!)
+- **APP Website support:** Implement support for app.gpro.net optional link generation for users who prefer that over the classic version
 
 # Hosting your own bot
 
