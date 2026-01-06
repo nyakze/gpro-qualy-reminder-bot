@@ -619,7 +619,6 @@ notif-quali-results = 🏁 <b>Risultati Qualifiche - Gara #{ $raceId }</b>
 
     Risultati delle qualifiche disponibili:
 
-    🔗 <a href="{ $q12Link }">Classifica Q1 e Q2</a>
     🔗 <a href="{ $gridLink }">Griglia di Partenza</a>
 
 notif-quali-results-no-group = 🏁 <b>Risultati Qualifiche - Gara #{ $raceId }</b>
@@ -632,5 +631,4 @@ notif-quali-results-no-group = 🏁 <b>Risultati Qualifiche - Gara #{ $raceId }<
 
     ⚠️ Per link personalizzati, imposta il tuo gruppo in /settings!
 
-    🔗 <a href="{ $q12Link }">Classifica Q1 e Q2</a>
     🔗 <a href="{ $gridLink }">Griglia di Partenza</a>

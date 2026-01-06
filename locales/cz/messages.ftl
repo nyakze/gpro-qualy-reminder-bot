@@ -649,7 +649,6 @@ notif-quali-results = 🏁 <b>Výsledky kvalifikace - Závod #{ $raceId }</b>
 
     Výsledky kvalifikace jsou k dispozici:
 
-    🔗 <a href="{ $q12Link }">Pořadí Q1 a Q2</a>
     🔗 <a href="{ $gridLink }">Startovní rošt</a>
 
 notif-quali-results-no-group = 🏁 <b>Výsledky kvalifikace - Závod #{ $raceId }</b>
@@ -662,5 +661,4 @@ notif-quali-results-no-group = 🏁 <b>Výsledky kvalifikace - Závod #{ $raceId
 
     ⚠️ Pro personalizované odkazy nastavte svou skupinu v /settings!
 
-    🔗 <a href="{ $q12Link }">Pořadí Q1 a Q2</a>
     🔗 <a href="{ $gridLink }">Startovní rošt</a>

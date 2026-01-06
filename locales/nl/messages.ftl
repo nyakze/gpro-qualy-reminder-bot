@@ -639,7 +639,6 @@ notif-quali-results = 🏁 <b>Kwalificatie Resultaten - Race #{ $raceId }</b>
 
     Kwalificatie resultaten beschikbaar:
 
-    🔗 <a href="{ $q12Link }">Klassement Q1 en Q2</a>
     🔗 <a href="{ $gridLink }">Startgrid</a>
 
 notif-quali-results-no-group = 🏁 <b>Kwalificatie Resultaten - Race #{ $raceId }</b>
@@ -652,5 +651,4 @@ notif-quali-results-no-group = 🏁 <b>Kwalificatie Resultaten - Race #{ $raceId
 
     ⚠️ Voor gepersonaliseerde links, stel je groep in via /settings!
 
-    🔗 <a href="{ $q12Link }">Klassement Q1 en Q2</a>
     🔗 <a href="{ $gridLink }">Startgrid</a>
