@@ -53,9 +53,10 @@ def build_settings_keyboard(user_id: int, i18n: I18nContext) -> InlineKeyboardMa
     from datetime import datetime, timezone
 
     user_status = get_user_status(user_id)
-    current_ui_lang = user_status.get("ui_lang", "en")
+    current_ui_lang = user_status.get("ui_lang", "gb")
     current_lang = user_status.get("gpro_lang", "gb")
     current_group = user_status.get("group")
+    website_mode = user_status.get("website_mode", "classic")
 
     keyboard_buttons = []
 
@@ -70,16 +71,28 @@ def build_settings_keyboard(user_id: int, i18n: I18nContext) -> InlineKeyboardMa
         ]
     )
 
-    # GPRO Website Language button
-    lang_display = LANGUAGE_OPTIONS.get(current_lang, current_lang)
+    # Website Mode button
+    mode_display = "APP" if website_mode == "app" else i18n.get("website-mode-classic")
     keyboard_buttons.append(
         [
             InlineKeyboardButton(
-                text=i18n.get("button-gpro-language", language=lang_display),
-                callback_data="lang_menu",
+                text=i18n.get("button-website-mode", mode=mode_display),
+                callback_data="toggle_website_mode",
             )
         ]
     )
+
+    # GPRO Website Language button - ONLY show if Classic mode
+    if website_mode == "classic":
+        lang_display = LANGUAGE_OPTIONS.get(current_lang, current_lang)
+        keyboard_buttons.append(
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-gpro-language", language=lang_display),
+                    callback_data="lang_menu",
+                )
+            ]
+        )
 
     # Group button
     group_display = format_group_display(current_group)
@@ -1458,3 +1471,31 @@ async def handle_timezone_reset(
         await handle_settings_main(callback, i18n)
     else:
         await callback.answer(i18n.get("error-reset-failed"), show_alert=True)
+
+
+@router.callback_query(F.data == "toggle_website_mode")
+async def handle_toggle_website_mode(callback: CallbackQuery, i18n: I18nContext):
+    """Toggle between Classic and APP website modes"""
+    from notifications.user_data import set_user_website_mode
+
+    user_id = callback.from_user.id
+    user_status = get_user_status(user_id)
+    current_mode = user_status.get("website_mode", "classic")
+
+    # Toggle mode
+    new_mode = "app" if current_mode == "classic" else "classic"
+
+    # Save new mode
+    if set_user_website_mode(user_id, new_mode):
+        # Show notification message
+        if new_mode == "app":
+            message = i18n.get("feedback-switched-to-app")
+        else:
+            message = i18n.get("feedback-switched-to-classic")
+
+        await callback.answer(message, show_alert=True)
+
+        # Refresh settings menu to update button and hide/show GPRO language
+        await handle_settings_main(callback, i18n)
+    else:
+        await callback.answer(i18n.get("error-mode-switch-failed"), show_alert=True)

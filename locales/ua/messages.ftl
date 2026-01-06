@@ -604,6 +604,8 @@ weather-condition-rain = Дощ
 # Timezone Settings
 # =======================
 button-timezone = ⏰ Часовий пояс: { $timezone }
+button-website-mode = 🌐 Тип посилання: { $mode }
+website-mode-classic = Класичний
 timezone-menu-title = ⏰ <b>Налаштування Часового Поясу</b>
 
     Поточний часовий пояс: <b>{ $timezone }</b>
@@ -631,6 +633,9 @@ timezone-set-success = ✅ <b>Часовий пояс встановлено!</b
 button-reset-timezone = 🔄 Скинути до UTC
 feedback-timezone-set = ✅ Часовий пояс оновлено
 feedback-timezone-reset = ✅ Часовий пояс скинуто до UTC
+feedback-switched-to-app = Перемкнуто в режим APP. Налаштування мови GPRO не застосовуватиметься до URL-адрес.
+feedback-switched-to-classic = Перемкнуто в класичний режим. Буде використано мову GPRO.
+error-mode-switch-failed = ❌ Не вдалося перемкнути режим веб-сайту
 error-timezone-not-found = ❌ Не знайдено часовий пояс для "{ $query }"
 
     Спробуйте: назву міста (Київ), абревіатуру (EET) або зміщення UTC (UTC+2)

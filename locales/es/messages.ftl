@@ -572,6 +572,8 @@ custom-notif-menu-title = ⏱️ <b>Notificaciones Personalizadas</b>
 # Configuración de Zona Horaria
 # =======================
 button-timezone = ⏰ Zona horaria: { $timezone }
+button-website-mode = 🌐 Tipo de enlace: { $mode }
+website-mode-classic = Clásico
 timezone-menu-title = ⏰ <b>Configuración de Zona Horaria</b>
 
     Zona horaria actual: <b>{ $timezone }</b>
@@ -599,6 +601,9 @@ timezone-set-success = ✅ <b>¡Zona horaria configurada!</b>
 button-reset-timezone = 🔄 Restablecer a UTC
 feedback-timezone-set = ✅ Zona horaria actualizada
 feedback-timezone-reset = ✅ Zona horaria restablecida a UTC
+feedback-switched-to-app = Cambiado al modo APP. La configuración de idioma GPRO no se aplicará a las URLs.
+feedback-switched-to-classic = Cambiado al modo Clásico. Se usará el idioma GPRO.
+error-mode-switch-failed = ❌ Error al cambiar el modo del sitio web
 error-timezone-not-found = ❌ No se encontró zona horaria para "{ $query }"
 
     Intenta: nombre de ciudad en inglés (Madrid), abreviatura (CET), o desplazamiento UTC (UTC+1)

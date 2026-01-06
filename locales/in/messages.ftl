@@ -594,6 +594,8 @@ weather-condition-rain = बारिश
 # Timezone Settings
 # =======================
 button-timezone = ⏰ टाइम ज़ोन: { $timezone }
+button-website-mode = 🌐 लिंक प्रकार: { $mode }
+website-mode-classic = क्लासिक
 timezone-menu-title = ⏰ <b>टाइम ज़ोन सेटिंग्स</b>
 
     वर्तमान टाइम ज़ोन: <b>{ $timezone }</b>
@@ -621,6 +623,9 @@ timezone-set-success = ✅ <b>टाइम ज़ोन सेट किया �
 button-reset-timezone = 🔄 UTC पर रीसेट करें
 feedback-timezone-set = ✅ टाइम ज़ोन अपडेट किया गया
 feedback-timezone-reset = ✅ टाइम ज़ोन UTC पर रीसेट किया गया
+feedback-switched-to-app = APP मोड में स्विच किया गया। GPRO भाषा सेटिंग URL पर लागू नहीं होगी।
+feedback-switched-to-classic = क्लासिक मोड में स्विच किया गया। GPRO भाषा का उपयोग किया जाएगा।
+error-mode-switch-failed = ❌ वेबसाइट मोड बदलने में विफल
 error-timezone-not-found = ❌ "{ $query }" के लिए कोई टाइम ज़ोन नहीं मिला
 
     प्रयास करें: शहर का नाम (New York), संक्षिप्त नाम (PST), या UTC ऑफसेट (UTC+3)

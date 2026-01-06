@@ -572,6 +572,8 @@ custom-notif-menu-title = ⏱️ <b>Notifiche Personalizzate</b>
 # Impostazioni Fuso Orario
 # =======================
 button-timezone = ⏰ Fuso orario: { $timezone }
+button-website-mode = 🌐 Tipo di link: { $mode }
+website-mode-classic = Classico
 timezone-menu-title = ⏰ <b>Impostazioni Fuso Orario</b>
 
     Fuso orario attuale: <b>{ $timezone }</b>
@@ -599,6 +601,9 @@ timezone-set-success = ✅ <b>Fuso orario impostato!</b>
 button-reset-timezone = 🔄 Ripristina UTC
 feedback-timezone-set = ✅ Fuso orario aggiornato
 feedback-timezone-reset = ✅ Fuso orario ripristinato a UTC
+feedback-switched-to-app = Passato alla modalità APP. L'impostazione della lingua GPRO non verrà applicata agli URL.
+feedback-switched-to-classic = Passato alla modalità Classica. Verrà utilizzata la lingua GPRO.
+error-mode-switch-failed = ❌ Impossibile cambiare modalità sito web
 error-timezone-not-found = ❌ Nessun fuso orario trovato per "{ $query }"
 
     Prova: nome città in inglese (Rome), abbreviazione (CET), o offset UTC (UTC+1)

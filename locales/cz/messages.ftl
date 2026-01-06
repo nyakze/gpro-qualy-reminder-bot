@@ -604,6 +604,8 @@ weather-condition-rain = Déšť
 # Timezone Settings
 # =======================
 button-timezone = ⏰ Časové pásmo: { $timezone }
+button-website-mode = 🌐 Typ odkazu: { $mode }
+website-mode-classic = Klasický
 timezone-menu-title = ⏰ <b>Nastavení časového pásma</b>
 
     Aktuální časové pásmo: <b>{ $timezone }</b>
@@ -631,6 +633,9 @@ timezone-set-success = ✅ <b>Časové pásmo nastaveno!</b>
 button-reset-timezone = 🔄 Resetovat na UTC
 feedback-timezone-set = ✅ Časové pásmo aktualizováno
 feedback-timezone-reset = ✅ Časové pásmo resetováno na UTC
+feedback-switched-to-app = Přepnuto do režimu APP. Nastavení jazyka GPRO se neuplatní na URL adresy.
+feedback-switched-to-classic = Přepnuto do klasického režimu. Bude použit jazyk GPRO.
+error-mode-switch-failed = ❌ Nelze přepnout režim webové stránky
 error-timezone-not-found = ❌ Nenalezeno žádné časové pásmo pro "{ $query }"
 
     Zkuste: název města (Praha), zkratka (CET), nebo UTC offset (UTC+1)

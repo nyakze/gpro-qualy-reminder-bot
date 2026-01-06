@@ -588,6 +588,8 @@ weather-condition-rain = Chuva
 # Definições de Fuso Horário
 # =======================
 button-timezone = ⏰ Fuso Horário: { $timezone }
+button-website-mode = 🌐 Tipo de ligação: { $mode }
+website-mode-classic = Clássico
 timezone-menu-title = ⏰ <b>Definições de Fuso Horário</b>
 
     Fuso horário atual: <b>{ $timezone }</b>
@@ -615,6 +617,9 @@ timezone-set-success = ✅ <b>Fuso horário definido!</b>
 button-reset-timezone = 🔄 Redefinir para UTC
 feedback-timezone-set = ✅ Fuso horário atualizado
 feedback-timezone-reset = ✅ Fuso horário redefinido para UTC
+feedback-switched-to-app = Alterado para o modo APP. A definição de idioma GPRO não será aplicada aos URLs.
+feedback-switched-to-classic = Alterado para o modo Clássico. O idioma GPRO será usado.
+error-mode-switch-failed = ❌ Falha ao alterar o modo do site
 error-timezone-not-found = ❌ Nenhum fuso horário encontrado para "{ $query }"
 
     Tenta: nome da cidade (Lisboa), abreviatura (WET), ou desvio UTC (UTC+0)
