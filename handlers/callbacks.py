@@ -475,13 +475,13 @@ async def handle_toggle_website_mode(callback: CallbackQuery, i18n: I18nContext)
             message = i18n.get("feedback-switched-to-classic")
 
         logger.info(f"✅ User {user_id} successfully switched to {new_mode} mode")
-        await callback.answer(message, show_alert=True)
+        await callback.answer(message)
 
         # Refresh settings menu to update button and hide/show GPRO language
         await handle_settings_main(callback, i18n)
     else:
         logger.error(f"❌ User {user_id} failed to switch to {new_mode} mode")
-        await callback.answer(i18n.get("error-mode-switch-failed"), show_alert=True)
+        await callback.answer(i18n.get("error-mode-switch-failed"))
 
 
 @router.callback_query(F.data.startswith("toggle_"))
