@@ -612,8 +612,8 @@ async def handle_quali_done(callback: CallbackQuery, i18n: I18nContext):
     # Build new keyboard with toggled button
     new_keyboard = build_race_notification_keyboard(user_id, race_id, i18n)
 
-    # Update message with feedback and new keyboard
-    updated_message = callback.message.text + "\n\n" + i18n.get("feedback-race-marked-done")
+    # Update message with feedback and new keyboard (use html_text to preserve URLs)
+    updated_message = callback.message.html_text + "\n\n" + i18n.get("feedback-race-marked-done")
     await callback.message.edit_text(
         updated_message,
         reply_markup=new_keyboard,
@@ -645,8 +645,8 @@ async def handle_reset(callback: CallbackQuery, i18n: I18nContext):
         # Build new keyboard with toggled button
         new_keyboard = build_race_notification_keyboard(user_id, race_id, i18n)
 
-        # Update message with feedback and new keyboard
-        updated_message = callback.message.text + "\n\n" + i18n.get("feedback-notifications-reenabled")
+        # Update message with feedback and new keyboard (use html_text to preserve URLs)
+        updated_message = callback.message.html_text + "\n\n" + i18n.get("feedback-notifications-reenabled")
         await callback.message.edit_text(
             updated_message,
             reply_markup=new_keyboard,
