@@ -14,12 +14,12 @@ from .user_data import get_user_status, DEFAULT_USER_LANG
 logger = logging.getLogger(__name__)
 
 
-def generate_gpro_link(group: str, lang: str = "gb", link_type: str = "live") -> str:
+def generate_gpro_link(group: str, gpro_lang: str = "gb", link_type: str = "live") -> str:
     """Generate GPRO race link based on group format and type
 
     Args:
         group: User's GPRO group (E, M3, R11, etc.)
-        lang: Language code for URL (e.g., 'gb', 'de', 'fr')
+        gpro_lang: GPRO language code for URL (e.g., 'gb', 'de', 'fr')
         link_type: 'live' for live race, 'replay' for replay
 
     Examples: E → Elite, M3 → Master - 3, A42 → Amateur - 42, R11 → Rookie - 11"""
@@ -30,13 +30,13 @@ def generate_gpro_link(group: str, lang: str = "gb", link_type: str = "live") ->
     GPRO_REPLAY_ENDPOINT = "racescreen.asp"
 
     # Validate and fallback for language
-    if not is_valid_language(lang):
-        logger.warning(f"Invalid language code '{lang}', falling back to 'gb'")
-        lang = "gb"
+    if not is_valid_language(gpro_lang):
+        logger.warning(f"Invalid language code '{gpro_lang}', falling back to 'gb'")
+        gpro_lang = "gb"
 
     # Determine endpoint based on link type
     endpoint = GPRO_LIVE_ENDPOINT if link_type == "live" else GPRO_REPLAY_ENDPOINT
-    base_url = f"https://gpro.net/{lang}/{endpoint}?Group="
+    base_url = f"https://gpro.net/{gpro_lang}/{endpoint}?Group="
 
     if not group:
         return base_url
@@ -62,22 +62,22 @@ def generate_gpro_link(group: str, lang: str = "gb", link_type: str = "live") ->
     return f"{base_url}{encoded}"
 
 
-def generate_race_link(group: str, lang: str = "gb") -> str:
+def generate_race_link(group: str, gpro_lang: str = "gb") -> str:
     """Generate race live link - wrapper for backwards compatibility"""
-    return generate_gpro_link(group, lang, "live")
+    return generate_gpro_link(group, gpro_lang, "live")
 
 
-def generate_replay_link(group: str, lang: str = "gb") -> str:
+def generate_replay_link(group: str, gpro_lang: str = "gb") -> str:
     """Generate race replay link - wrapper for backwards compatibility"""
-    return generate_gpro_link(group, lang, "replay")
+    return generate_gpro_link(group, gpro_lang, "replay")
 
 
-def generate_quali_standings_link(group: str, lang: str = "gb") -> str:
+def generate_quali_standings_link(group: str, gpro_lang: str = "gb") -> str:
     """Generate Q1 Q2 Standings link with user's group
 
     Args:
         group: User's GPRO group (E, M3, R11, etc.)
-        lang: Language code for URL (e.g., 'gb', 'de', 'fr')
+        gpro_lang: GPRO language code for URL (e.g., 'gb', 'de', 'fr')
 
     Returns:
         str: URL to Q1 Q2 Standings page
@@ -85,11 +85,11 @@ def generate_quali_standings_link(group: str, lang: str = "gb") -> str:
     from .user_data import is_valid_language
 
     # Validate and fallback for language
-    if not is_valid_language(lang):
-        logger.warning(f"Invalid language code '{lang}', falling back to 'gb'")
-        lang = "gb"
+    if not is_valid_language(gpro_lang):
+        logger.warning(f"Invalid language code '{gpro_lang}', falling back to 'gb'")
+        gpro_lang = "gb"
 
-    base_url = f"https://gpro.net/{lang}/Qualify12Standings.asp?Group="
+    base_url = f"https://gpro.net/{gpro_lang}/Qualify12Standings.asp?Group="
 
     if not group:
         return base_url
@@ -115,12 +115,12 @@ def generate_quali_standings_link(group: str, lang: str = "gb") -> str:
     return f"{base_url}{encoded}"
 
 
-def generate_starting_grid_link(group: str, lang: str = "gb") -> str:
+def generate_starting_grid_link(group: str, gpro_lang: str = "gb") -> str:
     """Generate Starting Grid link with user's group
 
     Args:
         group: User's GPRO group (E, M3, R11, etc.)
-        lang: Language code for URL (e.g., 'gb', 'de', 'fr')
+        gpro_lang: GPRO language code for URL (e.g., 'gb', 'de', 'fr')
 
     Returns:
         str: URL to Starting Grid page
@@ -128,11 +128,11 @@ def generate_starting_grid_link(group: str, lang: str = "gb") -> str:
     from .user_data import is_valid_language
 
     # Validate and fallback for language
-    if not is_valid_language(lang):
-        logger.warning(f"Invalid language code '{lang}', falling back to 'gb'")
-        lang = "gb"
+    if not is_valid_language(gpro_lang):
+        logger.warning(f"Invalid language code '{gpro_lang}', falling back to 'gb'")
+        gpro_lang = "gb"
 
-    base_url = f"https://gpro.net/{lang}/StartingGrid.asp?Group="
+    base_url = f"https://gpro.net/{gpro_lang}/StartingGrid.asp?Group="
 
     if not group:
         return base_url
@@ -156,6 +156,44 @@ def generate_starting_grid_link(group: str, lang: str = "gb") -> str:
     # URL encode: "Rookie - 11" → "Rookie%20-%2011"
     encoded = f"{group_name}%20-%20{number}"
     return f"{base_url}{encoded}"
+
+
+def generate_quali_link(gpro_lang: str = "gb") -> str:
+    """Generate Qualifying page link
+
+    Args:
+        gpro_lang: GPRO language code for URL (e.g., 'gb', 'de', 'fr')
+
+    Returns:
+        str: URL to Qualifying page
+    """
+    from .user_data import is_valid_language
+
+    # Validate and fallback for language
+    if not is_valid_language(gpro_lang):
+        logger.warning(f"Invalid language code '{gpro_lang}', falling back to 'gb'")
+        gpro_lang = "gb"
+
+    return f"https://gpro.net/{gpro_lang}/Qualify.asp"
+
+
+def generate_race_analysis_link(gpro_lang: str = "gb") -> str:
+    """Generate Race Analysis page link
+
+    Args:
+        gpro_lang: GPRO language code for URL (e.g., 'gb', 'de', 'fr')
+
+    Returns:
+        str: URL to Race Analysis page
+    """
+    from .user_data import is_valid_language
+
+    # Validate and fallback for language
+    if not is_valid_language(gpro_lang):
+        logger.warning(f"Invalid language code '{gpro_lang}', falling back to 'gb'")
+        gpro_lang = "gb"
+
+    return f"https://gpro.net/{gpro_lang}/RaceAnalysis.asp"
 
 
 def translate_weather_condition(weather_condition: str, get_text_func) -> str:
@@ -282,14 +320,14 @@ async def send_race_live_notification(
 
     user_status = get_user_status(user_id)
     group = user_status.get("group")
-    user_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
+    gpro_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
     ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
 
     track = add_flag_to_track(race_data["track"])
     race_date = race_data["date"]
     race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
 
-    race_link = generate_race_link(group, user_lang)
+    race_link = generate_race_link(group, gpro_lang)
 
     # Import i18n context if not provided
     if i18n is None:
@@ -337,14 +375,14 @@ async def send_race_replay_notification(
 
     user_status = get_user_status(user_id)
     group = user_status.get("group")
-    user_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
+    gpro_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
     ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
 
     track = add_flag_to_track(race_data["track"])
     race_date = race_data["date"]
     race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
 
-    replay_link = generate_replay_link(group, user_lang)
+    replay_link = generate_replay_link(group, gpro_lang)
 
     # Import i18n context if not provided
     if i18n is None:
@@ -392,7 +430,7 @@ async def send_race_results_notification(
 
     user_status = get_user_status(user_id)
     group = user_status.get("group")
-    user_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
+    gpro_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
     ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
 
     track = add_flag_to_track(race_data["track"])
@@ -400,11 +438,11 @@ async def send_race_results_notification(
     race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
 
     # Race Analysis link (same for everyone, just language)
-    analysis_link = f"https://gpro.net/{user_lang}/RaceAnalysis.asp"
+    analysis_link = generate_race_analysis_link(gpro_lang)
 
     # Race Summary link (group-dependent)
     summary_link = generate_gpro_link(
-        group, user_lang, "replay"
+        group, gpro_lang, "replay"
     )  # Use same format as replay
     summary_link = summary_link.replace("racescreen.asp", "RaceSummary.asp")
 
@@ -457,7 +495,7 @@ async def send_quali_results_notification(
 
     user_status = get_user_status(user_id)
     group = user_status.get("group")
-    user_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
+    gpro_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
     ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
 
     track = add_flag_to_track(race_data["track"])
@@ -467,8 +505,8 @@ async def send_quali_results_notification(
     race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
 
     # Generate qualifying standings links
-    q12_standings_link = generate_quali_standings_link(group, user_lang)
-    starting_grid_link = generate_starting_grid_link(group, user_lang)
+    q12_standings_link = generate_quali_standings_link(group, gpro_lang)
+    starting_grid_link = generate_starting_grid_link(group, gpro_lang)
 
     # Import i18n context if not provided
     if i18n is None:
@@ -533,11 +571,11 @@ async def send_quali_notification(
     track = add_flag_to_track(race_data["track"])
     race_date = race_data["date"]
     quali_close = race_data["quali_close"]
-    user_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
+    gpro_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
     ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
 
     # Generate qualifying link
-    quali_link = f"https://gpro.net/{user_lang}/Qualify.asp"
+    quali_link = generate_quali_link(gpro_lang)
 
     # Import i18n context if not provided
     if i18n is None:
