@@ -8,13 +8,13 @@ Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadli
 ## Features
 
 ### Notifications
-- **Automatic quali notifications:** 3d, 2d, 1d, 2h, 10min before quali closes
+- **Automatic qualifying notifications:** 3d, 2d, 1d, 2h, 10min before qualifying closes
 - **Custom notification times:** Set up to 2 custom notification times (20m-70h)
-- **Quali open detection:** API-based detection when qualification opens (2-3.5h after race)
+- **Qualifying open detection:** API-based detection when qualification opens (2-3.5h after race)
 - **Race live notifications:** Get notified when race goes live
 - **Replay notifications:** Get notified when race replay is available
-- **Weather forecast:** Automatic weather data fetch when quali opens (Practice/Q1, Q2/Start, race quarters)
-- **User control:** "✅ Quali Done" button stops notifications for that race
+- **Weather forecast:** Automatic weather data fetch when qualifying opens (Practice/Q1, Q2/Start, race quarters)
+- **User control:** "✅ Qualifying Done" button stops notifications for that race
 
 ### Personalization
 - **Interactive onboarding:** New users select language and group during /start
@@ -31,7 +31,7 @@ Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadli
 - `/settings` - Configure language, group, and notification preferences
 
 ### Technical
-- **API Integration:** Calendar, Office (quali detection), Practice (weather)
+- **API Integration:** Calendar, Office (qualifying detection), Practice (weather)
 - **Smart caching:** Weather data cached to minimize API calls
 - **Retry logic:** Automatic retry if weather fetch fails
 - **Optimized notifications:** Adaptive check intervals based on race proximity

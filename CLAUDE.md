@@ -66,9 +66,9 @@ sudo journalctl -u gpro -f
 
 2. **Notification System** (async background task):
    - Adaptive check interval: 5min normally, 1min when race approaching
-   - API polling for quali opening detection (2-3.5h after previous race)
-   - Weather data fetch when quali opens (with retry logic)
-   - Notification windows: 48h, 24h, 2h, 10min before quali close + custom times + quali opens + race live + replay + results
+   - API polling for qualifying opening detection (2-3.5h after previous race)
+   - Weather data fetch when qualifying opens (with retry logic)
+   - Notification windows: 48h, 24h, 2h, 10min before qualifying close + custom times + qualifying opens + race live + replay + results
 
 3. **Handler Chain** (Aiogram 3.x):
    - User message → i18n middleware (determines UI language) → Router → Command/Callback/State handlers → Response
@@ -83,7 +83,7 @@ sudo journalctl -u gpro -f
 **Calendar Management:**
 - Two calendars: current season (`gpro_calendar.json`) and next season (`next_season_calendar.json`)
 - Race IDs are sequential 1-17, re-numbered by date on API parse (not using GPRO's `idxReal`)
-- Race timing: Always 19:00 UTC, quali closes 1.5h before race
+- Race timing: Always 19:00 UTC, qualifying closes 1.5h before race
 - Weather data embedded in race entries, persisted to file after fetch
 
 **Notification Deduplication:**
@@ -116,14 +116,14 @@ sudo journalctl -u gpro -f
 
 **`handlers/`** - Aiogram 3.x handlers
 - `commands.py`: /start, /status, /calendar, /next, /settings, /update, /updatetz, /weather, /users, /deluser
-- `callbacks.py`: Button interactions (quali done, weather, notifications toggle, settings)
+- `callbacks.py`: Button interactions (qualifying done, weather, notifications toggle, settings)
 - `states.py`: FSM handlers for multi-step flows
 - `onboarding.py`: New user language + group selection flow
 - `__init__.py`: Router initialization, imports all handlers
 
 **`notifications/`** - Notification system
 - `checker.py`: Main loop with adaptive intervals, notification window checking, API polling logic
-- `sender.py`: Send functions for each notification type (quali, opens, live, replay, results)
+- `sender.py`: Send functions for each notification type (qualifying, opens, live, replay, results)
 - `user_data.py`: User persistence, settings management, atomic writes
 - `validation.py`: Custom notification validation (20min-70h range)
 
@@ -148,10 +148,10 @@ sudo journalctl -u gpro -f
 - Standard windows use tolerance (±6min for 48h/24h, ±5min for 2h, ±2min for 10min)
 - Custom notifications have ±5min tolerance
 - Race live: Send 1min before to 5min after race start
-- Quali opens: API polling every 10min from 2-3.5h post-race, fallback at 3.5h if not detected
+- Qualifying opens: API polling every 10min from 2-3.5h post-race, fallback at 3.5h if not detected
 
 **Weather Data Flow:**
-- Fetched from Practice API when quali opens (either via API detection or fallback)
+- Fetched from Practice API when qualifying opens (either via API detection or fallback)
 - Retry once on failure (5s delay)
 - Cached in `race_calendar[race_id]['weather']` and persisted to file
 - Available via Weather button in status message
@@ -200,4 +200,4 @@ sudo journalctl -u gpro -f
 - Notification labels must match exactly: "48h", "24h", "2h", "10min", "opens_soon", "race_live", "race_replay", "race_results", "custom_1", "custom_2"
 - i18n context requires `await i18n.core.startup()` before use
 - Atomic file writes use `.tmp` extension + `os.replace()` for crash safety
-- API polling for quali opens is rate-limited (10min intervals) to avoid excessive calls
+- API polling for qualifying opens is rate-limited (10min intervals) to avoid excessive calls
