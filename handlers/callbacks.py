@@ -549,6 +549,55 @@ async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext)
             await handle_notifications_menu(callback, i18n)
 
 
+def build_race_notification_keyboard(
+    user_id: int, race_id: int, i18n: I18nContext
+) -> InlineKeyboardMarkup:
+    """Build keyboard for race notification with toggled done/reset button and weather
+
+    Args:
+        user_id: Telegram user ID
+        race_id: Race ID
+        i18n: I18n context for translations
+
+    Returns:
+        InlineKeyboardMarkup with done/reset button and optional weather button
+    """
+    user_status = get_user_status(user_id)
+    is_marked_done = user_status.get("completed_quali") == race_id
+
+    # Check if weather data is available
+    has_weather = race_id in race_calendar and "weather" in race_calendar[race_id]
+
+    keyboard_buttons = []
+
+    # Add done/reset button
+    if is_marked_done:
+        keyboard_buttons.append([
+            InlineKeyboardButton(
+                text=i18n.get("button-reenable-race", raceId=race_id),
+                callback_data=f"reset_{race_id}",
+            )
+        ])
+    else:
+        keyboard_buttons.append([
+            InlineKeyboardButton(
+                text=i18n.get("button-quali-done"),
+                callback_data=f"done_{race_id}",
+            )
+        ])
+
+    # Add weather button if available
+    if has_weather:
+        keyboard_buttons.append([
+            InlineKeyboardButton(
+                text=i18n.get("button-weather"),
+                callback_data=f"weather_{race_id}",
+            )
+        ])
+
+    return InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
+
+
 @router.callback_query(F.data.startswith("done_"))
 async def handle_quali_done(callback: CallbackQuery, i18n: I18nContext):
     try:
@@ -557,22 +606,26 @@ async def handle_quali_done(callback: CallbackQuery, i18n: I18nContext):
         await callback.answer(i18n.get("error-invalid-race"), show_alert=True)
         return
 
-    mark_quali_done(callback.from_user.id, race_id)
-    await callback.message.edit_text(
-        callback.message.text + "\n\n" + i18n.get("feedback-race-marked-done"),
-        parse_mode="HTML"
-    )
+    user_id = callback.from_user.id
+    mark_quali_done(user_id, race_id)
+
+    # Build new keyboard with toggled button
+    new_keyboard = build_race_notification_keyboard(user_id, race_id, i18n)
+
+    # Update only the keyboard, keeping the message text unchanged
+    await callback.message.edit_reply_markup(reply_markup=new_keyboard)
+
+    # Show feedback as popup
     await callback.answer(i18n.get("feedback-quali-done"))
 
 
 @router.callback_query(F.data.startswith("reset_"))
 async def handle_reset(callback: CallbackQuery, i18n: I18nContext):
+    user_id = callback.from_user.id
+
     if callback.data == "reset_all":
-        reset_user_status(callback.from_user.id)
-        await callback.message.edit_text(
-            callback.message.text + "\n\n" + i18n.get("feedback-notifications-reset"),
-            parse_mode="HTML"
-        )
+        reset_user_status(user_id)
+        # Show feedback as popup only, don't modify message
         await callback.answer(i18n.get("feedback-reset"))
     else:
         # reset_{race_id} format
@@ -582,13 +635,15 @@ async def handle_reset(callback: CallbackQuery, i18n: I18nContext):
             await callback.answer(i18n.get("error-invalid-race"), show_alert=True)
             return
 
-        reset_user_status(callback.from_user.id)
-        await callback.message.edit_text(
-            callback.message.text
-            + "\n\n"
-            + i18n.get("feedback-notifications-reenabled"),
-            parse_mode="HTML"
-        )
+        reset_user_status(user_id)
+
+        # Build new keyboard with toggled button
+        new_keyboard = build_race_notification_keyboard(user_id, race_id, i18n)
+
+        # Update only the keyboard, keeping the message text unchanged
+        await callback.message.edit_reply_markup(reply_markup=new_keyboard)
+
+        # Show feedback as popup
         await callback.answer(i18n.get("feedback-reenabled"))
 
 
