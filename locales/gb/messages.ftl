@@ -614,6 +614,8 @@ weather-condition-rain = Rain
 # Timezone Settings
 # =======================
 button-timezone = ⏰ Timezone: { $timezone }
+button-website-mode = 🌐 Link type: { $mode }
+website-mode-classic = Classic
 timezone-menu-title = ⏰ <b>Timezone Settings</b>
 
     Current timezone: <b>{ $timezone }</b>
@@ -641,6 +643,9 @@ timezone-set-success = ✅ <b>Timezone set!</b>
 button-reset-timezone = 🔄 Reset to UTC
 feedback-timezone-set = ✅ Timezone updated
 feedback-timezone-reset = ✅ Timezone reset to UTC
+feedback-switched-to-app = Switched to APP mode. GPRO Language setting will not be applied for URLs.
+feedback-switched-to-classic = Switched to Classic mode. GPRO Language will be used.
+error-mode-switch-failed = ❌ Failed to switch website mode
 error-timezone-not-found = ❌ No timezone found for "{ $query }"
 
     Try: city name (New York), abbreviation (PST), or UTC offset (UTC+3)

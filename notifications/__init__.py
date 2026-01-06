@@ -19,6 +19,8 @@ from .user_data import (
     get_user_ui_language,
     get_user_timezone,
     set_user_timezone,
+    set_user_website_mode,
+    get_user_website_mode,
     mark_quali_done,
     reset_user_status,
     LANGUAGE_OPTIONS,

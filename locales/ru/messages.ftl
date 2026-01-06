@@ -600,6 +600,8 @@ weather-condition-rain = Дождь
 # Настройки часового пояса
 # =======================
 button-timezone = ⏰ Часовой пояс: { $timezone }
+button-website-mode = 🌐 Тип ссылок: { $mode }
+website-mode-classic = Классический
 timezone-menu-title = ⏰ <b>Настройки часового пояса</b>
 
     Текущий часовой пояс: <b>{ $timezone }</b>
@@ -627,6 +629,9 @@ timezone-set-success = ✅ <b>Часовой пояс установлен!</b>
 button-reset-timezone = 🔄 Сбросить на UTC
 feedback-timezone-set = ✅ Часовой пояс обновлён
 feedback-timezone-reset = ✅ Часовой пояс сброшен на UTC
+feedback-switched-to-app = Переключено в режим APP. Настройка языка GPRO не будет применяться для URL-адресов.
+feedback-switched-to-classic = Переключено в классический режим. Язык GPRO будет использоваться.
+error-mode-switch-failed = ❌ Не удалось переключить режим сайта
 error-timezone-not-found = ❌ Часовой пояс не найден для "{ $query }"
 
     Попробуйте: название города на английском (Moscow), аббревиатуру (MSK), или смещение UTC (UTC+3)

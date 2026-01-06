@@ -594,6 +594,8 @@ weather-condition-rain = Regen
 # Timezone Settings
 # =======================
 button-timezone = ⏰ Tijdzone: { $timezone }
+button-website-mode = 🌐 Linktype: { $mode }
+website-mode-classic = Klassiek
 timezone-menu-title = ⏰ <b>Tijdzone Instellingen</b>
 
     Huidige tijdzone: <b>{ $timezone }</b>
@@ -621,6 +623,9 @@ timezone-set-success = ✅ <b>Tijdzone ingesteld!</b>
 button-reset-timezone = 🔄 Reset naar UTC
 feedback-timezone-set = ✅ Tijdzone bijgewerkt
 feedback-timezone-reset = ✅ Tijdzone gereset naar UTC
+feedback-switched-to-app = Overgeschakeld naar APP-modus. GPRO-taalinstelling wordt niet toegepast op URL's.
+feedback-switched-to-classic = Overgeschakeld naar Klassieke modus. GPRO-taal wordt gebruikt.
+error-mode-switch-failed = ❌ Kon websitemodus niet wijzigen
 error-timezone-not-found = ❌ Geen tijdzone gevonden voor "{ $query }"
 
     Probeer: stadsnaam (Amsterdam), afkorting (CET), of UTC offset (UTC+1)

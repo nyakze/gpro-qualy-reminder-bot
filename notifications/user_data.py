@@ -151,6 +151,7 @@ def get_user_status(user_id: int) -> Dict:
             "gpro_lang": DEFAULT_USER_LANG,
             "ui_lang": "gb",  # Default UI language (separate from GPRO links language)
             "timezone": "UTC",  # Default timezone
+            "website_mode": "classic",  # Website mode: "classic" or "app"
         }
         save_users_data()
     else:
@@ -195,6 +196,11 @@ def get_user_status(user_id: int) -> Dict:
         if "timezone" not in users_data[user_id]:
             users_data[user_id]["timezone"] = "UTC"
             logger.debug(f"Added 'timezone' field to user {user_id}")
+            needs_save = True
+        # Migration: Add website_mode field for existing users
+        if "website_mode" not in users_data[user_id]:
+            users_data[user_id]["website_mode"] = "classic"
+            logger.debug(f"Added 'website_mode' field to user {user_id}")
             needs_save = True
 
         # Save only once if any migrations were applied
@@ -357,6 +363,40 @@ def reset_user_status(user_id: int):
         users_data[user_id]["completed_quali"] = None
         save_users_data()
         logger.info(f"User {user_id} reset")
+
+
+def set_user_website_mode(user_id: int, mode: str) -> bool:
+    """Set user's website mode (classic or app)
+
+    Args:
+        user_id: Telegram user ID
+        mode: "classic" or "app"
+
+    Returns:
+        bool: True if successful, False otherwise
+    """
+    if mode not in ["classic", "app"]:
+        logger.warning(f"Invalid website mode: {mode}")
+        return False
+
+    get_user_status(user_id)
+    users_data[user_id]["website_mode"] = mode
+    save_users_data()
+    logger.info(f"User {user_id} switched to {mode} mode")
+    return True
+
+
+def get_user_website_mode(user_id: int) -> str:
+    """Get user's website mode
+
+    Args:
+        user_id: Telegram user ID
+
+    Returns:
+        str: "classic" or "app" (defaults to "classic")
+    """
+    user_status = get_user_status(user_id)
+    return user_status.get("website_mode", "classic")
 
 
 load_users_data()

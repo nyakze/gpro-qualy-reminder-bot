@@ -196,6 +196,130 @@ def generate_race_analysis_link(gpro_lang: str = "gb") -> str:
     return f"https://gpro.net/{gpro_lang}/RaceAnalysis.asp"
 
 
+# ==========================================
+# APP Website URL Generators
+# ==========================================
+
+
+def format_group_for_app_url(group: str) -> str:
+    """Convert group code to APP URL format
+
+    Examples:
+        E → Elite
+        M3 → Master%20-%203
+        R11 → Rookie%20-%2011
+
+    Args:
+        group: User's GPRO group (E, M3, R11, etc.)
+
+    Returns:
+        str: URL-encoded group string for APP URLs
+    """
+    if not group:
+        return ""
+
+    group = group.strip().upper()
+
+    if group == "E":
+        return "Elite"
+
+    match = re.match(r"^([MPAR])(\d{1,3})$", group)
+    if not match:
+        return ""
+
+    letter, number = match.groups()
+    group_names = {"M": "Master", "P": "Pro", "A": "Amateur", "R": "Rookie"}
+    group_name = group_names[letter]
+
+    return f"{group_name}%20-%20{number}"
+
+
+def generate_app_quali_link() -> str:
+    """Generate APP qualifying page link (office page)
+
+    Returns:
+        str: URL to APP office page (no language or group support)
+    """
+    return "https://app.gpro.net/office"
+
+
+def generate_app_starting_grid_link(group: str = None) -> str:
+    """Generate APP starting grid link
+
+    Args:
+        group: User's GPRO group (E, M3, R11, etc.)
+
+    Returns:
+        str: URL to APP starting grid page
+    """
+    base_url = "https://app.gpro.net/qstandings/startgrid"
+
+    if not group:
+        return base_url
+
+    formatted_group = format_group_for_app_url(group)
+    if formatted_group:
+        return f"{base_url}/{formatted_group}"
+    else:
+        return base_url
+
+
+def generate_app_race_live_link(group: str = None, gpro_lang: str = "gb") -> str:
+    """Generate APP race live link
+
+    NOTE: APP live race link not found yet, using classic fallback
+
+    Args:
+        group: User's GPRO group (E, M3, R11, etc.)
+        gpro_lang: GPRO language code for fallback classic URL
+
+    Returns:
+        str: URL to race live page (currently returns classic URL)
+    """
+    # TODO: Replace with APP link when found
+    # For now, use classic link as fallback
+    return generate_race_link(group, gpro_lang)
+
+
+def generate_app_race_replay_link() -> str:
+    """Generate APP race replay link
+
+    Returns:
+        str: URL to APP race replay page (no group or language support)
+    """
+    return "https://app.gpro.net/pastrace/racereplay"
+
+
+def generate_app_race_analysis_link() -> str:
+    """Generate APP race analysis link
+
+    Returns:
+        str: URL to APP race analysis page (no group or language support)
+    """
+    return "https://app.gpro.net/pastrace/analysis"
+
+
+def generate_app_race_summary_link(group: str = None) -> str:
+    """Generate APP race summary link
+
+    Args:
+        group: User's GPRO group (E, M3, R11, etc.)
+
+    Returns:
+        str: URL to APP race summary page
+    """
+    base_url = "https://app.gpro.net/pastrace/summary"
+
+    if not group:
+        return base_url
+
+    formatted_group = format_group_for_app_url(group)
+    if formatted_group:
+        return f"{base_url}/{formatted_group}"
+    else:
+        return base_url
+
+
 def translate_weather_condition(weather_condition: str, get_text_func) -> str:
     """Translate weather condition from English to user's language
 
@@ -322,12 +446,17 @@ async def send_race_live_notification(
     group = user_status.get("group")
     gpro_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
     ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
+    website_mode = user_status.get("website_mode", "classic")
 
     track = add_flag_to_track(race_data["track"])
     race_date = race_data["date"]
     race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
 
-    race_link = generate_race_link(group, gpro_lang)
+    # Generate race live link based on website mode
+    if website_mode == "app":
+        race_link = generate_app_race_live_link(group, gpro_lang)
+    else:
+        race_link = generate_race_link(group, gpro_lang)
 
     # Import i18n context if not provided
     if i18n is None:
@@ -377,12 +506,20 @@ async def send_race_replay_notification(
     group = user_status.get("group")
     gpro_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
     ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
+    website_mode = user_status.get("website_mode", "classic")
 
     track = add_flag_to_track(race_data["track"])
     race_date = race_data["date"]
     race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
 
-    replay_link = generate_replay_link(group, gpro_lang)
+    # Generate replay link based on website mode
+    if website_mode == "app":
+        replay_link = generate_app_race_replay_link()
+        # APP replay doesn't support group, always use no-group message
+        has_group_support = False
+    else:
+        replay_link = generate_replay_link(group, gpro_lang)
+        has_group_support = True
 
     # Import i18n context if not provided
     if i18n is None:
@@ -397,8 +534,8 @@ async def send_race_replay_notification(
         def get_text(key, **kwargs):
             return i18n.get(key, **kwargs)
 
-    # Build message based on whether group is set
-    if group:
+    # Build message based on whether group is set AND mode supports group
+    if group and has_group_support:
         message = get_text(
             "notif-race-replay",
             raceId=race_id,
@@ -432,19 +569,24 @@ async def send_race_results_notification(
     group = user_status.get("group")
     gpro_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
     ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
+    website_mode = user_status.get("website_mode", "classic")
 
     track = add_flag_to_track(race_data["track"])
     race_date = race_data["date"]
     race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
 
-    # Race Analysis link (same for everyone, just language)
-    analysis_link = generate_race_analysis_link(gpro_lang)
-
-    # Race Summary link (group-dependent)
-    summary_link = generate_gpro_link(
-        group, gpro_lang, "replay"
-    )  # Use same format as replay
-    summary_link = summary_link.replace("racescreen.asp", "RaceSummary.asp")
+    # Generate analysis and summary links based on website mode
+    if website_mode == "app":
+        analysis_link = generate_app_race_analysis_link()
+        summary_link = generate_app_race_summary_link(group)
+    else:
+        # Race Analysis link (same for everyone, just language)
+        analysis_link = generate_race_analysis_link(gpro_lang)
+        # Race Summary link (group-dependent)
+        summary_link = generate_gpro_link(
+            group, gpro_lang, "replay"
+        )  # Use same format as replay
+        summary_link = summary_link.replace("racescreen.asp", "RaceSummary.asp")
 
     # Import i18n context if not provided
     if i18n is None:
@@ -497,6 +639,7 @@ async def send_quali_results_notification(
     group = user_status.get("group")
     gpro_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
     ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
+    website_mode = user_status.get("website_mode", "classic")
 
     track = add_flag_to_track(race_data["track"])
     race_date = race_data["date"]
@@ -504,9 +647,11 @@ async def send_quali_results_notification(
     quali_close_time = format_datetime_for_user(quali_close, user_id, "%d.%m %H:%M")
     race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
 
-    # Generate qualifying standings links
-    q12_standings_link = generate_quali_standings_link(group, gpro_lang)
-    starting_grid_link = generate_starting_grid_link(group, gpro_lang)
+    # Generate starting grid link based on website mode (Q1/Q2 links removed)
+    if website_mode == "app":
+        starting_grid_link = generate_app_starting_grid_link(group)
+    else:
+        starting_grid_link = generate_starting_grid_link(group, gpro_lang)
 
     # Import i18n context if not provided
     if i18n is None:
@@ -521,7 +666,7 @@ async def send_quali_results_notification(
         def get_text(key, **kwargs):
             return i18n.get(key, **kwargs)
 
-    # Build message based on whether group is set
+    # Build message based on whether group is set (only starting grid link)
     if group:
         message = get_text(
             "notif-quali-results",
@@ -529,7 +674,6 @@ async def send_quali_results_notification(
             track=track,
             qualiClose=quali_close_time,
             raceTime=race_time,
-            q12Link=q12_standings_link,
             gridLink=starting_grid_link,
         )
     else:
@@ -539,7 +683,6 @@ async def send_quali_results_notification(
             track=track,
             qualiClose=quali_close_time,
             raceTime=race_time,
-            q12Link=q12_standings_link,
             gridLink=starting_grid_link,
         )
 
@@ -573,9 +716,13 @@ async def send_quali_notification(
     quali_close = race_data["quali_close"]
     gpro_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
     ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
+    website_mode = user_status.get("website_mode", "classic")
 
-    # Generate qualifying link
-    quali_link = generate_quali_link(gpro_lang)
+    # Generate qualifying link based on website mode
+    if website_mode == "app":
+        quali_link = generate_app_quali_link()
+    else:
+        quali_link = generate_quali_link(gpro_lang)
 
     # Import i18n context if not provided
     if i18n is None:
