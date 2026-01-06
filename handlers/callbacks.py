@@ -559,7 +559,8 @@ async def handle_quali_done(callback: CallbackQuery, i18n: I18nContext):
 
     mark_quali_done(callback.from_user.id, race_id)
     await callback.message.edit_text(
-        callback.message.text + "\n\n" + i18n.get("feedback-race-marked-done")
+        callback.message.text + "\n\n" + i18n.get("feedback-race-marked-done"),
+        parse_mode="HTML"
     )
     await callback.answer(i18n.get("feedback-quali-done"))
 
@@ -569,7 +570,8 @@ async def handle_reset(callback: CallbackQuery, i18n: I18nContext):
     if callback.data == "reset_all":
         reset_user_status(callback.from_user.id)
         await callback.message.edit_text(
-            callback.message.text + "\n\n" + i18n.get("feedback-notifications-reset")
+            callback.message.text + "\n\n" + i18n.get("feedback-notifications-reset"),
+            parse_mode="HTML"
         )
         await callback.answer(i18n.get("feedback-reset"))
     else:
@@ -584,7 +586,8 @@ async def handle_reset(callback: CallbackQuery, i18n: I18nContext):
         await callback.message.edit_text(
             callback.message.text
             + "\n\n"
-            + i18n.get("feedback-notifications-reenabled")
+            + i18n.get("feedback-notifications-reenabled"),
+            parse_mode="HTML"
         )
         await callback.answer(i18n.get("feedback-reenabled"))
 
