@@ -452,6 +452,38 @@ async def handle_toggle_category(callback: CallbackQuery, i18n: I18nContext):
     await handle_notification_category(callback, i18n, category_id=category_id)
 
 
+@router.callback_query(F.data == "toggle_website_mode")
+async def handle_toggle_website_mode(callback: CallbackQuery, i18n: I18nContext):
+    """Toggle between Classic and APP website modes"""
+    from notifications.user_data import set_user_website_mode
+
+    user_id = callback.from_user.id
+    user_status = get_user_status(user_id)
+    current_mode = user_status.get("website_mode", "classic")
+
+    # Toggle mode
+    new_mode = "app" if current_mode == "classic" else "classic"
+
+    logger.info(f"User {user_id} toggling website mode: {current_mode} → {new_mode}")
+
+    # Save new mode
+    if set_user_website_mode(user_id, new_mode):
+        # Show notification message
+        if new_mode == "app":
+            message = i18n.get("feedback-switched-to-app")
+        else:
+            message = i18n.get("feedback-switched-to-classic")
+
+        logger.info(f"✅ User {user_id} successfully switched to {new_mode} mode")
+        await callback.answer(message, show_alert=True)
+
+        # Refresh settings menu to update button and hide/show GPRO language
+        await handle_settings_main(callback, i18n)
+    else:
+        logger.error(f"❌ User {user_id} failed to switch to {new_mode} mode")
+        await callback.answer(i18n.get("error-mode-switch-failed"), show_alert=True)
+
+
 @router.callback_query(F.data.startswith("toggle_"))
 async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext):
     """Handle notification toggle button clicks"""
@@ -1471,35 +1503,3 @@ async def handle_timezone_reset(
         await handle_settings_main(callback, i18n)
     else:
         await callback.answer(i18n.get("error-reset-failed"), show_alert=True)
-
-
-@router.callback_query(F.data == "toggle_website_mode")
-async def handle_toggle_website_mode(callback: CallbackQuery, i18n: I18nContext):
-    """Toggle between Classic and APP website modes"""
-    from notifications.user_data import set_user_website_mode
-
-    user_id = callback.from_user.id
-    user_status = get_user_status(user_id)
-    current_mode = user_status.get("website_mode", "classic")
-
-    # Toggle mode
-    new_mode = "app" if current_mode == "classic" else "classic"
-
-    logger.info(f"User {user_id} toggling website mode: {current_mode} → {new_mode}")
-
-    # Save new mode
-    if set_user_website_mode(user_id, new_mode):
-        # Show notification message
-        if new_mode == "app":
-            message = i18n.get("feedback-switched-to-app")
-        else:
-            message = i18n.get("feedback-switched-to-classic")
-
-        logger.info(f"✅ User {user_id} successfully switched to {new_mode} mode")
-        await callback.answer(message, show_alert=True)
-
-        # Refresh settings menu to update button and hide/show GPRO language
-        await handle_settings_main(callback, i18n)
-    else:
-        logger.error(f"❌ User {user_id} failed to switch to {new_mode} mode")
-        await callback.answer(i18n.get("error-mode-switch-failed"), show_alert=True)
