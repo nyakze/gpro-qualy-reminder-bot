@@ -170,6 +170,8 @@ button-skip = ⏭️ छोड़ें
 button-reset-language = 🔄 डिफ़ॉल्ट पर रीसेट करें (अंग्रेजी)
 button-enable-all = 🔔 सभी सूचनाएं सक्षम करें
 button-disable-all = 🔕 सभी सूचनाएं अक्षम करें
+button-enable-category = 🔔 कैटेगरी सक्षम करें
+button-disable-category = 🔕 कैटेगरी अक्षम करें
 button-quali-done = ✅ क्वालीफाइंग पूर्ण
 button-reenable-race = 🔄 रेस { $raceId } सूचनाएं पुनः सक्षम करें
 button-weather = 🌤️ मौसम दिखाएं
@@ -197,6 +199,10 @@ button-custom-notif-time = ⏱️ कस्टम { $slot }: { $time }
 # =======================
 # Notifications
 # =======================
+notif-category-before-qualifying = क्वालीफाइंग से पहले
+notif-category-qualifying-events = क्वालीफाइंग इवेंट्स
+notif-category-race-events = रेस इवेंट्स
+
 notif-label-72h = क्वालीफाइंग बंद होने से 3 दिन पहले
 notif-label-48h = क्वालीफाइंग बंद होने से 2 दिन पहले
 notif-label-24h = क्वालीफाइंग बंद होने से 1 दिन पहले
@@ -365,6 +371,7 @@ error-custom-notif-failed = ❌ <b>त्रुटि:</b> { $error }
 error-invalid-race = ❌ अमान्य रेस ID
 error-invalid-page = ❌ अमान्य पेज
 error-invalid-language = ❌ अमान्य भाषा
+error-invalid-category = ❌ अमान्य श्रेणी
 error-invalid-slot = ❌ अमान्य स्लॉट
 error-invalid-data = ❌ अमान्य डेटा
 error-reset-failed = ❌ रीसेट विफल
@@ -377,6 +384,8 @@ error-weather-send-failed = ❌ मौसम भेजने में विफ
 # =======================
 feedback-all-enabled = ✅ सभी सूचनाएं सक्षम हैं!
 feedback-all-disabled = ✅ सभी सूचनाएं अक्षम हैं!
+feedback-category-enabled = ✅ { $category } सक्षम!
+feedback-category-disabled = ✅ { $category } अक्षम!
 feedback-notif-enabled = ✅ { $label } सक्षम!
 feedback-notif-disabled = ✅ { $label } अक्षम!
 feedback-quali-done = ✅ पूर्ण!

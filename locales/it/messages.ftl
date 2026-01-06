@@ -169,6 +169,8 @@ button-skip = ⏭️ Salta
 button-reset-language = 🔄 Reimposta su Predefinito (Inglese)
 button-enable-all = 🔔 Attiva Tutte le Notifiche
 button-disable-all = 🔕 Disattiva Tutte le Notifiche
+button-enable-category = 🔔 Attiva Categoria
+button-disable-category = 🔕 Disattiva Categoria
 button-quali-done = ✅ Qualifica Completata
 button-reenable-race = 🔄 Riattiva notifiche Gara { $raceId }
 button-weather = 🌤️ Mostra Meteo
@@ -196,6 +198,10 @@ button-custom-notif-time = ⏱️ Personalizzata { $slot }: { $time }
 # =======================
 # Notifiche
 # =======================
+notif-category-before-qualifying = Prima delle Qualifiche
+notif-category-qualifying-events = Eventi di Qualifica
+notif-category-race-events = Eventi di Gara
+
 notif-label-72h = 3g prima della chiusura qualifiche
 notif-label-48h = 2g prima della chiusura qualifiche
 notif-label-24h = 1g prima della chiusura qualifiche
@@ -384,6 +390,7 @@ error-custom-notif-failed = ❌ <b>Errore:</b> { $error }
 error-invalid-race = ❌ ID gara non valido
 error-invalid-page = ❌ Pagina non valida
 error-invalid-language = ❌ Lingua non valida
+error-invalid-category = ❌ Categoria non valida
 error-invalid-slot = ❌ Slot non valido
 error-invalid-data = ❌ Dati non validi
 error-reset-failed = ❌ Reimpostazione fallita
@@ -396,6 +403,8 @@ error-weather-send-failed = ❌ Impossibile inviare il meteo
 # =======================
 feedback-all-enabled = ✅ Tutte le notifiche attivate!
 feedback-all-disabled = ✅ Tutte le notifiche disattivate!
+feedback-category-enabled = ✅ { $category } attivata!
+feedback-category-disabled = ✅ { $category } disattivata!
 feedback-notif-enabled = ✅ { $label } attivata!
 feedback-notif-disabled = ✅ { $label } disattivata!
 feedback-quali-done = ✅ Fatto!

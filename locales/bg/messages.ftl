@@ -171,6 +171,8 @@ button-skip = ⏭️ Пропусни
 button-reset-language = 🔄 Нулиране до подразбиране (английски)
 button-enable-all = 🔔 Активиране на всички известия
 button-disable-all = 🔕 Деактивиране на всички известия
+button-enable-category = 🔔 Активиране на категорията
+button-disable-category = 🔕 Деактивиране на категорията
 button-quali-done = ✅ Квалификацията е готова
 button-reenable-race = 🔄 Повторно активиране на известия за състезание { $raceId }
 button-weather = 🌤️ Показване на времето
@@ -198,6 +200,10 @@ button-custom-notif-time = ⏱️ Персонализирано { $slot }: { $t
 # =======================
 # Известия
 # =======================
+notif-category-before-qualifying = Преди квалификацията
+notif-category-qualifying-events = Събития от квалификацията
+notif-category-race-events = Гонкови събития
+
 notif-label-72h = 3д преди затваряне на квалификацията
 notif-label-48h = 2д преди затваряне на квалификацията
 notif-label-24h = 1д преди затваряне на квалификацията
@@ -363,6 +369,7 @@ error-custom-notif-failed = ❌ <b>Грешка:</b> { $error }
 error-invalid-race = ❌ Невалиден идентификатор на състезание
 error-invalid-page = ❌ Невалидна страница
 error-invalid-language = ❌ Невалиден език
+error-invalid-category = ❌ Невалидна категория
 error-invalid-slot = ❌ Невалиден слот
 error-invalid-data = ❌ Невалидни данни
 error-reset-failed = ❌ Нулирането е неуспешно
@@ -375,6 +382,8 @@ error-weather-send-failed = ❌ Неуспешно изпращане на да�
 # =======================
 feedback-all-enabled = ✅ Всички известия са активирани!
 feedback-all-disabled = ✅ Всички известия са деактивирани!
+feedback-category-enabled = ✅ { $category } активирана!
+feedback-category-disabled = ✅ { $category } деактивирана!
 feedback-notif-enabled = ✅ { $label } активирано!
 feedback-notif-disabled = ✅ { $label } деактивирано!
 feedback-quali-done = ✅ Готово!

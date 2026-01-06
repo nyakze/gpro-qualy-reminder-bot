@@ -170,6 +170,8 @@ button-skip = ⏭️ Skip
 button-reset-language = 🔄 Reset to Default (English)
 button-enable-all = 🔔 Enable All Notifications
 button-disable-all = 🔕 Disable All Notifications
+button-enable-category = 🔔 Enable Category
+button-disable-category = 🔕 Disable Category
 button-quali-done = ✅ Quali Done
 button-reenable-race = 🔄 Re-enable Race { $raceId } notifications
 button-weather = 🌤️ Show Weather
@@ -197,6 +199,12 @@ button-custom-notif-time = ⏱️ Custom { $slot }: { $time }
 # =======================
 # Notifications
 # =======================
+# Notification categories
+notif-category-before-qualifying = Before Qualifying
+notif-category-qualifying-events = Qualifying Events
+notif-category-race-events = Race Events
+
+# Individual notification labels
 notif-label-72h = 3d before quali closes
 notif-label-48h = 2d before quali closes
 notif-label-24h = 1d before quali closes
@@ -386,6 +394,7 @@ error-custom-notif-failed = ❌ <b>Error:</b> { $error }
 error-invalid-race = ❌ Invalid race ID
 error-invalid-page = ❌ Invalid page
 error-invalid-language = ❌ Invalid language
+error-invalid-category = ❌ Invalid category
 error-invalid-slot = ❌ Invalid slot
 error-invalid-data = ❌ Invalid data
 error-reset-failed = ❌ Reset failed
@@ -398,6 +407,8 @@ error-weather-send-failed = ❌ Failed to send weather
 # =======================
 feedback-all-enabled = ✅ All notifications enabled!
 feedback-all-disabled = ✅ All notifications disabled!
+feedback-category-enabled = ✅ { $category } enabled!
+feedback-category-disabled = ✅ { $category } disabled!
 feedback-notif-enabled = ✅ { $label } enabled!
 feedback-notif-disabled = ✅ { $label } disabled!
 feedback-quali-done = ✅ Done!

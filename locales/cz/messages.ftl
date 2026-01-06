@@ -170,6 +170,8 @@ button-skip = ⏭️ Přeskočit
 button-reset-language = 🔄 Resetovat na výchozí (angličtinu)
 button-enable-all = 🔔 Zapnout všechna oznámení
 button-disable-all = 🔕 Vypnout všechna oznámení
+button-enable-category = 🔔 Povolit kategorii
+button-disable-category = 🔕 Zakázat kategorii
 button-quali-done = ✅ Kvalifikace hotova
 button-reenable-race = 🔄 Znovu zapnout oznámení závodu { $raceId }
 button-weather = 🌤️ Zobrazit počasí
@@ -197,6 +199,10 @@ button-custom-notif-time = ⏱️ Vlastní { $slot }: { $time }
 # =======================
 # Notifications
 # =======================
+notif-category-before-qualifying = Před kvalifikací
+notif-category-qualifying-events = Kvalifikační události
+notif-category-race-events = Závodní události
+
 notif-label-72h = 3 dny před uzavřením kvalifikace
 notif-label-48h = 2 dny před uzavřením kvalifikace
 notif-label-24h = 1 den před uzavřením kvalifikace
@@ -365,6 +371,7 @@ error-custom-notif-failed = ❌ <b>Chyba:</b> { $error }
 error-invalid-race = ❌ Neplatné ID závodu
 error-invalid-page = ❌ Neplatná stránka
 error-invalid-language = ❌ Neplatný jazyk
+error-invalid-category = ❌ Neplatná kategorie
 error-invalid-slot = ❌ Neplatný slot
 error-invalid-data = ❌ Neplatná data
 error-reset-failed = ❌ Reset selhal
@@ -377,6 +384,8 @@ error-weather-send-failed = ❌ Nepodařilo se odeslat počasí
 # =======================
 feedback-all-enabled = ✅ Všechna oznámení zapnuta!
 feedback-all-disabled = ✅ Všechna oznámení vypnuta!
+feedback-category-enabled = ✅ { $category } povolena!
+feedback-category-disabled = ✅ { $category } zakázána!
 feedback-notif-enabled = ✅ { $label } zapnuto!
 feedback-notif-disabled = ✅ { $label } vypnuto!
 feedback-quali-done = ✅ Hotovo!

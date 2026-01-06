@@ -169,6 +169,8 @@ button-skip = ⏭️ Omitir
 button-reset-language = 🔄 Restablecer a Predeterminado (Inglés)
 button-enable-all = 🔔 Activar Todas las Notificaciones
 button-disable-all = 🔕 Desactivar Todas las Notificaciones
+button-enable-category = 🔔 Activar Categoría
+button-disable-category = 🔕 Desactivar Categoría
 button-quali-done = ✅ Clasificación Completada
 button-reenable-race = 🔄 Reactivar notificaciones de la Carrera { $raceId }
 button-weather = 🌤️ Mostrar Clima
@@ -196,6 +198,10 @@ button-custom-notif-time = ⏱️ Personalizada { $slot }: { $time }
 # =======================
 # Notificaciones
 # =======================
+notif-category-before-qualifying = Antes de la Clasificación
+notif-category-qualifying-events = Eventos de Clasificación
+notif-category-race-events = Eventos de Carrera
+
 notif-label-72h = 3d antes del cierre de la clasificación
 notif-label-48h = 2d antes del cierre de la clasificación
 notif-label-24h = 1d antes del cierre de la clasificación
@@ -384,6 +390,7 @@ error-custom-notif-failed = ❌ <b>Error:</b> { $error }
 error-invalid-race = ❌ ID de carrera inválido
 error-invalid-page = ❌ Página inválida
 error-invalid-language = ❌ Idioma inválido
+error-invalid-category = ❌ Categoría inválida
 error-invalid-slot = ❌ Espacio inválido
 error-invalid-data = ❌ Datos inválidos
 error-reset-failed = ❌ Restablecimiento fallido
@@ -396,6 +403,8 @@ error-weather-send-failed = ❌ No se pudo enviar el clima
 # =======================
 feedback-all-enabled = ✅ ¡Todas las notificaciones activadas!
 feedback-all-disabled = ✅ ¡Todas las notificaciones desactivadas!
+feedback-category-enabled = ✅ ¡{ $category } activada!
+feedback-category-disabled = ✅ ¡{ $category } desactivada!
 feedback-notif-enabled = ✅ ¡{ $label } activada!
 feedback-notif-disabled = ✅ ¡{ $label } desactivada!
 feedback-quali-done = ✅ ¡Hecho!
