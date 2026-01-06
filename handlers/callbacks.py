@@ -549,6 +549,36 @@ async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext)
             await handle_notifications_menu(callback, i18n)
 
 
+def strip_existing_feedback(message_text: str, i18n: I18nContext) -> str:
+    """Remove existing feedback messages from notification text
+
+    Args:
+        message_text: Current message text (HTML formatted)
+        i18n: I18n context for getting feedback message patterns
+
+    Returns:
+        Message text with feedback messages removed
+    """
+    # Get all possible feedback messages that might have been appended
+    feedback_messages = [
+        i18n.get("feedback-race-marked-done"),
+        i18n.get("feedback-notifications-reenabled"),
+        i18n.get("feedback-notifications-reset"),
+    ]
+
+    # Split message by double newlines to separate sections
+    parts = message_text.split("\n\n")
+
+    # Remove any parts that match feedback messages
+    cleaned_parts = [
+        part for part in parts
+        if part.strip() not in [msg.strip() for msg in feedback_messages]
+    ]
+
+    # Rejoin the cleaned parts
+    return "\n\n".join(cleaned_parts)
+
+
 def build_race_notification_keyboard(
     user_id: int, race_id: int, i18n: I18nContext
 ) -> InlineKeyboardMarkup:
@@ -612,8 +642,9 @@ async def handle_quali_done(callback: CallbackQuery, i18n: I18nContext):
     # Build new keyboard with toggled button
     new_keyboard = build_race_notification_keyboard(user_id, race_id, i18n)
 
-    # Update message with feedback and new keyboard (use html_text to preserve URLs)
-    updated_message = callback.message.html_text + "\n\n" + i18n.get("feedback-race-marked-done")
+    # Remove any existing feedback and append new one
+    clean_message = strip_existing_feedback(callback.message.html_text, i18n)
+    updated_message = clean_message + "\n\n" + i18n.get("feedback-race-marked-done")
     await callback.message.edit_text(
         updated_message,
         reply_markup=new_keyboard,
@@ -645,8 +676,9 @@ async def handle_reset(callback: CallbackQuery, i18n: I18nContext):
         # Build new keyboard with toggled button
         new_keyboard = build_race_notification_keyboard(user_id, race_id, i18n)
 
-        # Update message with feedback and new keyboard (use html_text to preserve URLs)
-        updated_message = callback.message.html_text + "\n\n" + i18n.get("feedback-notifications-reenabled")
+        # Remove any existing feedback and append new one
+        clean_message = strip_existing_feedback(callback.message.html_text, i18n)
+        updated_message = clean_message + "\n\n" + i18n.get("feedback-notifications-reenabled")
         await callback.message.edit_text(
             updated_message,
             reply_markup=new_keyboard,
