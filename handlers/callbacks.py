@@ -125,6 +125,7 @@ NOTIFICATION_TYPES = (
     "2h",
     "10min",
     "opens_soon",
+    "quali_results",
     "race_replay",
     "race_live",
     "race_results",

@@ -203,6 +203,7 @@ notif-label-24h = 1d before quali closes
 notif-label-2h = 2h before quali closes
 notif-label-10min = 10min before quali closes
 notif-label-opens = Quali is open
+notif-label-quali-results = Qualifying results available
 notif-label-replay = Race replay available
 notif-label-live = Race is live
 notif-label-results = Race results available
@@ -289,6 +290,30 @@ notif-race-results-no-group = 📊 <b>Race #{ $raceId } Results Available</b>
     🔗 <a href="{ $analysisLink }">Race Analysis</a>
 
     ⚠️ For personalized Race Summary, set your group in /settings!
+
+notif-quali-results = 🏁 <b>Race #{ $raceId } Qualifying Results</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Quali closed: { $qualiClose }</b>
+    🏎 <b>Race: { $raceTime }</b>
+
+    Qualifying results are now available:
+
+    🔗 <a href="{ $q12Link }">Q1 Q2 Standings</a>
+    🔗 <a href="{ $gridLink }">Starting Grid</a>
+
+notif-quali-results-no-group = 🏁 <b>Race #{ $raceId } Qualifying Results</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Quali closed: { $qualiClose }</b>
+    🏎 <b>Race: { $raceTime }</b>
+
+    Qualifying results are now available:
+
+    ⚠️ For personalized links, set your group in /settings!
+
+    🔗 <a href="{ $q12Link }">Q1 Q2 Standings</a>
+    🔗 <a href="{ $gridLink }">Starting Grid</a>
 
 # =======================
 # Weather
@@ -498,6 +523,7 @@ notif-label-24h = 1d before quali closes
 notif-label-2h = 2h before quali closes
 notif-label-10min = 10min before quali closes
 notif-label-opens-soon = Quali is open
+notif-label-quali-results = Qualifying results available
 notif-label-race-replay = Race replay available
 notif-label-race-live = Race is live
 notif-label-race-results = Race results available

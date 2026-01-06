@@ -203,6 +203,7 @@ notif-label-24h = За 1 день до закрытия квалификации
 notif-label-2h = За 2ч до закрытия квалификации
 notif-label-10min = За 10мин до закрытия квалификации
 notif-label-opens = Квалификация открыта
+notif-label-quali-results = Результаты квалификации доступны
 notif-label-replay = Доступен реплей гонки
 notif-label-live = Гонка в прямом эфире
 notif-label-results = Доступны результаты гонки
@@ -508,6 +509,7 @@ notif-label-24h = 1 день до закрытия квалификации
 notif-label-2h = 2ч до закрытия квалификации
 notif-label-10min = 10мин до закрытия квалификации
 notif-label-opens-soon = Квалификация открыта
+notif-label-quali-results = Результаты квалификации доступны
 notif-label-race-replay = Доступен повтор гонки
 notif-label-race-live = Гонка началась
 notif-label-race-results = Доступны результаты гонки
@@ -618,3 +620,29 @@ error-timezone-not-found = ❌ Часовой пояс не найден для 
 
     Попробуйте: название города на английском (Moscow), аббревиатуру (MSK), или смещение UTC (UTC+3)
 error-invalid-timezone = ❌ Неверный часовой пояс
+
+
+
+notif-quali-results = 🏁 <b>Результаты квалификации гонки #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Квалификация закрыта: { $qualiClose }</b>
+    🏎 <b>Гонка: { $raceTime }</b>
+
+    Результаты квалификации доступны:
+
+    🔗 <a href="{ $q12Link }">Результаты Кв1 и Кв2</a>
+    🔗 <a href="{ $gridLink }">Стартовая решётка</a>
+
+notif-quali-results-no-group = 🏁 <b>Результаты квалификации гонки #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Квалификация закрыта: { $qualiClose }</b>
+    🏎 <b>Гонка: { $raceTime }</b>
+
+    Результаты квалификации доступны:
+
+    ⚠️ Для персональных ссылок укажите группу в /settings!
+
+    🔗 <a href="{ $q12Link }">Результаты Кв1 и Кв2</a>
+    🔗 <a href="{ $gridLink }">Стартовая решётка</a>

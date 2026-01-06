@@ -17,6 +17,7 @@ from .sender import (
     send_race_live_notification,
     send_race_replay_notification,
     send_race_results_notification,
+    send_quali_results_notification,
 )
 
 logger = logging.getLogger(__name__)
@@ -45,6 +46,9 @@ RACE_LIVE_NOTIFICATION_BEFORE_MINUTES = (
 )
 RACE_LIVE_NOTIFICATION_AFTER_MINUTES = (
     5  # Allow up to 5min after race start (just in case)
+)
+QUALI_RESULTS_NOTIFICATION_AFTER_MINUTES = (
+    10  # Send quali results notification up to 10min after quali closes
 )
 NOTIFICATION_HISTORY_RETENTION_DAYS = 30  # Keep notification history for 30 days
 
@@ -396,6 +400,30 @@ def _check_race_live_notifications(now: datetime) -> list:
     return notifications
 
 
+def _check_quali_results_notifications(now: datetime) -> list:
+    """Check for qualifying results that should be sent after quali deadline
+
+    Returns:
+        list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
+    """
+    notifications = []
+
+    for race_id, race_data in race_calendar.items():
+        quali_close = race_data["quali_close"]
+        time_since_quali_close = (now - quali_close).total_seconds() / 60
+
+        # Send if qualifying has closed (within 10min window after closing)
+        # This ensures we send after deadline has passed but not too late
+        if 0 <= time_since_quali_close <= QUALI_RESULTS_NOTIFICATION_AFTER_MINUTES:
+            history_key = (race_id, "quali_results")
+            if history_key not in notify_history:
+                notifications.append(
+                    ("quali_results", race_id, race_data, "quali_results", history_key)
+                )
+
+    return notifications
+
+
 async def _send_notifications_to_users(bot: Bot, notifications_to_send: list):
     """Send notifications to all eligible users
 
@@ -454,6 +482,10 @@ async def _send_notifications_to_users(bot: Bot, notifications_to_send: list):
                             )
                         elif notif_type == "results":
                             await send_race_results_notification(
+                                bot, user_id, race_id, race_data
+                            )
+                        elif notif_type == "quali_results":
+                            await send_quali_results_notification(
                                 bot, user_id, race_id, race_data
                             )
                         sent_count += 1
@@ -519,6 +551,7 @@ async def check_notifications(bot: Bot):
                     _check_quali_closing_notifications(now, races_closing)
                 )
                 notifications_to_send.extend(await _check_quali_open_notifications(now))
+                notifications_to_send.extend(_check_quali_results_notifications(now))
                 notifications_to_send.extend(_check_race_live_notifications(now))
                 notifications_to_send.extend(
                     _check_custom_notifications(now, races_closing)
