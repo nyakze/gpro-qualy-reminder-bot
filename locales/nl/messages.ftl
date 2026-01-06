@@ -215,7 +215,7 @@ notif-label-live = Race is live
 notif-label-results = Race resultaten beschikbaar
 
 notif-quali-closes = <b>Kwalificatie sluit over { $time }!</b>
-notif-quali-opens = <b>Kwalificatie is open (of gaat binnenkort open)</b>
+notif-quali-opens = <b>Kwalificatie is open</b>
 
 notif-quali-message = { $emoji } { $title }
 
@@ -272,7 +272,7 @@ notif-race-replay = 📺 <b>Race #{ $raceId } Replay Beschikbaar</b>
     📍 <b>{ $track }</b>
     🕐 <b>{ $raceTime }</b>
 
-    Als de race al is berekend, is de replay hier beschikbaar:
+    Bekijk de race replay:
 
     🔗 <a href="{ $replayLink }">Bekijk Replay</a>
 
@@ -281,7 +281,7 @@ notif-race-replay-no-group = 📺 <b>Race #{ $raceId } Replay Beschikbaar</b>
     📍 <b>{ $track }</b>
     🕐 <b>{ $raceTime }</b>
 
-    Als de race al is berekend, is de replay hier beschikbaar:
+    Bekijk de race replay:
 
     ⚠️ Voor gepersonaliseerde links, stel je groep in via /settings!
 
@@ -645,7 +645,7 @@ error-invalid-timezone = ❌ Ongeldige tijdzone
 notif-quali-results = 🏁 <b>Kwalificatie Resultaten - Race #{ $raceId }</b>
 
     📍 <b>{ $track }</b>
-    ✅ <b>Kwalificatie gesloten: { $qualiClose }</b>
+    ✅ <b>Kwalificatie gesloten</b>
     🏎 <b>Race: { $raceTime }</b>
 
     Kwalificatie resultaten beschikbaar:
@@ -655,7 +655,7 @@ notif-quali-results = 🏁 <b>Kwalificatie Resultaten - Race #{ $raceId }</b>
 notif-quali-results-no-group = 🏁 <b>Kwalificatie Resultaten - Race #{ $raceId }</b>
 
     📍 <b>{ $track }</b>
-    ✅ <b>Kwalificatie gesloten: { $qualiClose }</b>
+    ✅ <b>Kwalificatie gesloten</b>
     🏎 <b>Race: { $raceTime }</b>
 
     Kwalificatie resultaten beschikbaar:

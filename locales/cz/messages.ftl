@@ -215,7 +215,7 @@ notif-label-live = Závod probíhá
 notif-label-results = Výsledky závodu jsou dostupné
 
 notif-quali-closes = <b>Kvalifikace se uzavře za { $time }!</b>
-notif-quali-opens = <b>Kvalifikace je otevřena (nebo se brzy otevře)</b>
+notif-quali-opens = <b>Kvalifikace je otevřena</b>
 
 notif-quali-message = { $emoji } { $title }
 
@@ -272,7 +272,7 @@ notif-race-replay = 📺 <b>Repríza závodu č. { $raceId } je dostupná</b>
     📍 <b>{ $track }</b>
     🕐 <b>{ $raceTime }</b>
 
-    Pokud byl závod již vyhodnocen, repríza je dostupná zde:
+    Sledujte reprízu závodu:
 
     🔗 <a href="{ $replayLink }">Sledovat reprízu</a>
 
@@ -281,7 +281,7 @@ notif-race-replay-no-group = 📺 <b>Repríza závodu č. { $raceId } je dostupn
     📍 <b>{ $track }</b>
     🕐 <b>{ $raceTime }</b>
 
-    Pokud byl závod již vyhodnocen, repríza je dostupná zde:
+    Sledujte reprízu závodu:
 
     ⚠️ Pro personalizované odkazy nastavte svou skupinu v /settings!
 
@@ -655,7 +655,7 @@ error-invalid-timezone = ❌ Neplatné časové pásmo
 notif-quali-results = 🏁 <b>Výsledky kvalifikace - Závod #{ $raceId }</b>
 
     📍 <b>{ $track }</b>
-    ✅ <b>Kvalifikace uzavřena: { $qualiClose }</b>
+    ✅ <b>Kvalifikace uzavřena</b>
     🏎 <b>Závod: { $raceTime }</b>
 
     Výsledky kvalifikace jsou k dispozici:
@@ -665,7 +665,7 @@ notif-quali-results = 🏁 <b>Výsledky kvalifikace - Závod #{ $raceId }</b>
 notif-quali-results-no-group = 🏁 <b>Výsledky kvalifikace - Závod #{ $raceId }</b>
 
     📍 <b>{ $track }</b>
-    ✅ <b>Kvalifikace uzavřena: { $qualiClose }</b>
+    ✅ <b>Kvalifikace uzavřena</b>
     🏎 <b>Závod: { $raceTime }</b>
 
     Výsledky kvalifikace jsou k dispozici:

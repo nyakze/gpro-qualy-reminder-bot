@@ -220,7 +220,7 @@ notif-label-race-live = Gara in diretta
 notif-label-race-results = Risultati della gara disponibili
 
 notif-quali-closes = <b>Le qualifiche chiudono tra { $time }!</b>
-notif-quali-opens = <b>Le qualifiche sono aperte (o si apriranno presto)</b>
+notif-quali-opens = <b>Le qualifiche sono aperte</b>
 
 notif-quali-message = { $emoji } { $title }
 
@@ -277,7 +277,7 @@ notif-race-replay = 📺 <b>Replay Gara #{ $raceId } Disponibile</b>
     📍 <b>{ $track }</b>
     🕐 <b>{ $raceTime }</b>
 
-    Se la gara è già stata calcolata, il replay è disponibile qui:
+    Guarda il replay della gara:
 
     🔗 <a href="{ $replayLink }">Guarda il Replay</a>
 
@@ -286,7 +286,7 @@ notif-race-replay-no-group = 📺 <b>Replay Gara #{ $raceId } Disponibile</b>
     📍 <b>{ $track }</b>
     🕐 <b>{ $raceTime }</b>
 
-    Se la gara è già stata calcolata, il replay è disponibile qui:
+    Guarda il replay della gara:
 
     ⚠️ Per link personalizzati, imposta il tuo gruppo in /settings!
 
@@ -625,7 +625,7 @@ error-invalid-timezone = ❌ Fuso orario non valido
 notif-quali-results = 🏁 <b>Risultati Qualifiche - Gara #{ $raceId }</b>
 
     📍 <b>{ $track }</b>
-    ✅ <b>Qualifiche chiuse: { $qualiClose }</b>
+    ✅ <b>Qualifiche chiuse</b>
     🏎 <b>Gara: { $raceTime }</b>
 
     Risultati delle qualifiche disponibili:
@@ -635,7 +635,7 @@ notif-quali-results = 🏁 <b>Risultati Qualifiche - Gara #{ $raceId }</b>
 notif-quali-results-no-group = 🏁 <b>Risultati Qualifiche - Gara #{ $raceId }</b>
 
     📍 <b>{ $track }</b>
-    ✅ <b>Qualifiche chiuse: { $qualiClose }</b>
+    ✅ <b>Qualifiche chiuse</b>
     🏎 <b>Gara: { $raceTime }</b>
 
     Risultati delle qualifiche disponibili:

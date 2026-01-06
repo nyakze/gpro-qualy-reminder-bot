@@ -217,7 +217,7 @@ notif-label-live = Race is live
 notif-label-results = Race results available
 
 notif-quali-closes = <b>Qualifying closes in { $time }!</b>
-notif-quali-opens = <b>Qualifying is open (or is opening soon)</b>
+notif-quali-opens = <b>Qualifying is open</b>
 
 notif-quali-message = { $emoji } { $title }
 
@@ -274,7 +274,7 @@ notif-race-replay = 📺 <b>Race #{ $raceId } Replay Available</b>
     📍 <b>{ $track }</b>
     🕐 <b>{ $raceTime }</b>
 
-    If the race has already been calculated, replay is available here:
+    Watch the race replay:
 
     🔗 <a href="{ $replayLink }">Watch Replay</a>
 
@@ -283,7 +283,7 @@ notif-race-replay-no-group = 📺 <b>Race #{ $raceId } Replay Available</b>
     📍 <b>{ $track }</b>
     🕐 <b>{ $raceTime }</b>
 
-    If the race has already been calculated, replay is available here:
+    Watch the race replay:
 
     ⚠️ For personalized links, set your group in /settings!
 
@@ -313,7 +313,7 @@ notif-race-results-no-group = 📊 <b>Race #{ $raceId } Results Available</b>
 notif-quali-results = 🏁 <b>Race #{ $raceId } Qualifying Results</b>
 
     📍 <b>{ $track }</b>
-    ✅ <b>Qualifying closed: { $qualiClose }</b>
+    ✅ <b>Qualifying closed</b>
     🏎 <b>Race: { $raceTime }</b>
 
     Qualifying results are now available:
@@ -323,7 +323,7 @@ notif-quali-results = 🏁 <b>Race #{ $raceId } Qualifying Results</b>
 notif-quali-results-no-group = 🏁 <b>Race #{ $raceId } Qualifying Results</b>
 
     📍 <b>{ $track }</b>
-    ✅ <b>Qualifying closed: { $qualiClose }</b>
+    ✅ <b>Qualifying closed</b>
     🏎 <b>Race: { $raceTime }</b>
 
     Qualifying results are now available:
