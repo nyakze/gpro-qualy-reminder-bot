@@ -344,14 +344,14 @@ async def _check_quali_open_notifications(now: datetime) -> list:
             # Fetch weather data with retry
             await _fetch_weather_with_retry(race_id)
 
-            # Add quali open notification
+            # Add replay and results notifications for previous race FIRST
+            _add_replay_and_results_notifications(notifications, prev_race_id)
+
+            # Add quali open notification AFTER replay and results
             history_key = (race_id, "opens_soon")
             notifications.append(
                 ("opens", race_id, race_data, "opens_soon", history_key)
             )
-
-            # Add replay and results notifications for previous race
-            _add_replay_and_results_notifications(notifications, prev_race_id)
 
     # Process fallback races (3.5h without API detection)
     for race_id, race_data, prev_race_id, hours_since in races_for_fallback:
@@ -362,12 +362,12 @@ async def _check_quali_open_notifications(now: datetime) -> list:
         # Fetch weather data with retry
         await _fetch_weather_with_retry(race_id)
 
-        # Add quali open notification
+        # Add replay and results notifications for previous race FIRST
+        _add_replay_and_results_notifications(notifications, prev_race_id)
+
+        # Add quali open notification AFTER replay and results
         history_key = (race_id, "opens_soon")
         notifications.append(("opens", race_id, race_data, "opens_soon", history_key))
-
-        # Add replay and results notifications for previous race
-        _add_replay_and_results_notifications(notifications, prev_race_id)
 
     return notifications
 
