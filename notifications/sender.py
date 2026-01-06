@@ -760,12 +760,20 @@ async def send_quali_notification(
             hours_left = race_data["hours_left"]
 
         if hours_left >= 24:
-            hours = int(hours_left)
-            time_text = get_text("time-hours", hours=hours)
+            days = int(hours_left / 24)
+            remaining_hours = int(hours_left % 24)
+            if remaining_hours > 0:
+                time_text = get_text("time-days-hours", days=days, hours=remaining_hours)
+            else:
+                time_text = get_text("time-days", days=days)
             emoji = "🔔"
         elif hours_left >= 2:
             hours = int(hours_left)
-            time_text = get_text("time-hours", hours=hours)
+            minutes = int((hours_left - hours) * 60)
+            if minutes > 0:
+                time_text = get_text("time-hours-minutes", hours=hours, minutes=minutes)
+            else:
+                time_text = get_text("time-hours", hours=hours)
             emoji = "⏰"
         elif hours_left >= 0.333:
             time_text = get_text("time-minutes", minutes=10)
