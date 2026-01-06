@@ -66,6 +66,11 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
     - Spanish: d, día, días, h, hora, horas, m, min, minuto, minutos
     - French: d, j, jour, jours, h, heure, heures, m, min, minute, minutes
     - Italian: d, g, giorno, giorni, h, ora, ore, m, min, minuto, minuti
+    - Dutch: d, dag, dagen, u, uur, m, minuut, minuten
+    - Bulgarian: д, ден, дни, дена, ч, час, часа, часове, м, минута, минути
+    - Czech: d, den, dny, dní, h, hodina, hodiny, hodin, m, minuta, minuty, minut
+    - Hindi: दिन, घंटा, घंटे, मिनट
+    - Ukrainian: д, день, дні, днів, г, година, години, годин, хвилина, хвилини, хвилин
 
     Args:
         time_str: User input time string
@@ -101,7 +106,12 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
     # Spanish: d, día, días
     # French: d, j, jour, jours
     # Italian: d, g, giorno, giorni
-    day_pattern = r"(?:d(?:ay|ays|ia|ias|ía|ías)?|j(?:our|ours)?|g(?:iorno|iorni)?|д(?:ень|ня|ней)?)"
+    # Dutch: d, dag, dagen
+    # Bulgarian: д, ден, дни, дена
+    # Czech: d, den, dny, dní
+    # Hindi: दिन
+    # Ukrainian: д, день, дні, днів
+    day_pattern = r"(?:d(?:ay|ays|ia|ias|ía|ías|ag|agen|en|ny|ní)?|j(?:our|ours)?|g(?:iorno|iorni)?|д(?:ень|ня|ней|ні|нів|ен|ни|ена)?|दिन)"
 
     # Hour patterns (multi-language support)
     # English: h, hour, hours
@@ -110,7 +120,12 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
     # Spanish: h, hora, horas
     # French: h, heure, heures
     # Italian: h, ora, ore (note: "ore" standalone is also common)
-    hour_pattern = r"(?:h(?:our|ours|ora|oras|eure|eures)?|ore|ч(?:ас(?:а|ов)?)?)"
+    # Dutch: u, uur
+    # Bulgarian: ч, час, часа, часове
+    # Czech: h, hodina, hodiny, hodin
+    # Hindi: घंटा, घंटे
+    # Ukrainian: г, година, години, годин
+    hour_pattern = r"(?:h(?:our|ours|ora|oras|eure|eures|odina|odiny|odin)?|ore|u(?:ur)?|ч(?:ас(?:а|ов|ове)?)?|г(?:одина|одини|один)?|घंटा|घंटे)"
 
     # Minute patterns (multi-language support)
     # English: m, min, minute, minutes
@@ -119,7 +134,12 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
     # Spanish: m, min, minuto, minutos
     # French: m, min, minute, minutes
     # Italian: m, min, minuto, minuti
-    minute_pattern = r"(?:m(?:in(?:ute|utes|uto|utos|uti)?)?|м(?:ин(?:ут(?:а|ы)?)?)?)"
+    # Dutch: m, minuut, minuten
+    # Bulgarian: м, минута, минути
+    # Czech: m, minuta, minuty, minut
+    # Hindi: मिनट
+    # Ukrainian: хвилина, хвилини, хвилин
+    minute_pattern = r"(?:m(?:in(?:ute|utes|uto|utos|uti|uta|uty|ut)?)?|minuut(?:en)?|м(?:ин(?:ут(?:а|ы|и)?)?)?|хвилина|хвилини|хвилин|मिनट)"
 
     # Try to match "Xd Yh Zm" or "XdYhZm" format (days + hours + minutes)
     match = re.match(
