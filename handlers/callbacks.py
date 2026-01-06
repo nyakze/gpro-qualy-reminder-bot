@@ -407,16 +407,23 @@ async def handle_toggle_category(callback: CallbackQuery, i18n: I18nContext):
 
     if category_id not in NOTIFICATION_CATEGORIES:
         await callback.answer(i18n.get("error-invalid-category"), show_alert=True)
+        logger.warning(f"User {user_id} tried to toggle invalid category: {category_id}")
         return
 
     category_types = NOTIFICATION_CATEGORIES[category_id]["types"]
     new_state = action == "on"
+    state_str = "enabled" if new_state else "disabled"
 
     # Toggle all notifications in the category
     for notif_type in category_types:
         user_status["notifications"][notif_type] = new_state
 
     save_users_data()
+
+    logger.info(
+        f"User {user_id} {state_str} category '{category_id}' "
+        f"({len(category_types)} notifications: {', '.join(category_types)})"
+    )
 
     # Get category name for feedback
     category_name = i18n.get(f"notif-category-{category_id.replace('_', '-')}")
@@ -440,9 +447,14 @@ async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext)
     # Handle "Enable All" / "Disable All"
     if callback.data == "toggle_all_on":
         user_status = get_user_status(user_id)
-        for notif_type in user_status["notifications"].keys():
+        notif_types = list(user_status["notifications"].keys())
+        for notif_type in notif_types:
             user_status["notifications"][notif_type] = True
         save_users_data()
+        logger.info(
+            f"User {user_id} enabled all notifications "
+            f"({len(notif_types)} total: {', '.join(notif_types)})"
+        )
         feedback_text = i18n.get("feedback-all-enabled")
         # Refresh main notifications menu
         await callback.answer(feedback_text)
@@ -450,9 +462,14 @@ async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext)
         return
     elif callback.data == "toggle_all_off":
         user_status = get_user_status(user_id)
-        for notif_type in user_status["notifications"].keys():
+        notif_types = list(user_status["notifications"].keys())
+        for notif_type in notif_types:
             user_status["notifications"][notif_type] = False
         save_users_data()
+        logger.info(
+            f"User {user_id} disabled all notifications "
+            f"({len(notif_types)} total: {', '.join(notif_types)})"
+        )
         feedback_text = i18n.get("feedback-all-disabled")
         # Refresh main notifications menu
         await callback.answer(feedback_text)
