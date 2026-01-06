@@ -203,6 +203,7 @@ notif-label-24h = क्वालीफाइंग बंद होने स�
 notif-label-2h = क्वालीफाइंग बंद होने से 2 घंटे पहले
 notif-label-10min = क्वालीफाइंग बंद होने से 10 मिनट पहले
 notif-label-opens = क्वालीफाइंग खुली है
+notif-label-quali-results = क्वालीफाइंग परिणाम उपलब्ध हैं
 notif-label-replay = रेस रिप्ले उपलब्ध है
 notif-label-live = रेस लाइव है
 notif-label-results = रेस परिणाम उपलब्ध हैं
@@ -292,6 +293,9 @@ notif-race-results-no-group = 📊 <b>रेस #{ $raceId } परिणाम 
 
 # =======================
 # Weather
+
+
+
 # =======================
 weather-title = 🌤️ <b>रेस मौसम पूर्वानुमान</b>
 weather-practice-q1 = <b>प्रैक्टिस / क्वालीफाई 1:</b> { $weather }
@@ -498,6 +502,7 @@ notif-label-24h = क्वालीफाइंग बंद होने स�
 notif-label-2h = क्वालीफाइंग बंद होने से 2 घंटे पहले
 notif-label-10min = क्वालीफाइंग बंद होने से 10 मिनट पहले
 notif-label-opens-soon = क्वालीफाइंग खुली है
+notif-label-quali-results = क्वालीफाइंग परिणाम उपलब्ध हैं
 notif-label-race-replay = रेस रिप्ले उपलब्ध है
 notif-label-race-live = रेस लाइव है
 notif-label-race-results = रेस परिणाम उपलब्ध हैं
@@ -551,6 +556,9 @@ custom-notif-menu-title = ⏱️ <b>कस्टम सूचनाएं</b>
 
 # =======================
 # Weather
+
+
+
 # =======================
 weather-unavailable = ⚠️ मौसम डेटा उपलब्ध नहीं है
 weather-title = 🌤️ <b>रेस मौसम पूर्वानुमान</b>
@@ -608,3 +616,27 @@ error-timezone-not-found = ❌ "{ $query }" के लिए कोई टाइ
 
     प्रयास करें: शहर का नाम (New York), संक्षिप्त नाम (PST), या UTC ऑफसेट (UTC+3)
 error-invalid-timezone = ❌ अमान्य टाइम ज़ोन
+
+notif-quali-results = 🏁 <b>क्वालीफाइंग परिणाम - रेस #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>क्वालीफाइंग बंद: { $qualiClose }</b>
+    🏎 <b>रेस: { $raceTime }</b>
+
+    क्वालीफाइंग परिणाम उपलब्ध हैं:
+
+    🔗 <a href="{ $q12Link }">Q1 Q2 स्टैंडिंग्स</a>
+    🔗 <a href="{ $gridLink }">स्टार्टिंग ग्रिड</a>
+
+notif-quali-results-no-group = 🏁 <b>क्वालीफाइंग परिणाम - रेस #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>क्वालीफाइंग बंद: { $qualiClose }</b>
+    🏎 <b>रेस: { $raceTime }</b>
+
+    क्वालीफाइंग परिणाम उपलब्ध हैं:
+
+    ⚠️ व्यक्तिगत लिंक के लिए, /settings में अपना समूह सेट करें!
+
+    🔗 <a href="{ $q12Link }">Q1 Q2 स्टैंडिंग्स</a>
+    🔗 <a href="{ $gridLink }">स्टार्टिंग ग्रिड</a>

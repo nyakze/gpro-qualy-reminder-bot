@@ -203,6 +203,7 @@ notif-label-24h = 1d antes do fecho da qualificação
 notif-label-2h = 2h antes do fecho da qualificação
 notif-label-10min = 10min antes do fecho da qualificação
 notif-label-opens = Qualificação aberta
+notif-label-quali-results = Resultados da qualificação disponíveis
 notif-label-replay = Repetição da corrida disponível
 notif-label-live = Corrida ao vivo
 notif-label-results = Resultados da corrida disponíveis
@@ -498,6 +499,7 @@ notif-label-24h = 1d antes do fecho da qualificação
 notif-label-2h = 2h antes do fecho da qualificação
 notif-label-10min = 10min antes do fecho da qualificação
 notif-label-opens-soon = Qualificação aberta
+notif-label-quali-results = Resultados da qualificação disponíveis
 notif-label-race-replay = Repetição da corrida disponível
 notif-label-race-live = Corrida ao vivo
 notif-label-race-results = Resultados da corrida disponíveis
@@ -608,3 +610,29 @@ error-timezone-not-found = ❌ Nenhum fuso horário encontrado para "{ $query }"
 
     Tenta: nome da cidade (Lisboa), abreviatura (WET), ou desvio UTC (UTC+0)
 error-invalid-timezone = ❌ Fuso horário inválido
+
+
+
+notif-quali-results = 🏁 <b>Resultados da Qualificação - Corrida #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Qualificação encerrada: { $qualiClose }</b>
+    🏎 <b>Corrida: { $raceTime }</b>
+
+    Resultados da qualificação disponíveis:
+
+    🔗 <a href="{ $q12Link }">Classificação Q1 e Q2</a>
+    🔗 <a href="{ $gridLink }">Grelha de Partida</a>
+
+notif-quali-results-no-group = 🏁 <b>Resultados da Qualificação - Corrida #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Qualificação encerrada: { $qualiClose }</b>
+    🏎 <b>Corrida: { $raceTime }</b>
+
+    Resultados da qualificação disponíveis:
+
+    ⚠️ Para ligações personalizadas, configure o seu grupo em /settings!
+
+    🔗 <a href="{ $q12Link }">Classificação Q1 e Q2</a>
+    🔗 <a href="{ $gridLink }">Grelha de Partida</a>

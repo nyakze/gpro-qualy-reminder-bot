@@ -203,6 +203,7 @@ notif-label-24h = 1d voor sluiting kwalificatie
 notif-label-2h = 2u voor sluiting kwalificatie
 notif-label-10min = 10min voor sluiting kwalificatie
 notif-label-opens = Kwalificatie is open
+notif-label-quali-results = Kwalificatie resultaten beschikbaar
 notif-label-replay = Race replay beschikbaar
 notif-label-live = Race is live
 notif-label-results = Race resultaten beschikbaar
@@ -292,6 +293,9 @@ notif-race-results-no-group = 📊 <b>Race #{ $raceId } Resultaten Beschikbaar</
 
 # =======================
 # Weather
+
+
+
 # =======================
 weather-title = 🌤️ <b>Race Weer Voorspelling</b>
 weather-practice-q1 = <b>Training / Kwalificatie 1:</b> { $weather }
@@ -498,6 +502,7 @@ notif-label-24h = 1d voor sluiting kwalificatie
 notif-label-2h = 2u voor sluiting kwalificatie
 notif-label-10min = 10min voor sluiting kwalificatie
 notif-label-opens-soon = Kwalificatie is open
+notif-label-quali-results = Kwalificatie resultaten beschikbaar
 notif-label-race-replay = Race replay beschikbaar
 notif-label-race-live = Race is live
 notif-label-race-results = Race resultaten beschikbaar
@@ -551,6 +556,9 @@ custom-notif-menu-title = ⏱️ <b>Aangepaste Notificaties</b>
 
 # =======================
 # Weather
+
+
+
 # =======================
 weather-unavailable = ⚠️ Weergegevens niet beschikbaar
 weather-title = 🌤️ <b>Race Weer Voorspelling</b>
@@ -608,3 +616,27 @@ error-timezone-not-found = ❌ Geen tijdzone gevonden voor "{ $query }"
 
     Probeer: stadsnaam (Amsterdam), afkorting (CET), of UTC offset (UTC+1)
 error-invalid-timezone = ❌ Ongeldige tijdzone
+
+notif-quali-results = 🏁 <b>Kwalificatie Resultaten - Race #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Kwalificatie gesloten: { $qualiClose }</b>
+    🏎 <b>Race: { $raceTime }</b>
+
+    Kwalificatie resultaten beschikbaar:
+
+    🔗 <a href="{ $q12Link }">Klassement Q1 en Q2</a>
+    🔗 <a href="{ $gridLink }">Startgrid</a>
+
+notif-quali-results-no-group = 🏁 <b>Kwalificatie Resultaten - Race #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Kwalificatie gesloten: { $qualiClose }</b>
+    🏎 <b>Race: { $raceTime }</b>
+
+    Kwalificatie resultaten beschikbaar:
+
+    ⚠️ Voor gepersonaliseerde links, stel je groep in via /settings!
+
+    🔗 <a href="{ $q12Link }">Klassement Q1 en Q2</a>
+    🔗 <a href="{ $gridLink }">Startgrid</a>

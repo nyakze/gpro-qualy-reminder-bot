@@ -202,11 +202,13 @@ notif-label-24h = 1d antes do fechamento da classificação
 notif-label-2h = 2h antes do fechamento da classificação
 notif-label-10min = 10min antes do fechamento da classificação
 notif-label-opens = Classificação está aberta
+notif-label-quali-results = Resultados da classificação disponíveis
 notif-label-replay = Replay da corrida disponível
 notif-label-live = Corrida está ao vivo
 notif-label-results = Resultados da corrida disponíveis
 
 notif-label-opens-soon = Classificação está aberta
+notif-label-quali-results = Resultados da classificação disponíveis
 notif-label-race-replay = Replay da corrida disponível
 notif-label-race-live = Corrida está ao vivo
 notif-label-race-results = Resultados da corrida disponíveis
@@ -592,3 +594,29 @@ error-timezone-not-found = ❌ Nenhum fuso horário encontrado para "{ $query }"
 
     Tente: nome da cidade em inglês (Sao Paulo), abreviação (BRT), ou deslocamento UTC (UTC-3)
 error-invalid-timezone = ❌ Fuso horário inválido
+
+
+
+notif-quali-results = 🏁 <b>Resultados da Classificação - Corrida #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Classificação encerrada: { $qualiClose }</b>
+    🏎 <b>Corrida: { $raceTime }</b>
+
+    Resultados da classificação disponíveis:
+
+    🔗 <a href="{ $q12Link }">Classificação Q1 e Q2</a>
+    🔗 <a href="{ $gridLink }">Grid de Largada</a>
+
+notif-quali-results-no-group = 🏁 <b>Resultados da Classificação - Corrida #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Classificação encerrada: { $qualiClose }</b>
+    🏎 <b>Corrida: { $raceTime }</b>
+
+    Resultados da classificação disponíveis:
+
+    ⚠️ Para links personalizados, configure seu grupo em /settings!
+
+    🔗 <a href="{ $q12Link }">Classificação Q1 e Q2</a>
+    🔗 <a href="{ $gridLink }">Grid de Largada</a>

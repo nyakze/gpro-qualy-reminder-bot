@@ -72,6 +72,92 @@ def generate_replay_link(group: str, lang: str = "gb") -> str:
     return generate_gpro_link(group, lang, "replay")
 
 
+def generate_quali_standings_link(group: str, lang: str = "gb") -> str:
+    """Generate Q1 Q2 Standings link with user's group
+
+    Args:
+        group: User's GPRO group (E, M3, R11, etc.)
+        lang: Language code for URL (e.g., 'gb', 'de', 'fr')
+
+    Returns:
+        str: URL to Q1 Q2 Standings page
+    """
+    from .user_data import is_valid_language
+
+    # Validate and fallback for language
+    if not is_valid_language(lang):
+        logger.warning(f"Invalid language code '{lang}', falling back to 'gb'")
+        lang = "gb"
+
+    base_url = f"https://gpro.net/{lang}/Qualify12Standings.asp?Group="
+
+    if not group:
+        return base_url
+
+    group = group.strip().upper()
+
+    # Elite has no number
+    if group == "E":
+        return f"{base_url}Elite"
+
+    # Parse group letter and number (e.g., M3, R11, P15, A42)
+    match = re.match(r"^([MPAR])(\d{1,3})$", group)
+    if not match:
+        # Invalid format, return default
+        return base_url
+
+    letter, number = match.groups()
+    group_names = {"M": "Master", "P": "Pro", "A": "Amateur", "R": "Rookie"}
+
+    group_name = group_names[letter]
+    # URL encode: "Rookie - 11" → "Rookie%20-%2011"
+    encoded = f"{group_name}%20-%20{number}"
+    return f"{base_url}{encoded}"
+
+
+def generate_starting_grid_link(group: str, lang: str = "gb") -> str:
+    """Generate Starting Grid link with user's group
+
+    Args:
+        group: User's GPRO group (E, M3, R11, etc.)
+        lang: Language code for URL (e.g., 'gb', 'de', 'fr')
+
+    Returns:
+        str: URL to Starting Grid page
+    """
+    from .user_data import is_valid_language
+
+    # Validate and fallback for language
+    if not is_valid_language(lang):
+        logger.warning(f"Invalid language code '{lang}', falling back to 'gb'")
+        lang = "gb"
+
+    base_url = f"https://gpro.net/{lang}/StartingGrid.asp?Group="
+
+    if not group:
+        return base_url
+
+    group = group.strip().upper()
+
+    # Elite has no number
+    if group == "E":
+        return f"{base_url}Elite"
+
+    # Parse group letter and number (e.g., M3, R11, P15, A42)
+    match = re.match(r"^([MPAR])(\d{1,3})$", group)
+    if not match:
+        # Invalid format, return default
+        return base_url
+
+    letter, number = match.groups()
+    group_names = {"M": "Master", "P": "Pro", "A": "Amateur", "R": "Rookie"}
+
+    group_name = group_names[letter]
+    # URL encode: "Rookie - 11" → "Rookie%20-%2011"
+    encoded = f"{group_name}%20-%20{number}"
+    return f"{base_url}{encoded}"
+
+
 def translate_weather_condition(weather_condition: str, get_text_func) -> str:
     """Translate weather condition from English to user's language
 
@@ -117,10 +203,10 @@ def format_weather_data(weather: dict, i18n=None, user_id: int = None) -> str:
     # Import i18n context if not provided
     if i18n is None:
         # Get user's UI language if user_id is provided
-        ui_lang = "en"
+        ui_lang = "gb"
         if user_id is not None:
             user_status = get_user_status(user_id)
-            ui_lang = user_status.get("ui_lang", "en")
+            ui_lang = user_status.get("ui_lang", "gb")
 
         # Use the global translation function with user's UI language
         from i18n_setup import get_translation
@@ -197,7 +283,7 @@ async def send_race_live_notification(
     user_status = get_user_status(user_id)
     group = user_status.get("group")
     user_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
-    ui_lang = user_status.get("ui_lang", "en")  # Get user's UI language
+    ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
 
     track = add_flag_to_track(race_data["track"])
     race_date = race_data["date"]
@@ -252,7 +338,7 @@ async def send_race_replay_notification(
     user_status = get_user_status(user_id)
     group = user_status.get("group")
     user_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
-    ui_lang = user_status.get("ui_lang", "en")  # Get user's UI language
+    ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
 
     track = add_flag_to_track(race_data["track"])
     race_date = race_data["date"]
@@ -307,7 +393,7 @@ async def send_race_results_notification(
     user_status = get_user_status(user_id)
     group = user_status.get("group")
     user_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
-    ui_lang = user_status.get("ui_lang", "en")  # Get user's UI language
+    ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
 
     track = add_flag_to_track(race_data["track"])
     race_date = race_data["date"]
@@ -363,6 +449,71 @@ async def send_race_results_notification(
         logger.error(f"Race results notify {user_id} failed: {e}")
 
 
+async def send_quali_results_notification(
+    bot: Bot, user_id: int, race_id: int, race_data: Dict, i18n=None
+):
+    """Send qualifying results notification after quali deadline"""
+    from timezone_utils import format_datetime_for_user
+
+    user_status = get_user_status(user_id)
+    group = user_status.get("group")
+    user_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
+    ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
+
+    track = add_flag_to_track(race_data["track"])
+    race_date = race_data["date"]
+    quali_close = race_data["quali_close"]
+    quali_close_time = format_datetime_for_user(quali_close, user_id, "%d.%m %H:%M")
+    race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
+
+    # Generate qualifying standings links
+    q12_standings_link = generate_quali_standings_link(group, user_lang)
+    starting_grid_link = generate_starting_grid_link(group, user_lang)
+
+    # Import i18n context if not provided
+    if i18n is None:
+        # Use the global translation function with user's UI language
+        from i18n_setup import get_translation
+
+        def get_text(key, **kwargs):
+            return get_translation(key, locale=ui_lang, **kwargs)
+
+    else:
+        # Use i18n context from handler
+        def get_text(key, **kwargs):
+            return i18n.get(key, **kwargs)
+
+    # Build message based on whether group is set
+    if group:
+        message = get_text(
+            "notif-quali-results",
+            raceId=race_id,
+            track=track,
+            qualiClose=quali_close_time,
+            raceTime=race_time,
+            q12Link=q12_standings_link,
+            gridLink=starting_grid_link,
+        )
+    else:
+        message = get_text(
+            "notif-quali-results-no-group",
+            raceId=race_id,
+            track=track,
+            qualiClose=quali_close_time,
+            raceTime=race_time,
+            q12Link=q12_standings_link,
+            gridLink=starting_grid_link,
+        )
+
+    try:
+        await bot.send_message(user_id, message, parse_mode="HTML")
+        logger.info(
+            f"🏁 Sent quali results notification to {user_id} for race {race_id}"
+        )
+    except Exception as e:
+        logger.error(f"Quali results notify {user_id} failed: {e}")
+
+
 async def send_quali_notification(
     bot: Bot,
     user_id: int,
@@ -383,7 +534,7 @@ async def send_quali_notification(
     race_date = race_data["date"]
     quali_close = race_data["quali_close"]
     user_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
-    ui_lang = user_status.get("ui_lang", "en")  # Get user's UI language
+    ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
 
     # Generate qualifying link
     quali_link = f"https://gpro.net/{user_lang}/Qualify.asp"

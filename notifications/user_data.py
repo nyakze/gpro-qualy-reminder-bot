@@ -79,6 +79,7 @@ def get_default_notification_preferences():
         "2h": True,
         "10min": True,
         "opens_soon": True,
+        "quali_results": True,
         "race_replay": True,
         "race_live": True,
         "race_results": True,

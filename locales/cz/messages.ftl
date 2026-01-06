@@ -203,6 +203,7 @@ notif-label-24h = 1 den před uzavřením kvalifikace
 notif-label-2h = 2 hodiny před uzavřením kvalifikace
 notif-label-10min = 10 minut před uzavřením kvalifikace
 notif-label-opens = Kvalifikace je otevřena
+notif-label-quali-results = Výsledky kvalifikace jsou k dispozici
 notif-label-replay = Repríza závodu je dostupná
 notif-label-live = Závod probíhá
 notif-label-results = Výsledky závodu jsou dostupné
@@ -292,6 +293,9 @@ notif-race-results-no-group = 📊 <b>Výsledky závodu č. { $raceId } jsou dos
 
 # =======================
 # Weather
+
+
+
 # =======================
 weather-title = 🌤️ <b>Předpověď počasí pro závod</b>
 weather-practice-q1 = <b>Trénink / Kvalifikace 1:</b> { $weather }
@@ -508,6 +512,7 @@ notif-label-24h = 1 den před uzavřením kvalifikace
 notif-label-2h = 2 hodiny před uzavřením kvalifikace
 notif-label-10min = 10 minut před uzavřením kvalifikace
 notif-label-opens-soon = Kvalifikace je otevřena
+notif-label-quali-results = Výsledky kvalifikace jsou k dispozici
 notif-label-race-replay = Repríza závodu je dostupná
 notif-label-race-live = Závod probíhá
 notif-label-race-results = Výsledky závodu jsou dostupné
@@ -561,6 +566,9 @@ custom-notif-menu-title = ⏱️ <b>Vlastní oznámení</b>
 
 # =======================
 # Weather
+
+
+
 # =======================
 weather-unavailable = ⚠️ Data o počasí nejsou dostupná
 weather-title = 🌤️ <b>Předpověď počasí pro závod</b>
@@ -618,3 +626,27 @@ error-timezone-not-found = ❌ Nenalezeno žádné časové pásmo pro "{ $query
 
     Zkuste: název města (Praha), zkratka (CET), nebo UTC offset (UTC+1)
 error-invalid-timezone = ❌ Neplatné časové pásmo
+
+notif-quali-results = 🏁 <b>Výsledky kvalifikace - Závod #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Kvalifikace uzavřena: { $qualiClose }</b>
+    🏎 <b>Závod: { $raceTime }</b>
+
+    Výsledky kvalifikace jsou k dispozici:
+
+    🔗 <a href="{ $q12Link }">Pořadí Q1 a Q2</a>
+    🔗 <a href="{ $gridLink }">Startovní rošt</a>
+
+notif-quali-results-no-group = 🏁 <b>Výsledky kvalifikace - Závod #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Kvalifikace uzavřena: { $qualiClose }</b>
+    🏎 <b>Závod: { $raceTime }</b>
+
+    Výsledky kvalifikace jsou k dispozici:
+
+    ⚠️ Pro personalizované odkazy nastavte svou skupinu v /settings!
+
+    🔗 <a href="{ $q12Link }">Pořadí Q1 a Q2</a>
+    🔗 <a href="{ $gridLink }">Startovní rošt</a>

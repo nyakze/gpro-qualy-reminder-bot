@@ -202,11 +202,13 @@ notif-label-24h = 1g prima della chiusura qualifiche
 notif-label-2h = 2h prima della chiusura qualifiche
 notif-label-10min = 10min prima della chiusura qualifiche
 notif-label-opens = Le qualifiche sono aperte
+notif-label-quali-results = Risultati delle qualifiche disponibili
 notif-label-replay = Replay della gara disponibile
 notif-label-live = Gara in diretta
 notif-label-results = Risultati della gara disponibili
 
 notif-label-opens-soon = Le qualifiche sono aperte
+notif-label-quali-results = Risultati delle qualifiche disponibili
 notif-label-race-replay = Replay della gara disponibile
 notif-label-race-live = Gara in diretta
 notif-label-race-results = Risultati della gara disponibili
@@ -592,3 +594,29 @@ error-timezone-not-found = ❌ Nessun fuso orario trovato per "{ $query }"
 
     Prova: nome città in inglese (Rome), abbreviazione (CET), o offset UTC (UTC+1)
 error-invalid-timezone = ❌ Fuso orario non valido
+
+
+
+notif-quali-results = 🏁 <b>Risultati Qualifiche - Gara #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Qualifiche chiuse: { $qualiClose }</b>
+    🏎 <b>Gara: { $raceTime }</b>
+
+    Risultati delle qualifiche disponibili:
+
+    🔗 <a href="{ $q12Link }">Classifica Q1 e Q2</a>
+    🔗 <a href="{ $gridLink }">Griglia di Partenza</a>
+
+notif-quali-results-no-group = 🏁 <b>Risultati Qualifiche - Gara #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Qualifiche chiuse: { $qualiClose }</b>
+    🏎 <b>Gara: { $raceTime }</b>
+
+    Risultati delle qualifiche disponibili:
+
+    ⚠️ Per link personalizzati, imposta il tuo gruppo in /settings!
+
+    🔗 <a href="{ $q12Link }">Classifica Q1 e Q2</a>
+    🔗 <a href="{ $gridLink }">Griglia di Partenza</a>

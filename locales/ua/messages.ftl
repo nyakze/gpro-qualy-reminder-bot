@@ -203,6 +203,7 @@ notif-label-24h = 1д до закриття кваліфікації
 notif-label-2h = 2год до закриття кваліфікації
 notif-label-10min = 10хв до закриття кваліфікації
 notif-label-opens = Кваліфікація відкрита
+notif-label-quali-results = Результати кваліфікації доступні
 notif-label-replay = Доступний повтор гонки
 notif-label-live = Гонка в прямому ефірі
 notif-label-results = Доступні результати гонки
@@ -292,6 +293,9 @@ notif-race-results-no-group = 📊 <b>Доступні Результати Го
 
 # =======================
 # Weather
+
+
+
 # =======================
 weather-title = 🌤️ <b>Прогноз Погоди для Гонки</b>
 weather-practice-q1 = <b>Практика / Кваліфікація 1:</b> { $weather }
@@ -508,6 +512,7 @@ notif-label-24h = 1д до закриття кваліфікації
 notif-label-2h = 2год до закриття кваліфікації
 notif-label-10min = 10хв до закриття кваліфікації
 notif-label-opens-soon = Кваліфікація відкрита
+notif-label-quali-results = Результати кваліфікації доступні
 notif-label-race-replay = Доступний повтор гонки
 notif-label-race-live = Гонка в прямому ефірі
 notif-label-race-results = Доступні результати гонки
@@ -561,6 +566,9 @@ custom-notif-menu-title = ⏱️ <b>Користувацькі Сповіщен�
 
 # =======================
 # Weather
+
+
+
 # =======================
 weather-unavailable = ⚠️ Дані про погоду недоступні
 weather-title = 🌤️ <b>Прогноз Погоди для Гонки</b>
@@ -618,3 +626,27 @@ error-timezone-not-found = ❌ Не знайдено часовий пояс д�
 
     Спробуйте: назву міста (Київ), абревіатуру (EET) або зміщення UTC (UTC+2)
 error-invalid-timezone = ❌ Невірний часовий пояс
+
+notif-quali-results = 🏁 <b>Результати кваліфікації - Гонка #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Кваліфікація закрита: { $qualiClose }</b>
+    🏎 <b>Гонка: { $raceTime }</b>
+
+    Результати кваліфікації доступні:
+
+    🔗 <a href="{ $q12Link }">Результати Кв1 і Кв2</a>
+    🔗 <a href="{ $gridLink }">Стартова решітка</a>
+
+notif-quali-results-no-group = 🏁 <b>Результати кваліфікації - Гонка #{ $raceId }</b>
+
+    📍 <b>{ $track }</b>
+    ✅ <b>Кваліфікація закрита: { $qualiClose }</b>
+    🏎 <b>Гонка: { $raceTime }</b>
+
+    Результати кваліфікації доступні:
+
+    ⚠️ Для персональних посилань встановіть свою групу в /settings!
+
+    🔗 <a href="{ $q12Link }">Результати Кв1 і Кв2</a>
+    🔗 <a href="{ $gridLink }">Стартова решітка</a>
