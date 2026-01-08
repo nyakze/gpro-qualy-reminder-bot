@@ -83,7 +83,7 @@ sudo journalctl -u gpro -f
 **Calendar Management:**
 - Two calendars: current season (`gpro_calendar.json`) and next season (`next_season_calendar.json`)
 - Race IDs are sequential 1-17, re-numbered by date on API parse (not using GPRO's `idxReal`)
-- Race timing: Always 19:00 UTC, qualifying closes 1.5h before race
+- Race timing: Always 20:00 CET/CEST (19:00 UTC winter, 18:00 UTC summer), qualifying closes 1.5h before race
 - Weather data embedded in race entries, persisted to file after fetch
 
 **Notification Deduplication:**
