@@ -4,6 +4,7 @@ import re
 import os
 import asyncio
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 import aiohttp
 from config import GPRO_API_TOKEN, CALENDAR_FILE, GPRO_API_LANG, NEXT_SEASON_FILE
 
@@ -24,9 +25,38 @@ DATE_FORMATS = [
 ]
 
 # Race timing constants
-RACE_START_HOUR_UTC = 19  # Races start at 19:00 UTC
-RACE_START_MINUTE_UTC = 0
+# GPRO races are at 20:00 CET/CEST (Europe/Paris timezone)
+# CET (winter, UTC+1): 20:00 CET = 19:00 UTC
+# CEST (summer, UTC+2): 20:00 CEST = 18:00 UTC
+RACE_START_HOUR_CET = 20  # Races start at 20:00 CET/CEST
+RACE_START_MINUTE_CET = 0
 QUALI_CLOSES_BEFORE_RACE_HOURS = 1.5  # Quali closes 1.5 hours before race
+GPRO_TIMEZONE = ZoneInfo("Europe/Paris")  # CET/CEST timezone
+
+
+def get_race_time_in_utc(race_date: datetime) -> datetime:
+    """Convert race time from CET/CEST to UTC based on DST.
+
+    Args:
+        race_date: Naive datetime with just the date (time will be set)
+
+    Returns:
+        datetime: Race time in UTC timezone-aware format
+    """
+    # Create race time in CET/CEST timezone
+    race_time_cet = race_date.replace(
+        hour=RACE_START_HOUR_CET,
+        minute=RACE_START_MINUTE_CET,
+        second=0,
+        microsecond=0
+    )
+
+    # Localize to CET/CEST (handles DST automatically)
+    race_time_cet = race_time_cet.replace(tzinfo=GPRO_TIMEZONE)
+
+    # Convert to UTC and return as naive datetime (for consistency with existing code)
+    race_time_utc = race_time_cet.astimezone(ZoneInfo("UTC"))
+    return race_time_utc.replace(tzinfo=None)
 
 
 def _load_calendar_from_file(filepath: str) -> dict:
@@ -237,10 +267,8 @@ def parse_gpro_events(events: list, is_next_season: bool = False) -> dict:
             if not race_date:
                 continue
 
-            # Set race start time
-            race_date = race_date.replace(
-                hour=RACE_START_HOUR_UTC, minute=RACE_START_MINUTE_UTC, second=0
-            )
+            # Set race start time (convert from CET/CEST to UTC)
+            race_date = get_race_time_in_utc(race_date)
             quali_close = race_date - timedelta(hours=QUALI_CLOSES_BEFORE_RACE_HOURS)
 
             valid_races.append(
@@ -266,12 +294,14 @@ def parse_gpro_events(events: list, is_next_season: bool = False) -> dict:
             "date": race_data["date"],
             "group": race_data["group"],
         }
+        # Log with actual UTC time (varies by CET/CEST)
+        utc_time_str = race_data['date'].strftime('%d.%m %Y %H:%M UTC')
         logger.info(
-            f"{season_type} Race {seq_num}: {race_data['track']} → {race_data['date'].strftime('%d.%m %Y 19:00 UTC')}"
+            f"{season_type} Race {seq_num}: {race_data['track']} → {utc_time_str} (20:00 CET/CEST)"
         )
 
     logger.info(
-        f"{season_type} Parsed {len(calendar)} sequential race events at 19:00 UTC"
+        f"{season_type} Parsed {len(calendar)} sequential race events at 20:00 CET/CEST"
     )
     return calendar
 
@@ -285,7 +315,7 @@ def parse_gpro_date_fixed(date_str: str) -> datetime:
     if "Today" in date_str or "<font" in date_str or "<b>" in date_str:
         now = datetime.utcnow()
         today = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        logger.info(f"⏰ 'Today' → {today.strftime('%d.%m.%Y')} UTC 19:00")
+        logger.info(f"⏰ 'Today' → {today.strftime('%d.%m.%Y')} 20:00 CET/CEST")
         return today
 
     # **CLEAN HTML + ordinals**
