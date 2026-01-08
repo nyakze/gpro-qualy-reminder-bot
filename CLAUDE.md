@@ -165,7 +165,8 @@ sudo journalctl -u gpro -f
 - Mapping: `ua` → `gb` (GPRO), all others map directly (e.g., `gb` → `gb`, `nl` → `nl`, `bg` → `bg`)
 
 **Admin Commands:**
-- `/update`: Fetch calendar from API (current + next season if published)
+- `/update`: Fetch calendar from API (current + next season if published) and reset all users' completion status
+- `/update soft`: Fetch calendar from API without resetting user data (preserves `completed_quali` status)
 - `/updatetz`: Download timezone metadata from Geoapify and rebuild search index
 - `/weather`: Manual weather fetch for testing
 - `/users`: List all users with completion status

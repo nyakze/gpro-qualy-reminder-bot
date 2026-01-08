@@ -195,20 +195,37 @@ async def cmd_update(message: Message, i18n: I18nContext):
         await message.answer(i18n.get("admin-only"))
         return
 
+    # Check for "soft" argument
+    soft_update = False
+    if message.text and len(message.text.split()) > 1:
+        args = message.text.split()[1:]
+        if "soft" in args:
+            soft_update = True
+
     await update_calendar()
 
+    # Reset user data unless soft update
     reset_count = 0
-    for user_id in list(users_data.keys()):
-        reset_user_status(user_id)
-        reset_count += 1
+    if not soft_update:
+        for user_id in list(users_data.keys()):
+            reset_user_status(user_id)
+            reset_count += 1
 
     # Current season status
-    await message.answer(
-        i18n.get(
-            "admin-calendar-updated", count=len(race_calendar), userCount=reset_count
-        ),
-        parse_mode="HTML",
-    )
+    if soft_update:
+        await message.answer(
+            f"✅ <b>Calendar updated</b> (soft mode)\n\n"
+            f"📅 Current season: {len(race_calendar)} races\n"
+            f"👥 User data: <i>preserved</i>",
+            parse_mode="HTML",
+        )
+    else:
+        await message.answer(
+            i18n.get(
+                "admin-calendar-updated", count=len(race_calendar), userCount=reset_count
+            ),
+            parse_mode="HTML",
+        )
 
     # Next season status
     if next_season_calendar:
