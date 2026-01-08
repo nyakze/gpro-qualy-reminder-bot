@@ -311,6 +311,10 @@ def parse_gpro_date_fixed(date_str: str) -> datetime:
     if not date_str:
         return None
 
+    # Skip obvious placeholder values (e.g., "-", "TBD", "N/A")
+    if date_str.strip() in ["-", "TBD", "N/A", ""]:
+        return None
+
     # **SIMPLE "Today" = CURRENT DAY 00:00**
     if "Today" in date_str or "<font" in date_str or "<b>" in date_str:
         now = datetime.utcnow()
