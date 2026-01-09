@@ -33,6 +33,10 @@ RACE_START_MINUTE_CET = 0
 QUALI_CLOSES_BEFORE_RACE_HOURS = 1.5  # Quali closes 1.5 hours before race
 GPRO_TIMEZONE = ZoneInfo("Europe/Paris")  # CET/CEST timezone
 
+# Season transition constants
+PREFETCH_DAYS_BEFORE_SEASON = 4  # Fetch next season calendar 4 days before first race
+SEASON_TRANSITION_TOLERANCE_MINUTES = 15  # Tolerance for detecting season end
+
 
 def get_race_time_in_utc(race_date: datetime) -> datetime:
     """Convert race time from CET/CEST to UTC based on DST.
@@ -499,3 +503,131 @@ def get_races_closing_soon(hours_before: float = 720) -> dict:
         f"Upcoming races ({len(sorted_upcoming)}): {list(sorted_upcoming.keys())}"
     )
     return sorted_upcoming
+
+
+def get_last_race_id() -> int:
+    """Get the ID of the last race in the current season
+
+    Returns:
+        int: Last race ID, or 0 if no races
+    """
+    if not race_calendar:
+        return 0
+    return max(race_calendar.keys())
+
+
+def get_first_race_date() -> datetime:
+    """Get the date of the first race in the current season
+
+    Returns:
+        datetime: First race date, or None if no races
+    """
+    if not race_calendar:
+        return None
+    
+    first_race_id = min(race_calendar.keys())
+    return race_calendar[first_race_id]["date"]
+
+
+def should_trigger_season_transition(now: datetime) -> bool:
+    """Check if we should trigger season transition (last race concluded)
+
+    Args:
+        now: Current datetime
+
+    Returns:
+        bool: True if last race has concluded and we have next season data
+    """
+    if not race_calendar or not next_season_calendar:
+        return False
+    
+    last_race_id = get_last_race_id()
+    last_race_time = race_calendar[last_race_id]["date"]
+    
+    # Check if last race concluded (within tolerance window after race time)
+    minutes_since_race = (now - last_race_time).total_seconds() / 60
+    
+    # Trigger within tolerance window after race ends
+    if 0 <= minutes_since_race <= SEASON_TRANSITION_TOLERANCE_MINUTES:
+        logger.info(f"🔄 Season transition conditions met: {minutes_since_race:.1f}min after last race")
+        return True
+    
+    return False
+
+
+def should_prefetch_next_season(now: datetime) -> bool:
+    """Check if we should pre-fetch next season calendar (4 days before first race)
+
+    Args:
+        now: Current datetime
+
+    Returns:
+        bool: True if we should fetch next season calendar
+    """
+    if not race_calendar:
+        return False
+    
+    # Don't prefetch if we already have next season data
+    if next_season_calendar:
+        logger.debug("Next season calendar already exists, skipping prefetch")
+        return False
+    
+    first_race_date = get_first_race_date()
+    if not first_race_date:
+        return False
+    
+    days_until_first_race = (first_race_date - now).total_seconds() / (24 * 3600)
+    
+    # Check if we're within the prefetch window (4 days before, with 1 hour tolerance)
+    tolerance_hours = 1
+    target_days = PREFETCH_DAYS_BEFORE_SEASON
+    
+    if target_days - (tolerance_hours / 24) <= days_until_first_race <= target_days + (tolerance_hours / 24):
+        logger.info(f"📅 Prefetch conditions met: {days_until_first_race:.2f} days until first race")
+        return True
+    
+    return False
+
+
+async def transition_to_next_season() -> bool:
+    """Transition from current season to next season
+    
+    This function:
+    1. Replaces gpro_calendar.json with next_season_calendar.json
+    2. Deletes next_season_calendar.json
+    3. Updates in-memory race_calendar
+    
+    Returns:
+        bool: True if transition successful, False otherwise
+    """
+    global race_calendar, next_season_calendar
+    
+    if not next_season_calendar:
+        logger.error("❌ Cannot transition: no next season calendar available")
+        return False
+    
+    try:
+        logger.info("🔄 Starting season transition...")
+        
+        # Save next season as current season
+        save_calendar(next_season_calendar)
+        logger.info(f"✅ Saved next season as current season ({len(next_season_calendar)} races)")
+        
+        # Update in-memory calendar
+        race_calendar.clear()
+        race_calendar.update(next_season_calendar)
+        
+        # Clear next season
+        next_season_calendar.clear()
+        
+        # Delete next season file
+        if os.path.exists(NEXT_SEASON_FILE):
+            os.remove(NEXT_SEASON_FILE)
+            logger.info("🗑️ Deleted next_season_calendar.json")
+        
+        logger.info("🎉 Season transition completed successfully!")
+        return True
+        
+    except Exception as e:
+        logger.error(f"❌ Season transition failed: {e}")
+        return False
