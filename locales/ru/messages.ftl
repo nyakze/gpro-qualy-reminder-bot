@@ -269,7 +269,7 @@ notif-race-live-no-group = 🏁 <b>Гонка #{ $raceId } в ПРЯМОМ ЭФ�
 
     🔗 <a href="{ $raceLink }">Смотреть гонку</a>
 
-notif-race-replay = 📺 <b>Доступен потвтор гонки #{ $raceId }</b>
+notif-race-replay = 📺 <b>Доступен повтор гонки #{ $raceId }</b>
 
     📍 <b>{ $track }</b>
     🕐 <b>{ $raceTime }</b>
