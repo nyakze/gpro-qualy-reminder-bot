@@ -264,7 +264,7 @@ async def cmd_users(message: Message, i18n: I18nContext):
             group = status.get("group", "—")
             text += f"• <code>{uid}</code>: Race {quali} | Group {group}\n"
 
-        text += f"\n💡 Use <code>/user USER_ID</code> for details or <code>/userstats</code> for statistics"
+        text += f"\n💡 Use /user <USER_ID> for details or /userstats for statistics"
         await message.answer(text, parse_mode="HTML")
 
     except Exception as e:
