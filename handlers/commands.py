@@ -242,34 +242,199 @@ async def cmd_update(message: Message, i18n: I18nContext):
 
 @router.message(Command("users"))
 async def cmd_users(message: Message, i18n: I18nContext):
-    logger.debug(
-        f"USERS - User: {message.from_user.id} ({type(message.from_user.id)}), Admins: {ADMIN_USER_IDS}"
-    )
-
+    """List all users in compact format"""
     if message.from_user.id not in ADMIN_USER_IDS:
-        logger.warning(f"USERS: Access denied for user {message.from_user.id}")
         await message.answer(i18n.get("admin-only"))
         return
 
-    logger.debug("USERS: Admin access granted")
-
     try:
-        logger.debug(f"USERS: Loaded {len(users_data)} users from notifications")
-
         if not users_data:
             await message.answer(i18n.get("admin-users-none"), parse_mode="HTML")
             return
 
-        header = i18n.get("admin-users-count", count=len(users_data))
+        total_users = len(users_data)
+        users_with_group = sum(1 for u in users_data.values() if u.get("group"))
+        
+        header = i18n.get("admin-users-count", count=total_users)
         text = f"{header}\n\n"
+        text += f"📊 {users_with_group} in groups, {total_users - users_with_group} without\n\n"
+        
         for uid, status in users_data.items():
             quali = status.get("completed_quali", "None")
-            text += f"• <code>{uid}</code>: Race {quali}\n"
+            group = status.get("group", "—")
+            text += f"• <code>{uid}</code>: Race {quali} | Group {group}\n"
 
+        text += f"\n💡 Use <code>/user USER_ID</code> for details or <code>/userstats</code> for statistics"
         await message.answer(text, parse_mode="HTML")
 
     except Exception as e:
         logger.error(f"USERS ERROR: {e}")
+        await message.answer(i18n.get("error-invalid-data"), parse_mode="HTML")
+
+
+@router.message(Command("user"))
+async def cmd_user(message: Message, i18n: I18nContext):
+    """Show detailed information about a specific user
+    
+    Usage:
+        /user USER_ID - Show details for specified user
+        /user - Show details for yourself
+    """
+    if message.from_user.id not in ADMIN_USER_IDS:
+        await message.answer(i18n.get("admin-only"))
+        return
+
+    # Parse user ID from command
+    if message.text and len(message.text.split()) > 1:
+        try:
+            target_user_id = int(message.text.split()[1])
+        except ValueError:
+            await message.answer(
+                "❌ Invalid user ID. Usage: <code>/user USER_ID</code>",
+                parse_mode="HTML",
+            )
+            return
+    else:
+        target_user_id = message.from_user.id
+
+    # Get user data
+    if target_user_id not in users_data:
+        await message.answer(
+            f"❌ User <code>{target_user_id}</code> not found in database",
+            parse_mode="HTML",
+        )
+        return
+
+    status = users_data[target_user_id]
+    
+    # Build detailed info
+    text = f"👤 <b>User Details: <code>{target_user_id}</code></b>\n\n"
+    
+    # Basic info
+    text += f"<b>📋 Basic Info:</b>\n"
+    text += f"• Completed Quali: {status.get('completed_quali', 'None')}\n"
+    text += f"• Group: {status.get('group', '—')}\n"
+    text += f"• Website Mode: {status.get('website_mode', 'classic')}\n\n"
+    
+    # Language & Timezone
+    text += f"<b>🌍 Localization:</b>\n"
+    text += f"• UI Language: {status.get('ui_lang', 'gb')}\n"
+    text += f"• GPRO Language: {status.get('gpro_lang', 'gb')}\n"
+    text += f"• Timezone: {status.get('timezone', 'UTC')}\n\n"
+    
+    # Notifications
+    text += f"<b>🔔 Notifications:</b>\n"
+    notif = status.get("notifications", {})
+    if notif:
+        enabled = [k for k, v in notif.items() if v]
+        disabled = [k for k, v in notif.items() if not v]
+        text += f"• Enabled ({len(enabled)}): {', '.join(enabled) if enabled else '—'}\n"
+        text += f"• Disabled ({len(disabled)}): {', '.join(disabled) if disabled else '—'}\n"
+    else:
+        text += f"• No notification settings\n"
+    
+    # Custom notifications
+    custom = status.get("custom_notifications", [])
+    custom_enabled = [c for c in custom if c.get("enabled")]
+    if custom_enabled:
+        text += f"\n<b>⏰ Custom Notifications:</b>\n"
+        for i, c in enumerate(custom_enabled, 1):
+            hours = c.get("hours_before", "?")
+            text += f"• Custom {i}: {hours}h before\n"
+    
+    await message.answer(text, parse_mode="HTML")
+    logger.info(f"Admin {message.from_user.id} viewed user details for {target_user_id}")
+
+
+@router.message(Command("userstats"))
+async def cmd_userstats(message: Message, i18n: I18nContext):
+    """Show aggregated statistics about all users"""
+    if message.from_user.id not in ADMIN_USER_IDS:
+        await message.answer(i18n.get("admin-only"))
+        return
+
+    try:
+        if not users_data:
+            await message.answer(i18n.get("admin-users-none"), parse_mode="HTML")
+            return
+
+        total_users = len(users_data)
+        
+        text = f"📊 <b>User Statistics</b>\n\n"
+        text += f"👥 Total users: {total_users}\n\n"
+        
+        # Group distribution
+        text += "<b>🏁 Groups:</b>\n"
+        groups = {}
+        for status in users_data.values():
+            group = status.get("group") or "No group"
+            groups[group] = groups.get(group, 0) + 1
+        for group, count in sorted(groups.items(), key=lambda x: (x[0] == "No group", x[0])):
+            percentage = (count / total_users) * 100
+            text += f"• {group}: {count} ({percentage:.1f}%)\n"
+        
+        # Timezone distribution (top 5)
+        text += "\n<b>🌍 Timezones (Top 5):</b>\n"
+        tz_counts = {}
+        for status in users_data.values():
+            tz = status.get("timezone", "UTC")
+            tz_counts[tz] = tz_counts.get(tz, 0) + 1
+        for tz, count in sorted(tz_counts.items(), key=lambda x: x[1], reverse=True)[:5]:
+            percentage = (count / total_users) * 100
+            text += f"• {tz}: {count} ({percentage:.1f}%)\n"
+        if len(tz_counts) > 5:
+            text += f"• ...and {len(tz_counts) - 5} more\n"
+        
+        # Language distribution
+        text += "\n<b>🗣 UI Languages:</b>\n"
+        lang_counts = {}
+        for status in users_data.values():
+            lang = status.get("ui_lang", "gb")
+            lang_counts[lang] = lang_counts.get(lang, 0) + 1
+        for lang, count in sorted(lang_counts.items(), key=lambda x: x[1], reverse=True):
+            percentage = (count / total_users) * 100
+            text += f"• {lang}: {count} ({percentage:.1f}%)\n"
+        
+        # GPRO language distribution
+        text += "\n<b>🏎 GPRO Languages:</b>\n"
+        gpro_lang_counts = {}
+        for status in users_data.values():
+            lang = status.get("gpro_lang", "gb")
+            gpro_lang_counts[lang] = gpro_lang_counts.get(lang, 0) + 1
+        for lang, count in sorted(gpro_lang_counts.items(), key=lambda x: x[1], reverse=True):
+            percentage = (count / total_users) * 100
+            text += f"• {lang}: {count} ({percentage:.1f}%)\n"
+        
+        # Website mode distribution
+        text += "\n<b>💻 Website Mode:</b>\n"
+        mode_counts = {}
+        for status in users_data.values():
+            mode = status.get("website_mode", "classic")
+            mode_counts[mode] = mode_counts.get(mode, 0) + 1
+        for mode, count in sorted(mode_counts.items(), key=lambda x: x[1], reverse=True):
+            percentage = (count / total_users) * 100
+            text += f"• {mode}: {count} ({percentage:.1f}%)\n"
+        
+        # Notification stats
+        text += "\n<b>🔔 Notifications:</b>\n"
+        all_enabled = sum(1 for s in users_data.values() if all(s.get("notifications", {}).values()))
+        all_disabled = sum(1 for s in users_data.values() if not any(s.get("notifications", {}).values()))
+        partial = total_users - all_enabled - all_disabled
+        text += f"• All enabled: {all_enabled} ({(all_enabled/total_users)*100:.1f}%)\n"
+        text += f"• All disabled: {all_disabled} ({(all_disabled/total_users)*100:.1f}%)\n"
+        text += f"• Partial: {partial} ({(partial/total_users)*100:.1f}%)\n"
+        
+        # Custom notifications
+        custom_users = sum(1 for s in users_data.values() 
+                          if any(c.get("enabled") for c in s.get("custom_notifications", [])))
+        if custom_users > 0:
+            text += f"• Custom notifications: {custom_users} ({(custom_users/total_users)*100:.1f}%)\n"
+        
+        await message.answer(text, parse_mode="HTML")
+        logger.info(f"Admin {message.from_user.id} viewed user statistics")
+
+    except Exception as e:
+        logger.error(f"USERSTATS ERROR: {e}")
         await message.answer(i18n.get("error-invalid-data"), parse_mode="HTML")
 
 
