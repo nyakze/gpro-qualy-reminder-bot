@@ -240,6 +240,9 @@ def _add_replay_and_results_notifications(
 
 def _get_races_for_polling(now: datetime) -> list:
     """Get races that are in the API polling window (2-3.5 hours after previous race)
+    
+    IMPORTANT: Skips race_id=1 because Race 1 quali doesn't open after the 
+    last race of previous season - there's a season break.
 
     Args:
         now: Current datetime
@@ -250,7 +253,7 @@ def _get_races_for_polling(now: datetime) -> list:
     races = []
 
     for race_id, race_data in race_calendar.items():
-        # Skip race 1 (no previous race)
+        # Skip race 1 - no previous race in same season (season break)
         if race_id == 1:
             continue
 
@@ -276,6 +279,9 @@ def _get_races_for_polling(now: datetime) -> list:
 
 def _get_races_for_fallback(now: datetime) -> list:
     """Get races that have reached fallback time (3.5 hours after previous race)
+    
+    IMPORTANT: Skips race_id=1 because Race 1 quali doesn't open after the 
+    last race of previous season - there's a season break.
 
     Args:
         now: Current datetime
@@ -286,7 +292,7 @@ def _get_races_for_fallback(now: datetime) -> list:
     races = []
 
     for race_id, race_data in race_calendar.items():
-        # Skip race 1 (no previous race)
+        # Skip race 1 - no previous race in same season (season break)
         if race_id == 1:
             continue
 
