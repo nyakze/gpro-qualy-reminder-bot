@@ -35,7 +35,11 @@ GPRO_TIMEZONE = ZoneInfo("Europe/Paris")  # CET/CEST timezone
 
 # Season transition constants
 PREFETCH_DAYS_BEFORE_SEASON = 4  # Fetch next season calendar 4 days before first race
-SEASON_TRANSITION_TOLERANCE_MINUTES = 15  # Tolerance for detecting season end
+# CRITICAL: Wait until AFTER all notifications are sent
+# Replay/results notifications: sent immediately after race
+# We transition at 4h to ensure everything is complete and avoid conflicts
+SEASON_TRANSITION_HOURS_AFTER_RACE = 4.0  # Transition 4 hours after last race
+SEASON_TRANSITION_TOLERANCE_MINUTES = 15  # Tolerance window for detection
 
 
 def get_race_time_in_utc(race_date: datetime) -> datetime:
@@ -530,13 +534,25 @@ def get_first_race_date() -> datetime:
 
 
 def should_trigger_season_transition(now: datetime) -> bool:
-    """Check if we should trigger season transition (last race concluded)
+    """Check if we should trigger season transition (last race concluded + ALL notifications sent)
+
+    CRITICAL: This waits until 4 hours after the last race to ensure:
+    - Race replay/results notifications sent (immediately after race)
+    - All notification windows complete before transitioning
+    - No conflicts with any race-related notifications
+
+    Timeline example for Race 17 (last race) at 20:00:
+    - 20:00: Race 17 finishes
+    - 20:05: Replay/results notifications sent
+    - 00:00: Season transition occurs (4.0h) ✓ SAFE
+    
+    Note: Race 1 quali does NOT open after Race 17 - there's a season break
 
     Args:
         now: Current datetime
 
     Returns:
-        bool: True if last race has concluded and we have next season data
+        bool: True if 4h after last race and we have next season data
     """
     if not race_calendar or not next_season_calendar:
         return False
@@ -544,12 +560,20 @@ def should_trigger_season_transition(now: datetime) -> bool:
     last_race_id = get_last_race_id()
     last_race_time = race_calendar[last_race_id]["date"]
     
-    # Check if last race concluded (within tolerance window after race time)
-    minutes_since_race = (now - last_race_time).total_seconds() / 60
+    # Calculate hours since last race ended
+    hours_since_race = (now - last_race_time).total_seconds() / 3600
     
-    # Trigger within tolerance window after race ends
-    if 0 <= minutes_since_race <= SEASON_TRANSITION_TOLERANCE_MINUTES:
-        logger.info(f"🔄 Season transition conditions met: {minutes_since_race:.1f}min after last race")
+    # Target: 4 hours after race (ensures all notifications sent)
+    # We wait until 4 hours to ensure everything is done
+    target_hours = SEASON_TRANSITION_HOURS_AFTER_RACE
+    tolerance_hours = SEASON_TRANSITION_TOLERANCE_MINUTES / 60
+    
+    # Trigger within tolerance window around 4 hours after race
+    if target_hours - tolerance_hours <= hours_since_race <= target_hours + tolerance_hours:
+        logger.info(
+            f"🔄 Season transition conditions met: {hours_since_race:.2f}h after last race "
+            f"(all notifications sent)"
+        )
         return True
     
     return False
