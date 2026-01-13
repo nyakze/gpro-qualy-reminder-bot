@@ -775,13 +775,14 @@ async def send_quali_notification(
             else:
                 time_text = get_text("time-hours", hours=hours)
             emoji = "⏰"
-        elif hours_left >= 0.333:
-            time_text = get_text("time-minutes", minutes=minutes)
-            emoji = "⚠️"
         else:
+            # For anything under 2 hours, just show minutes
             minutes = int(hours_left * 60)
             time_text = get_text("time-minutes", minutes=minutes)
-            emoji = "🚨"
+            if hours_left >= 0.333:
+                emoji = "⚠️"
+            else:
+                emoji = "🚨"
 
         deadline = format_datetime_for_user(quali_close, user_id, "%d.%m %H:%M")
         race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
