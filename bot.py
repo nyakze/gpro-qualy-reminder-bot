@@ -21,8 +21,8 @@ from infra.runner import run_with_recovery
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 _STARTUP_TIME = time.time()
 
-logger = setup_logging()
 init_logging_paths(_SCRIPT_DIR)
+logger = setup_logging()
 
 
 async def main():
