@@ -94,6 +94,7 @@ journalctl -u gpro -f  # if deployed
 
 ```
 bot.py              → Entry point, dispatcher setup, middleware
+infra/              → Logging, signal handlers, notification runner
 config.py           → Environment config validation
 gpro_calendar.py    → API integration, calendar cache
 i18n_setup.py       → Fluent i18n middleware

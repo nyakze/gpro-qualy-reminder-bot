@@ -91,6 +91,11 @@ ADMIN_USER_ID=your_telegram_id # to use admin commands
 gpro-qualy-reminder-bot/
 ├── bot.py                      # Main Aiogram bot entry point
 ├── config.py                   # Environment configuration
+├── infra/                      # Bot infrastructure (logging, signals, runner)
+│   ├── __init__.py
+│   ├── logging.py              # JSON logging setup
+│   ├── signals.py              # Shutdown & signal handlers
+│   └── runner.py               # Notification checker with recovery
 ├── gpro_calendar.py            # GPRO API integration & caching
 ├── i18n_setup.py               # i18n middleware setup
 ├── utils.py                    # Shared utilities (flags, formatting)
