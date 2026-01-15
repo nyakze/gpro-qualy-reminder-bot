@@ -70,14 +70,7 @@ GPRO_API_TOKEN=your_gpro_api_token # get it here https://app.gpro.net/apiaccess
 ADMIN_USER_ID=your_telegram_id # to use admin commands
 ```
 
-**users_data.json** (auto-generated):
-```json
-{
-  "123456789": {
-    "completed_quali": null
-  }
-}
-```
+**users_data.json** (auto-generated on first run)
 
 ## Commands
 
@@ -104,6 +97,8 @@ gpro-qualy-reminder-bot/
 ├── i18n_setup.py               # i18n middleware setup
 ├── utils.py                    # Shared utilities (flags, formatting)
 ├── timezone_utils.py           # Timezone conversion & search
+├── middleware/                 # Aiogram middleware
+│   └── user_profile.py         # Auto-update user profile on interactions
 ├── handlers/                   # Command & callback handlers
 │   ├── __init__.py            # Router initialization
 │   ├── commands.py            # /start, /status, /calendar, /deluser, etc.
@@ -120,7 +115,6 @@ gpro-qualy-reminder-bot/
 │   └── {gb,ru,br,it,es,fr,nl,bg,cz,in,ua,pt}/messages.ftl
 ├── requirements.txt            # Python dependencies
 ├── .env.example               # Rename to .env and fill in your data
-├── CLAUDE.md                  # Architecture docs for AI assistance
 ├── timezone-info.json         # Timezone metadata (auto-downloaded)
 ├── users_data.json            # User settings (auto-generated)
 ├── gpro_calendar.json         # Current season calendar cache (auto-generated)
@@ -160,7 +154,7 @@ black .
 ruff check --fix .
 
 # Debug
-tail -f users_data.json
+tail -f gpro_bot.log
 sudo journalctl -u gpro -f
 
 # Test notifications
@@ -168,12 +162,6 @@ pkill -f notifications.py
 source venv/bin/activate
 python bot.py
 ```
-
-### AI Assistance
-
-**CLAUDE.md** - Architecture documentation for [Claude Code](https://claude.ai/code)
-
-This file provides detailed architectural guidance including notification timing logic, data flow patterns, and common gotchas. Helpful when using AI assistance to understand or modify the codebase.
 
 ## API Integration
 

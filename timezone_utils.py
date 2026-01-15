@@ -226,7 +226,8 @@ def build_timezone_search_index() -> dict:
         # Sort entries: canonical timezones first, then aliases
         # This ensures canonical timezones get priority in the mapping
         sorted_entries = sorted(
-            timezone_data, key=lambda e: (e.get("type") != "canonical", e.get("tzIdentifier", ""))
+            timezone_data,
+            key=lambda e: (e.get("type") != "canonical", e.get("tzIdentifier", "")),
         )
 
         for entry in sorted_entries:
@@ -833,7 +834,9 @@ def fuzzy_search_timezones(query: str, limit: int = 5) -> list[tuple[str, float]
 
     # Strategy 1: Try exact and prefix matching first (best for abbreviations)
     if is_abbreviation_like:
-        logger.debug(f"Using exact/prefix matching for abbreviation-like query: '{query}'")
+        logger.debug(
+            f"Using exact/prefix matching for abbreviation-like query: '{query}'"
+        )
 
         for term in search_corpus:
             term_upper = term.upper()
@@ -845,16 +848,23 @@ def fuzzy_search_timezones(query: str, limit: int = 5) -> list[tuple[str, float]
                     seen_timezones[tz_name] = 100.0  # Perfect score
 
             # Prefix match for UTC offsets ("+4" matches "+04" but not "+14")
-            elif query.startswith(("+", "-")) and term_upper == query_upper.ljust(len(term), '0')[:len(term)]:
+            elif (
+                query.startswith(("+", "-"))
+                and term_upper == query_upper.ljust(len(term), "0")[: len(term)]
+            ):
                 # This ensures "+4" matches "+04" but not "+14"
-                if len(query_upper) <= len(term_upper) and term_upper.startswith(query_upper.rstrip('0') or query_upper):
+                if len(query_upper) <= len(term_upper) and term_upper.startswith(
+                    query_upper.rstrip("0") or query_upper
+                ):
                     tz_name = tz_name_map.get(term)
                     if tz_name and tz_name not in seen_timezones:
                         seen_timezones[tz_name] = 95.0  # High score for prefix match
 
     # Strategy 2: Fuzzy matching for partial/typo matches (fallback or for city names)
     if len(seen_timezones) < limit:
-        logger.debug(f"Using fuzzy matching for query: '{query}' (found {len(seen_timezones)} exact matches)")
+        logger.debug(
+            f"Using fuzzy matching for query: '{query}' (found {len(seen_timezones)} exact matches)"
+        )
 
         results = process.extract(
             query,
@@ -876,12 +886,18 @@ def fuzzy_search_timezones(query: str, limit: int = 5) -> list[tuple[str, float]
             if tz_name and tz_name not in seen_timezones:
                 seen_timezones[tz_name] = score
             elif not tz_name:
-                logger.warning(f"Match '{match_text}' not found in tz_name_map (score: {score})")
+                logger.warning(
+                    f"Match '{match_text}' not found in tz_name_map (score: {score})"
+                )
 
-    logger.debug(f"After deduplication: {len(seen_timezones)} unique timezones for query '{query}'")
+    logger.debug(
+        f"After deduplication: {len(seen_timezones)} unique timezones for query '{query}'"
+    )
 
     # Sort by score and limit results
-    final_results = sorted(seen_timezones.items(), key=lambda x: x[1], reverse=True)[:limit]
+    final_results = sorted(seen_timezones.items(), key=lambda x: x[1], reverse=True)[
+        :limit
+    ]
 
     return final_results
 

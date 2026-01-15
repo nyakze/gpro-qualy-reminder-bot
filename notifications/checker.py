@@ -15,7 +15,12 @@ from gpro_calendar import (
     transition_to_next_season,
     update_calendar,
 )
-from .user_data import users_data, is_notification_enabled, load_users_data, save_users_data
+from .user_data import (
+    users_data,
+    is_notification_enabled,
+    load_users_data,
+    save_users_data,
+)
 from .sender import (
     send_quali_notification,
     send_race_live_notification,
@@ -240,8 +245,8 @@ def _add_replay_and_results_notifications(
 
 def _get_races_for_polling(now: datetime) -> list:
     """Get races that are in the API polling window (2-3.5 hours after previous race)
-    
-    IMPORTANT: Skips race_id=1 because Race 1 quali doesn't open after the 
+
+    IMPORTANT: Skips race_id=1 because Race 1 quali doesn't open after the
     last race of previous season - there's a season break.
 
     Args:
@@ -279,8 +284,8 @@ def _get_races_for_polling(now: datetime) -> list:
 
 def _get_races_for_fallback(now: datetime) -> list:
     """Get races that have reached fallback time (3.5 hours after previous race)
-    
-    IMPORTANT: Skips race_id=1 because Race 1 quali doesn't open after the 
+
+    IMPORTANT: Skips race_id=1 because Race 1 quali doesn't open after the
     last race of previous season - there's a season break.
 
     Args:
@@ -543,60 +548,61 @@ def _get_next_check_interval(now: datetime) -> int:
 
 def _cleanup_completed_quali_for_all_users() -> None:
     """Reset completed_quali to empty array for all users
-    
+
     This is called during season transition to clean up old quali data.
     """
     logger.info("🧹 Cleaning up completed_quali for all users...")
-    
+
     for user_id in users_data:
         users_data[user_id]["completed_quali"] = []
-    
+
     save_users_data()
     logger.info(f"✅ Cleaned completed_quali for {len(users_data)} users")
 
 
 async def _check_season_transition(now: datetime) -> None:
     """Check and handle season transition conditions
-    
+
     Args:
         now: Current datetime
     """
     global last_season_transition_check, last_prefetch_check
-    
+
     # Season transition check (after last race concludes)
     if should_trigger_season_transition(now):
         logger.info("🔄 Season transition triggered!")
-        
+
         # Perform transition
         success = await transition_to_next_season()
-        
+
         if success:
             # Clean up user data
             _cleanup_completed_quali_for_all_users()
-            
+
             # Mark as checked to avoid repeated transitions
             last_season_transition_check = now
             logger.info("🎉 Season transition completed successfully!")
         else:
             logger.error("❌ Season transition failed")
-    
+
     # Prefetch check (4 days before first race)
     # Only check every hour to avoid excessive checks
     if (
         last_prefetch_check is None
-        or (now - last_prefetch_check).total_seconds() >= SEASON_CHECK_INTERVAL_HOURS * 3600
+        or (now - last_prefetch_check).total_seconds()
+        >= SEASON_CHECK_INTERVAL_HOURS * 3600
     ):
         if should_prefetch_next_season(now):
             logger.info("📅 Pre-fetching next season calendar...")
-            
+
             # Fetch calendar from API
             success = await update_calendar()
-            
+
             if success:
                 logger.info("✅ Next season calendar pre-fetched successfully!")
             else:
                 logger.error("❌ Failed to pre-fetch next season calendar")
-        
+
         last_prefetch_check = now
 
 

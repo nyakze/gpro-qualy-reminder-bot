@@ -296,10 +296,12 @@ async def build_timezone_page_keyboard(
 
     # Format message with page indicator if multiple pages
     if total_pages > 1:
-        message_text = i18n.get("timezone-select-matches-paginated",
-                               query=query,
-                               page=page+1,
-                               total=total_pages)
+        message_text = i18n.get(
+            "timezone-select-matches-paginated",
+            query=query,
+            page=page + 1,
+            total=total_pages,
+        )
     else:
         message_text = i18n.get("timezone-select-matches", query=query)
 
@@ -314,7 +316,9 @@ async def show_timezone_page(
     matches = data.get("tz_matches", [])
     query = data.get("tz_query", "")
 
-    keyboard, message_text = await build_timezone_page_keyboard(matches, query, page, i18n)
+    keyboard, message_text = await build_timezone_page_keyboard(
+        matches, query, page, i18n
+    )
 
     await message.answer(
         message_text,
@@ -331,7 +335,9 @@ async def show_timezone_page_edit(
     matches = data.get("tz_matches", [])
     query = data.get("tz_query", "")
 
-    keyboard, message_text = await build_timezone_page_keyboard(matches, query, page, i18n)
+    keyboard, message_text = await build_timezone_page_keyboard(
+        matches, query, page, i18n
+    )
 
     await message.edit_text(
         message_text,

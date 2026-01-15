@@ -7,7 +7,20 @@ from aiogram_i18n.cores import FluentRuntimeCore
 from aiogram_i18n.managers import BaseManager
 
 # Supported UI languages
-SUPPORTED_UI_LANGUAGES = ["gb", "ru", "br", "it", "es", "fr", "nl", "bg", "cz", "in", "ua", "pt"]
+SUPPORTED_UI_LANGUAGES = [
+    "gb",
+    "ru",
+    "br",
+    "it",
+    "es",
+    "fr",
+    "nl",
+    "bg",
+    "cz",
+    "in",
+    "ua",
+    "pt",
+]
 DEFAULT_UI_LANGUAGE = "gb"
 
 # Get absolute path to locales directory
@@ -142,6 +155,7 @@ def get_translation(key: str, locale: str = None, **kwargs) -> str:
         # Log any formatting errors
         if errors:
             import logging
+
             logging.getLogger(__name__).debug(
                 f"Translation formatting errors for key '{key}': {errors}"
             )

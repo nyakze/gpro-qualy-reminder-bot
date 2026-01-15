@@ -10,15 +10,16 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from config import BOT_TOKEN
 from gpro_calendar import load_calendar_silent
-from notifications import check_notifications, load_users_data  # ADD load_users_data
+from notifications import check_notifications, load_users_data
 from i18n_setup import setup_i18n
+from middleware.user_profile import UserProfileMiddleware
 
 # Configure production-ready logging
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 _LOG_FILE = os.path.join(_SCRIPT_DIR, "gpro_bot.log")
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
         # Console handler
@@ -56,9 +57,11 @@ async def main():
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher(storage=MemoryStorage())
 
-    # Setup i18n middleware
+    dp.update.middleware(UserProfileMiddleware())
+    logger.debug("✅ UserProfileMiddleware loaded")
+
     i18n = setup_i18n()
-    await i18n.core.startup()  # Manually start the i18n core to load translations
+    await i18n.core.startup()
     dp.update.middleware(i18n)
     logger.debug("✅ i18n middleware loaded")
 

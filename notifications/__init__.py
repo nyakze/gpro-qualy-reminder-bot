@@ -23,6 +23,8 @@ from .user_data import (
     get_user_website_mode,
     mark_quali_done,
     reset_user_status,
+    update_user_profile,
+    get_user_profile,
     LANGUAGE_OPTIONS,
     DEFAULT_USER_LANG,
 )

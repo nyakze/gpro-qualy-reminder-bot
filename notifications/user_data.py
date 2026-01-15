@@ -110,22 +110,17 @@ def load_users_data():
 
 def save_users_data():
     """Save user data with atomic write to prevent corruption"""
+    temp_file = USERS_FILE + ".tmp"
     try:
-        # Write to temporary file first
-        temp_file = USERS_FILE + ".tmp"
         with open(temp_file, "w") as f:
-            # TYPE FIX: Convert int keys → string for JSON
             save_data = {str(k): v for k, v in users_data.items()}
             json.dump(save_data, f, indent=2)
             f.flush()
-            os.fsync(f.fileno())  # Ensure data is written to disk
-
-        # Atomic rename (overwrites USERS_FILE)
+            os.fsync(f.fileno())
         os.replace(temp_file, USERS_FILE)
         logger.debug(f"Saved {len(users_data)} users")
     except Exception as e:
         logger.error(f"Save failed: {e}")
-        # Clean up temp file if it exists
         if os.path.exists(temp_file):
             try:
                 os.remove(temp_file)
@@ -149,14 +144,15 @@ def get_user_status(user_id: int) -> Dict:
             "notifications": get_default_notification_preferences(),
             "custom_notifications": get_default_custom_notifications(),
             "gpro_lang": DEFAULT_USER_LANG,
-            "ui_lang": "gb",  # Default UI language (separate from GPRO links language)
-            "timezone": "UTC",  # Default timezone
-            "website_mode": "classic",  # Website mode: "classic" or "app"
+            "ui_lang": "gb",
+            "timezone": "UTC",
+            "website_mode": "classic",
+            "tg_language_code": None,
+            "username": None,
+            "first_name": None,
         }
         save_users_data()
     else:
-        # Ensure existing users have required fields (migration)
-        # Batch migrations to avoid multiple saves
         needs_save = False
         if "group" not in users_data[user_id]:
             users_data[user_id]["group"] = None
@@ -182,28 +178,34 @@ def get_user_status(user_id: int) -> Dict:
             users_data[user_id]["ui_lang"] = "gb"
             logger.debug(f"Added 'ui_lang' field to user {user_id}")
             needs_save = True
-        # Migration: Convert old "en" to "gb" for GPRO consistency
         elif users_data[user_id]["ui_lang"] == "en":
             users_data[user_id]["ui_lang"] = "gb"
             logger.debug(f"Migrated user {user_id} from 'en' to 'gb'")
             needs_save = True
-        # Migration: Add 72h notification preference for existing users
         if "72h" not in users_data[user_id]["notifications"]:
             users_data[user_id]["notifications"]["72h"] = True
             logger.debug(f"Added '72h' notification to user {user_id}")
             needs_save = True
-        # Migration: Add timezone field for existing users
         if "timezone" not in users_data[user_id]:
             users_data[user_id]["timezone"] = "UTC"
             logger.debug(f"Added 'timezone' field to user {user_id}")
             needs_save = True
-        # Migration: Add website_mode field for existing users
         if "website_mode" not in users_data[user_id]:
             users_data[user_id]["website_mode"] = "classic"
             logger.debug(f"Added 'website_mode' field to user {user_id}")
             needs_save = True
-
-        # Save only once if any migrations were applied
+        if "tg_language_code" not in users_data[user_id]:
+            users_data[user_id]["tg_language_code"] = None
+            logger.debug(f"Added 'tg_language_code' field to user {user_id}")
+            needs_save = True
+        if "username" not in users_data[user_id]:
+            users_data[user_id]["username"] = None
+            logger.debug(f"Added 'username' field to user {user_id}")
+            needs_save = True
+        if "first_name" not in users_data[user_id]:
+            users_data[user_id]["first_name"] = None
+            logger.debug(f"Added 'first_name' field to user {user_id}")
+            needs_save = True
         if needs_save:
             save_users_data()
 
@@ -397,6 +399,74 @@ def get_user_website_mode(user_id: int) -> str:
     """
     user_status = get_user_status(user_id)
     return user_status.get("website_mode", "classic")
+
+
+def update_user_profile(
+    user_id: int,
+    tg_language_code: str = None,
+    username: str = None,
+    first_name: str = None,
+) -> bool:
+    """Update user's profile data from Telegram message
+
+    Args:
+        user_id: Telegram user ID
+        tg_language_code: Telegram's language_code from message.from_user (e.g., 'en', 'ru')
+        username: Telegram username from message.from_user (can be None)
+        first_name: Display name from message.from_user
+
+    Returns:
+        bool: True if any data was updated and saved
+    """
+    if user_id not in users_data:
+        return False
+
+    needs_save = False
+
+    if tg_language_code is not None:
+        current_lang = users_data[user_id].get("tg_language_code")
+        if current_lang != tg_language_code:
+            users_data[user_id]["tg_language_code"] = tg_language_code
+            needs_save = True
+            logger.debug(
+                f"Updated tg_language_code for user {user_id}: {tg_language_code}"
+            )
+
+    if username is not None:
+        current_user = users_data[user_id].get("username")
+        if current_user != username:
+            users_data[user_id]["username"] = username
+            needs_save = True
+            logger.debug(f"Updated username for user {user_id}: {username}")
+
+    if first_name is not None:
+        current_name = users_data[user_id].get("first_name")
+        if current_name != first_name:
+            users_data[user_id]["first_name"] = first_name
+            needs_save = True
+            logger.debug(f"Updated first_name for user {user_id}: {first_name}")
+
+    if needs_save:
+        save_users_data()
+
+    return needs_save
+
+
+def get_user_profile(user_id: int) -> Dict:
+    """Get user's profile data
+
+    Args:
+        user_id: Telegram user ID
+
+    Returns:
+        Dict with tg_language_code, username, and first_name fields
+    """
+    user_status = get_user_status(user_id)
+    return {
+        "tg_language_code": user_status.get("tg_language_code"),
+        "username": user_status.get("username"),
+        "first_name": user_status.get("first_name"),
+    }
 
 
 load_users_data()

@@ -100,14 +100,16 @@ journalctl -u gpro -f  # if deployed
 ## Architecture Summary
 
 ```
-bot.py           → Entry point, dispatcher setup, background tasks
-config.py        → Environment config validation
-gpro_calendar.py → API integration, calendar cache
-i18n_setup.py    → Fluent i18n middleware
-timezone_utils.py→ Timezone conversion, fuzzy search
-handlers/        → Command, callback, FSM handlers
-notifications/   → Checker loop, senders, user data
-utils.py         → Shared helpers (flags, formatting)
+bot.py              → Entry point, dispatcher setup, middleware
+config.py           → Environment config validation
+gpro_calendar.py    → API integration, calendar cache
+i18n_setup.py       → Fluent i18n middleware
+timezone_utils.py   → Timezone conversion, fuzzy search
+middleware/
+    user_profile.py → Auto-update user profile on interactions
+handlers/           → Command, callback, FSM handlers
+notifications/      → Checker loop, senders, user data
+utils.py            → Shared helpers (flags, formatting)
 ```
 
 ## Critical Data Patterns

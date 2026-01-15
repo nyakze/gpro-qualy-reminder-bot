@@ -14,7 +14,9 @@ from .user_data import get_user_status, DEFAULT_USER_LANG
 logger = logging.getLogger(__name__)
 
 
-def generate_gpro_link(group: str, gpro_lang: str = "gb", link_type: str = "live") -> str:
+def generate_gpro_link(
+    group: str, gpro_lang: str = "gb", link_type: str = "live"
+) -> str:
     """Generate GPRO race link based on group format and type
 
     Args:
@@ -448,7 +450,9 @@ async def send_race_live_notification(
         race_link = generate_app_race_live_link()
         # APP live doesn't support group, always use no-group message
         has_group_support = False
-        logger.debug(f"User {user_id} using APP mode - Live: {race_link} (no group support)")
+        logger.debug(
+            f"User {user_id} using APP mode - Live: {race_link} (no group support)"
+        )
     else:
         race_link = generate_race_link(group, gpro_lang)
         has_group_support = True
@@ -515,7 +519,9 @@ async def send_race_replay_notification(
         replay_link = generate_app_race_replay_link()
         # APP replay doesn't support group, always use no-group message
         has_group_support = False
-        logger.debug(f"User {user_id} using APP mode - Replay: {replay_link} (no group support)")
+        logger.debug(
+            f"User {user_id} using APP mode - Replay: {replay_link} (no group support)"
+        )
     else:
         replay_link = generate_replay_link(group, gpro_lang)
         has_group_support = True
@@ -581,7 +587,9 @@ async def send_race_results_notification(
     if website_mode == "app":
         analysis_link = generate_app_race_analysis_link()
         summary_link = generate_app_race_summary_link(group)
-        logger.debug(f"User {user_id} using APP mode - Analysis: {analysis_link}, Summary: {summary_link}")
+        logger.debug(
+            f"User {user_id} using APP mode - Analysis: {analysis_link}, Summary: {summary_link}"
+        )
     else:
         # Race Analysis link (same for everyone, just language)
         analysis_link = generate_race_analysis_link(gpro_lang)
@@ -590,7 +598,9 @@ async def send_race_results_notification(
             group, gpro_lang, "replay"
         )  # Use same format as replay
         summary_link = summary_link.replace("racescreen.asp", "RaceSummary.asp")
-        logger.debug(f"User {user_id} using Classic mode - Analysis: {analysis_link}, Summary: {summary_link}")
+        logger.debug(
+            f"User {user_id} using Classic mode - Analysis: {analysis_link}, Summary: {summary_link}"
+        )
 
     # Import i18n context if not provided
     if i18n is None:
@@ -654,10 +664,14 @@ async def send_quali_results_notification(
     # Generate starting grid link based on website mode (Q1/Q2 links removed)
     if website_mode == "app":
         starting_grid_link = generate_app_starting_grid_link(group)
-        logger.debug(f"User {user_id} using APP mode - Starting grid: {starting_grid_link}")
+        logger.debug(
+            f"User {user_id} using APP mode - Starting grid: {starting_grid_link}"
+        )
     else:
         starting_grid_link = generate_starting_grid_link(group, gpro_lang)
-        logger.debug(f"User {user_id} using Classic mode - Starting grid: {starting_grid_link}")
+        logger.debug(
+            f"User {user_id} using Classic mode - Starting grid: {starting_grid_link}"
+        )
 
     # Import i18n context if not provided
     if i18n is None:
@@ -770,7 +784,9 @@ async def send_quali_notification(
             days = int(hours_left / 24)
             remaining_hours = int(hours_left % 24)
             if remaining_hours > 0:
-                time_text = get_text("time-days-hours", days=days, hours=remaining_hours)
+                time_text = get_text(
+                    "time-days-hours", days=days, hours=remaining_hours
+                )
             else:
                 time_text = get_text("time-days", days=days)
             emoji = "🔔"
@@ -815,7 +831,11 @@ async def send_quali_notification(
                 ]
             )
 
-        keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons) if keyboard_buttons else None
+        keyboard = (
+            InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
+            if keyboard_buttons
+            else None
+        )
         message = get_text(
             "notif-quali-closed-message",
             emoji=emoji,

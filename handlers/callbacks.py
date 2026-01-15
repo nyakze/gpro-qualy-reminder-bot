@@ -420,7 +420,9 @@ async def handle_toggle_category(callback: CallbackQuery, i18n: I18nContext):
 
     if category_id not in NOTIFICATION_CATEGORIES:
         await callback.answer(i18n.get("error-invalid-category"), show_alert=True)
-        logger.warning(f"User {user_id} tried to toggle invalid category: {category_id}")
+        logger.warning(
+            f"User {user_id} tried to toggle invalid category: {category_id}"
+        )
         return
 
     category_types = NOTIFICATION_CATEGORIES[category_id]["types"]
@@ -571,7 +573,8 @@ def strip_existing_feedback(message_text: str, i18n: I18nContext) -> str:
 
     # Remove any parts that match feedback messages
     cleaned_parts = [
-        part for part in parts
+        part
+        for part in parts
         if part.strip() not in [msg.strip() for msg in feedback_messages]
     ]
 
@@ -602,28 +605,34 @@ def build_race_notification_keyboard(
 
     # Add done/reset button
     if is_marked_done:
-        keyboard_buttons.append([
-            InlineKeyboardButton(
-                text=i18n.get("button-reenable-race", raceId=race_id),
-                callback_data=f"reset_{race_id}",
-            )
-        ])
+        keyboard_buttons.append(
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-reenable-race", raceId=race_id),
+                    callback_data=f"reset_{race_id}",
+                )
+            ]
+        )
     else:
-        keyboard_buttons.append([
-            InlineKeyboardButton(
-                text=i18n.get("button-quali-done"),
-                callback_data=f"done_{race_id}",
-            )
-        ])
+        keyboard_buttons.append(
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-quali-done"),
+                    callback_data=f"done_{race_id}",
+                )
+            ]
+        )
 
     # Add weather button if available
     if has_weather:
-        keyboard_buttons.append([
-            InlineKeyboardButton(
-                text=i18n.get("button-weather"),
-                callback_data=f"weather_{race_id}",
-            )
-        ])
+        keyboard_buttons.append(
+            [
+                InlineKeyboardButton(
+                    text=i18n.get("button-weather"),
+                    callback_data=f"weather_{race_id}",
+                )
+            ]
+        )
 
     return InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
 
@@ -646,9 +655,7 @@ async def handle_quali_done(callback: CallbackQuery, i18n: I18nContext):
     clean_message = strip_existing_feedback(callback.message.html_text, i18n)
     updated_message = clean_message + "\n\n" + i18n.get("feedback-race-marked-done")
     await callback.message.edit_text(
-        updated_message,
-        reply_markup=new_keyboard,
-        parse_mode="HTML"
+        updated_message, reply_markup=new_keyboard, parse_mode="HTML"
     )
 
     # Show feedback as popup
@@ -678,11 +685,11 @@ async def handle_reset(callback: CallbackQuery, i18n: I18nContext):
 
         # Remove any existing feedback and append new one
         clean_message = strip_existing_feedback(callback.message.html_text, i18n)
-        updated_message = clean_message + "\n\n" + i18n.get("feedback-notifications-reenabled")
+        updated_message = (
+            clean_message + "\n\n" + i18n.get("feedback-notifications-reenabled")
+        )
         await callback.message.edit_text(
-            updated_message,
-            reply_markup=new_keyboard,
-            parse_mode="HTML"
+            updated_message, reply_markup=new_keyboard, parse_mode="HTML"
         )
 
         # Show feedback as popup
@@ -1107,9 +1114,7 @@ async def handle_notification_category(
         )
 
     # Enable/Disable category button
-    category_all_enabled = all(
-        notifications.get(t, True) for t in category_types
-    )
+    category_all_enabled = all(notifications.get(t, True) for t in category_types)
     if category_all_enabled:
         keyboard_buttons.append(
             [
@@ -1133,7 +1138,8 @@ async def handle_notification_category(
     keyboard_buttons.append(
         [
             InlineKeyboardButton(
-                text=i18n.get("button-back-to-notifications"), callback_data="notif_menu"
+                text=i18n.get("button-back-to-notifications"),
+                callback_data="notif_menu",
             )
         ]
     )

@@ -19,6 +19,7 @@ from notifications import (
     send_quali_notification,
     save_users_data,
     users_data,
+    update_user_profile,
 )
 from utils import format_full_calendar
 from config import ADMIN_USER_IDS
@@ -31,15 +32,19 @@ logger = logging.getLogger(__name__)
 async def cmd_start(message: Message, state: FSMContext, i18n: I18nContext):
     user_id = message.from_user.id
 
-    # Clear any active state when command is issued
     await state.clear()
 
-    # Check BEFORE adding
     was_new = user_id not in users_data
     get_user_status(user_id)
 
     if was_new:
         logger.info(f"🆕 NEW user {user_id} registered via /start")
+        update_user_profile(
+            user_id,
+            tg_language_code=message.from_user.language_code,
+            username=message.from_user.username,
+            first_name=message.from_user.first_name,
+        )
         # Show bot UI language selection with 2-column layout
         from .callbacks import build_ui_language_keyboard
 
@@ -93,13 +98,12 @@ async def cmd_start(message: Message, state: FSMContext, i18n: I18nContext):
 @router.message(Command("settings"))
 async def cmd_settings(message: Message, state: FSMContext, i18n: I18nContext):
     """Show main settings menu"""
-    # Clear any active state when command is issued
     await state.clear()
 
-    # Import here to avoid circular import
+    user_id = message.from_user.id
+
     from .callbacks import build_settings_keyboard
 
-    user_id = message.from_user.id
     keyboard = build_settings_keyboard(user_id, i18n)
 
     await message.answer(
@@ -110,7 +114,6 @@ async def cmd_settings(message: Message, state: FSMContext, i18n: I18nContext):
 @router.message(Command("status"))
 async def cmd_status(message: Message, bot, state: FSMContext, i18n: I18nContext):
     """Show next race status with full details including weather"""
-    # Clear any active state when command is issued
     await state.clear()
 
     if not race_calendar:
@@ -152,7 +155,6 @@ async def cmd_status(message: Message, bot, state: FSMContext, i18n: I18nContext
 @router.message(Command("calendar"))
 async def cmd_calendar(message: Message, state: FSMContext, i18n: I18nContext):
     """Show full race calendar"""
-    # Clear any active state when command is issued
     await state.clear()
     user_id = message.from_user.id
     calendar_text = format_full_calendar(
@@ -222,7 +224,9 @@ async def cmd_update(message: Message, i18n: I18nContext):
     else:
         await message.answer(
             i18n.get(
-                "admin-calendar-updated", count=len(race_calendar), userCount=reset_count
+                "admin-calendar-updated",
+                count=len(race_calendar),
+                userCount=reset_count,
             ),
             parse_mode="HTML",
         )
@@ -254,17 +258,29 @@ async def cmd_users(message: Message, i18n: I18nContext):
 
         total_users = len(users_data)
         users_with_group = sum(1 for u in users_data.values() if u.get("group"))
-        
+
         header = i18n.get("admin-users-count", count=total_users)
         text = f"{header}\n\n"
         text += f"📊 {users_with_group} in groups, {total_users - users_with_group} without\n\n"
-        
+
         for uid, status in users_data.items():
             quali = status.get("completed_quali", "None")
             group = status.get("group", "—")
-            text += f"• <code>{uid}</code>: Race {quali} | Group {group}\n"
+            username = status.get("username")
+            first_name = status.get("first_name")
 
-        text += f"\n💡 Use /user USER_ID for details or /userstats for statistics"
+            if username:
+                display_name = f"@{username}"
+                link = f'<a href="tg://user?id={uid}">{display_name}</a>'
+            elif first_name:
+                display_name = first_name
+                link = f'<a href="tg://user?id={uid}">{display_name}</a>'
+            else:
+                link = "—"
+
+            text += f"• <code>{uid}</code> ({link}): Race {quali} | Group {group}\n"
+
+        text += "\n💡 Use /user USER_ID for details or /userstats for statistics"
         await message.answer(text, parse_mode="HTML")
 
     except Exception as e:
@@ -275,7 +291,7 @@ async def cmd_users(message: Message, i18n: I18nContext):
 @router.message(Command("user"))
 async def cmd_user(message: Message, i18n: I18nContext):
     """Show detailed information about a specific user
-    
+
     Usage:
         /user USER_ID - Show details for specified user
         /user - Show details for yourself
@@ -306,44 +322,59 @@ async def cmd_user(message: Message, i18n: I18nContext):
         return
 
     status = users_data[target_user_id]
-    
-    # Build detailed info
+
+    first_name = status.get("first_name")
+    username = status.get("username")
+    tg_language_code = status.get("tg_language_code")
+
     text = f"👤 <b>User Details: <code>{target_user_id}</code></b>\n\n"
-    
-    # Basic info
-    text += f"<b>📋 Basic Info:</b>\n"
+
+    if first_name or username or tg_language_code:
+        text += "<b>📱 Telegram Profile:</b>\n"
+        if first_name:
+            text += f"• Name: {first_name}\n"
+        if username:
+            text += f"• Username: @{username}\n"
+        if tg_language_code:
+            text += f"• Language: {tg_language_code}\n"
+        text += "\n"
+
+    text += "<b>📋 Basic Info:</b>\n"
     text += f"• Completed Quali: {status.get('completed_quali', 'None')}\n"
     text += f"• Group: {status.get('group', '—')}\n"
     text += f"• Website Mode: {status.get('website_mode', 'classic')}\n\n"
-    
-    # Language & Timezone
-    text += f"<b>🌍 Localization:</b>\n"
+
+    text += "<b>🌍 Localization:</b>\n"
     text += f"• UI Language: {status.get('ui_lang', 'gb')}\n"
     text += f"• GPRO Language: {status.get('gpro_lang', 'gb')}\n"
     text += f"• Timezone: {status.get('timezone', 'UTC')}\n\n"
-    
+
     # Notifications
-    text += f"<b>🔔 Notifications:</b>\n"
+    text += "<b>🔔 Notifications:</b>\n"
     notif = status.get("notifications", {})
     if notif:
         enabled = [k for k, v in notif.items() if v]
         disabled = [k for k, v in notif.items() if not v]
-        text += f"• Enabled ({len(enabled)}): {', '.join(enabled) if enabled else '—'}\n"
+        text += (
+            f"• Enabled ({len(enabled)}): {', '.join(enabled) if enabled else '—'}\n"
+        )
         text += f"• Disabled ({len(disabled)}): {', '.join(disabled) if disabled else '—'}\n"
     else:
-        text += f"• No notification settings\n"
-    
+        text += "• No notification settings\n"
+
     # Custom notifications
     custom = status.get("custom_notifications", [])
     custom_enabled = [c for c in custom if c.get("enabled")]
     if custom_enabled:
-        text += f"\n<b>⏰ Custom Notifications:</b>\n"
+        text += "\n<b>⏰ Custom Notifications:</b>\n"
         for i, c in enumerate(custom_enabled, 1):
             hours = c.get("hours_before", "?")
             text += f"• Custom {i}: {hours}h before\n"
-    
+
     await message.answer(text, parse_mode="HTML")
-    logger.info(f"Admin {message.from_user.id} viewed user details for {target_user_id}")
+    logger.info(
+        f"Admin {message.from_user.id} viewed user details for {target_user_id}"
+    )
 
 
 @router.message(Command("userstats"))
@@ -359,77 +390,98 @@ async def cmd_userstats(message: Message, i18n: I18nContext):
             return
 
         total_users = len(users_data)
-        
-        text = f"📊 <b>User Statistics</b>\n\n"
+
+        text = "📊 <b>User Statistics</b>\n\n"
         text += f"👥 Total users: {total_users}\n\n"
-        
+
         # Group distribution
         text += "<b>🏁 Groups:</b>\n"
         groups = {}
         for status in users_data.values():
             group = status.get("group") or "No group"
             groups[group] = groups.get(group, 0) + 1
-        for group, count in sorted(groups.items(), key=lambda x: (x[0] == "No group", x[0])):
+        for group, count in sorted(
+            groups.items(), key=lambda x: (x[0] == "No group", x[0])
+        ):
             percentage = (count / total_users) * 100
             text += f"• {group}: {count} ({percentage:.1f}%)\n"
-        
+
         # Timezone distribution (top 5)
         text += "\n<b>🌍 Timezones (Top 5):</b>\n"
         tz_counts = {}
         for status in users_data.values():
             tz = status.get("timezone", "UTC")
             tz_counts[tz] = tz_counts.get(tz, 0) + 1
-        for tz, count in sorted(tz_counts.items(), key=lambda x: x[1], reverse=True)[:5]:
+        for tz, count in sorted(tz_counts.items(), key=lambda x: x[1], reverse=True)[
+            :5
+        ]:
             percentage = (count / total_users) * 100
             text += f"• {tz}: {count} ({percentage:.1f}%)\n"
         if len(tz_counts) > 5:
             text += f"• ...and {len(tz_counts) - 5} more\n"
-        
+
         # Language distribution
         text += "\n<b>🗣 UI Languages:</b>\n"
         lang_counts = {}
         for status in users_data.values():
             lang = status.get("ui_lang", "gb")
             lang_counts[lang] = lang_counts.get(lang, 0) + 1
-        for lang, count in sorted(lang_counts.items(), key=lambda x: x[1], reverse=True):
+        for lang, count in sorted(
+            lang_counts.items(), key=lambda x: x[1], reverse=True
+        ):
             percentage = (count / total_users) * 100
             text += f"• {lang}: {count} ({percentage:.1f}%)\n"
-        
+
         # GPRO language distribution
         text += "\n<b>🏎 GPRO Languages:</b>\n"
         gpro_lang_counts = {}
         for status in users_data.values():
             lang = status.get("gpro_lang", "gb")
             gpro_lang_counts[lang] = gpro_lang_counts.get(lang, 0) + 1
-        for lang, count in sorted(gpro_lang_counts.items(), key=lambda x: x[1], reverse=True):
+        for lang, count in sorted(
+            gpro_lang_counts.items(), key=lambda x: x[1], reverse=True
+        ):
             percentage = (count / total_users) * 100
             text += f"• {lang}: {count} ({percentage:.1f}%)\n"
-        
+
         # Website mode distribution
         text += "\n<b>💻 Website Mode:</b>\n"
         mode_counts = {}
         for status in users_data.values():
             mode = status.get("website_mode", "classic")
             mode_counts[mode] = mode_counts.get(mode, 0) + 1
-        for mode, count in sorted(mode_counts.items(), key=lambda x: x[1], reverse=True):
+        for mode, count in sorted(
+            mode_counts.items(), key=lambda x: x[1], reverse=True
+        ):
             percentage = (count / total_users) * 100
             text += f"• {mode}: {count} ({percentage:.1f}%)\n"
-        
+
         # Notification stats
         text += "\n<b>🔔 Notifications:</b>\n"
-        all_enabled = sum(1 for s in users_data.values() if all(s.get("notifications", {}).values()))
-        all_disabled = sum(1 for s in users_data.values() if not any(s.get("notifications", {}).values()))
+        all_enabled = sum(
+            1 for s in users_data.values() if all(s.get("notifications", {}).values())
+        )
+        all_disabled = sum(
+            1
+            for s in users_data.values()
+            if not any(s.get("notifications", {}).values())
+        )
         partial = total_users - all_enabled - all_disabled
         text += f"• All enabled: {all_enabled} ({(all_enabled/total_users)*100:.1f}%)\n"
-        text += f"• All disabled: {all_disabled} ({(all_disabled/total_users)*100:.1f}%)\n"
+        text += (
+            f"• All disabled: {all_disabled} ({(all_disabled/total_users)*100:.1f}%)\n"
+        )
         text += f"• Partial: {partial} ({(partial/total_users)*100:.1f}%)\n"
-        
+
         # Custom notifications
-        custom_users = sum(1 for s in users_data.values() 
-                          if any(c.get("enabled") for c in s.get("custom_notifications", [])))
+        custom_users = sum(
+            1
+            for s in users_data.values()
+            if any(c.get("enabled") for c in s.get("custom_notifications", []))
+        )
         if custom_users > 0:
             text += f"• Custom notifications: {custom_users} ({(custom_users/total_users)*100:.1f}%)\n"
-        
+
         await message.answer(text, parse_mode="HTML")
         logger.info(f"Admin {message.from_user.id} viewed user statistics")
 
