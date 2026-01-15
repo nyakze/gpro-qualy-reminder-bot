@@ -42,7 +42,7 @@ async def cmd_start(message: Message, state: FSMContext, i18n: I18nContext):
             username=message.from_user.username,
             first_name=message.from_user.first_name,
         )
-        from .callbacks import build_ui_language_keyboard
+        from .callbacks.settings import build_ui_language_keyboard
 
         keyboard = build_ui_language_keyboard(
             page=1, current_ui_lang="gb", i18n=None, onboarding=True

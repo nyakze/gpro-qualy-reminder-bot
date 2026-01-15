@@ -506,7 +506,7 @@ async def handle_custom_notification_input_prompt(
     callback: CallbackQuery, state: FSMContext, i18n: I18nContext
 ):
     """Prompt user to enter custom time"""
-    from .states import CustomNotificationStates
+    from handlers.states import CustomNotificationStates
 
     try:
         slot_idx = int(callback.data.split("_")[-1])

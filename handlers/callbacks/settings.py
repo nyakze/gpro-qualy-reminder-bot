@@ -473,7 +473,7 @@ async def handle_group_menu(
     current_group = user_status.get("group")
     group_display = format_group_display(current_group)
 
-    from .states import SetGroupStates
+    from handlers.states import SetGroupStates
 
     keyboard_buttons = []
 
@@ -528,7 +528,7 @@ async def handle_timezone_menu(
     from timezone_utils import get_timezone_display_name
     from zoneinfo import ZoneInfo
     from datetime import datetime, timezone
-    from .states import TimezoneStates
+    from handlers.states import TimezoneStates
 
     user_id = callback.from_user.id
     current_tz = get_user_timezone(user_id)

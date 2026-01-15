@@ -7,13 +7,13 @@ __all__ = ["router", "commands", "callbacks", "states", "onboarding", "admin_com
 
 router = Router()
 
-# Import all handler modules to register them with the router
-# ruff: noqa: E402
 from . import commands
 from . import callbacks
 from . import states
 from . import onboarding
 from . import admin_commands
+
+router.include_router(callbacks.router)
 
 logger = logging.getLogger(__name__)
 
