@@ -119,11 +119,18 @@ def load_notify_history() -> Dict[Tuple[Any, ...], datetime]:
 def save_notify_history(history: Dict[Tuple[Any, ...], datetime]) -> None:
     """Save notification history to JSON file with atomic write
 
+    Also cleans old entries (older than retention period) before saving.
+
     Args:
-        history: Dict with history keys and datetime values
+        history keys and datetime history: Dict with values
     """
     temp_file = NOTIFY_HISTORY_FILE + ".tmp"
     try:
+        # Clean old entries before saving
+        now = datetime.utcnow()
+        cutoff = now - timedelta(hours=NOTIFICATION_HISTORY_RETENTION_HOURS)
+        history = {k: v for k, v in history.items() if v > cutoff}
+
         # Convert keys and values to JSON-serializable format
         save_data = {}
         for key, timestamp in history.items():
