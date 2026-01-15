@@ -121,7 +121,6 @@ FRIENDLY_ABBREVIATIONS = {
     "IRDT": "Asia/Tehran",
     # Asia - South Asia
     "PKT": "Asia/Karachi",
-    "BST": "Asia/Dhaka",  # Bangladesh Standard Time
     "NPT": "Asia/Kathmandu",
     # Asia - Southeast Asia
     "ICT": "Asia/Bangkok",

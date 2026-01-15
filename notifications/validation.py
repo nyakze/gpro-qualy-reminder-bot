@@ -27,7 +27,7 @@ def validate_custom_notification_hours(hours: float, i18n=None) -> tuple[bool, s
 
         try:
             i18n = I18nContext.get_current(no_error=True)
-        except:
+        except Exception:
             i18n = None
 
     # Use i18n if available, fallback to English
@@ -85,7 +85,7 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
 
         try:
             i18n = I18nContext.get_current(no_error=True)
-        except:
+        except Exception:
             i18n = None
 
     # Use i18n if available, fallback to English
@@ -214,7 +214,7 @@ def format_custom_notification_time(hours: float, i18n=None) -> str:
 
         try:
             i18n = I18nContext.get_current(no_error=True)
-        except:
+        except Exception:
             i18n = None
 
     # Helper to get i18n text or fallback to abbreviations
@@ -222,7 +222,7 @@ def format_custom_notification_time(hours: float, i18n=None) -> str:
         if i18n:
             try:
                 return i18n.get(key, **kwargs)
-            except:
+            except Exception:
                 pass
         return None
 
@@ -273,7 +273,7 @@ def set_custom_notification(
 
         try:
             i18n = I18nContext.get_current(no_error=True)
-        except:
+        except Exception:
             i18n = None
 
     # Use i18n if available, fallback to English

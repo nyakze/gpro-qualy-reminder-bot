@@ -125,7 +125,7 @@ def save_users_data():
         if os.path.exists(temp_file):
             try:
                 os.remove(temp_file)
-            except:
+            except Exception:
                 pass
 
 

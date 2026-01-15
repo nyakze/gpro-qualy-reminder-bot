@@ -136,7 +136,7 @@ def _save_calendar_to_file(calendar: dict, filepath: str):
         if os.path.exists(temp_file):
             try:
                 os.remove(temp_file)
-            except:
+            except Exception:
                 pass
         raise
 

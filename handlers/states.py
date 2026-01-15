@@ -39,9 +39,9 @@ async def process_group_input(message: Message, state: FSMContext, i18n: I18nCon
 
     # Validate format: E or M/P/A/R followed by 1-3 digits
     if group_input == "E":
-        valid = True
+        pass
     elif re.match(r"^[MPAR]\d{1,3}$", group_input):
-        valid = True
+        pass
     else:
         await message.answer(i18n.get("error-invalid-format"), parse_mode="HTML")
         return
@@ -151,9 +151,9 @@ async def process_onboarding_group_input(
 
     # Validate format
     if group_input == "E":
-        valid = True
+        pass
     elif re.match(r"^[MPAR]\d{1,3}$", group_input):
-        valid = True
+        pass
     else:
         await message.answer(
             i18n.get("error-invalid-format-onboarding"), parse_mode="HTML"
@@ -211,7 +211,6 @@ async def process_timezone_input(
     """Process user's timezone search input and show fuzzy-matched options"""
     from timezone_utils import fuzzy_search_timezones
 
-    user_id = message.from_user.id
     query = message.text.strip()
 
     # Fuzzy search timezones (increased limit to 30)

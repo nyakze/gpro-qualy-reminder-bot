@@ -171,7 +171,7 @@ def format_time_until_quali(quali_close: datetime, i18n=None) -> str:
         if i18n:
             try:
                 return i18n.get(key, **kwargs)
-            except:
+            except Exception:
                 pass
         # Fallback to abbreviations if no i18n
         return None

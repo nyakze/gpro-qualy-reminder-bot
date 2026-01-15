@@ -449,13 +449,11 @@ async def send_race_live_notification(
     if website_mode == "app":
         race_link = generate_app_race_live_link()
         # APP live doesn't support group, always use no-group message
-        has_group_support = False
         logger.debug(
             f"User {user_id} using APP mode - Live: {race_link} (no group support)"
         )
     else:
         race_link = generate_race_link(group, gpro_lang)
-        has_group_support = True
         logger.debug(f"User {user_id} using Classic mode - Live: {race_link}")
 
     # Import i18n context if not provided
@@ -518,13 +516,11 @@ async def send_race_replay_notification(
     if website_mode == "app":
         replay_link = generate_app_race_replay_link()
         # APP replay doesn't support group, always use no-group message
-        has_group_support = False
         logger.debug(
             f"User {user_id} using APP mode - Replay: {replay_link} (no group support)"
         )
     else:
         replay_link = generate_replay_link(group, gpro_lang)
-        has_group_support = True
         logger.debug(f"User {user_id} using Classic mode - Replay: {replay_link}")
 
     # Import i18n context if not provided
