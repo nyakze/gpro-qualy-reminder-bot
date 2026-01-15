@@ -41,24 +41,22 @@ class UserLanguageManager(BaseManager):
         Returns:
             str: Language code ('en' or 'ru')
         """
-        # Import here to avoid circular dependency
-        from notifications import users_data
-
         if not event_from_user:
             return DEFAULT_UI_LANGUAGE
 
         user_id = event_from_user.id
 
-        # Don't auto-create users - just check if they exist
+        try:
+            from notifications.user_data import users_data
+        except ImportError:
+            return DEFAULT_UI_LANGUAGE
+
         if user_id not in users_data:
             return DEFAULT_UI_LANGUAGE
 
         user_status = users_data[user_id]
-
-        # Get UI language (separate from GPRO language)
         ui_lang = user_status.get("ui_lang", DEFAULT_UI_LANGUAGE)
 
-        # Validate language
         if ui_lang not in SUPPORTED_UI_LANGUAGES:
             ui_lang = DEFAULT_UI_LANGUAGE
 
@@ -74,11 +72,12 @@ class UserLanguageManager(BaseManager):
             event_from_user: Telegram user object from event
             data: Additional event data
         """
-        # Import here to avoid circular dependency
-        from notifications import set_user_ui_language
-
         if event_from_user:
             user_id = event_from_user.id
+            try:
+                from notifications.user_data import set_user_ui_language
+            except ImportError:
+                return
             set_user_ui_language(user_id, locale)
 
 

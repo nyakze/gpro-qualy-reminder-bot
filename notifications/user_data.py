@@ -472,6 +472,3 @@ def get_user_profile(user_id: int) -> Dict:
         "username": user_status.get("username"),
         "first_name": user_status.get("first_name"),
     }
-
-
-load_users_data()

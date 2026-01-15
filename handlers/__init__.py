@@ -3,7 +3,7 @@
 import logging
 from aiogram import Router
 
-__all__ = ["router", "commands", "callbacks", "states", "onboarding"]
+__all__ = ["router", "commands", "callbacks", "states", "onboarding", "admin_commands"]
 
 router = Router()
 
@@ -13,6 +13,7 @@ from . import commands
 from . import callbacks
 from . import states
 from . import onboarding
+from . import admin_commands
 
 logger = logging.getLogger(__name__)
 

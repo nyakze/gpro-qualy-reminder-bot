@@ -1,8 +1,12 @@
 """Main notification checking loop and helper functions"""
 
 import asyncio
+import json
 import logging
+import os
 from datetime import datetime, timedelta
+from typing import Any, Dict, Tuple
+
 from aiogram import Bot
 
 from gpro_calendar import (
@@ -32,6 +36,10 @@ from .sender import (
 
 logger = logging.getLogger(__name__)
 
+# Use absolute path for notify history file
+_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+NOTIFY_HISTORY_FILE = os.path.join(_SCRIPT_DIR, "notify_history.json")
+
 # Notification windows: (hours_before, tolerance_minutes, label)
 NOTIFICATION_WINDOWS = [
     (48, 15, "48h"),  # 48h ±15min (wider tolerance for >36h notifications)
@@ -60,7 +68,7 @@ RACE_LIVE_NOTIFICATION_AFTER_MINUTES = (
 QUALI_RESULTS_NOTIFICATION_AFTER_MINUTES = (
     10  # Send quali results notification up to 10min after quali closes
 )
-NOTIFICATION_HISTORY_RETENTION_DAYS = 30  # Keep notification history for 30 days
+NOTIFICATION_HISTORY_RETENTION_HOURS = 24  # Keep notification history for 24 hours (enough to prevent duplicates)
 
 # New season reminder timing - send 24 hours before race 1
 NEW_SEASON_REMINDER_HOURS_BEFORE = 24
@@ -81,8 +89,60 @@ last_prefetch_check = None
 SEASON_CHECK_INTERVAL_HOURS = 1  # Check season transition conditions every hour
 
 notification_lock = asyncio.Lock()
-notify_history = {}  # {(race_id, window): sent_timestamp}
+notify_history: Dict[Tuple[Any, ...], datetime] = {}  # {(race_id, label) or (user_id, race_id, label): sent_timestamp}
 last_api_check_time = None  # Track last API check to limit calls
+
+
+def load_notify_history() -> Dict[Tuple[Any, ...], datetime]:
+    """Load notification history from JSON file
+
+    Returns:
+        Dict with history keys and datetime values
+    """
+    history = {}
+    if os.path.exists(NOTIFY_HISTORY_FILE):
+        try:
+            with open(NOTIFY_HISTORY_FILE, "r") as f:
+                raw_data = json.load(f)
+                for key_list, timestamp_str in raw_data.items():
+                    try:
+                        key = tuple(int(k) if k.isdigit() else k for k in key_list.split(","))
+                        history[key] = datetime.fromisoformat(timestamp_str)
+                    except (ValueError, KeyError):
+                        continue
+            logger.debug(f"✅ Loaded {len(history)} notification history entries")
+        except Exception as e:
+            logger.error(f"Failed to load notify_history: {e}")
+    return history
+
+
+def save_notify_history(history: Dict[Tuple[Any, ...], datetime]) -> None:
+    """Save notification history to JSON file with atomic write
+
+    Args:
+        history: Dict with history keys and datetime values
+    """
+    temp_file = NOTIFY_HISTORY_FILE + ".tmp"
+    try:
+        # Convert keys and values to JSON-serializable format
+        save_data = {}
+        for key, timestamp in history.items():
+            key_str = ",".join(str(k) for k in key)
+            save_data[key_str] = timestamp.isoformat()
+
+        with open(temp_file, "w") as f:
+            json.dump(save_data, f, indent=2)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(temp_file, NOTIFY_HISTORY_FILE)
+        logger.debug(f"Saved {len(history)} notification history entries")
+    except Exception as e:
+        logger.error(f"Failed to save notify_history: {e}")
+        if os.path.exists(temp_file):
+            try:
+                os.remove(temp_file)
+            except Exception:
+                pass
 
 
 def _is_tuesday_race(race_data: dict) -> bool:
@@ -555,6 +615,7 @@ async def _send_notifications_to_users(bot: Bot, notifications_to_send: list):
         # Update history after sending (re-acquire lock briefly)
         async with notification_lock:
             notify_history[history_key] = datetime.utcnow()
+            save_notify_history(notify_history)
 
 
 def _get_next_check_interval(now: datetime) -> int:
@@ -649,6 +710,7 @@ async def check_notifications(bot: Bot):
         f"🔔 Starting notification checker (adaptive: {CHECK_INTERVAL_NORMAL_SECONDS//60}min normal, {CHECK_INTERVAL_FAST_SECONDS}s when race approaching)"
     )
     load_users_data()
+    notify_history = load_notify_history()
 
     while True:
         try:
@@ -680,7 +742,7 @@ async def check_notifications(bot: Bot):
                 )
 
                 # Clean old history entries
-                cutoff = now - timedelta(days=NOTIFICATION_HISTORY_RETENTION_DAYS)
+                cutoff = now - timedelta(hours=NOTIFICATION_HISTORY_RETENTION_HOURS)
                 notify_history = {k: v for k, v in notify_history.items() if v > cutoff}
 
                 # Determine next check interval based on race proximity

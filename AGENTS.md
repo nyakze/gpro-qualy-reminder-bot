@@ -24,13 +24,6 @@ black .
 # Lint and auto-fix
 ruff check --fix .
 
-# Run a specific test (pytest with file::test_name pattern)
-pytest notifications/test_user_data.py::test_load_users_data -v
-pytest handlers/tests/ -k "test_onboarding" -v
-
-# Run all tests
-pytest
-
 # View logs
 tail -f gpro_bot.log
 journalctl -u gpro -f  # if deployed
