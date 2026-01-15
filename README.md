@@ -100,7 +100,8 @@ gpro-qualy-reminder-bot/
 │   └── user_profile.py         # Auto-update user profile on interactions
 ├── handlers/                   # Command & callback handlers
 │   ├── __init__.py            # Router initialization
-│   ├── commands.py            # /start, /status, /calendar, /deluser, etc.
+│   ├── commands.py            # User commands (/start, /status, /calendar, /notify)
+│   ├── admin_commands.py      # Admin commands (/update, /users, /weather, etc.)
 │   ├── callbacks.py           # Button interaction handlers
 │   ├── states.py              # FSM state handlers
 │   └── onboarding.py          # New user onboarding flow
@@ -117,7 +118,9 @@ gpro-qualy-reminder-bot/
 ├── timezone-info.json         # Timezone metadata (auto-downloaded)
 ├── users_data.json            # User settings (auto-generated)
 ├── gpro_calendar.json         # Current season calendar cache (auto-generated)
-└── next_season_calendar.json  # Next season calendar cache (auto-generated)
+├── next_season_calendar.json  # Next season calendar cache (auto-generated)
+├── notify_history.json        # Notification history (auto-generated)
+└── .gitignore                 # Git ignore rules
 ```
 
 ## Deployment (Ubuntu/Systemd)
