@@ -70,8 +70,6 @@ GPRO_API_TOKEN=your_gpro_api_token # get it here https://app.gpro.net/apiaccess
 ADMIN_USER_ID=your_telegram_id # to use admin commands
 ```
 
-**users_data.json** (auto-generated on first run)
-
 ## Commands
 
 | Command | Description |
@@ -97,6 +95,7 @@ gpro-qualy-reminder-bot/
 ├── i18n_setup.py               # i18n middleware setup
 ├── utils.py                    # Shared utilities (flags, formatting)
 ├── timezone_utils.py           # Timezone conversion & search
+├── AGENTS.md                   # Architecture docs for AI assistance
 ├── middleware/                 # Aiogram middleware
 │   └── user_profile.py         # Auto-update user profile on interactions
 ├── handlers/                   # Command & callback handlers
