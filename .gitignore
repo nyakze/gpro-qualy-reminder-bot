@@ -8,7 +8,6 @@ GPRO_API_TOKEN
 # Data/Caches
 *.json
 !timezone-info.json
-notify_history.json
 *.tmp
 *.log
 *.log.*
