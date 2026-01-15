@@ -304,6 +304,15 @@ def generate_app_race_summary_link(group: str = None) -> str:
         return base_url
 
 
+WEATHER_CONDITIONS = {
+    "Sunny": "☀️",
+    "Partially Cloudy": "⛅",
+    "Cloudy": "☁️",
+    "Very Cloudy": "🌥️",
+    "Rain": "🌧️",
+}
+
+
 def translate_weather_condition(weather_condition: str, get_text_func) -> str:
     """Translate weather condition from English to user's language
 
@@ -312,12 +321,10 @@ def translate_weather_condition(weather_condition: str, get_text_func) -> str:
         get_text_func: Function to get translated text
 
     Returns:
-        str: Translated weather condition
+        str: Translated weather condition with icon
     """
-    # Normalize the weather condition (title case for consistent lookup)
     normalized_condition = weather_condition.strip().title()
 
-    # Map English weather conditions to translation keys
     weather_map = {
         "Sunny": "weather-condition-sunny",
         "Partially Cloudy": "weather-condition-partially-cloudy",
@@ -326,12 +333,12 @@ def translate_weather_condition(weather_condition: str, get_text_func) -> str:
         "Rain": "weather-condition-rain",
     }
 
-    # Get translation key, fallback to original if not found
     translation_key = weather_map.get(normalized_condition)
     if translation_key:
-        return get_text_func(translation_key)
+        translated = get_text_func(translation_key)
+        icon = WEATHER_CONDITIONS.get(normalized_condition, "")
+        return f"{icon} {translated}" if icon else translated
     else:
-        # Return original if no translation found (for unknown conditions)
         return weather_condition
 
 
