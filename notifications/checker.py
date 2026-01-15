@@ -583,14 +583,14 @@ def _get_next_check_interval(now: datetime) -> int:
 
 
 def _cleanup_completed_quali_for_all_users() -> None:
-    """Reset completed_quali to empty array for all users
+    """Reset completed_quali to None for all users
 
     This is called during season transition to clean up old quali data.
     """
     logger.info("🧹 Cleaning up completed_quali for all users...")
 
     for user_id in users_data:
-        users_data[user_id]["completed_quali"] = []
+        users_data[user_id]["completed_quali"] = None
 
     save_users_data()
     logger.info(f"✅ Cleaned completed_quali for {len(users_data)} users")
