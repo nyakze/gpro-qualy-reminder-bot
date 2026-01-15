@@ -142,6 +142,7 @@ NOTIFICATION_TYPES = (
     "race_replay",
     "race_live",
     "race_results",
+    "new_season_reminder",
 )
 
 # Notification categories for better organization
@@ -157,6 +158,10 @@ NOTIFICATION_CATEGORIES = {
     "race_events": {
         "types": ["race_live", "race_replay", "race_results"],
         "icon": "🏎️",
+    },
+    "season_prep": {
+        "types": ["new_season_reminder"],
+        "icon": "🌟",
     },
 }
 

@@ -27,6 +27,7 @@ from .sender import (
     send_race_replay_notification,
     send_race_results_notification,
     send_quali_results_notification,
+    send_new_season_reminder_notification,
 )
 
 logger = logging.getLogger(__name__)
@@ -60,6 +61,10 @@ QUALI_RESULTS_NOTIFICATION_AFTER_MINUTES = (
     10  # Send quali results notification up to 10min after quali closes
 )
 NOTIFICATION_HISTORY_RETENTION_DAYS = 30  # Keep notification history for 30 days
+
+# New season reminder timing - send 24 hours before race 1
+NEW_SEASON_REMINDER_HOURS_BEFORE = 24
+NEW_SEASON_REMINDER_TOLERANCE_MINUTES = 60  # ±1 hour tolerance
 
 # API polling configuration for quali opening detection
 API_CHECK_START_HOURS = 1.68  # Start checking API 1h41m (101 minutes) after race
@@ -432,14 +437,41 @@ def _check_quali_results_notifications(now: datetime) -> list:
         quali_close = race_data["quali_close"]
         time_since_quali_close = (now - quali_close).total_seconds() / 60
 
-        # Send if qualifying has closed (within 10min window after closing)
-        # This ensures we send after deadline has passed but not too late
         if 0 <= time_since_quali_close <= QUALI_RESULTS_NOTIFICATION_AFTER_MINUTES:
             history_key = (race_id, "quali_results")
             if history_key not in notify_history:
                 notifications.append(
                     ("quali_results", race_id, race_data, "quali_results", history_key)
                 )
+
+    return notifications
+
+
+def _check_new_season_reminder_notifications(now: datetime) -> list:
+    """Check for new season reminder notifications before race 1
+
+    Returns:
+        list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
+    """
+    notifications = []
+
+    for race_id, race_data in race_calendar.items():
+        if race_id != 1:
+            continue
+
+        race_time = race_data["date"]
+        hours_until_race = (race_time - now).total_seconds() / 3600
+        tolerance_hours = NEW_SEASON_REMINDER_TOLERANCE_MINUTES / 60
+
+        history_key = ("season", race_id, "new_season_reminder")
+        if history_key in notify_history:
+            continue
+
+        # Check if we're in the notification window (24h ± 1h before race)
+        if abs(hours_until_race - NEW_SEASON_REMINDER_HOURS_BEFORE) <= tolerance_hours:
+            notifications.append(
+                ("new_season", race_id, race_data, "new_season_reminder", history_key)
+            )
 
     return notifications
 
@@ -506,6 +538,10 @@ async def _send_notifications_to_users(bot: Bot, notifications_to_send: list):
                             )
                         elif notif_type == "quali_results":
                             await send_quali_results_notification(
+                                bot, user_id, race_id, race_data
+                            )
+                        elif notif_type == "new_season":
+                            await send_new_season_reminder_notification(
                                 bot, user_id, race_id, race_data
                             )
                         sent_count += 1
@@ -638,6 +674,9 @@ async def check_notifications(bot: Bot):
                 notifications_to_send.extend(_check_race_live_notifications(now))
                 notifications_to_send.extend(
                     _check_custom_notifications(now, races_closing)
+                )
+                notifications_to_send.extend(
+                    _check_new_season_reminder_notifications(now)
                 )
 
                 # Clean old history entries

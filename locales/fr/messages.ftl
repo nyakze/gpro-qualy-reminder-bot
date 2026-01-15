@@ -643,3 +643,30 @@ notif-quali-results-no-group = 🏁 <b>Résultats des Qualifications - Course #{
     ⚠️ Pour des liens personnalisés, configurez votre groupe dans /settings!
 
     🔗 <a href="{ $gridLink }">Grille de Départ</a>
+
+# =======================
+# Rappel Nouvelle Saison
+# =======================
+notif-category-season-prep = Préparation Saison
+
+notif-label-new-season-reminder = Rappel nouvelle saison
+
+notif-new-season-reminder = 🌟 <b>Nouvelle Saison Commence!</b>
+
+    🏁 <b>Course #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    🏎 <b>Course: { $raceTime }</b>
+
+    Votre groupe actuel: <b>{ $group }</b>
+
+    💡 Si vous avez changé de groupe, mettez-le à jour dans /settings pour recevoir des liens personnalisés!
+
+notif-new-season-reminder-no-group = 🌟 <b>Nouvelle Saison Commence!</b>
+
+    🏁 <b>Course #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    🏎 <b>Course: { $raceTime }</b>
+
+    ⚠️ Vous n'avez pas encore configuré votre groupe!
+
+    💡 Configurez votre groupe dans /settings pour recevoir des liens de course personnalisés!

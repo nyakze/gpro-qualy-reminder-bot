@@ -643,3 +643,30 @@ notif-quali-results-no-group = 🏁 <b>Risultati Qualifiche - Gara #{ $raceId }<
     ⚠️ Per link personalizzati, imposta il tuo gruppo in /settings!
 
     🔗 <a href="{ $gridLink }">Griglia di Partenza</a>
+
+# =======================
+# Promemoria Nuova Stagione
+# =======================
+notif-category-season-prep = Preparazione Stagione
+
+notif-label-new-season-reminder = Promemoria nuova stagione
+
+notif-new-season-reminder = 🌟 <b>Nuova Stagione Inizia!</b>
+
+    🏁 <b>Gara #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    🏎 <b>Gara: { $raceTime }</b>
+
+    Il tuo gruppo attuale: <b>{ $group }</b>
+
+    💡 Se hai cambiato gruppo, aggiornalo in /settings per ricevere link personalizzati!
+
+notif-new-season-reminder-no-group = 🌟 <b>Nuova Stagione Inizia!</b>
+
+    🏁 <b>Gara #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    🏎 <b>Gara: { $raceTime }</b>
+
+    ⚠️ Non hai ancora impostato il tuo gruppo!
+
+    💡 Imposta il tuo gruppo in /settings per ricevere link Gare personalizzati!

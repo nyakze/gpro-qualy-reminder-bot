@@ -673,3 +673,30 @@ notif-quali-results-no-group = 🏁 <b>Výsledky kvalifikace - Závod #{ $raceId
     ⚠️ Pro personalizované odkazy nastavte svou skupinu v /settings!
 
     🔗 <a href="{ $gridLink }">Startovní rošt</a>
+
+# =======================
+# Připomínka nové sezóny
+# =======================
+notif-category-season-prep = Příprava na sezónu
+
+notif-label-new-season-reminder = Připomínka nové sezóny
+
+notif-new-season-reminder = 🌟 <b>Nová sezóna začíná!</b>
+
+    🏁 <b>Závod #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    🏎 <b>Závod: { $raceTime }</b>
+
+    Vaše aktuální skupina: <b>{ $group }</b>
+
+    💡 Pokud jste přešli do jiné skupiny, aktualizujte ji v /settings pro personalizované odkazy!
+
+notif-new-season-reminder-no-group = 🌟 <b>Nová sezóna začíná!</b>
+
+    🏁 <b>Závod #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    🏎 <b>Závod: { $raceTime }</b>
+
+    ⚠️ Ještě jste nenastavili svou skupinu!
+
+    💡 Nastavte svou skupinu v /settings pro personalizované odkazy na závody!

@@ -652,7 +652,7 @@ async def send_quali_results_notification(
     user_status = get_user_status(user_id)
     group = user_status.get("group")
     gpro_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
-    ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
+    ui_lang = user_status.get("ui_lang", "gb")
     website_mode = user_status.get("website_mode", "classic")
 
     track = add_flag_to_track(race_data["track"])
@@ -661,7 +661,6 @@ async def send_quali_results_notification(
     quali_close_time = format_datetime_for_user(quali_close, user_id, "%d.%m %H:%M")
     race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
 
-    # Generate starting grid link based on website mode (Q1/Q2 links removed)
     if website_mode == "app":
         starting_grid_link = generate_app_starting_grid_link(group)
         logger.debug(
@@ -673,20 +672,17 @@ async def send_quali_results_notification(
             f"User {user_id} using Classic mode - Starting grid: {starting_grid_link}"
         )
 
-    # Import i18n context if not provided
     if i18n is None:
-        # Use the global translation function with user's UI language
         from i18n_setup import get_translation
 
         def get_text(key, **kwargs):
             return get_translation(key, locale=ui_lang, **kwargs)
 
     else:
-        # Use i18n context from handler
+
         def get_text(key, **kwargs):
             return i18n.get(key, **kwargs)
 
-    # Build message based on whether group is set (only starting grid link)
     if group:
         message = get_text(
             "notif-quali-results",
@@ -713,6 +709,56 @@ async def send_quali_results_notification(
         )
     except Exception as e:
         logger.error(f"Quali results notify {user_id} failed: {e}")
+
+
+async def send_new_season_reminder_notification(
+    bot: Bot, user_id: int, race_id: int, race_data: Dict, i18n=None
+):
+    """Send new season reminder notification before race 1"""
+    from timezone_utils import format_datetime_for_user
+    from utils import format_group_display
+
+    user_status = get_user_status(user_id)
+    group = user_status.get("group")
+    ui_lang = user_status.get("ui_lang", "gb")
+
+    track = add_flag_to_track(race_data["track"])
+    race_date = race_data["date"]
+    race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
+
+    if i18n is None:
+        from i18n_setup import get_translation
+
+        def get_text(key, **kwargs):
+            return get_translation(key, locale=ui_lang, **kwargs)
+
+    else:
+
+        def get_text(key, **kwargs):
+            return i18n.get(key, **kwargs)
+
+    if group:
+        group_display = format_group_display(group)
+        message = get_text(
+            "notif-new-season-reminder",
+            raceId=race_id,
+            track=track,
+            raceTime=race_time,
+            group=group_display,
+        )
+    else:
+        message = get_text(
+            "notif-new-season-reminder-no-group",
+            raceId=race_id,
+            track=track,
+            raceTime=race_time,
+        )
+
+    try:
+        await bot.send_message(user_id, message, parse_mode="HTML")
+        logger.info(f"🌟 Sent new season reminder to {user_id} for race {race_id}")
+    except Exception as e:
+        logger.error(f"New season reminder to {user_id} failed: {e}")
 
 
 async def send_quali_notification(

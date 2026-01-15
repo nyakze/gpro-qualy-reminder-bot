@@ -663,3 +663,30 @@ notif-quali-results-no-group = 🏁 <b>Kwalificatie Resultaten - Race #{ $raceId
     ⚠️ Voor gepersonaliseerde links, stel je groep in via /settings!
 
     🔗 <a href="{ $gridLink }">Startgrid</a>
+
+# =======================
+# Nieuw Seizoensherinnering
+# =======================
+notif-category-season-prep = Seizoensvoorbereiding
+
+notif-label-new-season-reminder = Nieuw seizoensherinnering
+
+notif-new-season-reminder = 🌟 <b>Nieuw Seizoen Begint!</b>
+
+    🏁 <b>Race #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    🏎 <b>Race: { $raceTime }</b>
+
+    Je huidige groep: <b>{ $group }</b>
+
+    💡 Als je bent veranderd van groep, update deze dan in /settings om gepersonaliseerde links te ontvangen!
+
+notif-new-season-reminder-no-group = 🌟 <b>Nieuw Seizoen Begint!</b>
+
+    🏁 <b>Race #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    🏎 <b>Race: { $raceTime }</b>
+
+    ⚠️ Je hebt nog geen groep ingesteld!
+
+    💡 Stel je groep in via /settings om gepersonaliseerde race links te ontvangen!

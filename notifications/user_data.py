@@ -83,6 +83,7 @@ def get_default_notification_preferences():
         "race_replay": True,
         "race_live": True,
         "race_results": True,
+        "new_season_reminder": True,
     }
 
 
@@ -185,6 +186,10 @@ def get_user_status(user_id: int) -> Dict:
         if "72h" not in users_data[user_id]["notifications"]:
             users_data[user_id]["notifications"]["72h"] = True
             logger.debug(f"Added '72h' notification to user {user_id}")
+            needs_save = True
+        if "new_season_reminder" not in users_data[user_id]["notifications"]:
+            users_data[user_id]["notifications"]["new_season_reminder"] = True
+            logger.debug(f"Added 'new_season_reminder' notification to user {user_id}")
             needs_save = True
         if "timezone" not in users_data[user_id]:
             users_data[user_id]["timezone"] = "UTC"

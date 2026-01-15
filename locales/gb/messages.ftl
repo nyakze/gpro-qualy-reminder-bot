@@ -333,6 +333,33 @@ notif-quali-results-no-group = 🏁 <b>Race #{ $raceId } Qualifying Results</b>
     🔗 <a href="{ $gridLink }">Starting Grid</a>
 
 # =======================
+# New Season Reminder
+# =======================
+notif-category-season-prep = Season Preparation
+
+notif-label-new-season-reminder = New season reminder
+
+notif-new-season-reminder = 🌟 <b>New Season Starting!</b>
+
+    🏁 <b>Race #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    🏎 <b>Race: { $raceTime }</b>
+
+    Your current group: <b>{ $group }</b>
+
+    💡 If you've moved to a different group, please update it in /settings to receive personalized links!
+
+notif-new-season-reminder-no-group = 🌟 <b>New Season Starting!</b>
+
+    🏁 <b>Race #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    🏎 <b>Race: { $raceTime }</b>
+
+    ⚠️ You haven't set your group yet!
+
+    💡 Set your group in /settings to receive personalized race links!
+
+# =======================
 # Weather
 # =======================
 weather-title = 🌤️ <b>Race Weather Forecast</b>

@@ -44,6 +44,8 @@ from .sender import (
     send_race_live_notification,
     send_race_replay_notification,
     send_race_results_notification,
+    send_quali_results_notification,
+    send_new_season_reminder_notification,
     format_weather_data,
 )
 

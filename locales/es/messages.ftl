@@ -643,3 +643,30 @@ notif-quali-results-no-group = 🏁 <b>Resultados de Clasificación - Carrera #{
     ⚠️ Para enlaces personalizados, configura tu grupo en /settings!
 
     🔗 <a href="{ $gridLink }">Parrilla de Salida</a>
+
+# =======================
+# Recordatorio Nueva Temporada
+# =======================
+notif-category-season-prep = Preparación Temporada
+
+notif-label-new-season-reminder = Recordatorio nueva temporada
+
+notif-new-season-reminder = 🌟 <b>¡Nueva Temporada Comienza!</b>
+
+    🏁 <b>Carrera #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    🏎 <b>Carrera: { $raceTime }</b>
+
+    Tu grupo actual: <b>{ $group }</b>
+
+    💡 Si has cambiado de grupo, actualízalo en /settings para recibir enlaces personalizados!
+
+notif-new-season-reminder-no-group = 🌟 <b>¡Nueva Temporada Comienza!</b>
+
+    🏁 <b>Carrera #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    🏎 <b>Carrera: { $raceTime }</b>
+
+    ⚠️ ¡Aún no has configurado tu grupo!
+
+    💡 Configura tu grupo en /settings para recibir enlaces de carrera personalizados!
