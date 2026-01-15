@@ -307,8 +307,8 @@ def generate_app_race_summary_link(group: str = None) -> str:
 WEATHER_CONDITIONS = {
     "Sunny": "☀️",
     "Partially Cloudy": "⛅",
-    "Cloudy": "☁️",
-    "Very Cloudy": "🌥️",
+    "Cloudy": "🌥️",
+    "Very Cloudy": "☁️",
     "Rain": "🌧️",
 }
 
