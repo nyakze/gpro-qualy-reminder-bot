@@ -16,5 +16,9 @@ async def run_with_recovery(bot) -> None:
             log_structured(logging.INFO, "Notification checker cancelled")
             raise
         except Exception as e:
-            log_structured(logging.ERROR, "Notification checker crashed, restarting in 10s", error=str(e))
+            log_structured(
+                logging.ERROR,
+                "Notification checker crashed, restarting in 10s",
+                error=str(e),
+            )
             await asyncio.sleep(10)

@@ -175,6 +175,13 @@ button-disable-category = 🔕 Вимкнути категорію
 button-quali-done = ✅ Кваліфікація Завершена
 button-reenable-race = 🔄 Увімкнути знову сповіщення Гонки { $raceId }
 button-weather = 🌤️ Показати Погоду
+button-snooze-5m = 🔔🔁 +5хв
+button-snooze-15m = 🔔🔁 +15хв
+button-snooze-30m = 🔔🔁 +30хв
+button-snooze-1h = 🔔🔁 +1год
+button-snooze-2h = 🔔🔁 +2год
+button-snooze-4h = 🔔🔁 +4год
+button-snooze-8h = 🔔🔁 +8год
 button-enter-custom-group = ✏️ Ввести Власну Групу
 button-enter-custom-time = ✏️ Ввести Власний Час
 button-disable-notification = 🔕 Вимкнути Це Сповіщення
@@ -218,6 +225,19 @@ notif-quali-closes = <b>Кваліфікація закривається чер
 notif-quali-opens = <b>Кваліфікація відкрита</b>
 
 notif-quali-message = { $emoji } { $title }
+
+    🏁 <b>Гонка #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    📅 <b>Дедлайн кваліфікації: { $qualiDeadline }</b>
+    🏎 <b>Гонка: { $raceTime }</b>
+
+    🔗 <a href="{ $qualiLink }">Перейти до Кваліфікації</a>
+
+    <i>Натисніть кнопку '✅ Кваліфікація Завершена', щоб вимкнути сповіщення для цієї гонки</i>
+
+notif-snooze-title = <b>Нагадування (відтерміновано)</b>
+
+notif-snooze-message = { $emoji } { $title }
 
     🏁 <b>Гонка #{ $raceId }</b>
     📍 <b>{ $track }</b>
@@ -415,6 +435,10 @@ feedback-skip-language = ⏭️ Використовується мова за �
 feedback-skip-group = ⏭️ Вибір групи пропущено
 feedback-welcome = ✅ Ласкаво просимо на борт!
 feedback-weather-sent = 🌤️ Прогноз погоди надіслано!
+snooze-confirmed = 🔁⏰ Нагадування перенесено на { $time }
+snooze-max-reached = 🔁❌ Ліміт відтермінування досягнуто (3/3)
+snooze-past-deadline = 🔁❌ Неможливо відтермінувати після дедлайну
+snooze-past-next = 🔁❌ Наступне нагадування через { $minutes }хв
 
 # =======================
 # Time Formatting

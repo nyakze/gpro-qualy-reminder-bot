@@ -3,6 +3,7 @@
 import logging
 import json
 import os
+from datetime import datetime
 from typing import Dict
 
 logger = logging.getLogger(__name__)
@@ -93,6 +94,17 @@ def get_default_custom_notifications():
         {"enabled": False, "hours_before": None},
         {"enabled": False, "hours_before": None},
     ]
+
+
+def get_default_snooze_tracking():
+    """Default snooze tracking - 0 snoozes per notification type"""
+    return {
+        "72h": 0,
+        "48h": 0,
+        "24h": 0,
+        "2h": 0,
+        "10min": 0,
+    }
 
 
 def load_users_data():
@@ -210,6 +222,10 @@ def get_user_status(user_id: int) -> Dict:
         if "first_name" not in users_data[user_id]:
             users_data[user_id]["first_name"] = None
             logger.debug(f"Added 'first_name' field to user {user_id}")
+            needs_save = True
+        if "snooze_tracking" not in users_data[user_id]:
+            users_data[user_id]["snooze_tracking"] = get_default_snooze_tracking()
+            logger.debug(f"Added 'snooze_tracking' field to user {user_id}")
             needs_save = True
         if needs_save:
             save_users_data()
@@ -472,3 +488,183 @@ def get_user_profile(user_id: int) -> Dict:
         "username": user_status.get("username"),
         "first_name": user_status.get("first_name"),
     }
+
+
+def add_snooze_reminder(
+    user_id: int, race_id: int, until: datetime, notification_type: str
+) -> None:
+    """Add an active snooze reminder to user data
+
+    Args:
+        user_id: Telegram user ID
+        race_id: Race ID
+        until: Datetime when snooze should fire
+        notification_type: Original notification type (e.g., "2h")
+    """
+    user_status = get_user_status(user_id)
+
+    if "active_snoozes" not in user_status:
+        user_status["active_snoozes"] = {}
+
+    # Use unique key based on race, type, and until time to allow multiple snoozes
+    key = f"{race_id}_{notification_type}_{until.strftime('%Y%m%d%H%M%S')}"
+    user_status["active_snoozes"][key] = {
+        "until": until.isoformat(),
+        "notification_type": notification_type,
+        "race_id": race_id,
+    }
+    save_users_data()
+    logger.debug(
+        f"Added snooze reminder for user {user_id}, race {race_id}, type {notification_type}, key={key}"
+    )
+
+
+def remove_snooze_reminder(user_id: int, race_id: int, notification_type: str) -> None:
+    """Remove a snooze reminder from user data
+
+    Args:
+        user_id: Telegram user ID
+        race_id: Race ID
+        notification_type: Notification type
+    """
+    user_status = get_user_status(user_id)
+
+    if "active_snoozes" not in user_status:
+        return
+
+    # Find and remove snooze by race_id and notification_type (removes ALL matching)
+    keys_to_remove = []
+    for key, data in user_status["active_snoozes"].items():
+        if (
+            data.get("race_id") == race_id
+            and data.get("notification_type") == notification_type
+        ):
+            keys_to_remove.append(key)
+
+    for key in keys_to_remove:
+        del user_status["active_snoozes"][key]
+        logger.debug(
+            f"Removed snooze reminder for user {user_id}, race {race_id}, type {notification_type}, key={key}"
+        )
+
+    if keys_to_remove:
+        save_users_data()
+
+
+def remove_snooze_reminder_by_time(
+    user_id: int, race_id: int, notification_type: str, until: datetime
+) -> None:
+    """Remove a specific snooze reminder by its exact until time
+
+    Args:
+        user_id: Telegram user ID
+        race_id: Race ID
+        notification_type: Notification type
+        until: Exact datetime of the snooze to remove
+    """
+    user_status = get_user_status(user_id)
+
+    if "active_snoozes" not in user_status:
+        return
+
+    until_str = until.isoformat()
+    keys_to_remove = []
+    for key, data in user_status["active_snoozes"].items():
+        if (
+            data.get("race_id") == race_id
+            and data.get("notification_type") == notification_type
+            and data.get("until") == until_str
+        ):
+            keys_to_remove.append(key)
+
+    for key in keys_to_remove:
+        del user_status["active_snoozes"][key]
+        logger.debug(
+            f"Removed snooze by time for user {user_id}, race {race_id}, type {notification_type}, until={until_str}"
+        )
+
+    if keys_to_remove:
+        save_users_data()
+
+
+def get_all_snooze_reminders() -> list:
+    """Get all active snooze reminders from all users
+
+    Returns:
+        list: [(user_id, race_id, until, notification_type), ...]
+    """
+    reminders = []
+
+    for user_id, user_status in users_data.items():
+        active_snoozes = user_status.get("active_snoozes", {})
+
+        for key, data in active_snoozes.items():
+            try:
+                # Get data from dict (new format stores race_id and notification_type)
+                race_id = data.get("race_id")
+                notification_type = data.get("notification_type")
+                until = datetime.fromisoformat(data["until"])
+
+                if race_id is None or notification_type is None:
+                    continue
+
+                # Return ALL snoozes (past and future) - checker will handle timing
+                reminders.append((user_id, race_id, until, notification_type))
+            except (ValueError, IndexError, TypeError):
+                continue
+
+    return reminders
+
+
+def get_snooze_count(user_id: int, notification_label: str) -> int:
+    """Get snooze count for a notification type
+
+    Args:
+        user_id: Telegram user ID
+        notification_label: Notification label (e.g., "48h", "2h", "10min")
+
+    Returns:
+        int: Number of times user has snoozed this notification type
+    """
+    user_status = get_user_status(user_id)
+    tracking = user_status.get("snooze_tracking", get_default_snooze_tracking())
+    return tracking.get(notification_label, 0)
+
+
+def increment_snooze_count(user_id: int, notification_label: str) -> None:
+    """Increment snooze count for a notification type
+
+    Args:
+        user_id: Telegram user ID
+        notification_label: Notification label (e.g., "48h", "2h", "10min")
+    """
+    user_status = get_user_status(user_id)
+    if "snooze_tracking" not in user_status:
+        user_status["snooze_tracking"] = get_default_snooze_tracking()
+    user_status["snooze_tracking"][notification_label] = (
+        user_status["snooze_tracking"].get(notification_label, 0) + 1
+    )
+    save_users_data()
+    logger.debug(f"User {user_id} snooze count for '{notification_label}' incremented")
+
+
+def reset_snooze_counts_for_deadline_passed(race_id: int, quali_close) -> None:
+    """Reset snooze counts for notification types where deadline has passed
+
+    Called after quali_close to reset counts for that race's notifications
+
+    Args:
+        race_id: Race ID
+        quali_close: Datetime when qualifying closes
+    """
+    now = datetime.utcnow()
+    if now < quali_close:
+        return
+
+    for user_id in users_data:
+        if "snooze_tracking" not in users_data[user_id]:
+            continue
+        users_data[user_id]["snooze_tracking"] = get_default_snooze_tracking()
+
+    save_users_data()
+    logger.info(f"🔄 Reset snooze counts for all users after race {race_id} deadline")

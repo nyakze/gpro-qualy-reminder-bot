@@ -3,7 +3,6 @@
 import logging
 from aiogram.types import Message
 from aiogram.filters import Command
-from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
 from datetime import datetime
 
@@ -12,16 +11,13 @@ from gpro_calendar import (
     next_season_calendar,
     update_calendar,
     fetch_weather_from_api,
-    load_next_season_silent,
 )
 from notifications import (
-    get_user_status,
     reset_user_status,
-    send_quali_notification,
     save_users_data,
     users_data,
 )
-from utils import format_full_calendar, add_flag_to_track
+from utils import add_flag_to_track
 from config import ADMIN_USER_IDS
 from . import router
 

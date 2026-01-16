@@ -32,9 +32,12 @@ from .sender import (
     send_race_results_notification,
     send_quali_results_notification,
     send_new_season_reminder_notification,
+    QUALI_NOTIFICATION_TYPES,
 )
 
 logger = logging.getLogger(__name__)
+
+snooze_reminders = {}
 
 # Use absolute path for notify history file
 _SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -68,7 +71,9 @@ RACE_LIVE_NOTIFICATION_AFTER_MINUTES = (
 QUALI_RESULTS_NOTIFICATION_AFTER_MINUTES = (
     10  # Send quali results notification up to 10min after quali closes
 )
-NOTIFICATION_HISTORY_RETENTION_HOURS = 24  # Keep notification history for 24 hours (enough to prevent duplicates)
+NOTIFICATION_HISTORY_RETENTION_HOURS = (
+    24  # Keep notification history for 24 hours (enough to prevent duplicates)
+)
 
 # New season reminder timing - send 24 hours before race 1
 NEW_SEASON_REMINDER_HOURS_BEFORE = 24
@@ -83,13 +88,20 @@ FALLBACK_TOLERANCE_MINUTES = 15  # Send fallback within 15min of reaching 3.5h
 # Custom notification tolerance
 CUSTOM_NOTIF_TOLERANCE_MIN = 5  # ±5 minutes tolerance for custom notifications
 
+# Snooze firing tolerance - how late a snooze notification can fire
+SNOOZE_TOLERANCE_SECONDS = (
+    120  # Fire snoozes up to 2min late (allows for checker processing time)
+)
+
 # Season transition tracking
 last_season_transition_check = None
 last_prefetch_check = None
 SEASON_CHECK_INTERVAL_HOURS = 1  # Check season transition conditions every hour
 
 notification_lock = asyncio.Lock()
-notify_history: Dict[Tuple[Any, ...], datetime] = {}  # {(race_id, label) or (user_id, race_id, label): sent_timestamp}
+notify_history: Dict[Tuple[Any, ...], datetime] = (
+    {}
+)  # {(race_id, label) or (user_id, race_id, label): sent_timestamp}
 last_api_check_time = None  # Track last API check to limit calls
 
 
@@ -106,7 +118,9 @@ def load_notify_history() -> Dict[Tuple[Any, ...], datetime]:
                 raw_data = json.load(f)
                 for key_list, timestamp_str in raw_data.items():
                     try:
-                        key = tuple(int(k) if k.isdigit() else k for k in key_list.split(","))
+                        key = tuple(
+                            int(k) if k.isdigit() else k for k in key_list.split(",")
+                        )
                         history[key] = datetime.fromisoformat(timestamp_str)
                     except (ValueError, KeyError):
                         continue
@@ -543,6 +557,148 @@ def _check_new_season_reminder_notifications(now: datetime) -> list:
     return notifications
 
 
+def _check_snooze_reminders(now: datetime, races_closing: dict) -> list:
+    """Check for expired snooze reminders and return notifications to send
+
+    Args:
+        now: Current datetime
+        races_closing: Pre-fetched dict of upcoming races
+
+    Returns:
+        list: Notifications to send [(type, race_id, race_data, label, history_key, user_id), ...]
+    """
+    from .user_data import get_all_snooze_reminders, remove_snooze_reminder
+
+    notifications = []
+
+    # Get ALL active snooze reminders (including past ones that need cleanup)
+    all_reminders = get_all_snooze_reminders()
+
+    logger.debug(f"🔔 Snooze checker: {len(all_reminders)} active snoozes")
+
+    if not all_reminders:
+        return notifications
+
+    for user_id, race_id, until, notification_type in all_reminders:
+        time_diff = (until - now).total_seconds()
+        logger.debug(
+            f"🔔 Check snooze: user={user_id}, race={race_id}, type={notification_type}, until={until}, now={now}, diff={time_diff:.1f}s"
+        )
+
+        if race_id not in races_closing:
+            logger.debug(f"🔔 Race {race_id} not in races_closing, removing snooze")
+            remove_snooze_reminder(user_id, race_id, notification_type)
+            continue
+
+        race_data = races_closing[race_id]
+
+        if now >= until:
+            seconds_late = (now - until).total_seconds()
+
+            if seconds_late > SNOOZE_TOLERANCE_SECONDS:
+                logger.debug(
+                    f"🔔 Snooze missed tolerance (late by {seconds_late:.1f}s > {SNOOZE_TOLERANCE_SECONDS}s), removing: user {user_id}, race {race_id}"
+                )
+                from .user_data import remove_snooze_reminder_by_time
+
+                remove_snooze_reminder_by_time(
+                    user_id, race_id, notification_type, until
+                )
+                continue
+
+            label = f"snooze_{notification_type}"
+            history_key = (user_id, race_id, label, until.isoformat())
+            minutes_late = seconds_late / 60
+
+            if history_key not in notify_history:
+                user_status = users_data.get(user_id, {})
+                if user_status.get("completed_quali") == race_id:
+                    logger.debug(
+                        f"🔔 Snooze skipped: user {user_id} already marked race {race_id} as done"
+                    )
+                    from .user_data import remove_snooze_reminder_by_time
+
+                    remove_snooze_reminder_by_time(
+                        user_id, race_id, notification_type, until
+                    )
+                    continue
+
+                logger.info(
+                    f"🔔 Snooze FIRING (late by {minutes_late:.1f}min): user {user_id}, race {race_id}, type {notification_type}"
+                )
+                notifications.append(
+                    (
+                        "snooze",
+                        race_id,
+                        race_data,
+                        label,
+                        history_key,
+                        user_id,
+                    )
+                )
+            else:
+                logger.debug(
+                    f"🔔 Snooze already sent (in history): user {user_id}, race {race_id}"
+                )
+
+            from .user_data import remove_snooze_reminder_by_time
+
+            remove_snooze_reminder_by_time(user_id, race_id, notification_type, until)
+            logger.debug(
+                f"🔔 Snooze removed: user {user_id}, race {race_id}, until {until}"
+            )
+        else:
+            time_until = (until - now).total_seconds() / 60
+            logger.debug(
+                f"🔔 Snooze pending: user {user_id}, race {race_id}, fires in {time_until:.1f}min (at {until})"
+            )
+
+    logger.debug(f"🔔 Snooze checker returning {len(notifications)} notifications")
+    return notifications
+
+
+def _reset_snooze_counts_for_past_deadlines(now: datetime) -> None:
+    """Reset snooze counts for notification types where deadline has passed
+
+    Args:
+        now: Current datetime
+    """
+    from .user_data import get_default_snooze_tracking
+
+    reset_count = 0
+    for user_id, user_data in users_data.items():
+        if "snooze_tracking" not in user_data:
+            continue
+
+        needs_reset = False
+        for notification_label in QUALI_NOTIFICATION_TYPES:
+            if notification_label not in race_calendar:
+                continue
+
+            race_data = (
+                race_calendar[notification_label]
+                if isinstance(race_calendar, dict)
+                else race_calendar.get(notification_label)
+            )
+            if not race_data:
+                continue
+
+            quali_close = race_data.get("quali_close")
+            if quali_close and now >= quali_close:
+                needs_reset = True
+                break
+
+        if needs_reset:
+            user_data["snooze_tracking"] = get_default_snooze_tracking()
+            reset_count += 1
+
+    if reset_count > 0:
+        logger.debug(
+            f"🔔 Reset snooze counts for {reset_count} users (deadlines passed)"
+        )
+        save_users_data()
+
+
 async def _send_notifications_to_users(bot: Bot, notifications_to_send: list):
     """Send notifications to all eligible users
 
@@ -568,19 +724,21 @@ async def _send_notifications_to_users(bot: Bot, notifications_to_send: list):
 
         # For custom notifications, send to specific user only
         if is_custom:
-            try:
-                # Custom notifications are always quali-type
-                await send_quali_notification(
-                    bot, target_user_id, race_id, race_data, label
-                )
-                sent_count = 1
-                logger.info(
-                    f"✅ Sent custom notification ({label}) for race {race_id} to user {target_user_id}"
-                )
-            except Exception as e:
-                logger.error(
-                    f"Failed to send custom {label} to user {target_user_id}: {e}"
-                )
+            if target_user_id is None:
+                logger.error(f"Custom notification missing user_id for race {race_id}")
+            else:
+                try:
+                    await send_quali_notification(
+                        bot, target_user_id, race_id, race_data, label
+                    )
+                    sent_count = 1
+                    logger.info(
+                        f"✅ Sent custom notification ({label}) for race {race_id} to user {target_user_id}"
+                    )
+                except Exception as e:
+                    logger.error(
+                        f"Failed to send custom {label} to user {target_user_id}: {e}"
+                    )
         else:
             # Regular notifications - send to all users with that notification enabled
             # Use list() to avoid "dictionary changed size during iteration" error
@@ -626,13 +784,16 @@ async def _send_notifications_to_users(bot: Bot, notifications_to_send: list):
 
 
 def _get_next_check_interval(now: datetime) -> int:
-    """Determine next check interval based on proximity to upcoming races
+    """Determine next check interval based on proximity to upcoming races or active snoozes
 
-    Returns faster checks when race is approaching for better timing precision.
+    Returns faster checks when race is approaching or when there are pending snoozes
+    for better timing precision.
 
     Returns:
         int: Seconds until next check
     """
+    from .user_data import get_all_snooze_reminders
+
     # Check if any race is approaching
     for race_id, race_data in race_calendar.items():
         race_time = race_data["date"]
@@ -644,6 +805,25 @@ def _get_next_check_interval(now: datetime) -> int:
             <= minutes_until_race
             <= RACE_PROXIMITY_THRESHOLD_MINUTES
         ):
+            logger.debug(
+                f"🔔 Checker: race approaching in {minutes_until_race:.1f}min, using fast interval"
+            )
+            return CHECK_INTERVAL_FAST_SECONDS
+
+    # Check if there are any active snooze reminders that will fire soon
+    active_snoozes = get_all_snooze_reminders()
+    if active_snoozes:
+        now = datetime.utcnow()
+        soonest_snooze = min(until for _, _, until, _ in active_snoozes)
+        minutes_until_snooze = (soonest_snooze - now).total_seconds() / 60
+
+        logger.debug(
+            f"🔔 Checker: {len(active_snoozes)} active snooze(s), soonest in {minutes_until_snooze:.1f}min"
+        )
+
+        # If snooze is within 10 minutes, use fast checking
+        if minutes_until_snooze <= 10:
+            logger.debug("🔔 Checker: snooze within 10min, using fast interval")
             return CHECK_INTERVAL_FAST_SECONDS
 
     # Default to normal interval
@@ -747,6 +927,12 @@ async def check_notifications(bot: Bot):
                 notifications_to_send.extend(
                     _check_new_season_reminder_notifications(now)
                 )
+                notifications_to_send.extend(
+                    _check_snooze_reminders(now, races_closing)
+                )
+
+                # Reset snooze counts for past deadlines
+                _reset_snooze_counts_for_past_deadlines(now)
 
                 # Clean old history entries
                 cutoff = now - timedelta(hours=NOTIFICATION_HISTORY_RETENTION_HOURS)

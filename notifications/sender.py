@@ -4,14 +4,33 @@ import logging
 import re
 from aiogram import Bot
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from datetime import datetime
-from typing import Dict
+from datetime import datetime, timedelta
+from typing import Dict, List, Optional, Tuple
 
 from gpro_calendar import race_calendar
 from utils import add_flag_to_track
-from .user_data import get_user_status, DEFAULT_USER_LANG
+from .user_data import (
+    get_user_status,
+    DEFAULT_USER_LANG,
+    get_snooze_count,
+)
 
 logger = logging.getLogger(__name__)
+
+SNOOZE_OPTIONS = [
+    (5, "5m"),
+    (15, "15m"),
+    (30, "30m"),
+    (60, "1h"),
+    (120, "2h"),
+    (240, "4h"),
+    (480, "8h"),
+]
+
+SNOOZE_TOLERANCE_MINUTES = 2
+MAX_SNOOZES = 3
+
+QUALI_NOTIFICATION_TYPES = ["72h", "48h", "24h", "2h", "10min", "deadline"]
 
 
 def generate_gpro_link(
@@ -313,6 +332,168 @@ WEATHER_CONDITIONS = {
     "Very Cloudy": "☁️",
     "Rain": "🌧️",
 }
+
+
+def get_next_notification_time(
+    race_id: int, current_label: str, now: datetime
+) -> Optional[datetime]:
+    """Get the next notification time after current_label for a race
+
+    Args:
+        race_id: Race ID
+        current_label: Current notification label (e.g., "48h", "2h")
+        now: Current datetime
+
+    Returns:
+        datetime: Next notification time, or None if no more notifications
+    """
+    if race_id not in race_calendar:
+        return None
+
+    race_data = race_calendar[race_id]
+    quali_close = race_data.get("quali_close")
+    if not quali_close:
+        return None
+
+    notification_labels = ["72h", "48h", "24h", "2h", "10min"]
+
+    try:
+        current_idx = notification_labels.index(current_label)
+    except ValueError:
+        return None
+
+    for label in notification_labels[current_idx + 1 :]:
+        hours_map = {
+            "72h": 72,
+            "48h": 48,
+            "24h": 24,
+            "2h": 2,
+            "10min": 10 / 60,
+        }
+        hours_before = hours_map.get(label)
+        if hours_before is None:
+            continue
+
+        next_time = quali_close - timedelta(hours=hours_before)
+        if next_time > now:
+            return next_time
+
+    return None
+
+
+def can_snooze(
+    user_id: int, race_id: int, notification_label: str, snooze_minutes: int
+) -> Tuple[bool, str]:
+    """Check if a snooze action is valid
+
+    Args:
+        user_id: Telegram user ID
+        race_id: Race ID
+        notification_label: Current notification label (e.g., "48h", "2h")
+        snooze_minutes: Minutes to snooze
+
+    Returns:
+        Tuple of (is_valid, error_message)
+    """
+    if race_id not in race_calendar:
+        return False, "Race not found"
+
+    race_data = race_calendar[race_id]
+    quali_close = race_data.get("quali_close")
+    now = datetime.utcnow()
+
+    if not quali_close:
+        return False, "Qualifying deadline not set"
+
+    snooze_until = now + timedelta(minutes=snooze_minutes)
+
+    snooze_count = get_snooze_count(user_id, notification_label)
+    if snooze_count >= MAX_SNOOZES:
+        return False, "max_reached"
+
+    if snooze_until >= quali_close:
+        return False, "past_deadline"
+
+    next_notification = get_next_notification_time(race_id, notification_label, now)
+    if next_notification and snooze_until >= next_notification - timedelta(
+        minutes=SNOOZE_TOLERANCE_MINUTES
+    ):
+        minutes_until_next = int((next_notification - now).total_seconds() / 60)
+        return False, f"next_{minutes_until_next}"
+
+    return True, ""
+
+
+def get_snooze_buttons(
+    user_id: int,
+    race_id: int,
+    notification_label: str,
+    i18n_get_text,
+) -> List[List[InlineKeyboardButton]]:
+    """Generate dynamic snooze buttons based on available time
+
+    Args:
+        user_id: Telegram user ID
+        race_id: Race ID
+        notification_label: Current notification label (e.g., "48h", "2h")
+        i18n_get_text: Function to get translated text
+
+    Returns:
+        List of button rows for inline keyboard
+    """
+    if race_id not in race_calendar:
+        return []
+
+    race_data = race_calendar[race_id]
+    quali_close = race_data.get("quali_close")
+    now = datetime.utcnow()
+
+    if not quali_close:
+        return []
+
+    time_until_deadline = (quali_close - now).total_seconds() / 60
+    next_notification = get_next_notification_time(race_id, notification_label, now)
+
+    if next_notification:
+        time_until_next = (next_notification - now).total_seconds() / 60
+        available_minutes = min(
+            time_until_deadline, time_until_next - SNOOZE_TOLERANCE_MINUTES
+        )
+    else:
+        available_minutes = time_until_deadline
+
+    if available_minutes < 5:
+        return []
+
+    snooze_count = get_snooze_count(user_id, notification_label)
+    if snooze_count >= MAX_SNOOZES:
+        return []
+
+    buttons = []
+    current_row = []
+
+    for minutes, label in SNOOZE_OPTIONS:
+        if minutes > available_minutes:
+            continue
+
+        if snooze_count >= MAX_SNOOZES:
+            break
+
+        button = InlineKeyboardButton(
+            text=i18n_get_text(f"button-snooze-{label}"),
+            callback_data=f"snooze_{race_id}_{notification_label}_{minutes}",
+        )
+
+        current_row.append(button)
+
+        if len(current_row) == 2:
+            buttons.append(current_row)
+            current_row = []
+
+    if current_row:
+        buttons.append(current_row)
+
+    return buttons
 
 
 def translate_weather_condition(weather_condition: str, get_text_func) -> str:
@@ -801,10 +982,17 @@ async def send_quali_notification(
         def get_text(key, **kwargs):
             return i18n.get(key, **kwargs)
 
+    # Check if this is a snoozed notification
+    is_snoozed = notification_type.startswith("snooze_")
+    if is_snoozed:
+        original_type = notification_type.replace("snooze_", "")
+    else:
+        original_type = notification_type
+
     # Check if qualifying is currently closed (between deadline and opens_soon)
     quali_is_closed = is_qualifying_closed(race_id, race_data)
 
-    if quali_is_closed:
+    if quali_is_closed and not is_snoozed:
         # Qualifying is closed, waiting for race to be calculated
         emoji = "🔒"
         title = get_text("notif-quali-closed-title")
@@ -852,6 +1040,10 @@ async def send_quali_notification(
         deadline = format_datetime_for_user(quali_close, user_id, "%d.%m %H:%M")
         race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
         title = get_text("notif-quali-closes", time=time_text)
+
+    # Add 🔁 prefix for snoozed notifications
+    if is_snoozed:
+        title = f"🔁 {title}"
 
     # Check if user already marked this race done
     is_marked_done = user_status.get("completed_quali") == race_id
@@ -935,17 +1127,43 @@ async def send_quali_notification(
                 ]
             )
 
+        # Add snooze buttons for qualifying deadline notifications
+        if (
+            original_type in QUALI_NOTIFICATION_TYPES
+            and original_type != "manual"
+            and not quali_is_closed
+        ):
+            snooze_buttons = get_snooze_buttons(
+                user_id, race_id, original_type, get_text
+            )
+            if snooze_buttons:
+                keyboard_buttons.extend(snooze_buttons)
+
         keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
-        message = get_text(
-            "notif-quali-message",
-            emoji=emoji,
-            title=title,
-            raceId=race_id,
-            track=track,
-            qualiDeadline=deadline,
-            raceTime=race_time,
-            qualiLink=quali_link,
-        )
+
+        # Use snooze-specific message template if snoozed
+        if is_snoozed:
+            message = get_text(
+                "notif-snooze-message",
+                emoji=emoji,
+                title=title,
+                raceId=race_id,
+                track=track,
+                qualiDeadline=deadline,
+                raceTime=race_time,
+                qualiLink=quali_link,
+            )
+        else:
+            message = get_text(
+                "notif-quali-message",
+                emoji=emoji,
+                title=title,
+                raceId=race_id,
+                track=track,
+                qualiDeadline=deadline,
+                raceTime=race_time,
+                qualiLink=quali_link,
+            )
 
     try:
         await bot.send_message(

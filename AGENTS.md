@@ -107,6 +107,14 @@ Required `.env` variables:
 - Notification labels: `"48h"`, `"24h"`, `"2h"`, `"10min"`, `"opens_soon"`, `"race_live"`, `"race_replay"`, `"race_results"`, `"custom_1"`, `"custom_2"`
 - Admin check: `user_id in ADMIN_USER_IDS`
 
+### Snooze Feature
+- **Snooze options**: +5m, +15m, +30m, +1h, +2h, +4h, +8h
+- **Max snoozes**: 3 per notification type (72h, 48h, 24h, 2h, 10min, deadline)
+- **Tolerance**: `SNOOZE_TOLERANCE_SECONDS = 120` - snoozes fire up to 2min late
+- **Fast mode**: Checker switches to 60s interval when snooze is within 10min
+- **Multiple snoozes**: User can snooze multiple times; each creates unique reminder
+- **Storage**: Snoozes saved in `users_data.json` as `active_snoozes` dict
+
 ### Module Structure
 - Add module docstring at file top: `"""Module description"""`
 - Initialize module-level logger: `logger = logging.getLogger(__name__)`

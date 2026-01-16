@@ -175,6 +175,13 @@ button-disable-category = 🔕 Categorie Uitschakelen
 button-quali-done = ✅ Kwalificatie Klaar
 button-reenable-race = 🔄 Race { $raceId } notificaties opnieuw inschakelen
 button-weather = 🌤️ Toon Weer
+button-snooze-5m = 🔔🔁 +5m
+button-snooze-15m = 🔔🔁 +15m
+button-snooze-30m = 🔔🔁 +30m
+button-snooze-1h = 🔔🔁 +1u
+button-snooze-2h = 🔔🔁 +2u
+button-snooze-4h = 🔔🔁 +4u
+button-snooze-8h = 🔔🔁 +8u
 button-enter-custom-group = ✏️ Voer Aangepaste Groep in
 button-enter-custom-time = ✏️ Voer Aangepaste Tijd in
 button-disable-notification = 🔕 Schakel Deze Notificatie Uit
@@ -218,6 +225,19 @@ notif-quali-closes = <b>Kwalificatie sluit over { $time }!</b>
 notif-quali-opens = <b>Kwalificatie is open</b>
 
 notif-quali-message = { $emoji } { $title }
+
+    🏁 <b>Race #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    📅 <b>Kwalificatie deadline: { $qualiDeadline }</b>
+    🏎 <b>Race: { $raceTime }</b>
+
+    🔗 <a href="{ $qualiLink }">Ga naar Kwalificatie</a>
+
+    <i>Klik op de '✅ Kwal Klaar' knop om notificaties voor deze race uit te schakelen</i>
+
+notif-snooze-title = <b>Herinnering (uitgesteld)</b>
+
+notif-snooze-message = { $emoji } { $title }
 
     🏁 <b>Race #{ $raceId }</b>
     📍 <b>{ $track }</b>
@@ -415,6 +435,10 @@ feedback-skip-language = ⏭️ Standaard taal gebruiken (Engels)
 feedback-skip-group = ⏭️ Groep selectie overgeslagen
 feedback-welcome = ✅ Welkom aan boord!
 feedback-weather-sent = 🌤️ Weersverwachting verzonden!
+snooze-confirmed = 🔁⏰ Herinnering verplaatst naar { $time }
+snooze-max-reached = 🔁❌ Snooze limiet bereikt (3/3)
+snooze-past-deadline = 🔁❌ Kan niet uitstellen voorbij deadline
+snooze-past-next = 🔁❌ Volgende herinnering over { $minutes }min
 
 # =======================
 # Time Formatting

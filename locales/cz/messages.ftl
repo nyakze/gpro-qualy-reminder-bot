@@ -175,6 +175,13 @@ button-disable-category = 🔕 Zakázat kategorii
 button-quali-done = ✅ Kvalifikace hotova
 button-reenable-race = 🔄 Znovu zapnout oznámení závodu { $raceId }
 button-weather = 🌤️ Zobrazit počasí
+button-snooze-5m = 🔔🔁 +5m
+button-snooze-15m = 🔔🔁 +15m
+button-snooze-30m = 🔔🔁 +30m
+button-snooze-1h = 🔔🔁 +1h
+button-snooze-2h = 🔔🔁 +2h
+button-snooze-4h = 🔔🔁 +4h
+button-snooze-8h = 🔔🔁 +8h
 button-enter-custom-group = ✏️ Zadat vlastní skupinu
 button-enter-custom-time = ✏️ Zadat vlastní čas
 button-disable-notification = 🔕 Vypnout toto oznámení
@@ -218,6 +225,19 @@ notif-quali-closes = <b>Kvalifikace se uzavře za { $time }!</b>
 notif-quali-opens = <b>Kvalifikace je otevřena</b>
 
 notif-quali-message = { $emoji } { $title }
+
+    🏁 <b>Závod č. { $raceId }</b>
+    📍 <b>{ $track }</b>
+    📅 <b>Uzávěrka kvalifikace: { $qualiDeadline }</b>
+    🏎 <b>Závod: { $raceTime }</b>
+
+    🔗 <a href="{ $qualiLink }">Přejít na kvalifikaci</a>
+
+    <i>Klikněte na tlačítko '✅ Kvalifikace hotova' pro vypnutí oznámení tohoto závodu</i>
+
+notif-snooze-title = <b>Připomínka (odloženo)</b>
+
+notif-snooze-message = { $emoji } { $title }
 
     🏁 <b>Závod č. { $raceId }</b>
     📍 <b>{ $track }</b>
@@ -415,6 +435,10 @@ feedback-skip-language = ⏭️ Používá se výchozí jazyk (angličtina)
 feedback-skip-group = ⏭️ Výběr skupiny přeskočen
 feedback-welcome = ✅ Vítejte na palubě!
 feedback-weather-sent = 🌤️ Předpověď počasí odeslána!
+snooze-confirmed = 🔁⏰ Připomínka přesunuta na { $time }
+snooze-max-reached = 🔁❌ Limit odložení dosažen (3/3)
+snooze-past-deadline = 🔁❌ Nelze odložit po termínu
+snooze-past-next = 🔁❌ Další připomínka za { $minutes }min
 
 # =======================
 # Time Formatting

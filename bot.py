@@ -45,9 +45,13 @@ async def main():
     try:
         loaded_history = load_notify_history()
         notify_history.update(loaded_history)
-        log_structured(logging.INFO, "Notification history loaded", count=len(notify_history))
+        log_structured(
+            logging.INFO, "Notification history loaded", count=len(notify_history)
+        )
     except Exception as e:
-        log_structured(logging.WARNING, "Failed to load notification history", error=str(e))
+        log_structured(
+            logging.WARNING, "Failed to load notification history", error=str(e)
+        )
 
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher(storage=MemoryStorage())
@@ -57,7 +61,10 @@ async def main():
     if not race_calendar:
         log_structured(logging.WARNING, "No calendar loaded, alerting admins")
         from infra.signals import alert_admin
-        await alert_admin(bot, "⚠️ Calendar failed to load! Bot is running but has no race data.")
+
+        await alert_admin(
+            bot, "⚠️ Calendar failed to load! Bot is running but has no race data."
+        )
     else:
         log_structured(logging.INFO, "Calendar loaded", races=len(race_calendar))
 
@@ -77,7 +84,9 @@ async def main():
     setup_signal_handlers(bot)
 
     uptime_seconds = time.time() - _STARTUP_TIME
-    log_structured(logging.INFO, "Bot startup complete", uptime_seconds=round(uptime_seconds, 2))
+    log_structured(
+        logging.INFO, "Bot startup complete", uptime_seconds=round(uptime_seconds, 2)
+    )
 
     asyncio.create_task(run_with_recovery(bot))
 

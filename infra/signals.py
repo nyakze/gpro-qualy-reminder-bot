@@ -16,9 +16,13 @@ async def alert_admin(bot, message: str) -> None:
     for admin_id in ADMIN_USER_IDS:
         try:
             await bot.send_message(admin_id, f"⚠️ {message}")
-            log_structured(logging.INFO, f"Alert sent to admin {admin_id}", admin_id=admin_id)
+            log_structured(
+                logging.INFO, f"Alert sent to admin {admin_id}", admin_id=admin_id
+            )
         except Exception as e:
-            log_structured(logging.ERROR, f"Failed to alert admin {admin_id}", error=str(e))
+            log_structured(
+                logging.ERROR, f"Failed to alert admin {admin_id}", error=str(e)
+            )
 
 
 async def shutdown(bot, reason: str) -> None:

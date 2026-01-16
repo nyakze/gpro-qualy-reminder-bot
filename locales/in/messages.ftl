@@ -175,6 +175,13 @@ button-disable-category = 🔕 कैटेगरी अक्षम करे�
 button-quali-done = ✅ क्वालीफाइंग पूर्ण
 button-reenable-race = 🔄 रेस { $raceId } सूचनाएं पुनः सक्षम करें
 button-weather = 🌤️ मौसम दिखाएं
+button-snooze-5m = 🔔🔁 +5m
+button-snooze-15m = 🔔🔁 +15m
+button-snooze-30m = 🔔🔁 +30m
+button-snooze-1h = 🔔🔁 +1h
+button-snooze-2h = 🔔🔁 +2h
+button-snooze-4h = 🔔🔁 +4h
+button-snooze-8h = 🔔🔁 +8h
 button-enter-custom-group = ✏️ कस्टम ग्रुप दर्ज करें
 button-enter-custom-time = ✏️ कस्टम समय दर्ज करें
 button-disable-notification = 🔕 यह सूचना अक्षम करें
@@ -218,6 +225,19 @@ notif-quali-closes = <b>क्वालीफाइंग { $time } में �
 notif-quali-opens = <b>क्वालीफाइंग खुली है</b>
 
 notif-quali-message = { $emoji } { $title }
+
+    🏁 <b>रेस #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    📅 <b>क्वालीफाइंग की अंतिम तिथि: { $qualiDeadline }</b>
+    🏎 <b>रेस: { $raceTime }</b>
+
+    🔗 <a href="{ $qualiLink }">क्वालीफाइंग पर जाएं</a>
+
+    <i>इस रेस के लिए सूचनाओं को अक्षम करने के लिए '✅ क्वालीफाइंग पूर्ण' बटन पर क्लिक करें</i>
+
+notif-snooze-title = <b>अनुस्मारक (स्नूज़ किया गया)</b>
+
+notif-snooze-message = { $emoji } { $title }
 
     🏁 <b>रेस #{ $raceId }</b>
     📍 <b>{ $track }</b>
@@ -415,6 +435,10 @@ feedback-skip-language = ⏭️ डिफ़ॉल्ट भाषा का उ
 feedback-skip-group = ⏭️ ग्रुप चयन छोड़ दिया गया
 feedback-welcome = ✅ स्वागत है!
 feedback-weather-sent = 🌤️ मौसम पूर्वानुमान भेजा गया!
+snooze-confirmed = 🔁⏰ अनुस्मारक स्थानांतरित { $time }
+snooze-max-reached = 🔁❌ स्नूज़ सीमा पहुंची (3/3)
+snooze-past-deadline = 🔁❌ समय सीमा के बाद स्नूज़ नहीं कर सकते
+snooze-past-next = 🔁❌ अगला अनुस्मारक { $minutes }मिनट में
 
 # =======================
 # Time Formatting

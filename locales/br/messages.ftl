@@ -174,6 +174,13 @@ button-disable-category = 🔕 Desativar Categoria
 button-quali-done = ✅ Classificação Concluída
 button-reenable-race = 🔄 Reativar notificações da Corrida { $raceId }
 button-weather = 🌤️ Mostrar Clima
+button-snooze-5m = 🔔🔁 +5m
+button-snooze-15m = 🔔🔁 +15m
+button-snooze-30m = 🔔🔁 +30m
+button-snooze-1h = 🔔🔁 +1h
+button-snooze-2h = 🔔🔁 +2h
+button-snooze-4h = 🔔🔁 +4h
+button-snooze-8h = 🔔🔁 +8h
 button-enter-custom-group = ✏️ Informar Grupo Personalizado
 button-enter-custom-time = ✏️ Informar Horário Personalizado
 button-disable-notification = 🔕 Desativar Esta Notificação
@@ -223,6 +230,19 @@ notif-quali-closes = <b>Classificação fecha em { $time }!</b>
 notif-quali-opens = <b>Classificação está aberta</b>
 
 notif-quali-message = { $emoji } { $title }
+
+    🏁 <b>Corrida #{ $raceId }</b>
+    📍 <b>{ $track }</b>
+    📅 <b>Classificação fecha: { $qualiDeadline }</b>
+    🏎 <b>Corrida: { $raceTime }</b>
+
+    🔗 <a href="{ $qualiLink }">Ir para Classificação</a>
+
+    <i>Clique no botão '✅ Classificação Concluída' para desativar as notificações desta corrida</i>
+
+notif-snooze-title = <b>Lembrete (adiado)</b>
+
+notif-snooze-message = { $emoji } { $title }
 
     🏁 <b>Corrida #{ $raceId }</b>
     📍 <b>{ $track }</b>
@@ -434,6 +454,10 @@ feedback-skip-language = ⏭️ Usando idioma padrão (inglês)
 feedback-skip-group = ⏭️ Seleção de grupo pulada
 feedback-welcome = ✅ Bem-vindo!
 feedback-weather-sent = 🌤️ Previsão do clima enviada!
+snooze-confirmed = 🔁⏰ Lembrete movido para { $time }
+snooze-max-reached = 🔁❌ Limite de adiar atingido (3/3)
+snooze-past-deadline = 🔁❌ Não é possível adiar após o prazo
+snooze-past-next = 🔁❌ Próximo lembrete em { $minutes }min
 
 # =======================
 # Formatação de Tempo

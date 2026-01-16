@@ -9,7 +9,15 @@ Contains:
 
 from aiogram import Router
 
-__all__ = ["router", "main_menu", "settings", "notifications", "race_status", "build_ui_language_keyboard", "build_settings_keyboard"]
+__all__ = [
+    "router",
+    "main_menu",
+    "settings",
+    "notifications",
+    "race_status",
+    "build_ui_language_keyboard",
+    "build_settings_keyboard",
+]
 
 router = Router()
 
