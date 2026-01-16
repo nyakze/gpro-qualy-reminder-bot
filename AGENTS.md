@@ -27,7 +27,24 @@ ruff check --fix .
 # View logs
 tail -f gpro_bot.log
 journalctl -u gpro -f  # if deployed
+
+# Note: No automated test suite exists in this project
 ```
+
+## Environment Setup
+
+```bash
+# Create .env file from .env.example
+cp .env.example .env
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+Required `.env` variables:
+- `TELEGRAM_BOT_TOKEN` - from @botfather
+- `GPRO_API_TOKEN` - from https://app.gpro.net/apiaccess
+- `ADMIN_USER_ID` - your Telegram ID (comma-separated for multiple admins)
 
 ## Code Style Guidelines
 
@@ -89,6 +106,33 @@ journalctl -u gpro -f  # if deployed
 - User IDs: `int` in memory, `str` in JSON
 - Notification labels: `"48h"`, `"24h"`, `"2h"`, `"10min"`, `"opens_soon"`, `"race_live"`, `"race_replay"`, `"race_results"`, `"custom_1"`, `"custom_2"`
 - Admin check: `user_id in ADMIN_USER_IDS`
+
+### Module Structure
+- Add module docstring at file top: `"""Module description"""`
+- Initialize module-level logger: `logger = logging.getLogger(__name__)`
+- Define global module-level dicts for caching (e.g., `race_calendar`, `users_data`)
+- Use `_SCRIPT_DIR` pattern for file paths: `os.path.dirname(os.path.abspath(__file__))`
+- In `bot.py`: `sys.path.insert(0, ".")` for proper module imports
+
+### Handler Patterns
+- Register handlers with `@router.message()` or `@router.callback_query()` decorators
+- Use filter objects: `Command("start")`, `F.data.startswith("prefix")`, `F.text & ~F.text.startswith("/")`
+- Handler signature: `async def handler(event: Type, state: FSMContext, i18n: I18nContext)`
+- Import router from local module: `from . import router`
+- Clear FSM state with `await state.clear()` when flow completes
+
+### Keyboard Building
+- Use `InlineKeyboardMarkup(inline_keyboard=[[buttons], [buttons]])`
+- Create buttons with `InlineKeyboardButton(text="Label", callback_data="data")`
+- Build functions return `(keyboard, message_text)` tuples for reusability
+- Use `callback_query.answer()` to acknowledge button presses
+- Edit messages with `message.edit_text()` instead of sending new when updating
+
+### Logging Patterns
+- Use structured logging: `log_structured(logging.INFO, "message", key=value)` from `infra/logging`
+- For non-structured logging: `logger.info("message")` with module-level logger
+- Log new users with emoji marker: `logger.info(f"🆕 NEW user {user_id}")`
+- Use appropriate levels: INFO for normal operations, WARNING for recoverable issues, ERROR for failures
 
 ## Architecture Summary
 
