@@ -336,7 +336,7 @@ notif-race-results-no-group = 📊 <b>Доступні Результати Го
 # =======================
 weather-title = 🌤️ <b>Прогноз Погоди для Гонки</b>
 weather-practice-q1 = <b>Практика / Кваліфікація 1:</b> { $weather }
-weather-temp-hum = Темп: { $temp }°C • Вологість: { $hum }%
+weather-temp-hum = Темп: { $temp }°C • Волог: { $hum }%
 weather-q2-start = <b>Кваліфікація 2 / Старт Гонки:</b> { $weather }
 weather-race-conditions = <b>Умови Гонки:</b>
 weather-quarter = <b>{ $label }:</b>
@@ -618,14 +618,14 @@ weather-unavailable = ⚠️ Дані про погоду недоступні
 weather-title = 🌤️ <b>Прогноз Погоди для Гонки</b>
 weather-race-header = Гонка #{ $raceId }: { $track }
 weather-practice-q1 = <b>Практика / Кваліфікація 1:</b> { $weather }
-weather-temp-hum = Темп: { $temp }°C • Вологість: { $hum }%
+weather-temp-hum = Темп: { $temp }°C • Волог: { $hum }%
 weather-q2-race-start = <b>Кваліфікація 2 / Старт Гонки:</b> { $weather }
 weather-race-conditions = <b>Умови Гонки:</b>
 weather-start-0h30m = <b>Старт - 0год30хв:</b>
 weather-0h30m-1h00m = <b>0год30хв - 1год00хв:</b>
 weather-1h00m-1h30m = <b>1год00хв - 1год30хв:</b>
 weather-1h30m-2h00m = <b>1год30хв - 2год00хв:</b>
-weather-temp-hum-range = Темп: { $temp } • Вологість: { $hum }
+weather-temp-hum-range = Темп: { $temp } • Волог: { $hum }
 weather-rain-prob = Ймовірність дощу: { $rain }
 
 # Weather Conditions

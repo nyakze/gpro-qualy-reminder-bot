@@ -334,7 +334,7 @@ notif-race-results-no-group = 📊 <b>Резултати от състезани
 # =======================
 weather-title = 🌤️ <b>Прогноза за времето на състезанието</b>
 weather-practice-q1 = <b>Тренировка / Квалификация 1:</b> { $weather }
-weather-temp-hum = Темп: { $temp }°C • Влажност: { $hum }%
+weather-temp-hum = Темп: { $temp }°C • Влаж: { $hum }%
 weather-q2-start = <b>Квалификация 2 / Начало на състезанието:</b> { $weather }
 weather-race-conditions = <b>Условия по време на състезанието:</b>
 weather-quarter = <b>{ $label }:</b>
@@ -603,14 +603,14 @@ weather-unavailable = ⚠️ Данните за времето не са нал
 weather-title = 🌤️ <b>Прогноза за времето на състезанието</b>
 weather-race-header = Състезание #{ $raceId }: { $track }
 weather-practice-q1 = <b>Тренировка / Квалификация 1:</b> { $weather }
-weather-temp-hum = Темп: { $temp }°C • Влажност: { $hum }%
+weather-temp-hum = Темп: { $temp }°C • Влаж: { $hum }%
 weather-q2-race-start = <b>Квалификация 2 / Начало на състезанието:</b> { $weather }
 weather-race-conditions = <b>Условия по време на състезанието:</b>
 weather-start-0h30m = <b>Начало - 0ч30м:</b>
 weather-0h30m-1h00m = <b>0ч30м - 1ч00м:</b>
 weather-1h00m-1h30m = <b>1ч00м - 1ч30м:</b>
 weather-1h30m-2h00m = <b>1ч30м - 2ч00м:</b>
-weather-temp-hum-range = Темп: { $temp } • Влажност: { $hum }
+weather-temp-hum-range = Темп: { $temp } • Влаж: { $hum }
 weather-rain-prob = Вероятност за дъжд: { $rain }
 
 # Метеорологични условия

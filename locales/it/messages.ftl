@@ -339,7 +339,7 @@ notif-race-results-no-group = 📊 <b>Risultati Gara #{ $raceId } Disponibili</b
 weather-title = 🌤️ <b>Previsioni Meteo Gara</b>
 weather-race-header = Race #{ $raceId }: { $track }
 weather-practice-q1 = <b>Prova / Qualifica 1:</b> { $weather }
-weather-temp-hum = Temp: { $temp }°C • Umidità: { $hum }%
+weather-temp-hum = Temp: { $temp }°C • Um: { $hum }%
 weather-q2-start = <b>Qualifica 2 / Partenza Gara:</b> { $weather }
 weather-q2-race-start = <b>Qualifica 2 / Partenza Gara:</b> { $weather }
 weather-race-conditions = <b>Condizioni di Gara:</b>
@@ -365,7 +365,7 @@ weather-start-0h30m = <b>Partenza - 0h30m:</b>
 weather-0h30m-1h00m = <b>0h30m - 1h00m:</b>
 weather-1h00m-1h30m = <b>1h00m - 1h30m:</b>
 weather-1h30m-2h00m = <b>1h30m - 2h00m:</b>
-weather-temp-hum-range = Temp: { $temp } • Umidità: { $hum }
+weather-temp-hum-range = Temp: { $temp } • Um: { $hum }
 weather-rain-prob = Probabilità di pioggia: { $rain }
 
 # Condizioni Meteorologiche

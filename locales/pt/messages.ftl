@@ -333,7 +333,7 @@ notif-race-results-no-group = 📊 <b>Resultados da Corrida #{ $raceId } Dispon�
 # =======================
 weather-title = 🌤️ <b>Previsão Meteorológica da Corrida</b>
 weather-practice-q1 = <b>Treinos / Qualificação 1:</b> { $weather }
-weather-temp-hum = Temp: { $temp }°C • Humidade: { $hum }%
+weather-temp-hum = Temp: { $temp }°C • Hum: { $hum }%
 weather-q2-start = <b>Qualificação 2 / Início da Corrida:</b> { $weather }
 weather-race-conditions = <b>Condições da Corrida:</b>
 weather-quarter = <b>{ $label }:</b>
@@ -602,14 +602,14 @@ weather-unavailable = ⚠️ Dados meteorológicos não disponíveis
 weather-title = 🌤️ <b>Previsão Meteorológica da Corrida</b>
 weather-race-header = Corrida #{ $raceId }: { $track }
 weather-practice-q1 = <b>Treinos / Qualificação 1:</b> { $weather }
-weather-temp-hum = Temp: { $temp }°C • Humidade: { $hum }%
+weather-temp-hum = Temp: { $temp }°C • Hum: { $hum }%
 weather-q2-race-start = <b>Qualificação 2 / Início da Corrida:</b> { $weather }
 weather-race-conditions = <b>Condições da Corrida:</b>
 weather-start-0h30m = <b>Início - 0h30m:</b>
 weather-0h30m-1h00m = <b>0h30m - 1h00m:</b>
 weather-1h00m-1h30m = <b>1h00m - 1h30m:</b>
 weather-1h30m-2h00m = <b>1h30m - 2h00m:</b>
-weather-temp-hum-range = Temp: { $temp } • Humidade: { $hum }
+weather-temp-hum-range = Temp: { $temp } • Hum: { $hum }
 weather-rain-prob = Probabilidade de chuva: { $rain }
 
 # Condições Meteorológicas

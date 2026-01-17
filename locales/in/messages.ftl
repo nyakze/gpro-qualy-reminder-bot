@@ -336,7 +336,7 @@ notif-race-results-no-group = 📊 <b>रेस #{ $raceId } परिणाम 
 # =======================
 weather-title = 🌤️ <b>रेस मौसम पूर्वानुमान</b>
 weather-practice-q1 = <b>प्रैक्टिस / क्वालीफाई 1:</b> { $weather }
-weather-temp-hum = तापमान: { $temp }°C • आर्द्रता: { $hum }%
+weather-temp-hum = तापमान: { $temp }°C • आर्द्र: { $hum }%
 weather-q2-start = <b>क्वालीफाई 2 / रेस शुरुआत:</b> { $weather }
 weather-race-conditions = <b>रेस स्थितियां:</b>
 weather-quarter = <b>{ $label }:</b>
@@ -608,14 +608,14 @@ weather-unavailable = ⚠️ मौसम डेटा उपलब्ध नह
 weather-title = 🌤️ <b>रेस मौसम पूर्वानुमान</b>
 weather-race-header = रेस #{ $raceId }: { $track }
 weather-practice-q1 = <b>प्रैक्टिस / क्वालीफाई 1:</b> { $weather }
-weather-temp-hum = तापमान: { $temp }°C • आर्द्रता: { $hum }%
+weather-temp-hum = तापमान: { $temp }°C • आर्द्र: { $hum }%
 weather-q2-race-start = <b>क्वालीफाई 2 / रेस शुरुआत:</b> { $weather }
 weather-race-conditions = <b>रेस स्थितियां:</b>
 weather-start-0h30m = <b>शुरुआत - 0h30m:</b>
 weather-0h30m-1h00m = <b>0h30m - 1h00m:</b>
 weather-1h00m-1h30m = <b>1h00m - 1h30m:</b>
 weather-1h30m-2h00m = <b>1h30m - 2h00m:</b>
-weather-temp-hum-range = तापमान: { $temp } • आर्द्रता: { $hum }
+weather-temp-hum-range = तापमान: { $temp } • आर्द्र: { $hum }
 weather-rain-prob = बारिश की संभावना: { $rain }
 
 # Weather Conditions

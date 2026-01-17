@@ -384,7 +384,7 @@ notif-new-season-reminder-no-group = 🌟 <b>New Season Starting!</b>
 # =======================
 weather-title = 🌤️ <b>Race Weather Forecast</b>
 weather-practice-q1 = <b>Practice / Qualify 1:</b> { $weather }
-weather-temp-hum = Temp: { $temp }°C • Humidity: { $hum }%
+weather-temp-hum = Temp: { $temp }°C • Hum: { $hum }%
 weather-q2-start = <b>Qualify 2 / Race Start:</b> { $weather }
 weather-race-conditions = <b>Race Conditions:</b>
 weather-quarter = <b>{ $label }:</b>
@@ -653,14 +653,14 @@ weather-unavailable = ⚠️ Weather data not available
 weather-title = 🌤️ <b>Race Weather Forecast</b>
 weather-race-header = Race #{ $raceId }: { $track }
 weather-practice-q1 = <b>Practice / Qualify 1:</b> { $weather }
-weather-temp-hum = Temp: { $temp }°C • Humidity: { $hum }%
+weather-temp-hum = Temp: { $temp }°C • Hum: { $hum }%
 weather-q2-race-start = <b>Qualify 2 / Race Start:</b> { $weather }
 weather-race-conditions = <b>Race Conditions:</b>
 weather-start-0h30m = <b>Start - 0h30m:</b>
 weather-0h30m-1h00m = <b>0h30m - 1h00m:</b>
 weather-1h00m-1h30m = <b>1h00m - 1h30m:</b>
 weather-1h30m-2h00m = <b>1h30m - 2h00m:</b>
-weather-temp-hum-range = Temp: { $temp } • Humidity: { $hum }
+weather-temp-hum-range = Temp: { $temp } • Hum: { $hum }
 weather-rain-prob = Rain probability: { $rain }
 
 # Weather Conditions

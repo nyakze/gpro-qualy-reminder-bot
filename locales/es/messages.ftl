@@ -339,7 +339,7 @@ notif-race-results-no-group = 📊 <b>Resultados de la Carrera #{ $raceId } Disp
 weather-title = 🌤️ <b>Pronóstico del Clima de la Carrera</b>
 weather-race-header = Race #{ $raceId }: { $track }
 weather-practice-q1 = <b>Práctica / Clasificación 1:</b> { $weather }
-weather-temp-hum = Temp: { $temp }°C • Humedad: { $hum }%
+weather-temp-hum = Temp: { $temp }°C • Hum: { $hum }%
 weather-q2-start = <b>Clasificación 2 / Inicio de Carrera:</b> { $weather }
 weather-q2-race-start = <b>Clasificación 2 / Inicio de Carrera:</b> { $weather }
 weather-race-conditions = <b>Condiciones de Carrera:</b>
@@ -365,7 +365,7 @@ weather-start-0h30m = <b>Inicio - 0h30m:</b>
 weather-0h30m-1h00m = <b>0h30m - 1h00m:</b>
 weather-1h00m-1h30m = <b>1h00m - 1h30m:</b>
 weather-1h30m-2h00m = <b>1h30m - 2h00m:</b>
-weather-temp-hum-range = Temp: { $temp } • Humedad: { $hum }
+weather-temp-hum-range = Temp: { $temp } • Hum: { $hum }
 weather-rain-prob = Probabilidad de lluvia: { $rain }
 
 # Condiciones Meteorológicas

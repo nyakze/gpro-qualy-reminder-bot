@@ -336,7 +336,7 @@ notif-race-results-no-group = 📊 <b>Race #{ $raceId } Resultaten Beschikbaar</
 # =======================
 weather-title = 🌤️ <b>Race Weer Voorspelling</b>
 weather-practice-q1 = <b>Training / Kwalificatie 1:</b> { $weather }
-weather-temp-hum = Temp: { $temp }°C • Luchtvocht: { $hum }%
+weather-temp-hum = Temp: { $temp }°C • Lucht: { $hum }%
 weather-q2-start = <b>Kwalificatie 2 / Race Start:</b> { $weather }
 weather-race-conditions = <b>Race Omstandigheden:</b>
 weather-quarter = <b>{ $label }:</b>
@@ -608,14 +608,14 @@ weather-unavailable = ⚠️ Weergegevens niet beschikbaar
 weather-title = 🌤️ <b>Race Weer Voorspelling</b>
 weather-race-header = Race #{ $raceId }: { $track }
 weather-practice-q1 = <b>Training / Kwalificatie 1:</b> { $weather }
-weather-temp-hum = Temp: { $temp }°C • Luchtvocht: { $hum }%
+weather-temp-hum = Temp: { $temp }°C • Lucht: { $hum }%
 weather-q2-race-start = <b>Kwalificatie 2 / Race Start:</b> { $weather }
 weather-race-conditions = <b>Race Omstandigheden:</b>
 weather-start-0h30m = <b>Start - 0u30m:</b>
 weather-0h30m-1h00m = <b>0u30m - 1u00m:</b>
 weather-1h00m-1h30m = <b>1u00m - 1u30m:</b>
 weather-1h30m-2h00m = <b>1u30m - 2u00m:</b>
-weather-temp-hum-range = Temp: { $temp } • Luchtvocht: { $hum }
+weather-temp-hum-range = Temp: { $temp } • Lucht: { $hum }
 weather-rain-prob = Regen kans: { $rain }
 
 # Weather Conditions

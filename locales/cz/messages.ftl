@@ -336,7 +336,7 @@ notif-race-results-no-group = 📊 <b>Výsledky závodu č. { $raceId } jsou dos
 # =======================
 weather-title = 🌤️ <b>Předpověď počasí pro závod</b>
 weather-practice-q1 = <b>Trénink / Kvalifikace 1:</b> { $weather }
-weather-temp-hum = Teplota: { $temp }°C • Vlhkost: { $hum }%
+weather-temp-hum = Teplota: { $temp }°C • Vlh: { $hum }%
 weather-q2-start = <b>Kvalifikace 2 / Start závodu:</b> { $weather }
 weather-race-conditions = <b>Podmínky závodu:</b>
 weather-quarter = <b>{ $label }:</b>
@@ -618,14 +618,14 @@ weather-unavailable = ⚠️ Data o počasí nejsou dostupná
 weather-title = 🌤️ <b>Předpověď počasí pro závod</b>
 weather-race-header = Závod č. { $raceId }: { $track }
 weather-practice-q1 = <b>Trénink / Kvalifikace 1:</b> { $weather }
-weather-temp-hum = Teplota: { $temp }°C • Vlhkost: { $hum }%
+weather-temp-hum = Teplota: { $temp }°C • Vlh: { $hum }%
 weather-q2-race-start = <b>Kvalifikace 2 / Start závodu:</b> { $weather }
 weather-race-conditions = <b>Podmínky závodu:</b>
 weather-start-0h30m = <b>Start - 0h30m:</b>
 weather-0h30m-1h00m = <b>0h30m - 1h00m:</b>
 weather-1h00m-1h30m = <b>1h00m - 1h30m:</b>
 weather-1h30m-2h00m = <b>1h30m - 2h00m:</b>
-weather-temp-hum-range = Teplota: { $temp } • Vlhkost: { $hum }
+weather-temp-hum-range = Teplota: { $temp } • Vlh: { $hum }
 weather-rain-prob = Pravděpodobnost deště: { $rain }
 
 # Weather Conditions
