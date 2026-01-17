@@ -335,7 +335,7 @@ notif-race-results-no-group = 📊 <b>Доступны результаты го
 # =======================
 weather-title = 🌤️ <b>Прогноз погоды на гонку</b>
 weather-practice-q1 = <b>Практика / Квалификация 1:</b> { $weather }
-weather-temp-hum = Темп: { $temp }°C • Влажность: { $hum }%
+weather-temp-hum = Температура: { $temp }°C • Влажность: { $hum }%
 weather-q2-start = <b>Квалификация 2 / Старт гонки:</b> { $weather }
 weather-race-conditions = <b>Условия гонки:</b>
 weather-quarter = <b>{ $label }:</b>
@@ -621,7 +621,7 @@ weather-start-0h30m = <b>Старт - 0ч30м:</b>
 weather-0h30m-1h00m = <b>0ч30м - 1ч00м:</b>
 weather-1h00m-1h30m = <b>1ч00м - 1ч30м:</b>
 weather-1h30m-2h00m = <b>1ч30м - 2ч00м:</b>
-weather-temp-hum-range = Температура: { $temp } • Влажность: { $hum }
+weather-temp-hum-range = Темп: { $temp } • Влажность: { $hum }
 weather-rain-prob = Вероятность дождя: { $rain }
 
 # Погодные условия
