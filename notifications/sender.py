@@ -334,6 +334,52 @@ WEATHER_CONDITIONS = {
 }
 
 
+def get_temp_icon(temp: int) -> str:
+    """Return temperature icon based on value
+    
+    Args:
+        temp: Temperature value in Celsius
+        
+    Returns:
+        Icon based on temperature (🔥 for hot, 🧊 for cold, 🌡️ for normal)
+    """
+    if isinstance(temp, int):
+        if temp > 38:
+            return "🔥"
+        if temp < 12:
+            return "🧊"
+    return "🌡️"
+
+
+def get_hum_icon() -> str:
+    """Return static humidity icon"""
+    return "💧"
+
+
+def get_rain_icon(rain_prob: int) -> str:
+    """Return rain icon based on probability
+    
+    Args:
+        rain_prob: Rain probability percentage (0-100)
+        
+    Returns:
+        Icon based on rain probability (💨 for none, ⛈️ for heavy, 🌧️ for moderate, ☔ for light)
+    """
+    if isinstance(rain_prob, int):
+        if rain_prob == 0:
+            return "💨"
+        if rain_prob >= 80:
+            return "⛈️"
+        if rain_prob >= 50:
+            return "🌧️"
+    return "☔"
+
+
+def get_time_interval_icon() -> str:
+    """Return static time interval icon"""
+    return "🕐"
+
+
 def get_next_notification_time(
     race_id: int, current_label: str, now: datetime
 ) -> Optional[datetime]:
@@ -572,9 +618,17 @@ def format_weather_data(weather: dict, i18n=None, user_id: int = None) -> str:
 
     message = get_text("weather-title") + "\n\n"
     message += get_text("weather-practice-q1", weather=q1_weather) + "\n"
-    message += get_text("weather-temp-hum", temp=q1_temp, hum=q1_hum) + "\n\n"
+    message += get_text(
+        "weather-temp-hum",
+        temp=f"{get_temp_icon(q1_temp) if isinstance(q1_temp, int) else ''} {q1_temp}",
+        hum=f"{get_hum_icon()} {q1_hum}",
+    ) + "\n\n"
     message += get_text("weather-q2-race-start", weather=q2_weather) + "\n"
-    message += get_text("weather-temp-hum", temp=q2_temp, hum=q2_hum) + "\n\n"
+    message += get_text(
+        "weather-temp-hum",
+        temp=f"{get_temp_icon(q2_temp) if isinstance(q2_temp, int) else ''} {q2_temp}",
+        hum=f"{get_hum_icon()} {q2_hum}",
+    ) + "\n\n"
 
     # Race Quarters
     message += get_text("weather-race-conditions") + "\n"
@@ -603,9 +657,25 @@ def format_weather_data(weather: dict, i18n=None, user_id: int = None) -> str:
             f"{rain_low}%" if rain_low == rain_high else f"{rain_low}%-{rain_high}%"
         )
 
-        message += f"\n{get_text(label_key)}\n"
-        message += get_text("weather-temp-hum-range", temp=temp_str, hum=hum_str) + "\n"
-        message += get_text("weather-rain-prob", rain=rain_str) + "\n"
+        # Get icons for temp (use higher value for range), humidity, and rain
+        temp_icon = (
+            get_temp_icon(temp_high)
+            if isinstance(temp_high, int)
+            else ""
+        )
+        rain_icon = (
+            get_rain_icon(rain_high)
+            if isinstance(rain_high, int)
+            else ""
+        )
+
+        message += f"\n{get_time_interval_icon()} {get_text(label_key)}\n"
+        message += get_text(
+            "weather-temp-hum-range",
+            temp=f"{temp_icon} {temp_str}",
+            hum=f"{get_hum_icon()} {hum_str}",
+        ) + "\n"
+        message += get_text("weather-rain-prob", rain=f"{rain_icon} {rain_str}") + "\n"
 
     return message
 
