@@ -26,7 +26,7 @@ ruff check --fix .
 
 # View logs
 tail -f gpro_bot.log
-journalctl -u gpro -f  # if deployed
+journalctl -u gpro -f --output=cat  # if deployed
 
 # Note: No automated test suite exists in this project
 ```

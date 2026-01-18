@@ -26,6 +26,7 @@ Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadli
 - **Timezone support:** Set your timezone for local time display with automatic DST handling (fuzzy search supports city names, abbreviations, UTC offsets)
 
 ### Commands
+- `/start` - New users: interactive onboarding; existing users: main menu
 - `/status` - Next race with full details, qualifying link, and weather button
 - `/calendar` - Full season calendar with all 17 races
 - `/next` - Next season calendar (when published)
@@ -58,7 +59,7 @@ python -m venv venv
 source venv/bin/activate  # Linux/Mac
 pip install -r requirements.txt
 cp .env.example .env
-# Edit .env with your TELEGRAM_BOT_TOKEN
+# Edit .env with TELEGRAM_BOT_TOKEN, GPRO_API_TOKEN, and ADMIN_USER_ID
 python bot.py
 ```
 
@@ -70,21 +71,6 @@ TELEGRAM_BOT_TOKEN=your_bot_token_here # get it from @botfather
 GPRO_API_TOKEN=your_gpro_api_token # get it here https://app.gpro.net/apiaccess
 ADMIN_USER_ID=your_telegram_id # to use admin commands
 ```
-
-## Commands
-
-| Command | Description |
-|---------|-------------|
-| `/start` | Interactive onboarding (language + group selection for new users) |
-| `/status` | Next race with full details, qualifying link, and weather forecast |
-| `/calendar` | Full season calendar (all 17 races) |
-| `/next` | Next season calendar (when published) |
-| `/settings` | Configure language, website mode, group, and notification preferences |
-| `/update` | Update calendar from API (admin only) |
-| `/updatetz` | Download timezone data and rebuild search index (admin only) |
-| `/weather` | Manually fetch weather data for testing (admin only) |
-| `/users` | See user list (admin only) |
-| `/deluser` | Delete a user from database - for testing onboarding (admin only) |
 
 ## File Structure
 
@@ -151,27 +137,89 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable gpro
 sudo systemctl start gpro
-sudo journalctl -u gpro -f
+sudo journalctl -u gpro -f --output=cat
 ```
 
 ## Development
 
 ```bash
-# Format code
-black .
-ruff check --fix .
+# Environment setup
+python -m venv venv
+source venv/bin/activate
+cp .env.example .env
+pip install -r requirements.txt
+
+# Run bot (main entry point)
+python bot.py
 
 # Run with debug logging
 python bot.py -v
 
+# Kill existing process
+pkill -f bot.py
+
+# Check if bot is running
+pgrep -f bot.py
+ps aux | grep bot.py
+
+# Format and lint
+black .
+ruff check --fix .
+
 # View logs
 tail -f gpro_bot.log
-journalctl -u gpro -f  # if deployed
+journalctl -u gpro -f --output=cat  # if deployed
 
-# Test notifications
-pkill -f notifications.py
-source venv/bin/activate
-python bot.py
+# Admin commands (in Telegram bot)
+/update        # Update calendar
+/updatetz      # Update timezone data
+/weather       # Fetch weather
+/users         # List users
+/user USER_ID  # View user details
+/userstats     # User statistics
+/deleteuser ID # Delete user
+/welcomealert  # Toggle new user notifications
+
+# Note: No automated test suite exists in this project
+```
+
+### Architecture
+
+The bot uses Aiogram 3.x with a notification checker running in the background:
+- **Main process**: Telegram bot handlers and API polling
+- **Checker loop**: Background task monitoring race times and sending notifications
+- **FSM**: In-memory state machine for onboarding flows (no Redis)
+
+Key modules:
+- `bot.py` - Entry point, dispatcher setup, middleware registration
+- `infra/runner.py` - Notification checker with error recovery
+- `gpro_calendar.py` - GPRO API integration, weather fetching, caching
+- `handlers/` - Command handlers, callbacks, FSM states
+- `notifications/` - User data, notification timing, sending logic
+- `middleware/user_profile.py` - Auto-update user profile on interactions
+
+### Adding Features
+
+1. **Add command**: Create handler in `handlers/commands.py` with `@router.message(Command("name"))`
+2. **Add callback**: Create handler in `handlers/callbacks.py` with `@router.callback_query()`
+3. **Add notification type**: Update `notifications/checker.py` timing logic and `notifications/sender.py` message format
+4. **Add translation**: Add key to `locales/*/messages.ftl` files
+
+### Debugging
+
+```bash
+# Run in verbose mode to see debug logs
+python bot.py -v
+
+# Check user data directly
+cat users_data.json | jq 'to_entries | .[] | select(.key == "USER_ID")'
+
+# Check calendar data
+cat gpro_calendar.json | jq
+
+# Test timezone search (Python REPL)
+from timezone_utils import search_timezone
+search_timezone("london")
 ```
 
 ### Logging
