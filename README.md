@@ -183,44 +183,13 @@ journalctl -u gpro -f --output=cat  # if deployed
 # Note: No automated test suite exists in this project
 ```
 
-### Architecture
+## Documentation
 
-The bot uses Aiogram 3.x with a notification checker running in the background:
-- **Main process**: Telegram bot handlers and API polling
-- **Checker loop**: Background task monitoring race times and sending notifications
-- **FSM**: In-memory state machine for onboarding flows (no Redis)
+For detailed documentation, see the [Wiki](https://github.com/nyakze/gpro-qualy-reminder-bot/wiki):
 
-Key modules:
-- `bot.py` - Entry point, dispatcher setup, middleware registration
-- `infra/runner.py` - Notification checker with error recovery
-- `gpro_calendar.py` - GPRO API integration, weather fetching, caching
-- `handlers/` - Command handlers, callbacks, FSM states
-- `notifications/` - User data, notification timing, sending logic
-- `middleware/user_profile.py` - Auto-update user profile on interactions
-
-### Adding Features
-
-1. **Add command**: Create handler in `handlers/commands.py` with `@router.message(Command("name"))`
-2. **Add callback**: Create handler in `handlers/callbacks.py` with `@router.callback_query()`
-3. **Add notification type**: Update `notifications/checker.py` timing logic and `notifications/sender.py` message format
-4. **Add translation**: Add key to `locales/*/messages.ftl` files
-
-### Debugging
-
-```bash
-# Run in verbose mode to see debug logs
-python bot.py -v
-
-# Check user data directly
-cat users_data.json | jq 'to_entries | .[] | select(.key == "USER_ID")'
-
-# Check calendar data
-cat gpro_calendar.json | jq
-
-# Test timezone search (Python REPL)
-from timezone_utils import search_timezone
-search_timezone("london")
-```
+- **[User Guide](https://github.com/nyakze/gpro-qualy-reminder-bot/wiki/User-Guide)** - How notifications work, configuring settings, snooze feature, website mode
+- **[Self-hosting Guide](https://github.com/nyakze/gpro-qualy-reminder-bot/wiki/Self-hosting-Guide)** - Data files, backup recommendations, troubleshooting
+- **[Development](https://github.com/nyakze/gpro-qualy-reminder-bot/wiki/Development)** - Architecture, adding features, debugging, code style guidelines
 
 ### Logging
 
