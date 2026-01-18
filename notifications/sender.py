@@ -587,7 +587,7 @@ def format_weather_data(weather: dict, i18n=None, user_id: int = None) -> str:
         # Get user's UI language if user_id is provided
         ui_lang = "gb"
         if user_id is not None:
-            user_status = get_user_status(user_id)[0]
+            user_status = get_user_status(user_id)[0][0]
             ui_lang = user_status.get("ui_lang", "gb")
 
         # Use the global translation function with user's UI language
@@ -686,7 +686,7 @@ async def send_race_live_notification(
     """Send notification when race goes live"""
     from timezone_utils import format_datetime_for_user
 
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     group = user_status.get("group")
     gpro_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
     ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
@@ -753,7 +753,7 @@ async def send_race_replay_notification(
     """Send race replay notification when next quali opens"""
     from timezone_utils import format_datetime_for_user
 
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     group = user_status.get("group")
     gpro_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
     ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
@@ -820,7 +820,7 @@ async def send_race_results_notification(
     """Send race results notification when next quali opens"""
     from timezone_utils import format_datetime_for_user
 
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     group = user_status.get("group")
     gpro_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
     ui_lang = user_status.get("ui_lang", "gb")  # Get user's UI language
@@ -896,7 +896,7 @@ async def send_quali_results_notification(
     """Send qualifying results notification after quali deadline"""
     from timezone_utils import format_datetime_for_user
 
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     group = user_status.get("group")
     gpro_lang = user_status.get("gpro_lang", DEFAULT_USER_LANG)
     ui_lang = user_status.get("ui_lang", "gb")
@@ -965,7 +965,7 @@ async def send_new_season_reminder_notification(
     from timezone_utils import format_datetime_for_user
     from utils import format_group_display
 
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     group = user_status.get("group")
     ui_lang = user_status.get("ui_lang", "gb")
 
@@ -1018,7 +1018,7 @@ async def send_quali_notification(
 ):
     from timezone_utils import format_datetime_for_user
 
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
 
     # Skip automatic notifications if user marked quali done
     if user_status.get("completed_quali") == race_id and notification_type != "manual":
