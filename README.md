@@ -4,7 +4,7 @@ Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadli
 
 ## 🚀 Use the Public Bot
 
-[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?logo=telegram&logoColor=white&style=for-the-badge&logoSize=48)](https://t.me/gproremindbot)
+[![Telegram](https://img.shields.io/badge/Launch_Bot_on_Telegram-2CA5E0?logo=telegram&logoColor=white&style=for-the-badge)](https://t.me/gproremindbot)
 
 **Click the button above or visit [@gproremindbot](https://t.me/gproremindbot) to start using the bot!**
 
