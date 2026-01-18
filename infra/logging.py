@@ -11,6 +11,9 @@ _LOG_FILE = None
 _VERBOSE = False
 _STARTUP_DATA = {}
 
+LOG_MAX_BYTES = 1 * 1024 * 1024
+LOG_BACKUP_COUNT = 5
+
 
 def init_logging_paths(script_dir: str) -> None:
     global _SCRIPT_DIR, _LOG_FILE
@@ -36,12 +39,14 @@ _LEVEL_ABBREV = {
 }
 
 _LevelColors = {
-    "DEBUG": "gray",
-    "INFO": "green",
-    "WARNING": "yellow",
-    "ERROR": "red",
-    "CRITICAL": "bold_red",
+    "DEBUG": "90",
+    "INFO": "92",
+    "WARNING": "93",
+    "ERROR": "91",
+    "CRITICAL": "1;31",
 }
+
+_RESET = "\033[0m"
 
 
 class StructuredLogFormatter(logging.Formatter):
@@ -73,25 +78,23 @@ class StructuredLogFormatter(logging.Formatter):
 
 class ConsoleFormatter(logging.Formatter):
     def __init__(self, *args, **kwargs):
-        self.use_colors = kwargs.pop("use_colors", True)
+        self.use_colors = kwargs.pop("use_colors", sys.stdout.isatty())
         super().__init__(*args, **kwargs)
-        self._level_width = 5
 
-    def _get_color(self, levelname: str) -> str:
+    def _color(self, levelname: str) -> str:
         if not self.use_colors:
             return ""
-        color = _LevelColors.get(levelname, "white")
-        return color
+        color_code = _LevelColors.get(levelname, "0")
+        return f"\033[{color_code}m"
 
     def format(self, record: logging.LogRecord) -> str:
         level_abbrev = _LEVEL_ABBREV.get(record.levelname, record.levelname[:5].upper())
         timestamp = _format_timestamp()
 
-        module = record.module
-        if len(module) > 15:
-            module = module[:12] + "..."
+        color = self._color(record.levelname)
+        reset = _RESET if self.use_colors else ""
 
-        base = f"[{timestamp}] [{level_abbrev:<5}] {record.getMessage()}"
+        base = f"[{timestamp}] [{color}{level_abbrev}{reset}] {record.getMessage()}"
 
         if record.exc_info:
             exc_text = self.formatException(record.exc_info)
@@ -116,20 +119,31 @@ def print_banner() -> None:
     if not _STARTUP_DATA:
         return
 
-    version = _STARTUP_DATA.get("version", "?.?")
     users = _STARTUP_DATA.get("users_count", "?")
     races = _STARTUP_DATA.get("races", "?")
     admins = _STARTUP_DATA.get("admins_count", "?")
     tz_count = _STARTUP_DATA.get("tz_count", "?")
     i18n_langs = _STARTUP_DATA.get("i18n_langs", "?")
 
+    green = "\033[92m" if sys.stdout.isatty() else ""
+    reset = "\033[0m" if sys.stdout.isatty() else ""
+
+    users_str = str(users)
+    races_str = str(races)
+    admins_str = str(admins)
+    tz_str = str(tz_count)
+    i18n_str = str(i18n_langs)
+
+    line1 = f"{green}║  Users: {users_str:>3} │ Races: {races_str:>2} │ Admins: {admins_str:>2}             {reset}║"
+    line2 = f"{green}║  Timezones: {tz_str:>3} │ i18n: {i18n_str:>2} languages            {reset}║"
+
     banner = f"""
-╔════════════════════════════════════════════════════════╗
-║              GPRO Bot v{version} - Starting...               ║
+{green}╔════════════════════════════════════════════════════════╗
+║              GPRO Bot - Starting...                     ║
 ╠════════════════════════════════════════════════════════╣
-║  Users: {str(users):<6} │ Races: {str(races):<3} │ Admins: {str(admins):<2}             ║
-║  Timezones: {str(tz_count):<4} │ i18n: {str(i18n_langs):<2} languages               ║
-╚════════════════════════════════════════════════════════╝"""
+{line1}
+{line2}
+╚════════════════════════════════════════════════════════╝{reset}"""
     print(banner)
 
 
@@ -140,8 +154,12 @@ def print_log_rotation_summary() -> None:
     size_bytes = os.path.getsize(_LOG_FILE)
     size_mb = size_bytes / (1024 * 1024)
 
-    print(f"\n📊 Log file: {_LOG_FILE} ({size_mb:.1f} MB)")
-    print("📊 Log rotation: 10 MB per file, 5 backups\n")
+    yellow = "\033[93m" if sys.stdout.isatty() else ""
+    reset = "\033[0m" if sys.stdout.isatty() else ""
+    log_size_mb = LOG_MAX_BYTES / (1024 * 1024)
+
+    print(f"\n{yellow}📊 Log file: {_LOG_FILE} ({size_mb:.1f} MB){reset}")
+    print(f"{yellow}📊 Log rotation: {int(log_size_mb)} MB per file, {LOG_BACKUP_COUNT} backups{reset}\n")
 
 
 def setup_logging(verbose: bool = False) -> logging.Logger:
@@ -158,7 +176,7 @@ def setup_logging(verbose: bool = False) -> logging.Logger:
     json_formatter = StructuredLogFormatter()
 
     file_handler = RotatingFileHandler(
-        cast(str, _LOG_FILE), maxBytes=10 * 1024 * 1024, backupCount=5, encoding="utf-8"
+        cast(str, _LOG_FILE), maxBytes=LOG_MAX_BYTES, backupCount=LOG_BACKUP_COUNT, encoding="utf-8"
     )
     file_handler.setFormatter(json_formatter)
     file_handler.setLevel(logging.DEBUG)

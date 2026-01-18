@@ -161,15 +161,50 @@ sudo journalctl -u gpro -f
 black .
 ruff check --fix .
 
-# Debug
+# Run with debug logging
+python bot.py -v
+
+# View logs
 tail -f gpro_bot.log
-sudo journalctl -u gpro -f
+journalctl -u gpro -f  # if deployed
 
 # Test notifications
 pkill -f notifications.py
 source venv/bin/activate
 python bot.py
 ```
+
+### Logging
+
+The bot uses dual logging:
+- **Console**: Human-readable colored output with timestamps
+- **File**: JSON format for parsing/analysis
+
+```bash
+python bot.py           # INFO level and above in console
+python bot.py -v        # DEBUG level and above in console
+```
+
+Console output example:
+```
+╔════════════════════════════════════════════════════════╗
+║              GPRO Bot - Starting...                     ║
+╠════════════════════════════════════════════════════════╣
+║  Users:   4 │ Races: 17 │ Admins:  2             ║
+║  Timezones:598 │ i18n: 12 languages            ║
+╚════════════════════════════════════════════════════════╝
+
+📊 Log file: /home/ubuntu/gproa/gpro_bot.log (0.1 MB)
+📊 Log rotation: 1 MB per file, 5 backups
+
+[18:10:00] [INF] Starting GPRO Bot
+[18:10:00] [WRN] Timezone search index not available
+[18:10:00] [ERR] Failed to send notification to user 12345: timeout
+```
+
+Log rotation settings are defined in `infra/logging.py`:
+- `LOG_MAX_BYTES`: 1 MB
+- `LOG_BACKUP_COUNT`: 5 files
 
 ## API Integration
 

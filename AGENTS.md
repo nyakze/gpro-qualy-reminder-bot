@@ -142,6 +142,31 @@ Required `.env` variables:
 - Log new users with emoji marker: `logger.info(f"🆕 NEW user {user_id}")`
 - Use appropriate levels: INFO for normal operations, WARNING for recoverable issues, ERROR for failures
 
+### Logging Configuration
+- **Console output**: Human-readable colored format with timestamps
+  - `[HH:MM:SS] [LEVEL] message`
+  - Colors: DEBUG (gray), INFO (green), WARNING (yellow), ERROR (red)
+  - Colors auto-disable when piped/redirected
+- **File output**: JSON format for parsing tools (unchanged)
+- **Verbose mode**: Use `-v` or `--verbose` flag to show DEBUG logs in console
+  - `python bot.py -v` enables debug logging
+  - File logs always capture all levels regardless
+
+### Startup Banner
+The bot prints a banner after data is loaded showing:
+- User count
+- Race count
+- Admin count
+- Timezone count
+- i18n language count
+
+Use `set_startup_data(users_count=X, races=Y, ...)` in `bot.py` to populate banner data before `print_banner()` is called.
+
+### Log Rotation
+Settings defined in `infra/logging.py`:
+- `LOG_MAX_BYTES = 1 * 1024 * 1024` (1 MB per file)
+- `LOG_BACKUP_COUNT = 5` (5 rotating files)
+
 ## Architecture Summary
 
 ```

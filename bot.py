@@ -28,7 +28,7 @@ parser = ArgumentParser(description="GPRO Telegram Bot")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable debug logging")
 args = parser.parse_args()
 
-set_startup_data(version="3.0", users_count=0, races=0, admins_count=len(ADMIN_USER_IDS), tz_count=0, i18n_langs=12)
+set_startup_data(users_count=0, races=0, admins_count=len(ADMIN_USER_IDS), tz_count=0, i18n_langs=12)
 logger = setup_logging(verbose=args.verbose)
 
 
