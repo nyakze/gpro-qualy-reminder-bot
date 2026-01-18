@@ -44,7 +44,7 @@ def build_race_notification_keyboard(
     user_id: int, race_id: int, i18n: I18nContext
 ) -> InlineKeyboardMarkup:
     """Build keyboard for race notification with toggled done/reset button and weather"""
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     is_marked_done = user_status.get("completed_quali") == race_id
 
     has_weather = race_id in race_calendar and "weather" in race_calendar[race_id]

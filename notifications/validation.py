@@ -249,7 +249,7 @@ def get_custom_notifications(user_id: int) -> list:
     """
     from .user_data import get_user_status, get_default_custom_notifications
 
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     return user_status.get("custom_notifications", get_default_custom_notifications())
 
 
@@ -299,7 +299,7 @@ def set_custom_notification(
         save_users_data,
     )
 
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     custom_notifs = user_status.get(
         "custom_notifications", get_default_custom_notifications()
     )

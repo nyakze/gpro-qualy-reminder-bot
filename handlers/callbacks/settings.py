@@ -31,7 +31,7 @@ def build_settings_keyboard(user_id: int, i18n: I18nContext) -> InlineKeyboardMa
     from zoneinfo import ZoneInfo
     from datetime import datetime, timezone
 
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     current_ui_lang = user_status.get("ui_lang", "gb")
     current_lang = user_status.get("gpro_lang", "gb")
     current_group = user_status.get("group")
@@ -469,7 +469,7 @@ async def handle_group_menu(
     from notifications import get_user_status
 
     user_id = callback.from_user.id
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     current_group = user_status.get("group")
     group_display = format_group_display(current_group)
 

@@ -134,7 +134,7 @@ async def handle_onboarding_skip_group(
     await state.clear()
 
     # Get user's selected language and show completion message in that language
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     ui_lang = user_status.get("ui_lang", "en")
 
     with i18n.use_locale(ui_lang):

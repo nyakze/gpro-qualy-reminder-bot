@@ -141,7 +141,7 @@ def save_users_data():
                 pass
 
 
-def get_user_status(user_id: int) -> Dict:
+def get_user_status(user_id: int):
     global users_data
     logger.debug(f"get_user_status({user_id}): {len(users_data)} users in cache")
 
@@ -149,7 +149,9 @@ def get_user_status(user_id: int) -> Dict:
         load_users_data()
         logger.debug(f"Loaded {len(users_data)} users from file")
 
+    was_new = False
     if user_id not in users_data:
+        was_new = True
         logger.info(f"🆕 New user {user_id} registered")
         users_data[user_id] = {
             "completed_quali": None,
@@ -230,7 +232,7 @@ def get_user_status(user_id: int) -> Dict:
         if needs_save:
             save_users_data()
 
-    return users_data[user_id]
+    return users_data[user_id], was_new
 
 
 def set_user_group(user_id: int, group: str):
@@ -243,7 +245,7 @@ def set_user_group(user_id: int, group: str):
 
 def toggle_notification(user_id: int, notification_type: str):
     """Toggle a specific notification type for a user"""
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     current_state = user_status["notifications"].get(notification_type, True)
     user_status["notifications"][notification_type] = not current_state
     save_users_data()
@@ -254,7 +256,7 @@ def toggle_notification(user_id: int, notification_type: str):
 
 def is_notification_enabled(user_id: int, notification_type: str) -> bool:
     """Check if a notification type is enabled for a user"""
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     return user_status["notifications"].get(notification_type, True)
 
 
@@ -294,7 +296,7 @@ def get_user_language(user_id: int) -> str:
     Returns:
         str: Language code (defaults to 'gb' if not set)
     """
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     return user_status.get("gpro_lang", DEFAULT_USER_LANG)
 
 
@@ -331,7 +333,7 @@ def get_user_ui_language(user_id: int) -> str:
     Returns:
         str: Language code (defaults to 'gb' if not set)
     """
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     return user_status.get("ui_lang", "gb")
 
 
@@ -344,7 +346,7 @@ def get_user_timezone(user_id: int) -> str:
     Returns:
         str: IANA timezone name (e.g., 'America/New_York', defaults to 'UTC')
     """
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     return user_status.get("timezone", "UTC")
 
 
@@ -418,7 +420,7 @@ def get_user_website_mode(user_id: int) -> str:
     Returns:
         str: "classic" or "app" (defaults to "classic")
     """
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     return user_status.get("website_mode", "classic")
 
 
@@ -482,7 +484,7 @@ def get_user_profile(user_id: int) -> Dict:
     Returns:
         Dict with tg_language_code, username, and first_name fields
     """
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     return {
         "tg_language_code": user_status.get("tg_language_code"),
         "username": user_status.get("username"),
@@ -501,7 +503,7 @@ def add_snooze_reminder(
         until: Datetime when snooze should fire
         notification_type: Original notification type (e.g., "2h")
     """
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
 
     if "active_snoozes" not in user_status:
         user_status["active_snoozes"] = {}
@@ -527,7 +529,7 @@ def remove_snooze_reminder(user_id: int, race_id: int, notification_type: str) -
         race_id: Race ID
         notification_type: Notification type
     """
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
 
     if "active_snoozes" not in user_status:
         return
@@ -562,7 +564,7 @@ def remove_snooze_reminder_by_time(
         notification_type: Notification type
         until: Exact datetime of the snooze to remove
     """
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
 
     if "active_snoozes" not in user_status:
         return
@@ -626,7 +628,7 @@ def get_snooze_count(user_id: int, notification_label: str) -> int:
     Returns:
         int: Number of times user has snoozed this notification type
     """
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     tracking = user_status.get("snooze_tracking", get_default_snooze_tracking())
     return tracking.get(notification_label, 0)
 
@@ -638,7 +640,7 @@ def increment_snooze_count(user_id: int, notification_label: str) -> None:
         user_id: Telegram user ID
         notification_label: Notification label (e.g., "48h", "2h", "10min")
     """
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     if "snooze_tracking" not in user_status:
         user_status["snooze_tracking"] = get_default_snooze_tracking()
     user_status["snooze_tracking"][notification_label] = (

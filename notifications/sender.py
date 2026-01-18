@@ -587,7 +587,7 @@ def format_weather_data(weather: dict, i18n=None, user_id: int = None) -> str:
         # Get user's UI language if user_id is provided
         ui_lang = "gb"
         if user_id is not None:
-            user_status = get_user_status(user_id)
+            user_status = get_user_status(user_id)[0]
             ui_lang = user_status.get("ui_lang", "gb")
 
         # Use the global translation function with user's UI language

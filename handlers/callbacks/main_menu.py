@@ -118,7 +118,7 @@ async def handle_toggle_website_mode(callback: CallbackQuery, i18n: I18nContext)
     from .settings import handle_settings_main
 
     user_id = callback.from_user.id
-    user_status = get_user_status(user_id)
+    user_status = get_user_status(user_id)[0]
     current_mode = user_status.get("website_mode", "classic")
 
     new_mode = "app" if current_mode == "classic" else "classic"

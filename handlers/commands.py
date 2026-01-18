@@ -30,8 +30,7 @@ async def cmd_start(message: Message, bot, state: FSMContext, i18n: I18nContext)
 
     await state.clear()
 
-    was_new = user_id not in users_data
-    get_user_status(user_id)
+    _, was_new = get_user_status(user_id)
 
     if was_new:
         logger.info(f"🆕 NEW user {user_id} registered via /start")
