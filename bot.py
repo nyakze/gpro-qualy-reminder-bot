@@ -15,7 +15,7 @@ from notifications import load_users_data
 from notifications.checker import load_notify_history, notify_history
 from i18n_setup import setup_i18n
 from middleware.user_profile import UserProfileMiddleware
-from infra.logging import init_logging_paths, setup_logging, log_structured, set_startup_data
+from infra.logging import init_logging_paths, setup_logging, log_structured, set_startup_data, print_banner, print_log_rotation_summary
 from infra.signals import setup_signal_handlers
 from infra.runner import run_with_recovery
 
@@ -97,6 +97,9 @@ async def main():
     log_structured(logging.INFO, "Handlers router loaded")
 
     setup_signal_handlers(bot)
+
+    print_banner()
+    print_log_rotation_summary()
 
     uptime_seconds = time.time() - _STARTUP_TIME
     log_structured(

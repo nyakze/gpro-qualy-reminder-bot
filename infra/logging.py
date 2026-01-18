@@ -112,7 +112,7 @@ class ConsoleFormatter(logging.Formatter):
         return base
 
 
-def _print_banner() -> None:
+def print_banner() -> None:
     if not _STARTUP_DATA:
         return
 
@@ -133,7 +133,7 @@ def _print_banner() -> None:
     print(banner)
 
 
-def _print_log_rotation_summary() -> None:
+def print_log_rotation_summary() -> None:
     if not _LOG_FILE or not os.path.exists(_LOG_FILE):
         return
 
@@ -172,9 +172,6 @@ def setup_logging(verbose: bool = False) -> logging.Logger:
     logger.addHandler(console_handler)
 
     logging.getLogger("aiogram.event").setLevel(logging.WARNING)
-
-    _print_banner()
-    _print_log_rotation_summary()
 
     return logger
 
