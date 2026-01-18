@@ -13,7 +13,7 @@ No setup required - just click and start using it.
 ## Features
 
 ### Notifications
-- **Automatic qualifying notifications:** 72h, 48h, 24h, 2h, 10min before qualifying closes
+- **Automatic qualifying notifications:** 3d, 2d, 1d, 2h, 10min before qualifying closes
 - **Snooze notifications:** Postpone any qualifying notification (+5m, +15m, +30m, +1h, +2h, +4h, +8h). Stack up to 3 snoozes per notification type. Snoozed notifications can be snoozed again.
 - **Custom notification times:** Set up to 2 custom notification times (20m-70h)
 - **Qualifying open detection:** API-based detection when qualification opens (2-3.5h after race)
