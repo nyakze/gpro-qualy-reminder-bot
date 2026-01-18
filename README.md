@@ -2,8 +2,13 @@
 
 Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadline notifications and provides race status/schedule commands.
 
-## 🚀 Public version
-🌟 Public bot available: [@gproremindbot](https://t.me/gproremindbot). Feel free to give it a try!
+## 🚀 Try the Public Bot
+
+[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?logo=telegram&logoColor=white&style=for-the-badge&logoSize=auto)](https://t.me/gproremindbot)
+
+**Click the button above or visit [@gproremindbot](https://t.me/gproremindbot) to try the bot!**
+
+No setup required - just click and start using it.
 
 ## Features
 
@@ -39,45 +44,13 @@ Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadli
 - **Optimized notifications:** Adaptive check intervals based on race proximity
 - **Multi-user support:** Persistent user data with atomic writes
 
-## Quick Start
-
-```bash
-git clone https://github.com/nyakze/gpro-qualy-reminder-bot.git
-cd gpro-qualy-reminder-bot
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-pip install -r requirements.txt
-cp .env.example .env
-# Edit .env with TELEGRAM_BOT_TOKEN, GPRO_API_TOKEN, and ADMIN_USER_ID
-python bot.py
-```
-
 ## Documentation
 
 For detailed documentation, see the [Wiki](https://github.com/nyakze/gpro-qualy-reminder-bot/wiki):
 
 - **[User Guide](https://github.com/nyakze/gpro-qualy-reminder-bot/wiki/User-Guide)** - How notifications work, configuring settings, snooze feature, website mode
-- **[Self-hosting Guide](https://github.com/nyakze/gpro-qualy-reminder-bot/wiki/Self-hosting-Guide)** - Quick start, tech stack, configuration, deployment, troubleshooting
-- **[Development](https://github.com/nyakze/gpro-qualy-reminder-bot/wiki/Development)** - Architecture, adding features, debugging, code style guidelines
-
-## API Integration
-
-Uses GPRO Calendar API:
-```
-GET https://gpro.net/gb/backend/api/v2/Calendar
-```
-GPRO office API:
-```
-GET https://gpro.net/gb/backend/api/v2/office
-```
-GPRO Practice API:
-```
-GET https://gpro.net/gb/backend/api/v2/Practice
-```
-
-
-
-🗄️ Caches results in `gpro_calendar.json`. Requires GPRO API token (.env → GPRO_API_TOKEN)
+- **[Self-hosting Guide](https://github.com/nyakze/gpro-qualy-reminder-bot/wiki/Self-hosting-Guide)** - Self-hosting quick start, tech stack, configuration, deployment, troubleshooting
+- **[Development](https://github.com/nyakze/gpro-qualy-reminder-bot/wiki/Development)** - Architecture, API integration, adding features, debugging, code style guidelines
 
 ## Data Attribution
 
@@ -91,7 +64,7 @@ This project uses timezone metadata from [Geoapify's Timezone Dataset](https://w
 - **Wikipedia**: Timezone textual metadata (Creative Commons BY-SA 3.0 / GFDL)
   - Used for city names and alternative names in multiple languages
 
-The timezone dataset is downloaded via the `/updatetz` admin command and stored in `timezone-info.json`. This file should be committed to the repository for offline functionality.
+The timezone dataset is downloaded via the `/updatetz` admin command and stored in `timezone-info.json`. This file should be committed to repository for offline functionality.
 
 **Attribution Requirements:**
 - ✅ IANA timezone identifiers: Public domain (no attribution required)
@@ -108,7 +81,7 @@ software, either in source code form or as a compiled binary, for any purpose,
 commercial or non-commercial, and by any means.
 
 In jurisdictions that recognize copyright laws, the author or authors of this
-software dedicate any and all copyright interest in the software to the public
+software dedicate any and any copyright interest in the software to the public
 domain. We make this dedication for the benefit of the public at large and to
 the detriment of our heirs and successors. We intend this dedication to be an
 overt act of relinquishment in perpetuity of all present and future rights to
