@@ -4,7 +4,7 @@ import os
 import sys
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
-from typing import Any, Dict, Optional, cast
+from typing import Any, Dict, cast
 
 _SCRIPT_DIR = None
 _LOG_FILE = None
@@ -104,7 +104,18 @@ class ConsoleFormatter(logging.Formatter):
         if extra:
             extra_parts = []
             for key, value in extra.items():
-                if not key.startswith("_") and key not in ("reason", "error", "signal", "version", "count", "races", "users_count", "admins_count", "tz_count", "i18n_langs"):
+                if not key.startswith("_") and key not in (
+                    "reason",
+                    "error",
+                    "signal",
+                    "version",
+                    "count",
+                    "races",
+                    "users_count",
+                    "admins_count",
+                    "tz_count",
+                    "i18n_langs",
+                ):
                     try:
                         extra_parts.append(f"{key}={json.dumps(value)}")
                     except (TypeError, ValueError):
@@ -134,16 +145,34 @@ def print_banner() -> None:
     tz_str = str(tz_count)
     i18n_str = str(i18n_langs)
 
-    line1 = f"{green}║  Users: {users_str:>3} │ Races: {races_str:>2} │ Admins: {admins_str:>2}             {reset}║"
-    line2 = f"{green}║  Timezones: {tz_str:>3} │ i18n: {i18n_str:>2} languages            {reset}║"
+    line1_content = (
+        f"  Users: {users_str:>3} │ Races: {races_str:>2} │ Admins: {admins_str:>2}"
+    )
+    line2_content = f"  Timezones:{tz_str:>3} │ i18n: {i18n_str:>2} languages"
+    title_content = "GPRO Bot - Starting..."
+
+    box_width = 56
+    line1_left = (box_width - len(line1_content)) // 2
+    line1_right = box_width - len(line1_content) - line1_left
+    line2_left = (box_width - len(line2_content)) // 2
+    line2_right = box_width - len(line2_content) - line2_left
+    title_left = (box_width - len(title_content)) // 2
+    title_right = box_width - len(title_content) - title_left
+
+    line1 = f"{green}║{' ' * line1_left}{line1_content}{' ' * line1_right}{reset}║"
+    line2 = f"{green}║{' ' * line2_left}{line2_content}{' ' * line2_right}{reset}║"
+    title = f"{green}║{' ' * title_left}{title_content}{' ' * title_right}{reset}║"
+    top = f"{green}╔════════════════════════════════════════════════════════╗"
+    divider = f"{green}╠════════════════════════════════════════════════════════╣"
+    bottom = f"{green}╚════════════════════════════════════════════════════════╝{reset}"
 
     banner = f"""
-{green}╔════════════════════════════════════════════════════════╗
-║              GPRO Bot - Starting...                     ║
-╠════════════════════════════════════════════════════════╣
+{top}
+{title}
+{divider}
 {line1}
 {line2}
-╚════════════════════════════════════════════════════════╝{reset}"""
+{bottom}"""
     print(banner)
 
 
@@ -159,7 +188,9 @@ def print_log_rotation_summary() -> None:
     log_size_mb = LOG_MAX_BYTES / (1024 * 1024)
 
     print(f"\n{yellow}📊 Log file: {_LOG_FILE} ({size_mb:.1f} MB){reset}")
-    print(f"{yellow}📊 Log rotation: {int(log_size_mb)} MB per file, {LOG_BACKUP_COUNT} backups{reset}\n")
+    print(
+        f"{yellow}📊 Log rotation: {int(log_size_mb)} MB per file, {LOG_BACKUP_COUNT} backups{reset}\n"
+    )
 
 
 def setup_logging(verbose: bool = False) -> logging.Logger:
@@ -167,7 +198,9 @@ def setup_logging(verbose: bool = False) -> logging.Logger:
     _VERBOSE = verbose
 
     if _LOG_FILE is None:
-        raise RuntimeError("Log file path not initialized. Call init_logging_paths() first.")
+        raise RuntimeError(
+            "Log file path not initialized. Call init_logging_paths() first."
+        )
 
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG if verbose else logging.INFO)
@@ -176,7 +209,10 @@ def setup_logging(verbose: bool = False) -> logging.Logger:
     json_formatter = StructuredLogFormatter()
 
     file_handler = RotatingFileHandler(
-        cast(str, _LOG_FILE), maxBytes=LOG_MAX_BYTES, backupCount=LOG_BACKUP_COUNT, encoding="utf-8"
+        cast(str, _LOG_FILE),
+        maxBytes=LOG_MAX_BYTES,
+        backupCount=LOG_BACKUP_COUNT,
+        encoding="utf-8",
     )
     file_handler.setFormatter(json_formatter)
     file_handler.setLevel(logging.DEBUG)
@@ -219,16 +255,25 @@ class ProgressLogger:
             try:
                 spin = next(self._spinner)
             except StopIteration:
-                self._spinner = iter(lambda: (c for c in ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]), None)
+                self._spinner = iter(
+                    lambda: (
+                        c for c in ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+                    ),
+                    None,
+                )
                 spin = "⠋"
 
             spin_str = f"{spin} " if sys.stdout.isatty() else ""
             logger = logging.getLogger()
-            logger.info(f"{spin_str}{self.description}: {self.current}/{self.total} ({pct:.0f}%)")
+            logger.info(
+                f"{spin_str}{self.description}: {self.current}/{self.total} ({pct:.0f}%)"
+            )
 
     def complete(self, final_message: str = "") -> None:
         logger = logging.getLogger()
-        complete_msg = final_message or f"{self.description} complete: {self.current}/{self.total}"
+        complete_msg = (
+            final_message or f"{self.description} complete: {self.current}/{self.total}"
+        )
         logger.info(f"✅ {complete_msg}")
 
 

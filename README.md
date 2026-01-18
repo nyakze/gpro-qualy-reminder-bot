@@ -188,10 +188,10 @@ python bot.py -v        # DEBUG level and above in console
 Console output example:
 ```
 ╔════════════════════════════════════════════════════════╗
-║              GPRO Bot - Starting...                     ║
+║                 GPRO Bot - Starting...                 ║
 ╠════════════════════════════════════════════════════════╣
-║  Users:   4 │ Races: 17 │ Admins:  2             ║
-║  Timezones:598 │ i18n: 12 languages            ║
+║           Users:   4 │ Races: 17 │ Admins:  2          ║
+║            Timezones:598 │ i18n: 12 languages          ║
 ╚════════════════════════════════════════════════════════╝
 
 📊 Log file: /home/ubuntu/gproa/gpro_bot.log (0.1 MB)
