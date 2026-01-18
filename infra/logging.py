@@ -76,9 +76,18 @@ class StructuredLogFormatter(logging.Formatter):
         return json.dumps(log_data, ensure_ascii=False)
 
 
+def _should_use_colors() -> bool:
+    if sys.stdout.isatty():
+        return True
+    systemd_colors = os.getenv("SYSTEMD_COLORS")
+    if systemd_colors and systemd_colors not in ("0", "false"):
+        return True
+    return False
+
+
 class ConsoleFormatter(logging.Formatter):
     def __init__(self, *args, **kwargs):
-        self.use_colors = kwargs.pop("use_colors", sys.stdout.isatty())
+        self.use_colors = kwargs.pop("use_colors", _should_use_colors())
         super().__init__(*args, **kwargs)
 
     def _color(self, levelname: str) -> str:
@@ -136,8 +145,8 @@ def print_banner() -> None:
     tz_count = _STARTUP_DATA.get("tz_count", "?")
     i18n_langs = _STARTUP_DATA.get("i18n_langs", "?")
 
-    green = "\033[92m" if sys.stdout.isatty() else ""
-    reset = "\033[0m" if sys.stdout.isatty() else ""
+    green = "\033[92m" if _should_use_colors() else ""
+    reset = "\033[0m" if _should_use_colors() else ""
 
     users_str = str(users)
     races_str = str(races)
@@ -183,8 +192,8 @@ def print_log_rotation_summary() -> None:
     size_bytes = os.path.getsize(_LOG_FILE)
     size_mb = size_bytes / (1024 * 1024)
 
-    yellow = "\033[93m" if sys.stdout.isatty() else ""
-    reset = "\033[0m" if sys.stdout.isatty() else ""
+    yellow = "\033[93m" if _should_use_colors() else ""
+    reset = "\033[0m" if _should_use_colors() else ""
     log_size_mb = LOG_MAX_BYTES / (1024 * 1024)
 
     print(f"\n{yellow}📊 Log file: {_LOG_FILE} ({size_mb:.1f} MB){reset}")
@@ -219,7 +228,7 @@ def setup_logging(verbose: bool = False) -> logging.Logger:
     logger.addHandler(file_handler)
 
     console_handler = logging.StreamHandler(sys.stdout)
-    console_formatter = ConsoleFormatter(use_colors=sys.stdout.isatty())
+    console_formatter = ConsoleFormatter(use_colors=_should_use_colors())
 
     console_handler.setFormatter(console_formatter)
     console_handler.setLevel(logging.DEBUG if verbose else logging.INFO)
@@ -263,7 +272,7 @@ class ProgressLogger:
                 )
                 spin = "⠋"
 
-            spin_str = f"{spin} " if sys.stdout.isatty() else ""
+            spin_str = f"{spin} " if _should_use_colors() else ""
             logger = logging.getLogger()
             logger.info(
                 f"{spin_str}{self.description}: {self.current}/{self.total} ({pct:.0f}%)"
