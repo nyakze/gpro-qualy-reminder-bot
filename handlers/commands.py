@@ -18,13 +18,14 @@ from notifications import (
     users_data,
 )
 from utils import format_full_calendar
+from handlers.admin_commands import format_user_link
 from . import router
 
 logger = logging.getLogger(__name__)
 
 
 @router.message(Command("start"))
-async def cmd_start(message: Message, state: FSMContext, i18n: I18nContext):
+async def cmd_start(message: Message, bot, state: FSMContext, i18n: I18nContext):
     user_id = message.from_user.id
 
     await state.clear()
@@ -42,6 +43,30 @@ async def cmd_start(message: Message, state: FSMContext, i18n: I18nContext):
             username=message.from_user.username,
             first_name=message.from_user.first_name,
         )
+
+        from config import ADMIN_USER_IDS
+
+        user_link = format_user_link(
+            user_id, message.from_user.username, message.from_user.first_name
+        )
+
+        from datetime import datetime
+
+        timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+
+        for admin_id in ADMIN_USER_IDS:
+            if users_data.get(admin_id, {}).get("notify_new_users", False):
+                try:
+                    await bot.send_message(
+                        admin_id,
+                        f"🆕 New user: <code>{user_id}</code> ({user_link}) at {timestamp}",
+                        parse_mode="HTML",
+                    )
+                    logger.info(f"New user notification sent to admin {admin_id}")
+                except Exception as e:
+                    logger.error(
+                        f"Failed to send new user notification to admin {admin_id}: {e}"
+                    )
         from .callbacks.settings import build_ui_language_keyboard
 
         keyboard = build_ui_language_keyboard(

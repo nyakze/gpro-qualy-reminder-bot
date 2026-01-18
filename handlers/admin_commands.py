@@ -29,6 +29,15 @@ def is_admin(user_id: int) -> bool:
     return user_id in ADMIN_USER_IDS
 
 
+def format_user_link(user_id: int, username: str | None, first_name: str | None) -> str:
+    """Format user as clickable Telegram link"""
+    if username:
+        return f'<a href="tg://user?id={user_id}">@{username}</a>'
+    elif first_name:
+        return f'<a href="tg://user?id={user_id}">{first_name}</a>'
+    return "—"
+
+
 @router.message(Command("update"))
 async def cmd_update(message: Message, i18n: I18nContext):
     if not is_admin(message.from_user.id):
@@ -102,14 +111,7 @@ async def cmd_users(message: Message, i18n: I18nContext):
             username = status.get("username")
             first_name = status.get("first_name")
 
-            if username:
-                display_name = f"@{username}"
-                link = f'<a href="tg://user?id={uid}">{display_name}</a>'
-            elif first_name:
-                display_name = first_name
-                link = f'<a href="tg://user?id={uid}">{display_name}</a>'
-            else:
-                link = "—"
+            link = format_user_link(uid, username, first_name)
 
             text += f"• <code>{uid}</code> ({link}): Race {quali} | Group {group}\n"
 
@@ -398,6 +400,36 @@ async def cmd_weather(message: Message, i18n: I18nContext):
         )
     else:
         await message.answer(i18n.get("weather-failed"), parse_mode="HTML")
+
+
+@router.message(Command("welcomealert"))
+async def cmd_welcomealert(message: Message):
+    if not is_admin(message.from_user.id):
+        await message.answer("❌ Admin only command")
+        return
+
+    admin_id = message.from_user.id
+    current_setting = users_data.get(admin_id, {}).get("notify_new_users", False)
+
+    if admin_id not in users_data:
+        users_data[admin_id] = {}
+    users_data[admin_id]["notify_new_users"] = not current_setting
+    save_users_data()
+
+    if not current_setting:
+        await message.answer(
+            "✅ <b>New user notifications enabled</b>\n\n"
+            "You will receive notifications when new users register via /start",
+            parse_mode="HTML",
+        )
+        logger.info(f"Admin {admin_id} enabled new user notifications")
+    else:
+        await message.answer(
+            "❌ <b>New user notifications disabled</b>\n\n"
+            "You will no longer receive notifications for new users",
+            parse_mode="HTML",
+        )
+        logger.info(f"Admin {admin_id} disabled new user notifications")
 
 
 @router.message(Command("updatetz"))
