@@ -47,7 +47,8 @@ async def main():
 
     from timezone_utils import load_timezone_search_index, _timezone_search_index
 
-    if load_timezone_search_index() and _timezone_search_index:
+    if load_timezone_search_index():
+        from timezone_utils import _timezone_search_index
         tz_count = len(_timezone_search_index.get("timezone_info", []))
         set_startup_data(tz_count=tz_count)
         log_structured(logging.INFO, "Timezone search index loaded")
