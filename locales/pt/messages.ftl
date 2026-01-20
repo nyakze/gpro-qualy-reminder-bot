@@ -533,6 +533,12 @@ validation-time-max = Tempo máximo é 70 horas
 validation-enter-time = Por favor introduz um horário
 validation-invalid-format = Formato inválido. Usa: 2h, 30m, ou 1h 30m
 validation-invalid-slot = Ranhura inválida (deve ser 0-{ $maxSlots })
+validation-group-invalid-format = Formato de grupo inválido. Usa: E, M1-5, P1-25, A1-80, R1-150
+validation-group-e-no-numbers = Grupo Elite não tem grupos numerados (usa 'E')
+validation-group-range-m = Grupo Master deve ser 1-5
+validation-group-range-p = Grupo Pro deve ser 1-25
+validation-group-range-a = Grupo Amateur deve ser 1-80
+validation-group-range-r = Grupo Rookie deve ser 1-150
 
 # =======================
 # Etiquetas de Notificações

@@ -536,6 +536,12 @@ validation-time-max = अधिकतम समय 70 घंटे है
 validation-enter-time = कृपया एक समय दर्ज करें
 validation-invalid-format = अमान्य फॉर्मेट। उपयोग करें: 2h, 30m, या 1h 30m
 validation-invalid-slot = अमान्य स्लॉट (0-{ $maxSlots } होना चाहिए)
+validation-group-invalid-format = अमान्य समूह प्रारूप। उपयोग करें: E, M1-5, P1-25, A1-80, R1-150
+validation-group-e-no-numbers = Elite समूह में कोई संख्यात्मक समूह नहीं हैं ('E' का उपयोग करें)
+validation-group-range-m = Master समूह 1-5 होना चाहिए
+validation-group-range-p = Pro समूह 1-25 होना चाहिए
+validation-group-range-a = Amateur समूह 1-80 होना चाहिए
+validation-group-range-r = Rookie समूह 1-150 होना चाहिए
 
 # =======================
 # Notification Labels

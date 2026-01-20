@@ -10,6 +10,14 @@ CUSTOM_NOTIF_MIN_HOURS = 20 / 60  # 20 minutes minimum
 CUSTOM_NOTIF_MAX_HOURS = 70  # 70 hours maximum
 CUSTOM_NOTIF_MAX_SLOTS = 2  # Maximum 2 custom notifications per user
 
+# Group validation ranges
+GROUP_RANGES = {
+    "M": (1, 5),
+    "P": (1, 25),
+    "A": (1, 80),
+    "R": (1, 150),
+}
+
 
 def validate_custom_notification_hours(hours: float, i18n=None) -> tuple[bool, str]:
     """Validate custom notification time
@@ -320,3 +328,78 @@ def set_custom_notification(
     time_str = format_custom_notification_time(hours_before, i18n)
     logger.info(f"User {user_id} set custom notification {slot+1} to: {time_str}")
     return True, get_text("custom-notif-set", slot=slot + 1, time=time_str)
+
+
+def validate_group_input(group: str, i18n=None) -> tuple[bool, str | None, str]:
+    """Validate and normalize GPRO group input
+
+    Rules:
+    - E: valid standalone (no numbers allowed)
+    - M: numbers 1-5
+    - P: numbers 1-25
+    - A: numbers 1-80
+    - R: numbers 1-150
+    - Leading zeros are stripped (e.g., R007 -> R7, M07 -> M7)
+    - Lowercase is accepted and converted to uppercase
+
+    Args:
+        group: User input group string
+        i18n: I18n context for translations (optional)
+
+    Returns:
+        (is_valid, normalized_group_or_None, error_message)
+    """
+    # Import i18n context if not provided
+    if i18n is None:
+        from aiogram_i18n import I18nContext
+
+        try:
+            i18n = I18nContext.get_current(no_error=True)
+        except Exception:
+            i18n = None
+
+    # Use i18n if available, fallback to English
+    def get_text(key, **kwargs):
+        if i18n:
+            return i18n.get(key, **kwargs)
+        return key
+
+    if not group:
+        return (False, None, get_text("validation-enter-time"))
+
+    # Normalize: strip whitespace and convert to uppercase
+    group = group.strip().upper()
+
+    # Handle Elite group (no numbers allowed)
+    if group == "E":
+        return (True, "E", "")
+
+    # Match pattern: E/M/P/A/R followed by one or more digits
+    match = re.match(r"^([EMPAR])(\d+)$", group)
+    if match:
+        letter, number_str = match.groups()
+
+        # Explicit rejection: E cannot have numbers
+        if letter == "E":
+            return (False, None, get_text("validation-group-e-no-numbers"))
+
+        # Convert number and remove leading zeros
+        number = int(number_str)
+
+        # Validate range for this group type
+        if letter in GROUP_RANGES:
+            min_val, max_val = GROUP_RANGES[letter]
+
+            if min_val <= number <= max_val:
+                return (True, f"{letter}{number}", "")
+            else:
+                return (
+                    False,
+                    None,
+                    get_text(f"validation-group-range-{letter.lower()}"),
+                )
+        else:
+            return (False, None, get_text("validation-group-invalid-format"))
+
+    # Doesn't match expected pattern
+    return (False, None, get_text("validation-group-invalid-format"))

@@ -546,6 +546,12 @@ validation-time-max = Максимальний час - 70 годин
 validation-enter-time = Будь ласка, введіть час
 validation-invalid-format = Невірний формат. Використовуйте: 2h, 30m або 1h 30m
 validation-invalid-slot = Невірний слот (має бути 0-{ $maxSlots })
+validation-group-invalid-format = Невірний формат групи. Використовуйте: E, M1-5, P1-25, A1-80, R1-150
+validation-group-e-no-numbers = Група Elite не має нумерованих груп (використовуйте 'E')
+validation-group-range-m = Група Master має бути 1-5
+validation-group-range-p = Група Pro має бути 1-25
+validation-group-range-a = Група Amateur має бути 1-80
+validation-group-range-r = Група Rookie має бути 1-150
 
 # =======================
 # Notification Labels

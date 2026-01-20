@@ -1,14 +1,18 @@
 """FSM state handlers and state group definitions"""
 
 import logging
-import re
 from aiogram import F
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram_i18n import I18nContext
 
-from notifications import set_user_group, parse_time_input, set_custom_notification
+from notifications import (
+    set_user_group,
+    parse_time_input,
+    set_custom_notification,
+    validate_group_input,
+)
 from utils import format_group_display
 from . import router
 
@@ -35,20 +39,18 @@ class TimezoneStates(StatesGroup):
 @router.message(SetGroupStates.waiting_for_group, F.text & ~F.text.startswith("/"))
 async def process_group_input(message: Message, state: FSMContext, i18n: I18nContext):
     """Process user's group input from settings"""
-    group_input = message.text.strip().upper()
+    group_input = message.text
 
-    # Validate format: E or M/P/A/R followed by 1-3 digits
-    if group_input == "E":
-        pass
-    elif re.match(r"^[MPAR]\d{1,3}$", group_input):
-        pass
-    else:
-        await message.answer(i18n.get("error-invalid-format"), parse_mode="HTML")
+    # Validate and normalize group input
+    is_valid, normalized_group, error_msg = validate_group_input(group_input, i18n)
+
+    if not is_valid:
+        await message.answer(error_msg, parse_mode="HTML")
         return
 
-    # Save the group
-    set_user_group(message.from_user.id, group_input)
-    group_display = format_group_display(group_input)
+    # Save the normalized group
+    set_user_group(message.from_user.id, normalized_group)
+    group_display = format_group_display(normalized_group)
     await state.clear()
 
     # Show success with back to settings button
@@ -147,22 +149,18 @@ async def process_onboarding_group_input(
 ):
     """Process custom group input during onboarding"""
     user_id = message.from_user.id
-    group_input = message.text.strip().upper()
+    group_input = message.text
 
-    # Validate format
-    if group_input == "E":
-        pass
-    elif re.match(r"^[MPAR]\d{1,3}$", group_input):
-        pass
-    else:
-        await message.answer(
-            i18n.get("error-invalid-format-onboarding"), parse_mode="HTML"
-        )
+    # Validate and normalize group input
+    is_valid, normalized_group, error_msg = validate_group_input(group_input, i18n)
+
+    if not is_valid:
+        await message.answer(error_msg, parse_mode="HTML")
         return
 
-    # Save the group
-    set_user_group(user_id, group_input)
-    group_display = format_group_display(group_input)
+    # Save the normalized group
+    set_user_group(user_id, normalized_group)
+    group_display = format_group_display(normalized_group)
     await state.clear()
 
     # Show welcome complete message with main menu buttons
