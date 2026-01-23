@@ -58,7 +58,7 @@ NOTIFICATION_CATEGORIES = {
 async def handle_toggle_category(callback: CallbackQuery, i18n: I18nContext):
     """Enable or disable all notifications in a category"""
     user_id = callback.from_user.id
-    user_status = get_user_status(user_id)[0]
+    user_status = get_user_status(user_id)[0][0]
 
     parts = callback.data.split("_")
     action = parts[2]
@@ -103,7 +103,7 @@ async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext)
     user_id = callback.from_user.id
 
     if callback.data == "toggle_all_on":
-        user_status = get_user_status(user_id)
+        user_status = get_user_status(user_id)[0]
         notif_types = list(user_status["notifications"].keys())
         for notif_type in notif_types:
             user_status["notifications"][notif_type] = True
@@ -117,7 +117,7 @@ async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext)
         await handle_notifications_menu(callback, i18n)
         return
     elif callback.data == "toggle_all_off":
-        user_status = get_user_status(user_id)
+        user_status = get_user_status(user_id)[0]
         notif_types = list(user_status["notifications"].keys())
         for notif_type in notif_types:
             user_status["notifications"][notif_type] = False
@@ -157,7 +157,7 @@ async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext)
 async def handle_notifications_menu(callback: CallbackQuery, i18n: I18nContext):
     """Show notifications menu with categories"""
     user_id = callback.from_user.id
-    user_status = get_user_status(user_id)[0]
+    user_status = get_user_status(user_id)[0][0]
     notifications = user_status.get("notifications", {})
 
     keyboard_buttons = []
@@ -229,7 +229,7 @@ async def handle_notification_category(
 ):
     """Show individual notification toggles for a category"""
     user_id = callback.from_user.id
-    user_status = get_user_status(user_id)[0]
+    user_status = get_user_status(user_id)[0][0]
     notifications = user_status.get("notifications", {})
 
     if category_id is None:
