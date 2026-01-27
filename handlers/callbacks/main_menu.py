@@ -29,13 +29,21 @@ async def handle_main_menu_status(callback: CallbackQuery, i18n: I18nContext):
 
     if isinstance(race_calendar, dict):
         for race_id, race_data in race_calendar.items():
-            if isinstance(race_data, dict) and race_data.get("quali_close", now) > now:
-                future_races.append((race_id, race_data))
+            if isinstance(race_data, dict):
+                quali_close = race_data.get("quali_close", now)
+                race_date = race_data.get("date", now)
+                # Include race if quali hasn't closed yet, OR if quali is closed but race hasn't happened
+                if quali_close > now or (quali_close <= now < race_date):
+                    future_races.append((race_id, race_data))
     else:
         for i, race_data in enumerate(race_calendar):
-            if isinstance(race_data, dict) and race_data.get("quali_close", now) > now:
-                race_id = race_data.get("race_id", i + 1)
-                future_races.append((race_id, race_data))
+            if isinstance(race_data, dict):
+                quali_close = race_data.get("quali_close", now)
+                race_date = race_data.get("date", now)
+                # Include race if quali hasn't closed yet, OR if quali is closed but race hasn't happened
+                if quali_close > now or (quali_close <= now < race_date):
+                    race_id = race_data.get("race_id", i + 1)
+                    future_races.append((race_id, race_data))
 
     future_races.sort(key=lambda x: x[1].get("quali_close", now))
 

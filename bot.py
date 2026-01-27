@@ -15,7 +15,14 @@ from notifications import load_users_data
 from notifications.checker import load_notify_history, notify_history
 from i18n_setup import setup_i18n
 from middleware.user_profile import UserProfileMiddleware
-from infra.logging import init_logging_paths, setup_logging, log_structured, set_startup_data, print_banner, print_log_rotation_summary
+from infra.logging import (
+    init_logging_paths,
+    setup_logging,
+    log_structured,
+    set_startup_data,
+    print_banner,
+    print_log_rotation_summary,
+)
 from infra.signals import setup_signal_handlers
 from infra.runner import run_with_recovery
 
@@ -28,7 +35,9 @@ parser = ArgumentParser(description="GPRO Telegram Bot")
 parser.add_argument("-v", "--verbose", action="store_true", help="Enable debug logging")
 args = parser.parse_args()
 
-set_startup_data(users_count=0, races=0, admins_count=len(ADMIN_USER_IDS), tz_count=0, i18n_langs=12)
+set_startup_data(
+    users_count=0, races=0, admins_count=len(ADMIN_USER_IDS), tz_count=0, i18n_langs=12
+)
 logger = setup_logging(verbose=args.verbose)
 
 
@@ -41,6 +50,7 @@ async def main():
 
     load_users_data()
     from notifications.user_data import users_data
+
     user_count = len(users_data)
     set_startup_data(users_count=user_count)
     log_structured(logging.INFO, "Users data loaded", count=user_count)
@@ -49,6 +59,7 @@ async def main():
 
     if load_timezone_search_index():
         from timezone_utils import _timezone_search_index
+
         tz_count = len(_timezone_search_index.get("timezone_info", []))
         set_startup_data(tz_count=tz_count)
         log_structured(logging.INFO, "Timezone search index loaded")
