@@ -234,7 +234,7 @@ async def build_timezone_page_keyboard(
     """Build keyboard and message text for a timezone search results page"""
     from timezone_utils import get_timezone_display_name
     from zoneinfo import ZoneInfo
-    from datetime import datetime, timezone as tz
+    from datetime import datetime, UTC
 
     RESULTS_PER_PAGE = 10
     total_pages = (len(matches) + RESULTS_PER_PAGE - 1) // RESULTS_PER_PAGE
@@ -246,7 +246,7 @@ async def build_timezone_page_keyboard(
 
     # Build inline keyboard with matches for this page
     keyboard_buttons = []
-    now = datetime.now(tz.utc)
+    now = datetime.now(UTC)
 
     for tz_name, score in page_matches:
         try:

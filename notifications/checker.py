@@ -4,7 +4,7 @@ import asyncio
 import json
 import logging
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from typing import Any, Dict, Tuple
 
 from aiogram import Bot
@@ -121,7 +121,7 @@ def load_notify_history() -> Dict[Tuple[Any, ...], datetime]:
                         key = tuple(
                             int(k) if k.isdigit() else k for k in key_list.split(",")
                         )
-                        history[key] = datetime.fromisoformat(timestamp_str)
+                        history[key] = datetime.fromisoformat(timestamp_str).replace(tzinfo=UTC)
                     except (ValueError, KeyError):
                         continue
             logger.debug(f"✅ Loaded {len(history)} notification history entries")
@@ -141,7 +141,7 @@ def save_notify_history(history: Dict[Tuple[Any, ...], datetime]) -> None:
     temp_file = NOTIFY_HISTORY_FILE + ".tmp"
     try:
         # Clean old entries before saving
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         cutoff = now - timedelta(hours=NOTIFICATION_HISTORY_RETENTION_HOURS)
         history = {k: v for k, v in history.items() if v > cutoff}
 
@@ -779,7 +779,7 @@ async def _send_notifications_to_users(bot: Bot, notifications_to_send: list):
 
         # Update history after sending (re-acquire lock briefly)
         async with notification_lock:
-            notify_history[history_key] = datetime.utcnow()
+            notify_history[history_key] = datetime.now(UTC)
             save_notify_history(notify_history)
 
 
@@ -813,7 +813,7 @@ def _get_next_check_interval(now: datetime) -> int:
     # Check if there are any active snooze reminders that will fire soon
     active_snoozes = get_all_snooze_reminders()
     if active_snoozes:
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         soonest_snooze = min(until for _, _, until, _ in active_snoozes)
         minutes_until_snooze = (soonest_snooze - now).total_seconds() / 60
 
@@ -903,7 +903,7 @@ async def check_notifications(bot: Bot):
         try:
             # Determine what notifications to send (quick check under lock)
             async with notification_lock:
-                now = datetime.utcnow()
+                now = datetime.now(UTC)
 
                 # Check season transition conditions
                 await _check_season_transition(now)

@@ -4,7 +4,7 @@ import logging
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram_i18n import I18nContext
-from datetime import datetime
+from datetime import datetime, UTC
 
 from gpro_calendar import (
     race_calendar,
@@ -356,7 +356,7 @@ async def cmd_weather(message: Message, i18n: I18nContext):
         if "force" in args:
             force_update = True
 
-    now = datetime.utcnow()
+    now = datetime.now(UTC)
     next_race_id = None
     next_race_data = None
 

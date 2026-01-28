@@ -3,7 +3,7 @@
 import pycountry
 import math
 import re
-from datetime import datetime
+from datetime import datetime, UTC
 
 # UI Language Display Names
 UI_LANGUAGE_DISPLAY = {
@@ -156,7 +156,7 @@ def format_time_until_quali(quali_close: datetime, i18n=None) -> str:
     Returns:
         Formatted time string (e.g., "2 hours 45 minutes" or "2h45m" if no i18n)
     """
-    now = datetime.utcnow()
+    now = datetime.now(UTC)
     delta = quali_close - now
 
     total_minutes = delta.total_seconds() / 60
@@ -221,7 +221,7 @@ def format_race_beautiful(race_data: dict) -> str:
     track = race_data.get("track", "Unknown")
     track = add_flag_to_track(track)
     hours_left = race_data.get("hours_left", 0)
-    quali_close = race_data.get("quali_close", datetime.utcnow())
+    quali_close = race_data.get("quali_close", datetime.now(UTC))
 
     hours_display = math.floor(hours_left)
     deadline = quali_close.strftime("%d.%m %H:%M")
@@ -280,7 +280,7 @@ def format_full_calendar(
     if not calendar_data:
         return "No races scheduled"
 
-    now = datetime.utcnow()
+    now = datetime.now(UTC)
     race_list = []
 
     # Collect races 1-17 in sequential order

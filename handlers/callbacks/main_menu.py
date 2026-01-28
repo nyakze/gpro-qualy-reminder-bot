@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 @router.callback_query(F.data == "main_menu_status")
 async def handle_main_menu_status(callback: CallbackQuery, i18n: I18nContext):
     """Handle Status button from main menu"""
-    from datetime import datetime
+    from datetime import datetime, UTC
 
     await callback.answer()
 
@@ -24,7 +24,7 @@ async def handle_main_menu_status(callback: CallbackQuery, i18n: I18nContext):
         await callback.message.answer(i18n.get("no-races-scheduled"))
         return
 
-    now = datetime.utcnow()
+    now = datetime.now(UTC)
     future_races = []
 
     if isinstance(race_calendar, dict):

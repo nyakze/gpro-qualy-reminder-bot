@@ -5,7 +5,7 @@ from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
-from datetime import datetime
+from datetime import datetime, UTC
 
 from gpro_calendar import (
     race_calendar,
@@ -49,9 +49,7 @@ async def cmd_start(message: Message, bot, state: FSMContext, i18n: I18nContext)
             user_id, message.from_user.username, message.from_user.first_name
         )
 
-        from datetime import datetime
-
-        timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+        timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
 
         for admin_id in ADMIN_USER_IDS:
             if users_data.get(admin_id, {}).get("notify_new_users", False):
@@ -139,22 +137,22 @@ async def cmd_status(message: Message, bot, state: FSMContext, i18n: I18nContext
         await message.answer(i18n.get("no-races-scheduled"))
         return
 
-    now = datetime.utcnow()
+    now = datetime.now(UTC)
     future_races = []
 
     if isinstance(race_calendar, dict):
         for race_id, race_data in race_calendar.items():
             if isinstance(race_data, dict):
-                quali_close = race_data.get("quali_close", now)
-                race_date = race_data.get("date", now)
+                quali_close = race_data.get("quali_close")
+                race_date = race_data.get("date")
                 # Include race if quali hasn't closed yet, OR if quali is closed but race hasn't happened
                 if quali_close > now or (quali_close <= now < race_date):
                     future_races.append((race_id, race_data))
     else:
         for i, race_data in enumerate(race_calendar):
             if isinstance(race_data, dict):
-                quali_close = race_data.get("quali_close", now)
-                race_date = race_data.get("date", now)
+                quali_close = race_data.get("quali_close")
+                race_date = race_data.get("date")
                 # Include race if quali hasn't closed yet, OR if quali is closed but race hasn't happened
                 if quali_close > now or (quali_close <= now < race_date):
                     race_id = race_data.get("race_id", i + 1)
@@ -222,22 +220,22 @@ async def cmd_notify(message: Message, bot, state: FSMContext, i18n: I18nContext
         await message.answer(i18n.get("no-races-scheduled"))
         return
 
-    now = datetime.utcnow()
+    now = datetime.now(UTC)
     future_races = []
 
     if isinstance(race_calendar, dict):
         for race_id, race_data in race_calendar.items():
             if isinstance(race_data, dict):
-                quali_close = race_data.get("quali_close", now)
-                race_date = race_data.get("date", now)
+                quali_close = race_data.get("quali_close")
+                race_date = race_data.get("date")
                 # Include race if quali hasn't closed yet, OR if quali is closed but race hasn't happened
                 if quali_close > now or (quali_close <= now < race_date):
                     future_races.append((race_id, race_data))
     else:
         for i, race_data in enumerate(race_calendar):
             if isinstance(race_data, dict):
-                quali_close = race_data.get("quali_close", now)
-                race_date = race_data.get("date", now)
+                quali_close = race_data.get("quali_close")
+                race_date = race_data.get("date")
                 # Include race if quali hasn't closed yet, OR if quali is closed but race hasn't happened
                 if quali_close > now or (quali_close <= now < race_date):
                     race_id = race_data.get("race_id", i + 1)

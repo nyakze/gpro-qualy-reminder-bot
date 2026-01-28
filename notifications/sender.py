@@ -4,7 +4,7 @@ import logging
 import re
 from aiogram import Bot
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from typing import Dict, List, Optional, Tuple
 
 from gpro_calendar import race_calendar
@@ -190,7 +190,7 @@ def is_qualifying_closed(race_id: int, race_data: dict) -> bool:
     """
     from .checker import notify_history
 
-    now = datetime.utcnow()
+    now = datetime.now(UTC)
     quali_close = race_data.get("quali_close")
 
     if not quali_close:
@@ -446,7 +446,7 @@ def can_snooze(
 
     race_data = race_calendar[race_id]
     quali_close = race_data.get("quali_close")
-    now = datetime.utcnow()
+    now = datetime.now(UTC)
 
     if not quali_close:
         return False, "Qualifying deadline not set"
@@ -492,7 +492,7 @@ def get_snooze_buttons(
 
     race_data = race_calendar[race_id]
     quali_close = race_data.get("quali_close")
-    now = datetime.utcnow()
+    now = datetime.now(UTC)
 
     if not quali_close:
         return []
@@ -1075,7 +1075,7 @@ async def send_quali_notification(
         deadline = format_datetime_for_user(quali_close, user_id, "%d.%m %H:%M")
         race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
     else:
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         if "hours_left" not in race_data:
             hours_left = (quali_close - now).total_seconds() / 3600
         else:

@@ -9,7 +9,7 @@ import logging
 import re
 import json
 import os
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 from zoneinfo import ZoneInfo
 from typing import Optional
 
@@ -508,7 +508,7 @@ def convert_to_user_tz(dt: Optional[datetime], user_id: int) -> Optional[datetim
         # Make sure datetime is aware (has timezone info)
         if dt.tzinfo is None:
             # Assume naive datetimes are UTC
-            dt = dt.replace(tzinfo=timezone.utc)
+            dt = dt.replace(tzinfo=UTC)
 
         # Get user's timezone
         user_tz = get_user_timezone(user_id)
@@ -570,11 +570,11 @@ def get_timezone_display_name(tz: ZoneInfo, dt: Optional[datetime] = None) -> st
     try:
         # Use provided datetime or current time
         if dt is None:
-            dt = datetime.now(timezone.utc)
+            dt = datetime.now(UTC)
 
         # Make datetime aware if needed
         if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=timezone.utc)
+            dt = dt.replace(tzinfo=UTC)
 
         # Convert to target timezone
         local_dt = dt.astimezone(tz)

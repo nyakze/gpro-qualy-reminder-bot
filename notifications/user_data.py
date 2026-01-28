@@ -3,7 +3,7 @@
 import logging
 import json
 import os
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Dict
 
 logger = logging.getLogger(__name__)
@@ -605,7 +605,7 @@ def get_all_snooze_reminders() -> list:
                 # Get data from dict (new format stores race_id and notification_type)
                 race_id = data.get("race_id")
                 notification_type = data.get("notification_type")
-                until = datetime.fromisoformat(data["until"])
+                until = datetime.fromisoformat(data["until"]).replace(tzinfo=UTC)
 
                 if race_id is None or notification_type is None:
                     continue
@@ -659,7 +659,7 @@ def reset_snooze_counts_for_deadline_passed(race_id: int, quali_close) -> None:
         race_id: Race ID
         quali_close: Datetime when qualifying closes
     """
-    now = datetime.utcnow()
+    now = datetime.now(UTC)
     if now < quali_close:
         return
 

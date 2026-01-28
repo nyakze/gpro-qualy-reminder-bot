@@ -1,7 +1,7 @@
 """Race status callback handlers"""
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from aiogram import F
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram_i18n import I18nContext
@@ -171,7 +171,7 @@ async def handle_snooze(callback: CallbackQuery, i18n: I18nContext):
             await callback.answer(i18n.get("error-invalid-data"), show_alert=True)
         return
 
-    snooze_until = datetime.utcnow() + timedelta(minutes=snooze_minutes)
+    snooze_until = datetime.now(UTC) + timedelta(minutes=snooze_minutes)
 
     from notifications.user_data import add_snooze_reminder
 

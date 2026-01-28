@@ -2,7 +2,7 @@ import json
 import logging
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, UTC
 from logging.handlers import RotatingFileHandler
 from typing import Any, Dict, cast
 
@@ -27,7 +27,7 @@ def set_startup_data(**kwargs) -> None:
 
 
 def _format_timestamp() -> str:
-    return datetime.utcnow().strftime("%H:%M:%S")
+    return datetime.now(UTC).strftime("%H:%M:%S")
 
 
 _LEVEL_ABBREV = {
@@ -52,7 +52,7 @@ _RESET = "\033[0m"
 class StructuredLogFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         log_data: Dict[str, Any] = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "level": record.levelname,
             "logger": record.name,
             "message": record.getMessage(),

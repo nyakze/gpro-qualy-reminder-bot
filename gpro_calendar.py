@@ -3,7 +3,7 @@ import logging
 import re
 import os
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from zoneinfo import ZoneInfo
 import aiohttp
 from config import GPRO_API_TOKEN, CALENDAR_FILE, GPRO_API_LANG, NEXT_SEASON_FILE
@@ -77,9 +77,9 @@ def _load_calendar_from_file(filepath: str) -> dict:
             for race_id_str, race_data in data.items():
                 race_id = int(race_id_str)
                 race_entry = {
-                    "quali_close": datetime.fromisoformat(race_data["quali_close"]),
+                    "quali_close": datetime.fromisoformat(race_data["quali_close"]).replace(tzinfo=UTC),
                     "track": race_data["track"],
-                    "date": datetime.fromisoformat(race_data["date"]),
+                    "date": datetime.fromisoformat(race_data["date"]).replace(tzinfo=UTC),
                     "group": race_data.get("group", "Pro"),
                 }
 
@@ -322,7 +322,7 @@ def parse_gpro_date_fixed(date_str: str) -> datetime:
 
     # **SIMPLE "Today" = CURRENT DAY 00:00**
     if "Today" in date_str or "<font" in date_str or "<b>" in date_str:
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         today = now.replace(hour=0, minute=0, second=0, microsecond=0)
         logger.info(f"⏰ 'Today' → {today.strftime('%d.%m.%Y')} 20:00 CET/CEST")
         return today
@@ -332,7 +332,7 @@ def parse_gpro_date_fixed(date_str: str) -> datetime:
     day_str = re.sub(r"(?i)(st|nd|rd|th)\b", "", day_str)
     day_str = day_str.strip()
 
-    now = datetime.utcnow()
+    now = datetime.now(UTC)
 
     # Try all standard date formats
     for fmt in DATE_FORMATS:
@@ -340,7 +340,7 @@ def parse_gpro_date_fixed(date_str: str) -> datetime:
             dt = datetime.strptime(day_str, fmt)
             if dt.year < 2025:
                 dt = dt.replace(year=now.year)
-            return dt
+            return dt.replace(tzinfo=UTC)
         except ValueError:
             continue
 
@@ -351,7 +351,7 @@ def parse_gpro_date_fixed(date_str: str) -> datetime:
             dt = dt.replace(year=now.year)
             if dt.date() < now.date():
                 dt = dt.replace(year=now.year + 1)
-            return dt
+            return dt.replace(tzinfo=UTC)
         except (ValueError, AttributeError) as e:
             logger.debug(f"Failed to parse date format '{day_str}': {e}")
             pass
@@ -396,7 +396,7 @@ async def check_quali_status_from_api() -> dict:
                         # Figure out which race this quali is for
                         # by matching quali close time
                         seconds = int(seconds_left)
-                        now = datetime.utcnow()
+                        now = datetime.now(UTC)
                         expected_close = now + timedelta(seconds=seconds)
 
                         # Find matching race (within 1 hour tolerance)
@@ -488,7 +488,7 @@ async def fetch_weather_from_api(race_id: int) -> dict:
 
 def get_races_closing_soon(hours_before: float = 720) -> dict:
     """Get races closing within 30 days - SORTED by time!"""
-    now = datetime.utcnow()
+    now = datetime.now(UTC)
     upcoming = {}
 
     for race_id, data in race_calendar.items():

@@ -29,7 +29,7 @@ def build_settings_keyboard(user_id: int, i18n: I18nContext) -> InlineKeyboardMa
     from notifications import get_user_timezone
     from timezone_utils import get_timezone_display_name
     from zoneinfo import ZoneInfo
-    from datetime import datetime, timezone
+    from datetime import datetime, UTC
 
     user_status = get_user_status(user_id)[0]
     current_ui_lang = user_status.get("ui_lang", "gb")
@@ -90,7 +90,7 @@ def build_settings_keyboard(user_id: int, i18n: I18nContext) -> InlineKeyboardMa
 
     current_tz = get_user_timezone(user_id)
     tz = ZoneInfo(current_tz)
-    tz_display = get_timezone_display_name(tz, datetime.now(timezone.utc))
+    tz_display = get_timezone_display_name(tz, datetime.now(UTC))
     keyboard_buttons.append(
         [
             InlineKeyboardButton(
@@ -527,13 +527,13 @@ async def handle_timezone_menu(
     from notifications import get_user_timezone
     from timezone_utils import get_timezone_display_name
     from zoneinfo import ZoneInfo
-    from datetime import datetime, timezone
+    from datetime import datetime, UTC
     from handlers.states import TimezoneStates
 
     user_id = callback.from_user.id
     current_tz = get_user_timezone(user_id)
     tz = ZoneInfo(current_tz)
-    tz_display = get_timezone_display_name(tz, datetime.now(timezone.utc))
+    tz_display = get_timezone_display_name(tz, datetime.now(UTC))
 
     keyboard_buttons = []
 
@@ -587,7 +587,7 @@ async def handle_timezone_select(
     from notifications import set_user_timezone
     from timezone_utils import get_timezone_display_name
     from zoneinfo import ZoneInfo
-    from datetime import datetime, timezone
+    from datetime import datetime, UTC
 
     user_id = callback.from_user.id
 
@@ -597,9 +597,9 @@ async def handle_timezone_select(
         await state.clear()
 
         tz = ZoneInfo(tz_name)
-        tz_display = get_timezone_display_name(tz, datetime.now(timezone.utc))
+        tz_display = get_timezone_display_name(tz, datetime.now(UTC))
 
-        utc_now = datetime.now(timezone.utc)
+        utc_now = datetime.now(UTC)
         local_now = utc_now.astimezone(tz)
         local_time_str = local_now.strftime("%H:%M")
 
