@@ -4,6 +4,7 @@ import asyncio
 import json
 import logging
 import os
+import tempfile
 from datetime import datetime, timedelta, UTC
 from typing import Any, Dict, Tuple
 
@@ -75,6 +76,9 @@ QUALI_RESULTS_NOTIFICATION_AFTER_MINUTES = (
 NOTIFICATION_HISTORY_RETENTION_HOURS = (
     24  # Keep notification history for 24 hours (enough to prevent duplicates)
 )
+NOTIFICATION_HISTORY_MAX_ENTRIES = (
+    10000  # Maximum entries to prevent unbounded memory growth
+)
 
 # New season reminder timing - send 24 hours before race 1
 NEW_SEASON_REMINDER_HOURS_BEFORE = 24
@@ -131,6 +135,30 @@ def load_notify_history() -> Dict[Tuple[Any, ...], datetime]:
     return history
 
 
+def _enforce_history_size_limit(history: Dict[Tuple[Any, ...], datetime]) -> Dict[Tuple[Any, ...], datetime]:
+    """Enforce maximum size limit on notification history
+
+    If history exceeds max entries, remove oldest entries first.
+
+    Args:
+        history: Notification history dict
+
+    Returns:
+        Dict with size limited history
+    """
+    if len(history) <= NOTIFICATION_HISTORY_MAX_ENTRIES:
+        return history
+
+    # Sort by timestamp (oldest first) and keep only the newest entries
+    sorted_items = sorted(history.items(), key=lambda x: x[1], reverse=True)
+    trimmed = dict(sorted_items[:NOTIFICATION_HISTORY_MAX_ENTRIES])
+
+    logger.warning(
+        f"🧹 Trimmed notify_history from {len(history)} to {len(trimmed)} entries (size limit)"
+    )
+    return trimmed
+
+
 def save_notify_history(history: Dict[Tuple[Any, ...], datetime]) -> None:
     """Save notification history to JSON file with atomic write
 
@@ -139,12 +167,15 @@ def save_notify_history(history: Dict[Tuple[Any, ...], datetime]) -> None:
     Args:
         history keys and datetime history: Dict with values
     """
-    temp_file = NOTIFY_HISTORY_FILE + ".tmp"
+    temp_file = None
     try:
         # Clean old entries before saving
         now = datetime.now(UTC)
         cutoff = now - timedelta(hours=NOTIFICATION_HISTORY_RETENTION_HOURS)
         history = {k: v for k, v in history.items() if v > cutoff}
+
+        # Enforce size limit to prevent unbounded growth
+        history = _enforce_history_size_limit(history)
 
         # Convert keys and values to JSON-serializable format
         save_data = {}
@@ -152,15 +183,29 @@ def save_notify_history(history: Dict[Tuple[Any, ...], datetime]) -> None:
             key_str = ",".join(str(k) for k in key)
             save_data[key_str] = timestamp.isoformat()
 
-        with open(temp_file, "w") as f:
-            json.dump(save_data, f, indent=2)
-            f.flush()
-            os.fsync(f.fileno())
-        os.replace(temp_file, NOTIFY_HISTORY_FILE)
-        logger.debug(f"Saved {len(history)} notification history entries")
+        # Use unique temp file to avoid race conditions
+        fd, temp_file = tempfile.mkstemp(
+            dir=os.path.dirname(NOTIFY_HISTORY_FILE), suffix=".tmp"
+        )
+        try:
+            with os.fdopen(fd, "w") as f:
+                json.dump(save_data, f, indent=2)
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(temp_file, NOTIFY_HISTORY_FILE)
+            logger.debug(f"Saved {len(history)} notification history entries")
+        except Exception:
+            # Close the fd if it wasn't closed by os.fdopen
+            try:
+                os.close(fd)
+            except (OSError, ValueError):
+                pass
+            raise
     except Exception as e:
         logger.error(f"Failed to save notify_history: {e}")
-        if os.path.exists(temp_file):
+    finally:
+        # Clean up temp file if it still exists
+        if temp_file and os.path.exists(temp_file):
             try:
                 os.remove(temp_file)
             except Exception:
@@ -941,6 +986,9 @@ async def check_notifications(bot: Bot):
                 # Clean old history entries
                 cutoff = now - timedelta(hours=NOTIFICATION_HISTORY_RETENTION_HOURS)
                 notify_history = {k: v for k, v in notify_history.items() if v > cutoff}
+
+                # Enforce size limit to prevent unbounded growth
+                notify_history = _enforce_history_size_limit(notify_history)
 
                 # Determine next check interval based on race proximity
                 next_interval = _get_next_check_interval(now)

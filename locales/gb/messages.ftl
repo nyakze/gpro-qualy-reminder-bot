@@ -9,6 +9,10 @@ start-welcome-new = 👋 <b>Welcome to GPRO Bot!</b>
 
     🌍 <b>Select your language</b> (or skip to use English):
 
+start-welcome-onboarding = 👋 <b>Welcome to GPRO Bot!</b>
+
+    Choose your preferred bot language:
+
 start-welcome-existing = 🏁 GPRO Bot LIVE!
     /status - Next race
     /calendar - Full season

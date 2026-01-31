@@ -3,6 +3,7 @@ import logging
 import re
 import os
 import asyncio
+import tempfile
 from datetime import datetime, timedelta, UTC
 from zoneinfo import ZoneInfo
 import aiohttp
@@ -92,7 +93,7 @@ def _load_calendar_from_file(filepath: str) -> dict:
     except FileNotFoundError:
         logger.warning(f"No cache file: {filepath}")
         return {}
-    except Exception as e:
+    except (json.JSONDecodeError, KeyError, ValueError, TypeError) as e:
         logger.error(f"Cache load error from {filepath}: {e}")
         return {}
 
@@ -122,23 +123,37 @@ def _save_calendar_to_file(calendar: dict, filepath: str):
 
         serializable[str(k)] = race_data
 
-    temp_file = filepath + ".tmp"
+    temp_file = None
     try:
-        with open(temp_file, "w") as f:
-            json.dump(serializable, f, indent=2)
-            f.flush()
-            os.fsync(f.fileno())
+        # Use unique temp file to avoid race conditions
+        fd, temp_file = tempfile.mkstemp(
+            dir=os.path.dirname(filepath), suffix=".tmp"
+        )
+        try:
+            with os.fdopen(fd, "w") as f:
+                json.dump(serializable, f, indent=2)
+                f.flush()
+                os.fsync(f.fileno())
 
-        os.replace(temp_file, filepath)
-        logger.debug(f"💾 Saved calendar to {filepath}")
+            os.replace(temp_file, filepath)
+            logger.debug(f"💾 Saved calendar to {filepath}")
+        except Exception:
+            # Close the fd if it wasn't closed by os.fdopen
+            try:
+                os.close(fd)
+            except (OSError, ValueError):
+                pass
+            raise
     except Exception as e:
         logger.error(f"Failed to save calendar to {filepath}: {e}")
-        if os.path.exists(temp_file):
+        raise
+    finally:
+        # Clean up temp file if it still exists
+        if temp_file and os.path.exists(temp_file):
             try:
                 os.remove(temp_file)
             except Exception:
                 pass
-        raise
 
 
 async def load_calendar_silent() -> bool:
@@ -244,8 +259,12 @@ async def update_calendar() -> bool:
                     return True
                 else:
                     logger.error(f"API {resp.status}")
-    except Exception as e:
-        logger.error(f"Calendar update error: {e}")
+    except asyncio.TimeoutError:
+        logger.warning("Calendar API timeout")
+    except aiohttp.ClientError as e:
+        logger.error(f"Calendar API client error: {e}")
+    except (json.JSONDecodeError, KeyError, TypeError) as e:
+        logger.error(f"Calendar API response error: {e}")
 
     return False
 
@@ -286,7 +305,7 @@ def parse_gpro_events(events: list, is_next_season: bool = False) -> dict:
                     "group": event.get("group", "Pro"),
                 }
             )
-        except Exception as e:
+        except (ValueError, TypeError, AttributeError) as e:
             logger.debug(f"Parse event {idx} error: {e}")
             continue
 
@@ -426,8 +445,11 @@ async def check_quali_status_from_api() -> dict:
     except asyncio.TimeoutError:
         logger.warning("Office API timeout")
         return {}
-    except Exception as e:
-        logger.error(f"Office API error: {e}")
+    except aiohttp.ClientError as e:
+        logger.error(f"Office API client error: {e}")
+        return {}
+    except (json.JSONDecodeError, KeyError, TypeError, ValueError) as e:
+        logger.error(f"Office API response error: {e}")
         return {}
 
 
@@ -484,8 +506,11 @@ async def fetch_weather_from_api(race_id: int) -> dict:
     except asyncio.TimeoutError:
         logger.warning("Weather API timeout")
         return {}
-    except Exception as e:
-        logger.error(f"Weather API error: {e}")
+    except aiohttp.ClientError as e:
+        logger.error(f"Weather API client error: {e}")
+        return {}
+    except (json.JSONDecodeError, KeyError, TypeError) as e:
+        logger.error(f"Weather API response error: {e}")
         return {}
 
 
@@ -680,6 +705,6 @@ async def transition_to_next_season() -> bool:
         logger.info("🎉 Season transition completed successfully!")
         return True
 
-    except Exception as e:
+    except (OSError, IOError, json.JSONDecodeError) as e:
         logger.error(f"❌ Season transition failed: {e}")
         return False

@@ -3,6 +3,7 @@
 import logging
 import json
 import os
+import tempfile
 from datetime import datetime, UTC
 from typing import Dict
 
@@ -123,18 +124,32 @@ def load_users_data():
 
 def save_users_data():
     """Save user data with atomic write to prevent corruption"""
-    temp_file = USERS_FILE + ".tmp"
+    temp_file = None
     try:
-        with open(temp_file, "w") as f:
-            save_data = {str(k): v for k, v in users_data.items()}
-            json.dump(save_data, f, indent=2)
-            f.flush()
-            os.fsync(f.fileno())
-        os.replace(temp_file, USERS_FILE)
-        logger.debug(f"Saved {len(users_data)} users")
+        # Use unique temp file to avoid race conditions
+        fd, temp_file = tempfile.mkstemp(
+            dir=os.path.dirname(USERS_FILE), suffix=".tmp"
+        )
+        try:
+            with os.fdopen(fd, "w") as f:
+                save_data = {str(k): v for k, v in users_data.items()}
+                json.dump(save_data, f, indent=2)
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(temp_file, USERS_FILE)
+            logger.debug(f"Saved {len(users_data)} users")
+        except Exception:
+            # Close the fd if it wasn't closed by os.fdopen
+            try:
+                os.close(fd)
+            except (OSError, ValueError):
+                pass
+            raise
     except Exception as e:
         logger.error(f"Save failed: {e}")
-        if os.path.exists(temp_file):
+    finally:
+        # Clean up temp file if it still exists
+        if temp_file and os.path.exists(temp_file):
             try:
                 os.remove(temp_file)
             except Exception:

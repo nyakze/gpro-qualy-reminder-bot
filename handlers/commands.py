@@ -75,7 +75,7 @@ async def cmd_start(message: Message, bot, state: FSMContext, i18n: I18nContext)
         )
 
         await message.answer(
-            "👋 <b>Welcome to GPRO Bot!</b>\n\n" "Choose your preferred bot language:",
+            i18n.get("start-welcome-onboarding"),
             reply_markup=keyboard,
             parse_mode="HTML",
         )
