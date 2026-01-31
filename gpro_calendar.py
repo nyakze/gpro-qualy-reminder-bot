@@ -503,9 +503,25 @@ def get_races_closing_soon(hours_before: float = 720) -> dict:
 
     # Sort by closest first
     sorted_upcoming = dict(sorted(upcoming.items(), key=lambda x: x[1]["hours_left"]))
-    logger.debug(
-        f"Upcoming races ({len(sorted_upcoming)}): {list(sorted_upcoming.keys())}"
-    )
+    if sorted_upcoming:
+        logger.debug(f"Tracking quali deadlines: {list(sorted_upcoming.keys())}")
+    else:
+        # Find when next race enters the tracking window
+        future_races = [
+            (rid, d) for rid, d in race_calendar.items() if d["quali_close"] > now
+        ]
+        if future_races:
+            next_race_id, next_race_data = min(
+                future_races, key=lambda x: x[1]["quali_close"]
+            )
+            hours_until_close = (
+                next_race_data["quali_close"] - now
+            ).total_seconds() / 3600
+            tracking_starts_in = hours_until_close - hours_before
+            logger.debug(
+                f"No races in {hours_before:.0f}h window. "
+                f"Race {next_race_id} enters tracking in {tracking_starts_in:.1f}h"
+            )
     return sorted_upcoming
 
 
