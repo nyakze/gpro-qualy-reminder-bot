@@ -135,7 +135,7 @@ async def handle_onboarding_skip_group(
 
     # Get user's selected language and show completion message in that language
     user_status = get_user_status(user_id)[0]
-    ui_lang = user_status.get("ui_lang", "en")
+    ui_lang = user_status.get("ui_lang", "gb")
 
     with i18n.use_locale(ui_lang):
         await callback.answer(i18n.get("feedback-skip-group"))
