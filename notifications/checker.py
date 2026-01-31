@@ -658,7 +658,7 @@ def _check_snooze_reminders(now: datetime, races_closing: dict) -> list:
 
 
 def _reset_snooze_counts_for_past_deadlines(now: datetime) -> None:
-    """Reset snooze counts for notification types where deadline has passed
+    """Reset snooze counts when all race quali deadlines have passed
 
     Args:
         now: Current datetime
@@ -666,35 +666,31 @@ def _reset_snooze_counts_for_past_deadlines(now: datetime) -> None:
     from .user_data import get_default_snooze_tracking
 
     reset_count = 0
-    for user_id, user_data in users_data.items():
-        if "snooze_tracking" not in user_data:
-            continue
 
-        needs_reset = False
-        for notification_label in QUALI_NOTIFICATION_TYPES:
-            if notification_label not in race_calendar:
+    # Check if any race has an upcoming or current quali deadline
+    # If all races have passed their quali_close, we should reset snooze counts
+    has_upcoming_quali = False
+    for race_id, race_data in race_calendar.items():
+        quali_close = race_data.get("quali_close")
+        if quali_close and now < quali_close:
+            has_upcoming_quali = True
+            break
+
+    # If no upcoming quali deadlines, reset all users' snooze tracking
+    if not has_upcoming_quali and race_calendar:
+        for user_id, user_data in users_data.items():
+            if "snooze_tracking" not in user_data:
                 continue
 
-            race_data = (
-                race_calendar[notification_label]
-                if isinstance(race_calendar, dict)
-                else race_calendar.get(notification_label)
-            )
-            if not race_data:
-                continue
-
-            quali_close = race_data.get("quali_close")
-            if quali_close and now >= quali_close:
-                needs_reset = True
-                break
-
-        if needs_reset:
-            user_data["snooze_tracking"] = get_default_snooze_tracking()
-            reset_count += 1
+            # Check if user has any non-zero snooze counts
+            snooze_tracking = user_data["snooze_tracking"]
+            if any(count > 0 for count in snooze_tracking.values()):
+                user_data["snooze_tracking"] = get_default_snooze_tracking()
+                reset_count += 1
 
     if reset_count > 0:
         logger.debug(
-            f"🔔 Reset snooze counts for {reset_count} users (deadlines passed)"
+            f"🔔 Reset snooze counts for {reset_count} users (all deadlines passed)"
         )
         save_users_data()
 
