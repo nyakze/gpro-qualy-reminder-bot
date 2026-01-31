@@ -2,6 +2,7 @@
 
 import logging
 import re
+from urllib.parse import quote
 from aiogram import Bot
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime, timedelta, UTC
@@ -30,7 +31,7 @@ SNOOZE_OPTIONS = [
 SNOOZE_TOLERANCE_MINUTES = 2
 MAX_SNOOZES = 3
 
-QUALI_NOTIFICATION_TYPES = ["72h", "48h", "24h", "2h", "10min", "deadline"]
+QUALI_NOTIFICATION_TYPES = ["72h", "48h", "24h", "2h", "10min", "opens_soon", "deadline"]
 
 
 def generate_gpro_link(

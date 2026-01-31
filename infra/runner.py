@@ -1,5 +1,4 @@
 import asyncio
-import logging
 
 from notifications import check_notifications
 

@@ -229,6 +229,10 @@ def get_user_status(user_id: int):
             users_data[user_id]["snooze_tracking"] = get_default_snooze_tracking()
             logger.debug(f"Added 'snooze_tracking' field to user {user_id}")
             needs_save = True
+        if "active_snoozes" not in users_data[user_id]:
+            users_data[user_id]["active_snoozes"] = {}
+            logger.debug(f"Added 'active_snoozes' field to user {user_id}")
+            needs_save = True
         if needs_save:
             save_users_data()
 

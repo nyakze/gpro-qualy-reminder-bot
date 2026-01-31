@@ -182,7 +182,8 @@ async def update_calendar() -> bool:
 
     try:
         logger.info("🔄 Updating calendar from GPRO API...")
-        async with aiohttp.ClientSession() as session:
+        timeout = aiohttp.ClientTimeout(total=30)
+        async with aiohttp.ClientSession(timeout=timeout) as session:
             async with session.get(url, headers=headers) as resp:
                 if resp.status == 200:
                     raw_response = await resp.json()
@@ -386,8 +387,9 @@ async def check_quali_status_from_api() -> dict:
     }
 
     try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=headers, timeout=10) as resp:
+        timeout = aiohttp.ClientTimeout(total=10)
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            async with session.get(url, headers=headers) as resp:
                 if resp.status == 200:
                     data = await resp.json()
                     seconds_left = data.get("secondsLeftQual")
@@ -449,8 +451,9 @@ async def fetch_weather_from_api(race_id: int) -> dict:
     }
 
     try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=headers, timeout=10) as resp:
+        timeout = aiohttp.ClientTimeout(total=10)
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            async with session.get(url, headers=headers) as resp:
                 if resp.status == 200:
                     data = await resp.json()
 
