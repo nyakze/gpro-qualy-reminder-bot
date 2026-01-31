@@ -52,17 +52,25 @@ async def handle_onboarding_ui_language_page(
 async def handle_onboarding_skip_ui_lang(
     callback: CallbackQuery, state: FSMContext, i18n: I18nContext
 ):
-    """Skip UI language selection during onboarding"""
+    """Skip UI language selection during onboarding - keeps auto-detected language"""
     user_id = callback.from_user.id
 
-    # Set default UI language to English (gb)
-    set_user_ui_language(user_id, "gb")
-    set_user_language(user_id, "gb")
-    logger.debug(f"User {user_id} skipped UI language selection, defaults set to 'gb'")
+    # Language is already auto-detected and set during /start, so just proceed
+    # Get current language for logging
+    user_status = get_user_status(user_id)[0]
+    current_ui_lang = user_status.get("ui_lang", "gb")
+    logger.debug(
+        f"User {user_id} skipped UI language selection, keeping auto-detected: {current_ui_lang}"
+    )
+
+    # Show feedback with auto-detected language name
+    from utils import get_ui_language_display
+
+    lang_display = get_ui_language_display(current_ui_lang)
+    await callback.answer(i18n.get("feedback-skip-language", language=lang_display))
 
     # Show group selection menu
     await show_onboarding_group_menu(callback.message, user_id, i18n, state)
-    await callback.answer()
 
 
 @router.callback_query(

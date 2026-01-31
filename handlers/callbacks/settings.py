@@ -385,7 +385,9 @@ async def handle_language_reset(callback: CallbackQuery, i18n: I18nContext):
             reply_markup=keyboard,
             parse_mode="HTML",
         )
-        await callback.answer(i18n.get("feedback-language-reset"))
+        await callback.answer(
+            i18n.get("feedback-language-reset", language=LANGUAGE_OPTIONS["gb"])
+        )
     else:
         await callback.answer(i18n.get("error-reset-failed"), show_alert=True)
 

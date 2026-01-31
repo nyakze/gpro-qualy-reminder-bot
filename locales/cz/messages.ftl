@@ -9,6 +9,10 @@ start-welcome-new = 👋 <b>Vítejte v GPRO Botu!</b>
 
     🌍 <b>Vyberte svůj jazyk</b> (nebo přeskočte a použijte angličtinu):
 
+start-welcome-onboarding = 👋 <b>Vítejte v GPRO Botu!</b>
+
+    Vyberte jazyk bota:
+
 start-welcome-existing = 🏁 GPRO Bot AKTIVNÍ!
     /status - Příští závod
     /calendar - Celá sezóna
@@ -426,12 +430,12 @@ feedback-notifications-reset = 🔄 <i>Oznámení resetována!</i>
 feedback-reenabled = 🔄 Znovu zapnuto!
 feedback-notifications-reenabled = 🔄 <i>Oznámení znovu zapnuta!</i>
 feedback-language-set = ✅ Jazyk nastaven na { $language }
-feedback-language-reset = ✅ Jazyk resetován na angličtinu
+feedback-language-reset = ✅ Jazyk resetován na { $language }
 feedback-ui-language-set = ✅ Jazyk botu nastaven na { $language }
 feedback-group-set = ✅ Skupina nastavena na { $group }
 feedback-custom-notif-set = ✅ { $message }
 feedback-custom-notif-disabled = ✅ Vlastní oznámení { $slot } vypnuto
-feedback-skip-language = ⏭️ Používá se výchozí jazyk (angličtina)
+feedback-skip-language = ⏭️ Používá se automaticky detekovaný jazyk: { $language }
 feedback-skip-group = ⏭️ Výběr skupiny přeskočen
 feedback-welcome = ✅ Vítejte na palubě!
 feedback-weather-sent = 🌤️ Předpověď počasí odeslána!

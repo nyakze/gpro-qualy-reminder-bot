@@ -9,6 +9,10 @@ start-welcome-new = 👋 <b>Bem-vindo ao GPRO Bot!</b>
 
     🌍 <b>Selecione seu idioma</b> (ou pule para usar inglês):
 
+start-welcome-onboarding = 👋 <b>Bem-vindo ao GPRO Bot!</b>
+
+    Escolha o idioma do bot:
+
 start-welcome-existing = 🏁 GPRO Bot ATIVO!
     /status - Próxima corrida
     /calendar - Temporada completa
@@ -445,12 +449,12 @@ feedback-notifications-reset = 🔄 <i>Notificações redefinidas!</i>
 feedback-reenabled = 🔄 Reativado!
 feedback-notifications-reenabled = 🔄 <i>Notificações reativadas!</i>
 feedback-language-set = ✅ Idioma definido para { $language }
-feedback-language-reset = ✅ Idioma redefinido para inglês
+feedback-language-reset = ✅ Idioma redefinido para { $language }
 feedback-ui-language-set = ✅ Idioma do bot definido para { $language }
 feedback-group-set = ✅ Grupo definido para { $group }
 feedback-custom-notif-set = ✅ { $message }
 feedback-custom-notif-disabled = ✅ Notificação personalizada { $slot } desativada
-feedback-skip-language = ⏭️ Usando idioma padrão (inglês)
+feedback-skip-language = ⏭️ Usando idioma detectado automaticamente: { $language }
 feedback-skip-group = ⏭️ Seleção de grupo pulada
 feedback-welcome = ✅ Bem-vindo!
 feedback-weather-sent = 🌤️ Previsão do clima enviada!

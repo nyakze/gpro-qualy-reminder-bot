@@ -21,6 +21,57 @@ UI_LANGUAGE_DISPLAY = {
     "pt": "🇵🇹 Português",
 }
 
+# Mapping from Telegram language_code to our UI language codes
+# Telegram uses ISO 639-1 codes, we use GPRO's language codes
+TELEGRAM_TO_UI_LANG = {
+    "en": "gb",  # English
+    "ru": "ru",  # Russian
+    "pt": "pt",  # Portuguese (European)
+    "pt-br": "br",  # Brazilian Portuguese
+    "it": "it",  # Italian
+    "es": "es",  # Spanish
+    "fr": "fr",  # French
+    "nl": "nl",  # Dutch
+    "bg": "bg",  # Bulgarian
+    "cs": "cz",  # Czech (Telegram uses 'cs', we use 'cz')
+    "hi": "in",  # Hindi (Telegram uses 'hi', we use 'in')
+    "uk": "ua",  # Ukrainian (Telegram uses 'uk', we use 'ua')
+    # Regional/fallback mappings
+    "ca": "es",  # Catalan -> Spanish
+    "kk": "ru",  # Kazakh -> Russian
+    "be": "ru",  # Belarusian -> Russian
+}
+
+
+def map_telegram_language(tg_lang_code: str | None) -> str:
+    """Map Telegram language_code to our UI language code
+
+    Args:
+        tg_lang_code: Telegram's language_code (e.g., 'en', 'ru', 'pt-br')
+
+    Returns:
+        str: Our UI language code (e.g., 'gb', 'ru', 'br') or 'gb' if not supported
+    """
+    if not tg_lang_code:
+        return "gb"
+
+    # Try exact match first
+    if tg_lang_code in TELEGRAM_TO_UI_LANG:
+        return TELEGRAM_TO_UI_LANG[tg_lang_code]
+
+    # Try lowercase match
+    tg_lang_lower = tg_lang_code.lower()
+    if tg_lang_lower in TELEGRAM_TO_UI_LANG:
+        return TELEGRAM_TO_UI_LANG[tg_lang_lower]
+
+    # Try base language (e.g., 'pt-BR' -> 'pt')
+    base_lang = tg_lang_lower.split("-")[0]
+    if base_lang in TELEGRAM_TO_UI_LANG:
+        return TELEGRAM_TO_UI_LANG[base_lang]
+
+    # Fallback to English
+    return "gb"
+
 
 def get_ui_language_display(lang_code: str) -> str:
     """Get display name for a UI language code

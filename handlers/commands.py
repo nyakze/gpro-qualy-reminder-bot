@@ -17,8 +17,10 @@ from notifications import (
     send_quali_notification,
     users_data,
     unblock_user,
+    set_user_ui_language,
+    set_user_language,
 )
-from utils import format_full_calendar
+from utils import format_full_calendar, map_telegram_language
 from handlers.admin_commands import format_user_link
 from . import router
 
@@ -69,16 +71,37 @@ async def cmd_start(message: Message, bot, state: FSMContext, i18n: I18nContext)
                         f"Failed to send new user notification to admin {admin_id}: {e}"
                     )
         from .callbacks.settings import build_ui_language_keyboard
+        from utils import get_ui_language_display
 
-        keyboard = build_ui_language_keyboard(
-            page=1, current_ui_lang="gb", i18n=None, onboarding=True
+        # Auto-detect language from Telegram's language_code
+        auto_ui_lang = map_telegram_language(message.from_user.language_code)
+
+        # Set the auto-detected language for the user
+        set_user_ui_language(user_id, auto_ui_lang)
+
+        # Map UI language to GPRO language (ua -> gb, others use same code)
+        auto_gpro_lang = "gb" if auto_ui_lang == "ua" else auto_ui_lang
+        set_user_language(user_id, auto_gpro_lang)
+
+        logger.info(
+            f"🆕 NEW user {user_id} auto-set language: UI={auto_ui_lang}, "
+            f"GPRO={auto_gpro_lang} (from Telegram: {message.from_user.language_code})"
         )
 
-        await message.answer(
-            i18n.get("start-welcome-onboarding"),
-            reply_markup=keyboard,
-            parse_mode="HTML",
-        )
+        # Send welcome message in auto-detected language
+        with i18n.use_locale(auto_ui_lang):
+            keyboard = build_ui_language_keyboard(
+                page=1, current_ui_lang=auto_ui_lang, i18n=i18n, onboarding=True
+            )
+
+            # Get language display name for the welcome message
+            lang_display = get_ui_language_display(auto_ui_lang)
+
+            await message.answer(
+                i18n.get("start-welcome-onboarding", language=lang_display),
+                reply_markup=keyboard,
+                parse_mode="HTML",
+            )
     else:
         logger.debug(f"👤 Existing user {user_id} used /start")
         keyboard = InlineKeyboardMarkup(

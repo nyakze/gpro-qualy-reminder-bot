@@ -2,7 +2,6 @@
 
 import logging
 import re
-from urllib.parse import quote
 from aiogram import Bot
 from aiogram.exceptions import TelegramForbiddenError
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton

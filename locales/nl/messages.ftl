@@ -9,6 +9,10 @@ start-welcome-new = 👋 <b>Welkom bij GPRO Bot!</b>
 
     🌍 <b>Selecteer je taal</b> (of sla over om Engels te gebruiken):
 
+start-welcome-onboarding = 👋 <b>Welkom bij GPRO Bot!</b>
+
+    Kies de bot-taal:
+
 start-welcome-existing = 🏁 GPRO Bot LIVE!
     /status - Volgende race
     /calendar - Volledig seizoen
@@ -426,12 +430,12 @@ feedback-notifications-reset = 🔄 <i>Notificaties gereset!</i>
 feedback-reenabled = 🔄 Opnieuw ingeschakeld!
 feedback-notifications-reenabled = 🔄 <i>Notificaties opnieuw ingeschakeld!</i>
 feedback-language-set = ✅ Taal ingesteld op { $language }
-feedback-language-reset = ✅ Taal gereset naar Engels
+feedback-language-reset = ✅ Taal gereset naar { $language }
 feedback-ui-language-set = ✅ Bot taal ingesteld op { $language }
 feedback-group-set = ✅ Groep ingesteld op { $group }
 feedback-custom-notif-set = ✅ { $message }
 feedback-custom-notif-disabled = ✅ Aangepaste notificatie { $slot } uitgeschakeld
-feedback-skip-language = ⏭️ Standaard taal gebruiken (Engels)
+feedback-skip-language = ⏭️ Automatisch gedetecteerde taal gebruiken: { $language }
 feedback-skip-group = ⏭️ Groep selectie overgeslagen
 feedback-welcome = ✅ Welkom aan boord!
 feedback-weather-sent = 🌤️ Weersverwachting verzonden!

@@ -9,6 +9,10 @@ start-welcome-new = 👋 <b>GPRO बॉट में आपका स्वा�
 
     🌍 <b>अपनी भाषा चुनें</b> (या अंग्रेजी उपयोग करने के लिए छोड़ दें):
 
+start-welcome-onboarding = 👋 <b>GPRO बॉट में आपका स्वागत है!</b>
+
+    अपनी बॉट भाषा चुनें:
+
 start-welcome-existing = 🏁 GPRO बॉट लाइव!
     /status - अगली रेस
     /calendar - पूरा सीज़न
@@ -426,12 +430,12 @@ feedback-notifications-reset = 🔄 <i>सूचनाएं रीसेट ह
 feedback-reenabled = 🔄 पुनः सक्षम!
 feedback-notifications-reenabled = 🔄 <i>सूचनाएं पुनः सक्षम हुईं!</i>
 feedback-language-set = ✅ भाषा { $language } पर सेट की गई
-feedback-language-reset = ✅ भाषा अंग्रेजी पर रीसेट की गई
+feedback-language-reset = ✅ भाषा { $language } पर रीसेट की गई
 feedback-ui-language-set = ✅ बॉट भाषा { $language } पर सेट की गई
 feedback-group-set = ✅ ग्रुप { $group } पर सेट किया गया
 feedback-custom-notif-set = ✅ { $message }
 feedback-custom-notif-disabled = ✅ कस्टम सूचना { $slot } अक्षम की गई
-feedback-skip-language = ⏭️ डिफ़ॉल्ट भाषा का उपयोग किया जा रहा है (अंग्रेजी)
+feedback-skip-language = ⏭️ ऑटो-डिटेक्टेड भाषा का उपयोग किया जा रहा है: { $language }
 feedback-skip-group = ⏭️ ग्रुप चयन छोड़ दिया गया
 feedback-welcome = ✅ स्वागत है!
 feedback-weather-sent = 🌤️ मौसम पूर्वानुमान भेजा गया!

@@ -34,7 +34,6 @@ from .sender import (
     send_race_results_notification,
     send_quali_results_notification,
     send_new_season_reminder_notification,
-    QUALI_NOTIFICATION_TYPES,
 )
 
 logger = logging.getLogger(__name__)
