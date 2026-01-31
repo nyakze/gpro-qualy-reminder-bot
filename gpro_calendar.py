@@ -59,9 +59,9 @@ def get_race_time_in_utc(race_date: datetime) -> datetime:
     # Localize to CET/CEST (handles DST automatically)
     race_time_cet = race_time_cet.replace(tzinfo=GPRO_TIMEZONE)
 
-    # Convert to UTC and return as naive datetime (for consistency with existing code)
+    # Convert to UTC and return as timezone-aware datetime
     race_time_utc = race_time_cet.astimezone(ZoneInfo("UTC"))
-    return race_time_utc.replace(tzinfo=None)
+    return race_time_utc
 
 
 def _load_calendar_from_file(filepath: str) -> dict:
