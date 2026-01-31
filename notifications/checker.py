@@ -22,6 +22,7 @@ from gpro_calendar import (
 from .user_data import (
     users_data,
     is_notification_enabled,
+    is_user_blocked,
     load_users_data,
     save_users_data,
 )
@@ -722,6 +723,10 @@ async def _send_notifications_to_users(bot: Bot, notifications_to_send: list):
         if is_custom:
             if target_user_id is None:
                 logger.error(f"Custom notification missing user_id for race {race_id}")
+            elif is_user_blocked(target_user_id):
+                logger.debug(
+                    f"Skipping custom notification for blocked user {target_user_id}"
+                )
             else:
                 try:
                     await send_quali_notification(
@@ -739,6 +744,9 @@ async def _send_notifications_to_users(bot: Bot, notifications_to_send: list):
             # Regular notifications - send to all users with that notification enabled
             # Use list() to avoid "dictionary changed size during iteration" error
             for user_id in list(users_data):
+                # Skip blocked users
+                if is_user_blocked(user_id):
+                    continue
                 if is_notification_enabled(user_id, label):
                     try:
                         if notif_type == "quali" or notif_type == "opens":

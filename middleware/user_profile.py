@@ -5,7 +5,7 @@ from typing import Callable, Awaitable, Dict, Any
 from aiogram import BaseMiddleware
 from aiogram.types import Update
 
-from notifications import update_user_profile
+from notifications import update_user_profile, unblock_user
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +33,9 @@ class UserProfileMiddleware(BaseMiddleware):
             user = event.chosen_inline_result.from_user
 
         if user:
+            # Unblock user if they were previously blocked (they unblocked the bot)
+            unblock_user(user.id)
+
             update_user_profile(
                 user_id=user.id,
                 tg_language_code=user.language_code,

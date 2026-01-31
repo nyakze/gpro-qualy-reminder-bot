@@ -4,6 +4,7 @@ import logging
 import re
 from urllib.parse import quote
 from aiogram import Bot
+from aiogram.exceptions import TelegramForbiddenError
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime, timedelta, UTC
 from typing import Dict, List, Optional, Tuple
@@ -14,6 +15,7 @@ from .user_data import (
     get_user_status,
     DEFAULT_USER_LANG,
     get_snooze_count,
+    mark_user_blocked,
 )
 
 logger = logging.getLogger(__name__)
@@ -745,6 +747,9 @@ async def send_race_live_notification(
     try:
         await bot.send_message(user_id, message, parse_mode="HTML")
         logger.info(f"🏁 Sent race live notification to {user_id} for race {race_id}")
+    except TelegramForbiddenError:
+        mark_user_blocked(user_id)
+        logger.warning(f"🚫 User {user_id} blocked the bot (race live notification)")
     except Exception as e:
         logger.error(f"Race live notify {user_id} failed: {e}")
 
@@ -812,6 +817,9 @@ async def send_race_replay_notification(
     try:
         await bot.send_message(user_id, message, parse_mode="HTML")
         logger.info(f"📺 Sent race replay notification to {user_id} for race {race_id}")
+    except TelegramForbiddenError:
+        mark_user_blocked(user_id)
+        logger.warning(f"🚫 User {user_id} blocked the bot (race replay notification)")
     except Exception as e:
         logger.error(f"Race replay notify {user_id} failed: {e}")
 
@@ -888,6 +896,9 @@ async def send_race_results_notification(
         logger.info(
             f"📊 Sent race results notification to {user_id} for race {race_id}"
         )
+    except TelegramForbiddenError:
+        mark_user_blocked(user_id)
+        logger.warning(f"🚫 User {user_id} blocked the bot (race results notification)")
     except Exception as e:
         logger.error(f"Race results notify {user_id} failed: {e}")
 
@@ -956,6 +967,9 @@ async def send_quali_results_notification(
         logger.info(
             f"🏁 Sent quali results notification to {user_id} for race {race_id}"
         )
+    except TelegramForbiddenError:
+        mark_user_blocked(user_id)
+        logger.warning(f"🚫 User {user_id} blocked the bot (quali results notification)")
     except Exception as e:
         logger.error(f"Quali results notify {user_id} failed: {e}")
 
@@ -1006,6 +1020,9 @@ async def send_new_season_reminder_notification(
     try:
         await bot.send_message(user_id, message, parse_mode="HTML")
         logger.info(f"🌟 Sent new season reminder to {user_id} for race {race_id}")
+    except TelegramForbiddenError:
+        mark_user_blocked(user_id)
+        logger.warning(f"🚫 User {user_id} blocked the bot (new season reminder)")
     except Exception as e:
         logger.error(f"New season reminder to {user_id} failed: {e}")
 
@@ -1242,5 +1259,8 @@ async def send_quali_notification(
             user_id, message, reply_markup=keyboard, parse_mode="HTML"
         )
         logger.info(f"✅ Sent {notification_type} to {user_id} for race {race_id}")
+    except TelegramForbiddenError:
+        mark_user_blocked(user_id)
+        logger.warning(f"🚫 User {user_id} blocked the bot (quali notification)")
     except Exception as e:
         logger.error(f"Notify {user_id} failed: {e}")

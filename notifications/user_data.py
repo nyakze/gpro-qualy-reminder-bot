@@ -233,6 +233,10 @@ def get_user_status(user_id: int):
             users_data[user_id]["active_snoozes"] = {}
             logger.debug(f"Added 'active_snoozes' field to user {user_id}")
             needs_save = True
+        if "blocked_at" not in users_data[user_id]:
+            users_data[user_id]["blocked_at"] = None
+            logger.debug(f"Added 'blocked_at' field to user {user_id}")
+            needs_save = True
         if needs_save:
             save_users_data()
 
@@ -674,3 +678,68 @@ def reset_snooze_counts_for_deadline_passed(race_id: int, quali_close) -> None:
 
     save_users_data()
     logger.info(f"🔄 Reset snooze counts for all users after race {race_id} deadline")
+
+
+def mark_user_blocked(user_id: int) -> bool:
+    """Mark user as blocked by the bot
+
+    Called when TelegramForbiddenError is raised when sending a message.
+    Once blocked, user won't receive notifications until they unblock and
+    send /start again.
+
+    Args:
+        user_id: Telegram user ID
+
+    Returns:
+        bool: True if user was marked as blocked, False if already blocked or user not found
+    """
+    if user_id not in users_data:
+        return False
+
+    # Check if already blocked
+    if users_data[user_id].get("blocked_at") is not None:
+        return False
+
+    users_data[user_id]["blocked_at"] = datetime.now(UTC).isoformat()
+    save_users_data()
+    logger.info(f"🚫 User {user_id} marked as blocked (bot was blocked by user)")
+    return True
+
+
+def is_user_blocked(user_id: int) -> bool:
+    """Check if user has blocked the bot
+
+    Args:
+        user_id: Telegram user ID
+
+    Returns:
+        bool: True if user has blocked the bot, False otherwise
+    """
+    if user_id not in users_data:
+        return False
+
+    return users_data[user_id].get("blocked_at") is not None
+
+
+def unblock_user(user_id: int) -> bool:
+    """Unblock a user when they interact with the bot again
+
+    Called when user sends /start or any command after unblocking the bot.
+
+    Args:
+        user_id: Telegram user ID
+
+    Returns:
+        bool: True if user was unblocked, False if not blocked or user not found
+    """
+    if user_id not in users_data:
+        return False
+
+    # Check if actually blocked
+    if users_data[user_id].get("blocked_at") is None:
+        return False
+
+    users_data[user_id]["blocked_at"] = None
+    save_users_data()
+    logger.info(f"✅ User {user_id} unblocked (user interacted with bot again)")
+    return True

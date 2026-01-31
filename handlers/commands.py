@@ -16,6 +16,7 @@ from notifications import (
     get_user_status,
     send_quali_notification,
     users_data,
+    unblock_user,
 )
 from utils import format_full_calendar
 from handlers.admin_commands import format_user_link
@@ -29,6 +30,9 @@ async def cmd_start(message: Message, bot, state: FSMContext, i18n: I18nContext)
     user_id = message.from_user.id
 
     await state.clear()
+
+    # Unblock user if they were previously blocked (user unblocked the bot)
+    unblock_user(user_id)
 
     _, was_new = get_user_status(user_id)
 
