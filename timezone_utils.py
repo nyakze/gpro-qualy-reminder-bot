@@ -547,7 +547,7 @@ def format_datetime_for_user(
         tz_abbr = local_dt.tzname()
 
         # Return with timezone abbreviation
-        return f"{formatted} {tz_abbr}"
+        return f"{formatted} ({tz_abbr})"
     except Exception as e:
         logger.error(f"Failed to format datetime for user {user_id}: {e}")
         # Fallback to UTC
