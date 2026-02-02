@@ -112,6 +112,12 @@ def country_code_to_flag(country_code: str) -> str:
         return ""
 
 
+# Manual mappings for country names that pycountry doesn't recognize
+COUNTRY_NAME_MAPPINGS = {
+    "turkey": "TR",  # Officially "Türkiye" since 2022
+}
+
+
 def get_country_iso_code(country_name: str) -> str:
     """Automatically get ISO code for any country name using pycountry
 
@@ -120,6 +126,11 @@ def get_country_iso_code(country_name: str) -> str:
     """
     if not country_name:
         return ""
+
+    # Check manual mappings first (case-insensitive)
+    country_lower = country_name.lower()
+    if country_lower in COUNTRY_NAME_MAPPINGS:
+        return COUNTRY_NAME_MAPPINGS[country_lower]
 
     # Try exact match first
     try:
