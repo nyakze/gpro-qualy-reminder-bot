@@ -896,7 +896,7 @@ async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
                 except Exception as e:
                     logger.error(f"Error sending to user {user_id}: {e}")
 
-            # Mark as notified (snoozes are marked in user_data, others in notify_history)
+            # Mark as notified (snoozes are marked in both user_data AND notify_history)
             if ntype == "snooze":
                 # For snoozes, extract the snooze_id from history_key
                 # history_key format: (race_id, f"snooze_{snooze_id}")
@@ -910,6 +910,9 @@ async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
                         if snooze["id"] == snooze_id:
                             remove_active_snooze(snooze["user_id"], snooze_id)
                             break
+                # ALSO mark in notify_history to prevent duplicate firing
+                # (in case checker runs again before active_snoozes is saved)
+                _mark_notified(race_id, snooze_key)
             else:
                 _mark_notified(race_id, label)
 
