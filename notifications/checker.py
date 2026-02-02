@@ -604,8 +604,9 @@ def _check_snooze_reminders(now: datetime, races_closing: list) -> list:
                     display_label = f"⏰ {original_label} snooze"
 
                 # Include user_id as 6th element for targeted delivery
+                # Use original_label (not display_label) so sender can parse notification type
                 notifications.append(
-                    ("snooze", race_id, race_data, display_label, history_key, user_id)
+                    ("snooze", race_id, race_data, original_label, history_key, user_id)
                 )
                 logger.info(
                     f"Snooze reminder firing: user {user_id}, race {race_id}, snooze {snooze_id} "
