@@ -6,7 +6,7 @@ import logging
 import os
 import tempfile
 from datetime import datetime, timedelta, UTC
-from typing import Any, Dict, Tuple
+from typing import Dict, Tuple
 
 from aiogram import Bot
 
@@ -25,297 +25,150 @@ from .user_data import (
     is_notification_enabled,
     is_user_blocked,
     load_users_data,
-    save_users_data,
 )
 from .sender import (
-    send_quali_notification,
-    send_race_live_notification,
-    send_race_replay_notification,
-    send_race_results_notification,
-    send_quali_results_notification,
-    send_new_season_reminder_notification,
+    send_notification_to_user,
 )
+from infra.logging import log_structured
 
 logger = logging.getLogger(__name__)
 
-snooze_reminders = {}
+# Check intervals (adaptive based on race proximity)
+CHECK_INTERVAL_NORMAL_SECONDS = 5 * 60  # 5 minutes
+CHECK_INTERVAL_FAST_SECONDS = 60  # 1 minute (when approaching race time)
+CHECK_INTERVAL_CLOSING_HOURS = 3  # Switch to fast mode when within this many hours
 
-# Use absolute path for notify history file
-_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-NOTIFY_HISTORY_FILE = os.path.join(_SCRIPT_DIR, "notify_history.json")
-
-# Notification windows: (hours_before, tolerance_minutes, label)
-NOTIFICATION_WINDOWS = [
-    (48, 15, "48h"),  # 48h ±15min (wider tolerance for >36h notifications)
-    (24, 10, "24h"),  # 24h ±10min (optimized tolerance)
-    (2, 5, "2h"),  # 2h ±5min
-    (10 / 60, 2, "10min"),  # 10min ±2min
-]
-
-# Additional notification for Tuesday races (more time between races)
-TUESDAY_NOTIFICATION = (
-    72,
-    15,
-    "72h",
-)  # 72h ±15min (wider tolerance for far-advance notifications)
-
-# Timing constants
-CHECK_INTERVAL_NORMAL_SECONDS = 300  # 5 minutes between checks (normal)
-CHECK_INTERVAL_FAST_SECONDS = 60  # 1 minute between checks (when race approaching)
-RACE_PROXIMITY_THRESHOLD_MINUTES = 10  # Switch to fast checks when race is within 10min
-RACE_LIVE_NOTIFICATION_BEFORE_MINUTES = (
-    1  # Send race live notification up to 1min before race
-)
-RACE_LIVE_NOTIFICATION_AFTER_MINUTES = (
-    5  # Allow up to 5min after race start (just in case)
-)
-QUALI_RESULTS_NOTIFICATION_AFTER_MINUTES = (
-    10  # Send quali results notification up to 10min after quali closes
-)
-NOTIFICATION_HISTORY_RETENTION_HOURS = (
-    24  # Keep notification history for 24 hours (enough to prevent duplicates)
-)
-NOTIFICATION_HISTORY_MAX_ENTRIES = (
-    10000  # Maximum entries to prevent unbounded memory growth
-)
-
-# New season reminder timing - send 24 hours before race 1
-NEW_SEASON_REMINDER_HOURS_BEFORE = 24
-NEW_SEASON_REMINDER_TOLERANCE_MINUTES = 60  # ±1 hour tolerance
-
-# API polling configuration for quali opening detection
-API_CHECK_START_HOURS = 1.68  # Start checking API 1h41m (101 minutes) after race
-API_CHECK_END_HOURS = 3.5  # Stop checking and send fallback at 3.5 hours
-API_CHECK_INTERVAL_MINUTES = 10  # Check API every 10 minutes
-FALLBACK_TOLERANCE_MINUTES = 15  # Send fallback within 15min of reaching 3.5h
-
-# Custom notification tolerance
-CUSTOM_NOTIF_TOLERANCE_MIN = 5  # ±5 minutes tolerance for custom notifications
-
-# Snooze firing tolerance - how late a snooze notification can fire
-SNOOZE_TOLERANCE_SECONDS = (
-    120  # Fire snoozes up to 2min late (allows for checker processing time)
-)
+# API check constants for quali open notifications
+API_CHECK_START_HOURS = 2.0  # Start checking API 2 hours after race
+API_CHECK_END_HOURS = 3.5  # Fallback after 3.5 hours if API doesn't detect
+API_CHECK_INTERVAL_MINUTES = 10  # Rate limit: check API every 10 minutes max
+FALLBACK_TOLERANCE_MINUTES = 10  # Allow fallback within 10 minutes of window end
 
 # Season transition tracking
 last_season_transition_check = None
-last_prefetch_check = None
 SEASON_CHECK_INTERVAL_HOURS = 1  # Check season transition conditions every hour
+last_prefetch_check = None
 
+# Notification history retention
+NOTIFICATION_HISTORY_RETENTION_HOURS = 24 * 30  # 30 days
+MAX_HISTORY_SIZE = 10000  # Maximum entries to prevent unbounded growth
+
+# Module-level in-memory caches (lazy loaded)
+notify_history: Dict[Tuple[int, str], datetime] = {}
 notification_lock = asyncio.Lock()
-notify_history: Dict[Tuple[Any, ...], datetime] = (
-    {}
-)  # {(race_id, label) or (user_id, race_id, label): sent_timestamp}
-last_api_check_time = None  # Track last API check to limit calls
 
 
-def load_notify_history() -> Dict[Tuple[Any, ...], datetime]:
-    """Load notification history from JSON file
+def _enforce_history_size_limit(
+    history: Dict[Tuple[int, str], datetime],
+) -> Dict[Tuple[int, str], datetime]:
+    """Enforce size limit on notification history to prevent memory leaks
 
-    Returns:
-        Dict with history keys and datetime values
+    If history exceeds MAX_HISTORY_SIZE, remove oldest entries.
     """
-    history = {}
-    if os.path.exists(NOTIFY_HISTORY_FILE):
+    if len(history) <= MAX_HISTORY_SIZE:
+        return history
+
+    # Sort by timestamp and keep most recent entries
+    sorted_items = sorted(history.items(), key=lambda x: x[1], reverse=True)
+    trimmed_history = dict(sorted_items[:MAX_HISTORY_SIZE])
+
+    removed_count = len(history) - len(trimmed_history)
+    logger.warning(
+        f"Notification history exceeded limit ({len(history)} > {MAX_HISTORY_SIZE}), "
+        f"removed {removed_count} oldest entries"
+    )
+
+    return trimmed_history
+
+
+def _get_history_file_path() -> str:
+    """Get the path for the notification history file"""
+    return os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "notification_history.json",
+    )
+
+
+def load_notify_history() -> Dict[Tuple[int, str], datetime]:
+    """Load notification history from file"""
+    history_file = _get_history_file_path()
+    history: Dict[Tuple[int, str], datetime] = {}
+
+    if os.path.exists(history_file):
         try:
-            with open(NOTIFY_HISTORY_FILE, "r") as f:
-                raw_data = json.load(f)
-                for key_list, timestamp_str in raw_data.items():
-                    try:
-                        key = tuple(
-                            int(k) if k.isdigit() else k for k in key_list.split(",")
-                        )
-                        history[key] = datetime.fromisoformat(timestamp_str).replace(tzinfo=UTC)
-                    except (ValueError, KeyError):
-                        continue
-            logger.debug(f"✅ Loaded {len(history)} notification history entries")
-        except Exception as e:
-            logger.error(f"Failed to load notify_history: {e}")
+            with open(history_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                # Convert from JSON format: list of [race_id, label, timestamp]
+                for item in data:
+                    if len(item) == 3:
+                        race_id, label, timestamp_str = item
+                        try:
+                            history[(int(race_id), label)] = datetime.fromisoformat(
+                                timestamp_str
+                            )
+                        except (ValueError, TypeError):
+                            continue
+            logger.info(f"✅ Loaded {len(history)} notification history entries")
+        except (json.JSONDecodeError, IOError, OSError) as e:
+            logger.error(f"Failed to load notification history: {e}")
+
     return history
 
 
-def _enforce_history_size_limit(history: Dict[Tuple[Any, ...], datetime]) -> Dict[Tuple[Any, ...], datetime]:
-    """Enforce maximum size limit on notification history
+def save_notify_history() -> None:
+    """Save notification history to file"""
+    history_file = _get_history_file_path()
 
-    If history exceeds max entries, remove oldest entries first.
-
-    Args:
-        history: Notification history dict
-
-    Returns:
-        Dict with size limited history
-    """
-    if len(history) <= NOTIFICATION_HISTORY_MAX_ENTRIES:
-        return history
-
-    # Sort by timestamp (oldest first) and keep only the newest entries
-    sorted_items = sorted(history.items(), key=lambda x: x[1], reverse=True)
-    trimmed = dict(sorted_items[:NOTIFICATION_HISTORY_MAX_ENTRIES])
-
-    logger.warning(
-        f"🧹 Trimmed notify_history from {len(history)} to {len(trimmed)} entries (size limit)"
-    )
-    return trimmed
-
-
-def save_notify_history(history: Dict[Tuple[Any, ...], datetime]) -> None:
-    """Save notification history to JSON file with atomic write
-
-    Also cleans old entries (older than retention period) before saving.
-
-    Args:
-        history keys and datetime history: Dict with values
-    """
-    temp_file = None
     try:
-        # Clean old entries before saving
-        now = datetime.now(UTC)
-        cutoff = now - timedelta(hours=NOTIFICATION_HISTORY_RETENTION_HOURS)
-        history = {k: v for k, v in history.items() if v > cutoff}
+        # Convert to JSON-serializable format: list of [race_id, label, timestamp]
+        data = [
+            [race_id, label, timestamp.isoformat()]
+            for (race_id, label), timestamp in notify_history.items()
+        ]
 
-        # Enforce size limit to prevent unbounded growth
-        history = _enforce_history_size_limit(history)
-
-        # Convert keys and values to JSON-serializable format
-        save_data = {}
-        for key, timestamp in history.items():
-            key_str = ",".join(str(k) for k in key)
-            save_data[key_str] = timestamp.isoformat()
-
-        # Use unique temp file to avoid race conditions
-        fd, temp_file = tempfile.mkstemp(
-            dir=os.path.dirname(NOTIFY_HISTORY_FILE), suffix=".tmp"
+        # Atomic write
+        fd, temp_path = tempfile.mkstemp(
+            dir=os.path.dirname(history_file), suffix=".tmp"
         )
         try:
-            with os.fdopen(fd, "w") as f:
-                json.dump(save_data, f, indent=2)
-                f.flush()
-                os.fsync(f.fileno())
-            os.replace(temp_file, NOTIFY_HISTORY_FILE)
-            logger.debug(f"Saved {len(history)} notification history entries")
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2)
+            os.replace(temp_path, history_file)
         except Exception:
-            # Close the fd if it wasn't closed by os.fdopen
-            try:
-                os.close(fd)
-            except (OSError, ValueError):
-                pass
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
             raise
-    except Exception as e:
-        logger.error(f"Failed to save notify_history: {e}")
-    finally:
-        # Clean up temp file if it still exists
-        if temp_file and os.path.exists(temp_file):
-            try:
-                os.remove(temp_file)
-            except Exception:
-                pass
+
+        logger.debug(f"Saved {len(data)} notification history entries")
+    except (IOError, OSError) as e:
+        logger.error(f"Failed to save notification history: {e}")
 
 
-def _is_tuesday_race(race_data: dict) -> bool:
-    """Check if a race is on Tuesday (weekday 1)
+def _is_already_notified(race_id: int, label: str) -> bool:
+    """Check if a notification was already sent (with history cleanup)"""
+    global notify_history
 
-    Args:
-        race_data: Race data dict with 'date' field
+    history_key = (race_id, label)
+    if history_key not in notify_history:
+        return False
 
-    Returns:
-        bool: True if race is on Tuesday
-    """
-    race_date = race_data["date"]
-    return race_date.weekday() == 1  # 0=Monday, 1=Tuesday, etc.
+    # Check if entry is older than retention period
+    cutoff = datetime.now(UTC) - timedelta(hours=NOTIFICATION_HISTORY_RETENTION_HOURS)
+    if notify_history[history_key] < cutoff:
+        # Clean up old entry
+        del notify_history[history_key]
+        return False
 
-
-def _check_quali_closing_notifications(now: datetime, races_closing: dict) -> list:
-    """Check for races with qualifying closing soon
-
-    Args:
-        now: Current datetime
-        races_closing: Pre-fetched dict of upcoming races
-
-    Returns:
-        list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
-    """
-    notifications = []
-
-    for race_id, race_data in races_closing.items():
-        quali_close = race_data["quali_close"]
-
-        # Check each preset notification window
-        for hours_before, tolerance_min, label in NOTIFICATION_WINDOWS:
-            time_until = (quali_close - now).total_seconds() / 3600
-            target_hours = hours_before
-            tolerance_hours = tolerance_min / 60
-
-            # Check if we're in the notification window
-            if abs(time_until - target_hours) <= tolerance_hours:
-                history_key = (race_id, label)
-
-                # Only send if not sent before
-                if history_key not in notify_history:
-                    notifications.append(
-                        ("quali", race_id, race_data, label, history_key)
-                    )
-
-        # Check 72h notification for Tuesday races only
-        if _is_tuesday_race(race_data):
-            hours_before, tolerance_min, label = TUESDAY_NOTIFICATION
-            time_until = (quali_close - now).total_seconds() / 3600
-            target_hours = hours_before
-            tolerance_hours = tolerance_min / 60
-
-            if abs(time_until - target_hours) <= tolerance_hours:
-                history_key = (race_id, label)
-
-                if history_key not in notify_history:
-                    notifications.append(
-                        ("quali", race_id, race_data, label, history_key)
-                    )
-
-    return notifications
+    return True
 
 
-def _check_custom_notifications(now: datetime, races_closing: dict) -> list:
-    """Check for custom notification times
+def _mark_notified(race_id: int, label: str) -> None:
+    """Mark a notification as sent with current timestamp"""
+    global notify_history
+    notify_history[(race_id, label)] = datetime.now(UTC)
 
-    Args:
-        now: Current datetime
-        races_closing: Pre-fetched dict of upcoming races
-
-    Returns:
-        list: Notifications to send [(type, race_id, race_data, label, history_key, user_id), ...]
-    """
-    notifications = []
-
-    # Check each user's custom notifications
-    for user_id, user_data in users_data.items():
-        custom_notifs = user_data.get("custom_notifications", [])
-
-        for slot_idx, custom_notif in enumerate(custom_notifs):
-            if not custom_notif.get("enabled", False):
-                continue
-
-            hours_before = custom_notif.get("hours_before")
-            if hours_before is None:
-                continue
-
-            # Check each race
-            for race_id, race_data in races_closing.items():
-                quali_close = race_data["quali_close"]
-                time_until = (quali_close - now).total_seconds() / 3600
-
-                # Check if we're within the custom notification window
-                tolerance_hours = CUSTOM_NOTIF_TOLERANCE_MIN / 60
-                if abs(time_until - hours_before) <= tolerance_hours:
-                    # Create unique history key for this user+race+custom slot
-                    label = f"custom_{slot_idx+1}"
-                    history_key = (user_id, race_id, label)
-
-                    # Only send if not sent before
-                    if history_key not in notify_history:
-                        notifications.append(
-                            ("custom", race_id, race_data, label, history_key, user_id)
-                        )
-
-    return notifications
+    # Enforce size limit
+    notify_history = _enforce_history_size_limit(notify_history)
 
 
 async def _fetch_weather_with_retry(race_id: int) -> None:
@@ -324,54 +177,106 @@ async def _fetch_weather_with_retry(race_id: int) -> None:
     Args:
         race_id: The race ID to fetch weather for
     """
+    # Skip if already fetched
     if "weather" in race_calendar[race_id]:
-        logger.debug(f"Weather data already cached for race {race_id}")
         return
 
+    # First attempt
     weather_data = await fetch_weather_from_api(race_id)
 
     # Retry once if failed
     if not weather_data:
-        logger.warning(f"Weather fetch failed for race {race_id}, retrying in 5s...")
-        await asyncio.sleep(5)
+        logger.warning(f"First weather fetch failed for race {race_id}, retrying...")
+        await asyncio.sleep(2)
         weather_data = await fetch_weather_from_api(race_id)
 
         if not weather_data:
-            logger.error(f"Weather fetch failed after retry for race {race_id}")
+            logger.warning(f"Weather fetch failed for race {race_id} after retry")
+
+
+def _check_quali_closing_notifications(now: datetime, races_closing: list) -> list:
+    """Check for qualification deadlines approaching
+
+    Returns:
+        list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
+    """
+    notifications = []
+
+    for hours_remaining, race_id, race_data in races_closing:
+        # Determine notification label based on time remaining
+        if hours_remaining <= 0.17:  # ~10 minutes
+            label = "10min"
+        elif hours_remaining <= 2:
+            label = "2h"
+        elif hours_remaining <= 24:
+            label = "24h"
+        elif hours_remaining <= 48:
+            label = "48h"
+        elif hours_remaining <= 72:
+            label = "72h"
         else:
-            logger.info(f"Weather fetch succeeded on retry for race {race_id}")
+            continue
+
+        # Check already notified
+        if _is_already_notified(race_id, label):
+            continue
+
+        history_key = (race_id, label)
+        notifications.append(("closing", race_id, race_data, label, history_key))
+
+    return notifications
 
 
-def _add_replay_and_results_notifications(
-    notifications: list, prev_race_id: int
-) -> None:
-    """Add replay and results notifications for a previous race
+def _get_next_check_interval(now: datetime) -> int:
+    """Determine the next check interval based on race proximity
+
+    Uses fast mode (60s) when approaching race time, normal mode (5min) otherwise.
 
     Args:
-        notifications: List to append notifications to
-        prev_race_id: ID of the previous race
-    """
-    # Add race replay notification
-    replay_history_key = (prev_race_id, "race_replay")
-    if replay_history_key not in notify_history:
-        prev_race_data = race_calendar[prev_race_id]
-        notifications.append(
-            ("replay", prev_race_id, prev_race_data, "race_replay", replay_history_key)
-        )
+        now: Current datetime
 
-    # Add race results notification
-    results_history_key = (prev_race_id, "race_results")
-    if results_history_key not in notify_history:
-        prev_race_data = race_calendar[prev_race_id]
-        notifications.append(
-            (
-                "results",
-                prev_race_id,
-                prev_race_data,
-                "race_results",
-                results_history_key,
-            )
-        )
+    Returns:
+        int: Seconds to wait before next check
+    """
+    from notifications.user_data import get_all_active_snoozes
+
+    # Check if any snoozes are within 10 minutes of firing
+    active_snoozes = get_all_active_snoozes()
+    for snooze in active_snoozes:
+        snooze_time = datetime.fromisoformat(snooze["snooze_time"])
+        minutes_until = (snooze_time - now).total_seconds() / 60
+
+        # If snooze is within 10 minutes (and hasn't passed), use fast mode
+        if 0 < minutes_until <= 10:
+            return CHECK_INTERVAL_FAST_SECONDS
+
+    # Check if any race is closing within the threshold
+    for race_id, race_data in race_calendar.items():
+        quali_close = race_data["quali_close"]
+        hours_until = (quali_close - now).total_seconds() / 3600
+
+        if 0 < hours_until <= CHECK_INTERVAL_CLOSING_HOURS:
+            return CHECK_INTERVAL_FAST_SECONDS
+
+    # Check if any qualification just opened (within last 4 hours)
+    for race_id, race_data in race_calendar.items():
+        # Skip race 1 - no previous race
+        if race_id == 1:
+            continue
+
+        # Get previous race end time
+        prev_race_id = race_id - 1
+        if prev_race_id not in race_calendar:
+            continue
+
+        prev_race_time = race_calendar[prev_race_id]["date"]
+        hours_since = (now - prev_race_time).total_seconds() / 3600
+
+        # If within 4 hours of previous race ending, we're in quali open window
+        if 0 <= hours_since <= 4:
+            return CHECK_INTERVAL_FAST_SECONDS
+
+    return CHECK_INTERVAL_NORMAL_SECONDS
 
 
 def _get_races_for_polling(now: datetime) -> list:
@@ -523,36 +428,52 @@ async def _check_quali_open_notifications(now: datetime) -> list:
     return notifications
 
 
-def _check_race_live_notifications(now: datetime) -> list:
-    """Check for races that are about to start or just started
+def _add_replay_and_results_notifications(
+    notifications: list, prev_race_id: int
+) -> None:
+    """Add replay and results notifications for the previous race if not already sent
 
-    Returns:
-        list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
+    These are time-independent - they should be sent once when the next quali opens,
+    regardless of when the previous race finished.
+
+    Args:
+        notifications: List to append notifications to
+        prev_race_id: The previous race ID
     """
-    notifications = []
+    if prev_race_id in race_calendar:
+        prev_race_data = race_calendar[prev_race_id]
 
-    for race_id, race_data in race_calendar.items():
-        race_time = race_data["date"]
-        time_since_race = (now - race_time).total_seconds() / 60
-
-        # Send if we're within window: 5min before to 2min after race starts
-        # This ensures notification is sent early (at 18:55 check for 19:00 race)
-        if (
-            -RACE_LIVE_NOTIFICATION_BEFORE_MINUTES
-            <= time_since_race
-            <= RACE_LIVE_NOTIFICATION_AFTER_MINUTES
-        ):
-            history_key = (race_id, "race_live")
-            if history_key not in notify_history:
-                notifications.append(
-                    ("live", race_id, race_data, "race_live", history_key)
+        # Add race replay notification
+        replay_history_key = (prev_race_id, "race_replay")
+        if replay_history_key not in notify_history:
+            notifications.append(
+                (
+                    "replay",
+                    prev_race_id,
+                    prev_race_data,
+                    "race_replay",
+                    replay_history_key,
                 )
+            )
 
-    return notifications
+        # Add race results notification
+        results_history_key = (prev_race_id, "race_results")
+        if results_history_key not in notify_history:
+            notifications.append(
+                (
+                    "results",
+                    prev_race_id,
+                    prev_race_data,
+                    "race_results",
+                    results_history_key,
+                )
+            )
 
 
 def _check_quali_results_notifications(now: datetime) -> list:
-    """Check for qualifying results that should be sent after quali deadline
+    """Check for qualification results notifications
+
+    Sends when 5 minutes have passed since quali close (time for GPRO to process results).
 
     Returns:
         list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
@@ -561,20 +482,28 @@ def _check_quali_results_notifications(now: datetime) -> list:
 
     for race_id, race_data in race_calendar.items():
         quali_close = race_data["quali_close"]
-        time_since_quali_close = (now - quali_close).total_seconds() / 60
+        history_key = (race_id, "race_results")
 
-        if 0 <= time_since_quali_close <= QUALI_RESULTS_NOTIFICATION_AFTER_MINUTES:
-            history_key = (race_id, "quali_results")
-            if history_key not in notify_history:
-                notifications.append(
-                    ("quali_results", race_id, race_data, "quali_results", history_key)
-                )
+        # Skip if already notified
+        if history_key in notify_history:
+            continue
+
+        # Check if quali closed 5+ minutes ago (time for GPRO to process results)
+        minutes_since_close = (now - quali_close).total_seconds() / 60
+
+        # Only notify if quali has been closed for at least 5 minutes
+        if minutes_since_close >= 5:
+            notifications.append(
+                ("results", race_id, race_data, "race_results", history_key)
+            )
 
     return notifications
 
 
-def _check_new_season_reminder_notifications(now: datetime) -> list:
-    """Check for new season reminder notifications before race 1
+def _check_race_live_notifications(now: datetime) -> list:
+    """Check for race live notifications
+
+    Sends at race start time.
 
     Returns:
         list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
@@ -582,314 +511,152 @@ def _check_new_season_reminder_notifications(now: datetime) -> list:
     notifications = []
 
     for race_id, race_data in race_calendar.items():
-        if race_id != 1:
-            continue
-
         race_time = race_data["date"]
-        hours_until_race = (race_time - now).total_seconds() / 3600
-        tolerance_hours = NEW_SEASON_REMINDER_TOLERANCE_MINUTES / 60
+        history_key = (race_id, "race_live")
 
-        history_key = ("season", race_id, "new_season_reminder")
+        # Skip if already notified
         if history_key in notify_history:
             continue
 
-        # Check if we're in the notification window (24h ± 1h before race)
-        if abs(hours_until_race - NEW_SEASON_REMINDER_HOURS_BEFORE) <= tolerance_hours:
+        # Check if race is starting now (within 1 minute window)
+        seconds_until = (race_time - now).total_seconds()
+
+        # Race starts when seconds_until is around 0 (within 60s tolerance)
+        if -60 <= seconds_until <= 60:
+            notifications.append(("live", race_id, race_data, "race_live", history_key))
+
+    return notifications
+
+
+def _check_custom_notifications(now: datetime, races_closing: list) -> list:
+    """Check for custom user-defined notifications
+
+    Returns:
+        list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
+    """
+    notifications = []
+
+    for hours_remaining, race_id, race_data in races_closing:
+        # Check custom_1 (8h)
+        custom_1_key = (race_id, "custom_1")
+        if custom_1_key not in notify_history and hours_remaining <= 8:
             notifications.append(
-                ("new_season", race_id, race_data, "new_season_reminder", history_key)
+                ("closing", race_id, race_data, "custom_1", custom_1_key)
+            )
+
+        # Check custom_2 (12h)
+        custom_2_key = (race_id, "custom_2")
+        if custom_2_key not in notify_history and hours_remaining <= 12:
+            notifications.append(
+                ("closing", race_id, race_data, "custom_2", custom_2_key)
             )
 
     return notifications
 
 
-def _check_snooze_reminders(now: datetime, races_closing: dict) -> list:
-    """Check for expired snooze reminders and return notifications to send
+def _check_snooze_reminders(now: datetime, races_closing: list) -> list:
+    """Check for snooze reminders that need to be sent
+
+    Snoozes fire up to 2 minutes late (within tolerance window).
 
     Args:
         now: Current datetime
-        races_closing: Pre-fetched dict of upcoming races
+        races_closing: List of races closing soon (to associate with snoozes)
 
     Returns:
-        list: Notifications to send [(type, race_id, race_data, label, history_key, user_id), ...]
+        list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
     """
-    from .user_data import get_all_snooze_reminders, remove_snooze_reminder
+    from notifications.user_data import get_all_active_snoozes, SNOOZE_TOLERANCE_SECONDS
 
     notifications = []
+    active_snoozes = get_all_active_snoozes()
 
-    # Get ALL active snooze reminders (including past ones that need cleanup)
-    all_reminders = get_all_snooze_reminders()
+    # Build lookup for race data
+    race_lookup = {race_id: race_data for _, race_id, race_data in races_closing}
+    # Also include all races in calendar for complete lookup
+    race_lookup.update(race_calendar)
 
-    logger.debug(f"🔔 Snooze checker: {len(all_reminders)} active snoozes")
+    for snooze in active_snoozes:
+        snooze_time = datetime.fromisoformat(snooze["snooze_time"])
+        seconds_until = (snooze_time - now).total_seconds()
 
-    if not all_reminders:
-        return notifications
+        # Snooze fires if we're within tolerance window (slightly early or up to 2 min late)
+        if -SNOOZE_TOLERANCE_SECONDS <= seconds_until <= SNOOZE_TOLERANCE_SECONDS:
+            race_id = snooze["race_id"]
+            snooze_id = snooze["id"]
+            original_label = snooze.get("original_label", "deadline")
 
-    for user_id, race_id, until, notification_type in all_reminders:
-        time_diff = (until - now).total_seconds()
-        logger.debug(
-            f"🔔 Check snooze: user={user_id}, race={race_id}, type={notification_type}, until={until}, now={now}, diff={time_diff:.1f}s"
-        )
-
-        if race_id not in races_closing:
-            logger.debug(f"🔔 Race {race_id} not in races_closing, removing snooze")
-            remove_snooze_reminder(user_id, race_id, notification_type)
-            continue
-
-        race_data = races_closing[race_id]
-
-        if now >= until:
-            seconds_late = (now - until).total_seconds()
-
-            if seconds_late > SNOOZE_TOLERANCE_SECONDS:
-                logger.debug(
-                    f"🔔 Snooze missed tolerance (late by {seconds_late:.1f}s > {SNOOZE_TOLERANCE_SECONDS}s), removing: user {user_id}, race {race_id}"
-                )
-                from .user_data import remove_snooze_reminder_by_time
-
-                remove_snooze_reminder_by_time(
-                    user_id, race_id, notification_type, until
-                )
+            # Get race data
+            race_data = race_lookup.get(race_id)
+            if not race_data:
                 continue
 
-            label = f"snooze_{notification_type}"
-            history_key = (user_id, race_id, label, until.isoformat())
-            minutes_late = seconds_late / 60
+            # Unique history key for this specific snooze instance
+            history_key = (race_id, f"snooze_{snooze_id}")
 
+            # Only send if not already notified for this snooze
             if history_key not in notify_history:
-                user_status = users_data.get(user_id, {})
-                if user_status.get("completed_quali") == race_id:
-                    logger.debug(
-                        f"🔔 Snooze skipped: user {user_id} already marked race {race_id} as done"
-                    )
-                    from .user_data import remove_snooze_reminder_by_time
+                # Convert original label to user-friendly format
+                if original_label == "deadline":
+                    display_label = "⏰ Deadline snooze"
+                else:
+                    display_label = f"⏰ {original_label} snooze"
 
-                    remove_snooze_reminder_by_time(
-                        user_id, race_id, notification_type, until
-                    )
-                    continue
-
-                logger.info(
-                    f"🔔 Snooze FIRING (late by {minutes_late:.1f}min): user {user_id}, race {race_id}, type {notification_type}"
-                )
                 notifications.append(
-                    (
-                        "snooze",
-                        race_id,
-                        race_data,
-                        label,
-                        history_key,
-                        user_id,
-                    )
+                    ("snooze", race_id, race_data, display_label, history_key)
                 )
-            else:
-                logger.debug(
-                    f"🔔 Snooze already sent (in history): user {user_id}, race {race_id}"
+                logger.info(
+                    f"Snooze reminder firing: race {race_id} snooze {snooze_id} "
+                    f"(scheduled: {snooze_time}, now: {now})"
                 )
 
-            from .user_data import remove_snooze_reminder_by_time
-
-            remove_snooze_reminder_by_time(user_id, race_id, notification_type, until)
-            logger.debug(
-                f"🔔 Snooze removed: user {user_id}, race {race_id}, until {until}"
-            )
-        else:
-            time_until = (until - now).total_seconds() / 60
-            logger.debug(
-                f"🔔 Snooze pending: user {user_id}, race {race_id}, fires in {time_until:.1f}min (at {until})"
-            )
-
-    logger.debug(f"🔔 Snooze checker returning {len(notifications)} notifications")
     return notifications
 
 
 def _reset_snooze_counts_for_past_deadlines(now: datetime) -> None:
-    """Reset snooze counts when all race quali deadlines have passed
+    """Reset snooze counts for races whose deadlines have passed
 
-    Args:
-        now: Current datetime
+    This allows snoozes to work again for the next occurrence of similar notifications.
     """
-    from .user_data import get_default_snooze_tracking
+    from notifications.user_data import (
+        users_data,
+        SNOOZE_MAX_COUNTS,
+        reset_snooze_count,
+    )
 
-    reset_count = 0
-
-    # Check if any race has an upcoming or current quali deadline
-    # If all races have passed their quali_close, we should reset snooze counts
-    has_upcoming_quali = False
     for race_id, race_data in race_calendar.items():
-        quali_close = race_data.get("quali_close")
-        if quali_close and now < quali_close:
-            has_upcoming_quali = True
-            break
+        quali_close = race_data["quali_close"]
 
-    # If no upcoming quali deadlines, reset all users' snooze tracking
-    if not has_upcoming_quali and race_calendar:
-        for user_id, user_data in users_data.items():
-            if "snooze_tracking" not in user_data:
-                continue
-
-            # Check if user has any non-zero snooze counts
-            snooze_tracking = user_data["snooze_tracking"]
-            if any(count > 0 for count in snooze_tracking.values()):
-                user_data["snooze_tracking"] = get_default_snooze_tracking()
-                reset_count += 1
-
-    if reset_count > 0:
-        logger.debug(
-            f"🔔 Reset snooze counts for {reset_count} users (all deadlines passed)"
-        )
-        save_users_data()
-
-
-async def _send_notifications_to_users(bot: Bot, notifications_to_send: list):
-    """Send notifications to all eligible users
-
-    Args:
-        bot: Telegram bot instance
-        notifications_to_send: List of notifications [(type, race_id, race_data, label, history_key, [user_id]), ...]
-    """
-    for notification_data in notifications_to_send:
-        # Handle both formats: regular (5 items) and custom (6 items with user_id)
-        if len(notification_data) == 6:
-            notif_type, race_id, race_data, label, history_key, target_user_id = (
-                notification_data
-            )
-            is_custom = True
-        else:
-            notif_type, race_id, race_data, label, history_key = notification_data
-            target_user_id = None
-            is_custom = False
-
-        logger.info(f"🔔 Sending {label} notification for race {race_id}")
-        sent_count = 0
-        total_users = len(users_data)
-
-        # For custom notifications, send to specific user only
-        if is_custom:
-            if target_user_id is None:
-                logger.error(f"Custom notification missing user_id for race {race_id}")
-            elif is_user_blocked(target_user_id):
-                logger.debug(
-                    f"Skipping custom notification for blocked user {target_user_id}"
-                )
-            else:
-                try:
-                    await send_quali_notification(
-                        bot, target_user_id, race_id, race_data, label
-                    )
-                    sent_count = 1
-                    logger.info(
-                        f"✅ Sent custom notification ({label}) for race {race_id} to user {target_user_id}"
-                    )
-                except Exception as e:
-                    logger.error(
-                        f"Failed to send custom {label} to user {target_user_id}: {e}"
-                    )
-        else:
-            # Regular notifications - send to all users with that notification enabled
-            # Use list() to avoid "dictionary changed size during iteration" error
-            for user_id in list(users_data):
-                # Skip blocked users
-                if is_user_blocked(user_id):
+        # If quali closed more than 1 hour ago, reset snooze counts
+        if now > quali_close + timedelta(hours=1):
+            for user_id_str in users_data:
+                user_data = users_data[user_id_str]
+                if "snooze_counts" not in user_data:
                     continue
-                if is_notification_enabled(user_id, label):
-                    try:
-                        if notif_type == "quali" or notif_type == "opens":
-                            await send_quali_notification(
-                                bot, user_id, race_id, race_data, label
-                            )
-                        elif notif_type == "replay":
-                            await send_race_replay_notification(
-                                bot, user_id, race_id, race_data
-                            )
-                        elif notif_type == "live":
-                            await send_race_live_notification(
-                                bot, user_id, race_id, race_data
-                            )
-                        elif notif_type == "results":
-                            await send_race_results_notification(
-                                bot, user_id, race_id, race_data
-                            )
-                        elif notif_type == "quali_results":
-                            await send_quali_results_notification(
-                                bot, user_id, race_id, race_data
-                            )
-                        elif notif_type == "new_season":
-                            await send_new_season_reminder_notification(
-                                bot, user_id, race_id, race_data
-                            )
-                        sent_count += 1
-                    except Exception as e:
-                        logger.error(f"Failed to send {label} to user {user_id}: {e}")
 
-            logger.info(
-                f"✅ Sent {label} for race {race_id} to {sent_count}/{total_users} users"
-            )
-
-        # Update history after sending (re-acquire lock briefly)
-        async with notification_lock:
-            notify_history[history_key] = datetime.now(UTC)
-            save_notify_history(notify_history)
-
-
-def _get_next_check_interval(now: datetime) -> int:
-    """Determine next check interval based on proximity to upcoming races or active snoozes
-
-    Returns faster checks when race is approaching or when there are pending snoozes
-    for better timing precision.
-
-    Returns:
-        int: Seconds until next check
-    """
-    from .user_data import get_all_snooze_reminders
-
-    # Check if any race is approaching
-    for race_id, race_data in race_calendar.items():
-        race_time = race_data["date"]
-        minutes_until_race = (race_time - now).total_seconds() / 60
-
-        # If race is within threshold, use fast checking
-        if (
-            -RACE_LIVE_NOTIFICATION_AFTER_MINUTES
-            <= minutes_until_race
-            <= RACE_PROXIMITY_THRESHOLD_MINUTES
-        ):
-            logger.debug(
-                f"🔔 Checker: race approaching in {minutes_until_race:.1f}min, using fast interval"
-            )
-            return CHECK_INTERVAL_FAST_SECONDS
-
-    # Check if there are any active snooze reminders that will fire soon
-    active_snoozes = get_all_snooze_reminders()
-    if active_snoozes:
-        now = datetime.now(UTC)
-        soonest_snooze = min(until for _, _, until, _ in active_snoozes)
-        minutes_until_snooze = (soonest_snooze - now).total_seconds() / 60
-
-        logger.debug(
-            f"🔔 Checker: {len(active_snoozes)} active snooze(s), soonest in {minutes_until_snooze:.1f}min"
-        )
-
-        # If snooze is within 10 minutes, use fast checking
-        if minutes_until_snooze <= 10:
-            logger.debug("🔔 Checker: snooze within 10min, using fast interval")
-            return CHECK_INTERVAL_FAST_SECONDS
-
-    # Default to normal interval
-    return CHECK_INTERVAL_NORMAL_SECONDS
+                snooze_counts = user_data["snooze_counts"]
+                for label in SNOOZE_MAX_COUNTS.keys():
+                    count_key = f"{race_id}_{label}"
+                    if count_key in snooze_counts and snooze_counts[count_key] > 0:
+                        reset_snooze_count(int(user_id_str), race_id, label)
 
 
 def _cleanup_completed_quali_for_all_users() -> None:
-    """Reset completed_quali to None for all users
+    """Clean up completed quali data for all users after season transition.
 
     This is called during season transition to clean up old quali data.
     """
-    logger.info("🧹 Cleaning up completed_quali for all users...")
+    from notifications.user_data import users_data, save_users_data
 
-    for user_id in users_data:
-        users_data[user_id]["completed_quali"] = None
+    cleaned_count = 0
+    for user_id, user_data in users_data.items():
+        if "completed_quali" in user_data:
+            del user_data["completed_quali"]
+            cleaned_count += 1
 
-    save_users_data()
-    logger.info(f"✅ Cleaned completed_quali for {len(users_data)} users")
+    if cleaned_count > 0:
+        save_users_data()
+        logger.info(f"Cleaned up completed_quali data for {cleaned_count} users")
 
 
 async def _check_season_transition(now: datetime) -> None:
@@ -932,6 +699,17 @@ async def _check_season_transition(now: datetime) -> None:
 
             if success:
                 logger.info("✅ Next season calendar pre-fetched successfully!")
+
+                # Also fetch weather for Race 1 (it won't be auto-fetched later)
+                if 1 in race_calendar:
+                    logger.info("🌤️ Fetching weather for Race 1...")
+                    weather_data = await fetch_weather_from_api(1)
+                    if weather_data:
+                        logger.info("✅ Race 1 weather fetched successfully")
+                    else:
+                        logger.warning(
+                            "⚠️ Race 1 weather not available yet (may need retry later)"
+                        )
             else:
                 logger.error("❌ Failed to pre-fetch next season calendar")
 
@@ -1001,3 +779,161 @@ async def check_notifications(bot: Bot):
 
         # Wait before next check (adaptive interval)
         await asyncio.sleep(next_interval)
+
+
+async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
+    """Send notifications to all eligible users
+
+    Args:
+        bot: Bot instance
+        notifications: List of (type, race_id, race_data, label, history_key) tuples
+    """
+    from notifications.user_data import remove_active_snooze
+
+    for notification in notifications:
+        try:
+            ntype, race_id, race_data, label, history_key = notification
+            race_name = race_data.get("track", f"Race {race_id}")
+
+            # Log notification type
+            if ntype == "closing":
+                log_structured(
+                    logging.INFO,
+                    f"🔔 Quali {label} notification: Race {race_id} - {race_name}",
+                    race_id=race_id,
+                    race_name=race_name,
+                    hours_remaining=(
+                        race_data["quali_close"] - datetime.now(UTC)
+                    ).total_seconds()
+                    / 3600,
+                )
+            elif ntype == "opens":
+                logger.info(f"🆕 Quali opened: Race {race_id} - {race_name}")
+            elif ntype == "replay":
+                logger.info(f"📺 Race replay available: Race {race_id} - {race_name}")
+            elif ntype == "results":
+                logger.info(f"📊 Race results available: Race {race_id} - {race_name}")
+            elif ntype == "live":
+                logger.info(f"🏁 Race is LIVE: Race {race_id} - {race_name}")
+            elif ntype == "custom":
+                logger.info(
+                    f"🔔 Custom notification {label}: Race {race_id} - {race_name}"
+                )
+            elif ntype == "snooze":
+                logger.info(f"⏰ Snooze reminder: Race {race_id} - {race_name}")
+            elif ntype == "new_season":
+                logger.info(f"🎉 New season reminder: {label}")
+
+            # Send to all users
+            for user_id, user_data in list(users_data.items()):
+                try:
+                    user_id_int = int(user_id)
+
+                    # Skip blocked users
+                    if is_user_blocked(user_id_int):
+                        continue
+
+                    # Check notification type and settings
+                    should_send = False
+
+                    if ntype == "snooze":
+                        # Snooze reminders are always sent regardless of settings
+                        should_send = True
+                    elif ntype == "new_season":
+                        # New season reminder uses race_live setting
+                        should_send = is_notification_enabled(user_id_int, "race_live")
+                    elif ntype == "closing":
+                        # Map labels to settings
+                        label_map = {
+                            "72h": "custom_1",
+                            "48h": "custom_1",
+                            "24h": "24h",
+                            "2h": "2h",
+                            "10min": "10min",
+                            "custom_1": "custom_1",
+                            "custom_2": "custom_2",
+                        }
+                        setting = label_map.get(label, label)
+                        should_send = is_notification_enabled(user_id_int, setting)
+                    elif ntype in ["opens", "replay", "results", "live", "custom"]:
+                        should_send = is_notification_enabled(user_id_int, ntype)
+
+                    if should_send:
+                        await send_notification_to_user(
+                            bot, user_id_int, ntype, race_id, race_data, label
+                        )
+
+                except Exception as e:
+                    logger.error(f"Error sending to user {user_id}: {e}")
+
+            # Mark as notified (snoozes are marked in user_data, others in notify_history)
+            if ntype == "snooze":
+                # For snoozes, extract the snooze_id from history_key
+                # history_key format: (race_id, f"snooze_{snooze_id}")
+                _, snooze_key = history_key
+                if snooze_key.startswith("snooze_"):
+                    snooze_id = snooze_key.replace("snooze_", "")
+                    # Find and remove the active snooze
+                    from notifications.user_data import get_all_active_snoozes
+
+                    for snooze in get_all_active_snoozes():
+                        if snooze["id"] == snooze_id:
+                            remove_active_snooze(snooze["user_id"], snooze_id)
+                            break
+            else:
+                _mark_notified(race_id, label)
+
+        except Exception as e:
+            logger.error(f"Error processing notification {notification}: {e}")
+
+    # Persist history after processing all notifications
+    save_notify_history()
+
+
+def _check_new_season_reminder_notifications(now: datetime) -> list:
+    """Check for new season reminder notifications (1-2 days before first race)
+
+    Returns:
+        list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
+    """
+    from gpro_calendar import get_first_race_date
+
+    notifications = []
+
+    # Check if we have a next season calendar (meaning new season is coming)
+    from gpro_calendar import next_season_calendar
+
+    if not next_season_calendar:
+        return notifications
+
+    first_race_date = get_first_race_date()
+    if not first_race_date:
+        return notifications
+
+    days_until = (first_race_date - now).total_seconds() / (24 * 3600)
+
+    # Send single reminder at 30 hours before (1.25 days)
+    # Window: 28.8-30 hours before (1.20-1.25 days with tolerance)
+    reminder_label = "new_season_reminder"
+    target_days = 1.25  # 30 hours
+    min_days = 1.20  # 28.8 hours (30 min tolerance)
+
+    history_key = (0, reminder_label)  # race_id=0 for season-level reminders
+
+    # Skip if already notified
+    if not _is_already_notified(0, reminder_label):
+        # Check if we're within the notification window
+        if min_days <= days_until <= target_days:
+            # Use race_id=1 data for track name, but label indicates season reminder
+            if 1 in next_season_calendar:
+                race_data = next_season_calendar[1].copy()
+                race_data["days_until"] = days_until
+                notifications.append(
+                    ("new_season", 1, race_data, reminder_label, history_key)
+                )
+
+    return notifications
+
+
+# Track last API check time for rate limiting
+last_api_check_time: datetime = None
