@@ -564,7 +564,7 @@ def _check_snooze_reminders(now: datetime, races_closing: list) -> list:
         races_closing: List of races closing soon (to associate with snoozes)
 
     Returns:
-        list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
+        list: Notifications to send [(type, race_id, race_data, label, history_key, user_id), ...]
     """
     from notifications.user_data import get_all_active_snoozes, SNOOZE_TOLERANCE_SECONDS
 
@@ -584,6 +584,7 @@ def _check_snooze_reminders(now: datetime, races_closing: list) -> list:
         if -SNOOZE_TOLERANCE_SECONDS <= seconds_until <= SNOOZE_TOLERANCE_SECONDS:
             race_id = snooze["race_id"]
             snooze_id = snooze["id"]
+            user_id = snooze["user_id"]
             original_label = snooze.get("original_label", "deadline")
 
             # Get race data
@@ -602,11 +603,12 @@ def _check_snooze_reminders(now: datetime, races_closing: list) -> list:
                 else:
                     display_label = f"⏰ {original_label} snooze"
 
+                # Include user_id as 6th element for targeted delivery
                 notifications.append(
-                    ("snooze", race_id, race_data, display_label, history_key)
+                    ("snooze", race_id, race_data, display_label, history_key, user_id)
                 )
                 logger.info(
-                    f"Snooze reminder firing: race {race_id} snooze {snooze_id} "
+                    f"Snooze reminder firing: user {user_id}, race {race_id}, snooze {snooze_id} "
                     f"(scheduled: {snooze_time}, now: {now})"
                 )
 
@@ -786,13 +788,24 @@ async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
 
     Args:
         bot: Bot instance
-        notifications: List of (type, race_id, race_data, label, history_key) tuples
+        notifications: List of (type, race_id, race_data, label, history_key, [user_id]) tuples.
+                      For snooze notifications, user_id is included as the 6th element for targeted delivery.
     """
     from notifications.user_data import remove_active_snooze
 
     for notification in notifications:
         try:
-            ntype, race_id, race_data, label, history_key = notification
+            # Handle both formats: regular (5 items) and snooze (6 items with user_id)
+            if len(notification) == 6:
+                ntype, race_id, race_data, label, history_key, target_user_id = (
+                    notification
+                )
+                is_targeted = True
+            else:
+                ntype, race_id, race_data, label, history_key = notification
+                target_user_id = None
+                is_targeted = False
+
             race_name = race_data.get("track", f"Race {race_id}")
 
             # Log notification type
@@ -820,11 +833,31 @@ async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
                     f"🔔 Custom notification {label}: Race {race_id} - {race_name}"
                 )
             elif ntype == "snooze":
-                logger.info(f"⏰ Snooze reminder: Race {race_id} - {race_name}")
+                logger.info(
+                    f"⏰ Snooze reminder: user {target_user_id}, race {race_id} - {race_name}"
+                )
             elif ntype == "new_season":
                 logger.info(f"🎉 New season reminder: {label}")
 
-            # Send to all users
+            # For targeted notifications (snoozes), only send to the specific user
+            if is_targeted and target_user_id is not None:
+                try:
+                    user_id_int = int(target_user_id)
+
+                    # Skip blocked users
+                    if is_user_blocked(user_id_int):
+                        continue
+
+                    await send_notification_to_user(
+                        bot, user_id_int, ntype, race_id, race_data, label
+                    )
+                except Exception as e:
+                    logger.error(
+                        f"Error sending targeted {ntype} to user {target_user_id}: {e}"
+                    )
+                continue
+
+            # Send to all users (for non-targeted notifications)
             for user_id, user_data in list(users_data.items()):
                 try:
                     user_id_int = int(user_id)
@@ -836,10 +869,7 @@ async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
                     # Check notification type and settings
                     should_send = False
 
-                    if ntype == "snooze":
-                        # Snooze reminders are always sent regardless of settings
-                        should_send = True
-                    elif ntype == "new_season":
+                    if ntype == "new_season":
                         # New season reminder uses race_live setting
                         should_send = is_notification_enabled(user_id_int, "race_live")
                     elif ntype == "closing":
