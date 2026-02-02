@@ -9,6 +9,18 @@ from typing import Dict
 
 logger = logging.getLogger(__name__)
 
+# Snooze configuration constants
+SNOOZE_TOLERANCE_SECONDS = 120  # Snoozes fire up to 2 minutes late
+SNOOZE_MAX_COUNTS = {
+    "72h": 3,
+    "48h": 3,
+    "24h": 3,
+    "2h": 3,
+    "10min": 3,
+    "opens_soon": 3,
+    "deadline": 3,
+}
+
 # Import UI language list for validation
 try:
     from utils import UI_LANGUAGE_DISPLAY
@@ -641,6 +653,64 @@ def get_all_snooze_reminders() -> list:
     return reminders
 
 
+def get_all_active_snoozes() -> list:
+    """Get all active snooze reminders as dict objects
+
+    Returns:
+        list: [{"id": snooze_id, "user_id": user_id, "race_id": race_id,
+                "snooze_time": iso_timestamp, "original_label": label}, ...]
+    """
+    snoozes = []
+
+    for user_id_str, user_status in users_data.items():
+        active_snoozes = user_status.get("active_snoozes", {})
+
+        for key, data in active_snoozes.items():
+            try:
+                race_id = data.get("race_id")
+                notification_type = data.get("notification_type")
+                until = data.get("until")
+
+                if race_id is None or notification_type is None or until is None:
+                    continue
+
+                snoozes.append({
+                    "id": key,
+                    "user_id": int(user_id_str),
+                    "race_id": race_id,
+                    "snooze_time": until,
+                    "original_label": notification_type,
+                })
+            except (ValueError, TypeError):
+                continue
+
+    return snoozes
+
+
+def remove_active_snooze(user_id: int, snooze_id: str) -> bool:
+    """Remove a specific snooze by its ID
+
+    Args:
+        user_id: Telegram user ID
+        snooze_id: The unique snooze key/ID
+
+    Returns:
+        bool: True if removed, False if not found
+    """
+    user_status = get_user_status(user_id)[0]
+
+    if "active_snoozes" not in user_status:
+        return False
+
+    if snooze_id in user_status["active_snoozes"]:
+        del user_status["active_snoozes"][snooze_id]
+        save_users_data()
+        logger.debug(f"Removed active snooze {snooze_id} for user {user_id}")
+        return True
+
+    return False
+
+
 def get_snooze_count(user_id: int, notification_label: str) -> int:
     """Get snooze count for a notification type
 
@@ -671,6 +741,26 @@ def increment_snooze_count(user_id: int, notification_label: str) -> None:
     )
     save_users_data()
     logger.debug(f"User {user_id} snooze count for '{notification_label}' incremented")
+
+
+def reset_snooze_count(user_id: int, race_id: int, notification_label: str) -> None:
+    """Reset snooze count for a specific race and notification type
+
+    Args:
+        user_id: Telegram user ID
+        race_id: Race ID
+        notification_label: Notification label (e.g., "48h", "2h", "10min")
+    """
+    user_status = get_user_status(user_id)[0]
+
+    if "snooze_counts" not in user_status:
+        return
+
+    count_key = f"{race_id}_{notification_label}"
+    if count_key in user_status["snooze_counts"]:
+        user_status["snooze_counts"][count_key] = 0
+        save_users_data()
+        logger.debug(f"Reset snooze count for user {user_id}, race {race_id}, label {notification_label}")
 
 
 def reset_snooze_counts_for_deadline_passed(race_id: int, quali_close) -> None:
