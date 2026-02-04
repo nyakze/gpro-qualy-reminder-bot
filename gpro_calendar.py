@@ -78,9 +78,13 @@ def _load_calendar_from_file(filepath: str) -> dict:
             for race_id_str, race_data in data.items():
                 race_id = int(race_id_str)
                 race_entry = {
-                    "quali_close": datetime.fromisoformat(race_data["quali_close"]).replace(tzinfo=UTC),
+                    "quali_close": datetime.fromisoformat(
+                        race_data["quali_close"]
+                    ).replace(tzinfo=UTC),
                     "track": race_data["track"],
-                    "date": datetime.fromisoformat(race_data["date"]).replace(tzinfo=UTC),
+                    "date": datetime.fromisoformat(race_data["date"]).replace(
+                        tzinfo=UTC
+                    ),
                     "group": race_data.get("group", "Pro"),
                 }
 
@@ -126,9 +130,7 @@ def _save_calendar_to_file(calendar: dict, filepath: str):
     temp_file = None
     try:
         # Use unique temp file to avoid race conditions
-        fd, temp_file = tempfile.mkstemp(
-            dir=os.path.dirname(filepath), suffix=".tmp"
-        )
+        fd, temp_file = tempfile.mkstemp(dir=os.path.dirname(filepath), suffix=".tmp")
         try:
             with os.fdopen(fd, "w") as f:
                 json.dump(serializable, f, indent=2)
@@ -514,7 +516,7 @@ async def fetch_weather_from_api(race_id: int) -> dict:
         return {}
 
 
-def get_races_closing_soon(hours_before: float = 720) -> dict:
+def get_races_closing_soon(hours_before: float = 720) -> list:
     """Get races closing within 30 days - SORTED by time!"""
     now = datetime.now(UTC)
     upcoming = {}
@@ -526,10 +528,14 @@ def get_races_closing_soon(hours_before: float = 720) -> dict:
             data_copy["hours_left"] = time_to_close
             upcoming[race_id] = data_copy
 
-    # Sort by closest first
-    sorted_upcoming = dict(sorted(upcoming.items(), key=lambda x: x[1]["hours_left"]))
+    # Sort by closest first and convert to list of tuples
+    sorted_items = sorted(upcoming.items(), key=lambda x: x[1]["hours_left"])
+    sorted_upcoming = [
+        (data["hours_left"], race_id, data) for race_id, data in sorted_items
+    ]
     if sorted_upcoming:
-        logger.debug(f"Tracking quali deadlines: {list(sorted_upcoming.keys())}")
+        race_ids = [race_id for _, race_id, _ in sorted_upcoming]
+        logger.debug(f"Tracking quali deadlines: {race_ids}")
     else:
         # Find when next race enters the tracking window
         future_races = [
