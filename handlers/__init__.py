@@ -7,11 +7,11 @@ __all__ = ["router", "commands", "callbacks", "states", "onboarding", "admin_com
 
 router = Router()
 
-from . import commands
-from . import callbacks
-from . import states
-from . import onboarding
-from . import admin_commands
+from . import commands  # noqa: E402
+from . import callbacks  # noqa: E402
+from . import states  # noqa: E402
+from . import onboarding  # noqa: E402
+from . import admin_commands  # noqa: E402
 
 router.include_router(callbacks.router)
 

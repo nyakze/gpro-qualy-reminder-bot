@@ -217,10 +217,7 @@ async def cmd_next(message: Message, i18n: I18nContext):
     await load_next_season_silent()
 
     if not next_season_calendar:
-        await message.answer(
-            i18n.get("next-season-not-published"),
-            parse_mode="HTML"
-        )
+        await message.answer(i18n.get("next-season-not-published"), parse_mode="HTML")
         return
 
     user_id = message.from_user.id

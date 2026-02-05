@@ -32,7 +32,15 @@ SNOOZE_OPTIONS = [
 SNOOZE_TOLERANCE_MINUTES = 2
 MAX_SNOOZES = 3
 
-QUALI_NOTIFICATION_TYPES = ["72h", "48h", "24h", "2h", "10min", "opens_soon", "deadline"]
+QUALI_NOTIFICATION_TYPES = [
+    "72h",
+    "48h",
+    "24h",
+    "2h",
+    "10min",
+    "opens_soon",
+    "deadline",
+]
 
 
 def generate_gpro_link(
@@ -968,7 +976,9 @@ async def send_quali_results_notification(
         )
     except TelegramForbiddenError:
         mark_user_blocked(user_id)
-        logger.warning(f"🚫 User {user_id} blocked the bot (quali results notification)")
+        logger.warning(
+            f"🚫 User {user_id} blocked the bot (quali results notification)"
+        )
     except Exception as e:
         logger.error(f"Quali results notify {user_id} failed: {e}")
 
@@ -1308,7 +1318,9 @@ async def send_notification_to_user(
         await send_new_season_reminder_notification(bot, user_id, race_id, race_data)
     elif ntype == "snooze":
         # Snooze notifications use the snooze_ prefix with original type
-        await send_quali_notification(bot, user_id, race_id, race_data, f"snooze_{label}")
+        await send_quali_notification(
+            bot, user_id, race_id, race_data, f"snooze_{label}"
+        )
     elif ntype == "custom":
         await send_quali_notification(bot, user_id, race_id, race_data, label)
     else:

@@ -683,12 +683,6 @@ def _check_snooze_reminders(now: datetime, races_closing: list) -> list:
 
             # Only send if not already notified for this snooze
             if history_key not in notify_history:
-                # Convert original label to user-friendly format
-                if original_label == "deadline":
-                    display_label = "⏰ Deadline snooze"
-                else:
-                    display_label = f"⏰ {original_label} snooze"
-
                 # Include user_id as 6th element for targeted delivery
                 # Use original_label (not display_label) so sender can parse notification type
                 notifications.append(

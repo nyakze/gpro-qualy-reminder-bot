@@ -139,9 +139,7 @@ def save_users_data():
     temp_file = None
     try:
         # Use unique temp file to avoid race conditions
-        fd, temp_file = tempfile.mkstemp(
-            dir=os.path.dirname(USERS_FILE), suffix=".tmp"
-        )
+        fd, temp_file = tempfile.mkstemp(dir=os.path.dirname(USERS_FILE), suffix=".tmp")
         try:
             with os.fdopen(fd, "w") as f:
                 save_data = {str(k): v for k, v in users_data.items()}
@@ -674,13 +672,15 @@ def get_all_active_snoozes() -> list:
                 if race_id is None or notification_type is None or until is None:
                     continue
 
-                snoozes.append({
-                    "id": key,
-                    "user_id": int(user_id_str),
-                    "race_id": race_id,
-                    "snooze_time": until,
-                    "original_label": notification_type,
-                })
+                snoozes.append(
+                    {
+                        "id": key,
+                        "user_id": int(user_id_str),
+                        "race_id": race_id,
+                        "snooze_time": until,
+                        "original_label": notification_type,
+                    }
+                )
             except (ValueError, TypeError):
                 continue
 
@@ -760,7 +760,9 @@ def reset_snooze_count(user_id: int, race_id: int, notification_label: str) -> N
     if count_key in user_status["snooze_counts"]:
         user_status["snooze_counts"][count_key] = 0
         save_users_data()
-        logger.debug(f"Reset snooze count for user {user_id}, race {race_id}, label {notification_label}")
+        logger.debug(
+            f"Reset snooze count for user {user_id}, race {race_id}, label {notification_label}"
+        )
 
 
 def reset_snooze_counts_for_deadline_passed(race_id: int, quali_close) -> None:
