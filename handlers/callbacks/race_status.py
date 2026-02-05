@@ -13,8 +13,8 @@ from notifications import (
     reset_user_status,
     format_weather_data,
 )
-from notifications.sender import can_snooze
-from notifications.user_data import increment_snooze_count
+from notifications.utils import can_snooze
+from notifications.users import increment_snooze_count
 from utils import add_flag_to_track
 from . import router
 
@@ -173,7 +173,7 @@ async def handle_snooze(callback: CallbackQuery, i18n: I18nContext):
 
     snooze_until = datetime.now(UTC) + timedelta(minutes=snooze_minutes)
 
-    from notifications.user_data import add_snooze_reminder
+    from notifications.users import add_snooze_reminder
 
     add_snooze_reminder(user_id, race_id, snooze_until, notification_type)
 

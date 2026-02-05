@@ -5,7 +5,7 @@ import sys
 from types import FrameType
 
 from config import ADMIN_USER_IDS
-from notifications.checker import save_notify_history, notify_history
+from notifications.history import save_notify_history
 from notifications import save_users_data
 
 from .logging import log_structured
@@ -30,7 +30,7 @@ async def shutdown(bot, reason: str) -> None:
     log_structured(logging.INFO, "Shutting down", reason=reason)
 
     try:
-        save_notify_history(notify_history)
+        save_notify_history()
         save_users_data()
         log_structured(logging.INFO, "State saved successfully")
     except Exception as e:

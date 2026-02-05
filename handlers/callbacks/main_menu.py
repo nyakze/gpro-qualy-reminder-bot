@@ -7,7 +7,7 @@ from aiogram_i18n import I18nContext
 
 from gpro_calendar import race_calendar
 from notifications import send_quali_notification, get_user_status
-from notifications.user_data import set_user_website_mode
+from notifications.users import set_user_website_mode
 from . import router
 
 logger = logging.getLogger(__name__)

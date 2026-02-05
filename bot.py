@@ -12,7 +12,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from config import BOT_TOKEN, ADMIN_USER_IDS
 from gpro_calendar import load_calendar_silent, race_calendar
 from notifications import load_users_data
-from notifications.checker import load_notify_history, notify_history
+from notifications.history import load_notify_history, notify_history
 from i18n_setup import setup_i18n
 from middleware.user_profile import UserProfileMiddleware
 from infra.logging import (
@@ -49,7 +49,7 @@ async def main():
         return
 
     load_users_data()
-    from notifications.user_data import users_data
+    from notifications.users import users_data
 
     user_count = len(users_data)
     set_startup_data(users_count=user_count)

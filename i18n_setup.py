@@ -47,7 +47,7 @@ class UserLanguageManager(BaseManager):
         user_id = event_from_user.id
 
         try:
-            from notifications.user_data import users_data
+            from notifications.users import users_data
         except ImportError:
             return DEFAULT_UI_LANGUAGE
 
@@ -75,7 +75,7 @@ class UserLanguageManager(BaseManager):
         if event_from_user:
             user_id = event_from_user.id
             try:
-                from notifications.user_data import set_user_ui_language
+                from notifications.users import set_user_ui_language
             except ImportError:
                 return
             set_user_ui_language(user_id, locale)
