@@ -514,10 +514,14 @@ async def _check_last_race_results_notification(now: datetime) -> list:
     """
     notifications = []
 
-    # Only check for the last race of the season
+    # Only check for the last race of the season (race 17)
     last_race_id = get_last_race_id()
     if last_race_id == 0:
         return notifications
+
+    # This function is specifically for the last race only
+    # Other races use the standard quali open detection via _check_quali_open_notifications
+    # which is more reliable when the next quali opens after a race
 
     # Skip if already notified for this race
     replay_history_key = (last_race_id, "race_replay")
