@@ -19,6 +19,8 @@ from gpro_calendar import (
     should_prefetch_next_season,
     transition_to_next_season,
     update_calendar,
+    get_last_race_id,
+    check_race_replay_api,
 )
 from .user_data import (
     users_data,
@@ -500,6 +502,86 @@ def _check_quali_results_notifications(now: datetime) -> list:
     return notifications
 
 
+async def _check_last_race_results_notification(now: datetime) -> list:
+    """Check if last race (race 17) results are available using RaceReplay API
+
+    For the last race of the season, we can't rely on the next quali opening
+    to detect when the race is complete (season break). Instead, we check the
+    RaceReplay API which returns the race number when results are calculated.
+
+    Returns:
+        list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
+    """
+    notifications = []
+
+    # Only check for the last race of the season
+    last_race_id = get_last_race_id()
+    if last_race_id == 0:
+        return notifications
+
+    # Skip if already notified for this race
+    replay_history_key = (last_race_id, "race_replay")
+    results_history_key = (last_race_id, "race_results")
+
+    if replay_history_key in notify_history and results_history_key in notify_history:
+        return notifications
+
+    # Check if last race has finished (at least 30 minutes ago to allow processing)
+    last_race_time = race_calendar[last_race_id]["date"]
+    minutes_since_race = (now - last_race_time).total_seconds() / 60
+
+    if minutes_since_race < 30:
+        # Race just finished, give GPRO time to calculate results
+        return notifications
+
+    # Stop checking after 3.5 hours (210 minutes) - if results aren't calculated by then,
+    # something is wrong with GPRO or the API, no point in wasting tokens
+    if minutes_since_race > 210:
+        logger.warning(
+            f"⚠️ Stopping RaceReplay API checks for race {last_race_id}: "
+            f"{minutes_since_race:.0f} minutes elapsed without results"
+        )
+        return notifications
+
+    # Check RaceReplay API to see if race 17 results are calculated
+    race_is_calculated = await check_race_replay_api(last_race_id)
+
+    if race_is_calculated:
+        last_race_data = race_calendar[last_race_id]
+
+        # Add race replay notification if not sent yet
+        if replay_history_key not in notify_history:
+            notifications.append(
+                (
+                    "replay",
+                    last_race_id,
+                    last_race_data,
+                    "race_replay",
+                    replay_history_key,
+                )
+            )
+
+        # Add race results notification if not sent yet
+        if results_history_key not in notify_history:
+            notifications.append(
+                (
+                    "results",
+                    last_race_id,
+                    last_race_data,
+                    "race_results",
+                    results_history_key,
+                )
+            )
+
+        if notifications:
+            logger.info(
+                f"🎯 RaceReplay API confirmed race {last_race_id} is calculated, "
+                f"sending {len(notifications)} notifications"
+            )
+
+    return notifications
+
+
 def _check_race_live_notifications(now: datetime) -> list:
     """Check for race live notifications
 
@@ -750,6 +832,9 @@ async def check_notifications(bot: Bot):
                 notifications_to_send.extend(await _check_quali_open_notifications(now))
                 notifications_to_send.extend(_check_quali_results_notifications(now))
                 notifications_to_send.extend(_check_race_live_notifications(now))
+                notifications_to_send.extend(
+                    await _check_last_race_results_notification(now)
+                )
                 notifications_to_send.extend(
                     _check_custom_notifications(now, races_closing)
                 )

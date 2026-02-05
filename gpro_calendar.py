@@ -516,6 +516,72 @@ async def fetch_weather_from_api(race_id: int) -> dict:
         return {}
 
 
+async def check_race_replay_api(race_id: int) -> bool:
+    """Check if a specific race has been calculated using RaceReplay API
+
+    This is especially important for the last race (race 17) where qualification
+    doesn't open afterwards due to season break, so we can't rely on the /office
+    endpoint to detect when the race is complete.
+
+    Args:
+        race_id: Race ID to check (1-17)
+
+    Returns:
+        bool: True if API returns the requested race number (race is calculated)
+    """
+    if not GPRO_API_TOKEN:
+        logger.warning("Cannot check race replay: GPRO_API_TOKEN missing")
+        return False
+
+    url = f"https://gpro.net/{GPRO_API_LANG}/backend/api/v2/RaceReplay"
+    headers = {
+        "Authorization": f"Bearer {GPRO_API_TOKEN}",
+        "User-Agent": "GPRO-QualiBot/1.0",
+    }
+
+    try:
+        timeout = aiohttp.ClientTimeout(total=10)
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            async with session.get(url, headers=headers) as resp:
+                if resp.status == 200:
+                    data = await resp.json()
+                    api_race_nb = data.get("raceNb")
+
+                    if api_race_nb:
+                        try:
+                            api_race_id = int(api_race_nb)
+                            if api_race_id == race_id:
+                                logger.info(
+                                    f"✅ RaceReplay API: Race {race_id} is calculated and available"
+                                )
+                                return True
+                            else:
+                                logger.debug(
+                                    f"RaceReplay API: Expected race {race_id}, got race {api_race_id}"
+                                )
+                                return False
+                        except (ValueError, TypeError):
+                            logger.warning(
+                                f"RaceReplay API returned non-integer raceNb: {api_race_nb}"
+                            )
+                            return False
+                    else:
+                        logger.debug("RaceReplay API: No raceNb in response")
+                        return False
+                else:
+                    logger.warning(f"RaceReplay API returned {resp.status}")
+                    return False
+    except asyncio.TimeoutError:
+        logger.warning("RaceReplay API timeout")
+        return False
+    except aiohttp.ClientError as e:
+        logger.error(f"RaceReplay API client error: {e}")
+        return False
+    except (json.JSONDecodeError, KeyError, TypeError) as e:
+        logger.error(f"RaceReplay API response error: {e}")
+        return False
+
+
 def get_races_closing_soon(hours_before: float = 720) -> list:
     """Get races closing within 30 days - SORTED by time!"""
     now = datetime.now(UTC)
