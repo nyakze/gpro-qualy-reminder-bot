@@ -526,11 +526,11 @@ async def _check_last_race_results_notification(now: datetime) -> list:
     if replay_history_key in notify_history and results_history_key in notify_history:
         return notifications
 
-    # Check if last race has finished (at least 30 minutes ago to allow processing)
+    # Check if last race has finished (at least 90 minutes ago to allow processing)
     last_race_time = race_calendar[last_race_id]["date"]
     minutes_since_race = (now - last_race_time).total_seconds() / 60
 
-    if minutes_since_race < 30:
+    if minutes_since_race < 90:
         # Race just finished, give GPRO time to calculate results
         return notifications
 
