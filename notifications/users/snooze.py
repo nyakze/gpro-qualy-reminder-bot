@@ -172,15 +172,21 @@ def remove_active_snooze(user_id: int, snooze_id: str) -> bool:
     user_status = get_user_status(user_id)[0]
 
     if "active_snoozes" not in user_status:
+        logger.warning(f"Cannot remove snooze {snooze_id} for user {user_id}: no active_snoozes dict")
         return False
 
-    if snooze_id in user_status["active_snoozes"]:
-        del user_status["active_snoozes"][snooze_id]
+    active_snoozes = user_status["active_snoozes"]
+    logger.debug(f"Active snoozes before removal: {list(active_snoozes.keys())}")
+
+    if snooze_id in active_snoozes:
+        del active_snoozes[snooze_id]
         save_users_data()
-        logger.debug(f"Removed active snooze {snooze_id} for user {user_id}")
+        logger.info(f"✅ Removed active snooze {snooze_id} for user {user_id}")
         return True
 
+    logger.warning(f"Snooze {snooze_id} not found in active_snoozes for user {user_id}")
     return False
+ 
 
 
 def get_snooze_count(user_id: int, notification_label: str) -> int:

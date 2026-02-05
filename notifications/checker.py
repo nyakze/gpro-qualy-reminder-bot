@@ -207,7 +207,8 @@ async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
                     logger.error(
                         f"Error sending targeted {ntype} to user {target_user_id}: {e}"
                     )
-                continue
+                    # Skip to next notification (don't mark notified if error)
+                    continue
 
             # Send to all users (for non-targeted notifications)
             for user_id, user_data in list(users_data.items()):
@@ -248,25 +249,24 @@ async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
                 except Exception as e:
                     logger.error(f"Error sending to user {user_id}: {e}")
 
-            # Mark as notified (snoozes are marked in both user_data AND notify_history)
-            if ntype == "snooze":
-                # For snoozes, extract the snooze_id from history_key
-                # history_key format: (race_id, f"snooze_{snooze_id}")
+            # Mark as notified (snoozes are marked in check_snooze_reminders before being added to list)
+            if ntype != "snooze":
+                mark_notified(race_id, label)
+            else:
+                # For snoozes, remove from active_snoozes after sending (history already marked)
                 _, snooze_key = history_key
                 if snooze_key.startswith("snooze_"):
                     snooze_id = snooze_key.replace("snooze_", "")
-                    # Find and remove the active snooze
                     from notifications.users import get_all_active_snoozes
 
+                    logger.debug(f"Removing snooze {snooze_id} from active_snoozes after sending")
                     for snooze in get_all_active_snoozes():
                         if snooze["id"] == snooze_id:
-                            remove_active_snooze(snooze["user_id"], snooze_id)
+                            if remove_active_snooze(snooze["user_id"], snooze_id):
+                                logger.debug(f"Removed active snooze {snooze_id}")
+                            else:
+                                logger.warning(f"Failed to remove active snooze {snooze_id}")
                             break
-                # ALSO mark in notify_history to prevent duplicate firing
-                # (in case checker runs again before active_snoozes is saved)
-                mark_notified(race_id, snooze_key)
-            else:
-                mark_notified(race_id, label)
 
         except Exception as e:
             logger.error(f"Error processing notification {notification}: {e}")

@@ -59,6 +59,11 @@ def check_snooze_reminders(now: datetime, races_closing: list) -> List[Tuple]:
 
             # Only send if not already notified for this snooze
             if history_key not in get_notify_history():
+                # Mark as notified immediately to prevent duplicate fires in the same check cycle
+                # This is marked before adding to notifications list to prevent race conditions
+                from notifications.history import mark_notified
+                mark_notified(race_id, f"snooze_{snooze_id}")
+
                 # Include user_id as 6th element for targeted delivery
                 # Use original_label (not display_label) so sender can parse notification type
                 notifications.append(
