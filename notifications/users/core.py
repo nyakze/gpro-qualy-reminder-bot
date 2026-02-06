@@ -269,12 +269,11 @@ def update_user_profile(
             needs_save = True
             logger.debug(f"Updated tg_language_code for user {user_id}: {tg_language_code}")
 
-    if username is not None:
-        current_user = users_data[user_id].get("username")
-        if current_user != username:
-            users_data[user_id]["username"] = username
-            needs_save = True
-            logger.debug(f"Updated username for user {user_id}: {username}")
+    current_username = users_data[user_id].get("username")
+    if current_username != username:
+        users_data[user_id]["username"] = username
+        needs_save = True
+        logger.debug(f"Updated username for user {user_id}: {username}")
 
     if first_name is not None:
         current_name = users_data[user_id].get("first_name")
