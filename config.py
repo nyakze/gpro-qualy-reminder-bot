@@ -35,3 +35,11 @@ _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 NEXT_SEASON_FILE = os.path.join(_SCRIPT_DIR, "next_season_calendar.json")
 CALENDAR_FILE = os.path.join(_SCRIPT_DIR, "gpro_calendar.json")
 GPRO_API_LANG = "gb"
+
+# Backup configuration
+CLASSIC_BACKUP_ENABLED = os.getenv("CLASSIC_BACKUP_ENABLED", "true").lower() in (
+    "true",
+    "1",
+    "yes",
+    "on",
+)

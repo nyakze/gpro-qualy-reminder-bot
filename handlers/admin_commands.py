@@ -1,9 +1,10 @@
 """Admin command handlers"""
 
 import logging
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
 from aiogram_i18n import I18nContext
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from datetime import datetime, UTC
 
 from gpro_calendar import (
@@ -482,3 +483,145 @@ async def cmd_updatetz(message: Message, i18n: I18nContext):
             "❌ **Failed to build search index**\n\n" "Please check logs for details.",
             parse_mode="HTML",
         )
+
+
+def _get_backup_menu_markup(tg_enabled: bool):
+    """Build backup menu keyboard"""
+    builder = InlineKeyboardBuilder()
+
+    tg_toggle = (
+        "🔴 Disable Telegram Backup" if tg_enabled else "🟢 Enable Telegram Backup"
+    )
+    tg_data = "backup:tg_disable" if tg_enabled else "backup:tg_enable"
+
+    builder.button(text=tg_toggle, callback_data=tg_data)
+    builder.button(text="📤 Send Backup Now", callback_data="backup:send")
+
+    builder.adjust(1)
+    return builder.as_markup()
+
+
+@router.message(Command("backup"))
+async def cmd_backup(message: Message, i18n: I18nContext):
+    if not is_admin(message.from_user.id):
+        await message.answer(i18n.get("admin-only"))
+        return
+
+    from infra.backup import (
+        is_telegram_backup_enabled,
+        get_classic_backup_info,
+        is_classic_backup_enabled,
+    )
+
+    admin_id = message.from_user.id
+    tg_enabled = is_telegram_backup_enabled(admin_id)
+    classic_enabled = is_classic_backup_enabled()
+    backups = get_classic_backup_info()
+
+    text = "📦 <b>Backup Management</b>\n\n"
+
+    # Classic backup status
+    if classic_enabled:
+        text += "<b>Classic Backups:</b> ON ✅\n"
+        text += f"• Stored: {len(backups)} backup(s)\n"
+        if backups:
+            latest = backups[0]
+            text += f"• Latest: {latest['filename']}\n"
+            text += f"  Size: {latest['size_bytes'] / 1024:.1f} KB\n"
+        text += "• Schedule: Thursday 2:00 AM UTC\n\n"
+    else:
+        text += "<b>Classic Backups:</b> OFF ⚪️\n"
+        text += "• Disabled in config.py\n\n"
+
+    # Telegram backup status
+    text += "<b>Your Telegram Backup:</b>\n"
+    text += f"• Status: {'✅ ON' if tg_enabled else '❌ OFF'}\n"
+    text += "• Schedule: Sunday 2:00 AM UTC\n"
+    if not tg_enabled:
+        text += "• You won't receive automatic Telegram backups\n"
+
+    await message.answer(
+        text,
+        parse_mode="HTML",
+        reply_markup=_get_backup_menu_markup(tg_enabled),
+    )
+
+
+@router.callback_query(lambda c: c.data.startswith("backup:"))
+async def callback_backup_menu(callback: CallbackQuery, i18n: I18nContext):
+    if not is_admin(callback.from_user.id):
+        await callback.answer(i18n.get("admin-only"), show_alert=True)
+        return
+
+    action = callback.data.split(":")[1]
+    admin_id = callback.from_user.id
+
+    if action in ("tg_enable", "tg_disable"):
+        from infra.backup import (
+            set_telegram_backup_enabled,
+            get_classic_backup_info,
+            is_classic_backup_enabled,
+        )
+
+        tg_enabled = action == "tg_enable"
+        set_telegram_backup_enabled(admin_id, tg_enabled)
+
+        await callback.answer(
+            f"Telegram backup {'enabled' if tg_enabled else 'disabled'}",
+            show_alert=True,
+        )
+
+        # Update the menu
+        classic_enabled = is_classic_backup_enabled()
+        backups = get_classic_backup_info()
+
+        text = "📦 <b>Backup Management</b>\n\n"
+
+        # Classic backup status
+        if classic_enabled:
+            text += "<b>Classic Backups:</b> ON ✅\n"
+            text += f"• Stored: {len(backups)} backup(s)\n"
+            if backups:
+                latest = backups[0]
+                text += f"• Latest: {latest['filename']}\n"
+                text += f"  Size: {latest['size_bytes'] / 1024:.1f} KB\n"
+            text += "• Schedule: Thursday 2:00 AM UTC\n\n"
+        else:
+            text += "<b>Classic Backups:</b> OFF ⚪️\n"
+            text += "• Disabled in config.py\n\n"
+
+        # Telegram backup status
+        text += "<b>Your Telegram Backup:</b>\n"
+        text += f"• Status: {'✅ ON' if tg_enabled else '❌ OFF'}\n"
+        text += "• Schedule: Sunday 2:00 AM UTC\n"
+        if not tg_enabled:
+            text += "• You won't receive automatic Telegram backups\n"
+
+        await callback.message.edit_text(
+            text,
+            parse_mode="HTML",
+            reply_markup=_get_backup_menu_markup(tg_enabled),
+        )
+
+    elif action == "send":
+        from infra.backup import run_backup_now
+
+        await callback.answer("Creating backup...", show_alert=False)
+
+        try:
+            success, result_message = await run_backup_now(callback.bot, admin_id)
+
+            status_emoji = "✅" if success else "❌"
+            await callback.message.answer(
+                f"{status_emoji} <b>Backup Results</b>\n\n{result_message}",
+                parse_mode="HTML",
+            )
+
+            logger.info(f"Admin {admin_id} triggered manual backup")
+
+        except Exception as e:
+            logger.error(f"Manual backup error: {e}")
+            await callback.message.answer(
+                "❌ <b>Backup failed</b>\n\nAn error occurred. Check logs for details.",
+                parse_mode="HTML",
+            )

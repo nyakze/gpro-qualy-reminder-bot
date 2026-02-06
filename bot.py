@@ -25,6 +25,7 @@ from infra.logging import (
 )
 from infra.signals import setup_signal_handlers
 from infra.runner import run_with_recovery
+from infra.backup import start_backup_scheduler, stop_backup_scheduler
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 _STARTUP_TIME = time.time()
@@ -39,6 +40,9 @@ set_startup_data(
     users_count=0, races=0, admins_count=len(ADMIN_USER_IDS), tz_count=0, i18n_langs=12
 )
 logger = setup_logging(verbose=args.verbose)
+
+# Global bot instance for access by handlers
+bot: Bot | None = None
 
 
 async def main():
@@ -77,6 +81,7 @@ async def main():
             logging.WARNING, "Failed to load notification history", error=str(e)
         )
 
+    global bot
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher(storage=MemoryStorage())
 
@@ -108,6 +113,10 @@ async def main():
     dp.include_router(router)
     log_structured(logging.INFO, "Handlers router loaded")
 
+    # Setup backup scheduler
+    start_backup_scheduler(bot)
+    log_structured(logging.INFO, "Backup scheduler initialized")
+
     setup_signal_handlers(bot)
 
     print_banner()
@@ -120,7 +129,11 @@ async def main():
 
     asyncio.create_task(run_with_recovery(bot))
 
-    await dp.start_polling(bot)
+    try:
+        await dp.start_polling(bot)
+    finally:
+        stop_backup_scheduler()
+        log_structured(logging.INFO, "Shutdown complete")
 
 
 if __name__ == "__main__":
