@@ -24,6 +24,9 @@ def check_race_live_notifications(now: datetime) -> List[Tuple]:
     Returns:
         list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
     """
+    from notifications.history import get_notify_history
+    notify_history = get_notify_history()
+
     notifications = []
 
     for race_id, race_data in race_calendar.items():
@@ -31,7 +34,7 @@ def check_race_live_notifications(now: datetime) -> List[Tuple]:
         history_key = (race_id, "race_live")
 
         # Skip if already notified
-        if history_key in notifications:
+        if history_key in notify_history:
             continue
 
         # Check if race is starting now (within 1 minute window)
