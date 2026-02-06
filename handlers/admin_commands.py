@@ -20,6 +20,11 @@ from notifications import (
 )
 from utils import add_flag_to_track
 from config import ADMIN_USER_IDS
+from middleware.rate_limit import (
+    get_rate_limit_stats,
+    get_user_rate_limit_info,
+    get_rate_limited_users,
+)
 from . import router
 
 logger = logging.getLogger(__name__)
@@ -114,7 +119,21 @@ async def cmd_users(message: Message, i18n: I18nContext):
 
             link = format_user_link(uid, username, first_name)
 
-            text += f"• <code>{uid}</code> ({link}): Race {quali} | Group {group}\n"
+            # Check rate limit status for icon
+            rl_info = get_user_rate_limit_info(uid)
+            if rl_info and rl_info["violation_count"] > 0:
+                if rl_info["is_blocked"]:
+                    icon = "⛔"
+                elif rl_info["warned"]:
+                    icon = "⚠️"
+                else:
+                    icon = ""
+            else:
+                icon = ""
+
+            text += (
+                f"• {icon} <code>{uid}</code> ({link}): Race {quali} | Group {group}\n"
+            )
 
         text += "\n💡 Use /user USER_ID for details or /userstats for statistics"
         await message.answer(text, parse_mode="HTML")
@@ -196,6 +215,21 @@ async def cmd_user(message: Message, i18n: I18nContext):
         for i, c in enumerate(custom_enabled, 1):
             hours = c.get("hours_before", "?")
             text += f"• Custom {i}: {hours}h before\n"
+
+    # Rate limiting info
+    rl_info = get_user_rate_limit_info(target_user_id)
+    if rl_info and rl_info["violation_count"] > 0:
+        text += "\n<b>🛡️ Rate Limit Status:</b>\n"
+        text += f"• Violations: {rl_info['violation_count']}\n"
+        if rl_info["is_blocked"]:
+            remaining = rl_info["blocked_remaining_seconds"]
+            if remaining < 60:
+                time_str = f"{remaining}s"
+            else:
+                time_str = f"{remaining // 60}m {remaining % 60}s"
+            text += f"• Currently blocked: {time_str} remaining\n"
+        if rl_info["warned"]:
+            text += "• Warned this session: Yes\n"
 
     await message.answer(text, parse_mode="HTML")
     logger.info(
@@ -299,6 +333,40 @@ async def cmd_userstats(message: Message, i18n: I18nContext):
         )
         if custom_users > 0:
             text += f"• Custom notifications: {custom_users} ({(custom_users/total_users)*100:.1f}%)\n"
+
+        # Rate limiting stats
+        rl_stats = get_rate_limit_stats()
+        if rl_stats["users_with_violations"] > 0:
+            text += "\n<b>🛡️ Rate Limiting:</b>\n"
+            text += f"• Users with violations: {rl_stats['users_with_violations']}\n"
+            if rl_stats["users_warned"] > 0:
+                text += f"• Users warned: {rl_stats['users_warned']}\n"
+            if rl_stats["users_currently_blocked"] > 0:
+                text += f"• Currently blocked: {rl_stats['users_currently_blocked']}\n"
+
+            # Show specific users who are blocked or warned
+            rl_users = get_rate_limited_users()
+            if rl_users:
+                text += "\n<b>⚠️ Flagged Users:</b>\n"
+                for uid, info in sorted(rl_users.items()):
+                    # Get username from users_data if available
+                    user_status = users_data.get(uid, {})
+                    username = user_status.get("username")
+                    first_name = user_status.get("first_name")
+                    link = format_user_link(uid, username, first_name)
+
+                    status = "🚫 BLOCKED"
+                    if not info["is_blocked"]:
+                        status = "⚠️ warned"
+                    details = f"({info['violation_count']} violations)"
+                    if info["is_blocked"]:
+                        remaining = info["blocked_remaining_seconds"]
+                        if remaining < 60:
+                            time_str = f"{remaining}s"
+                        else:
+                            time_str = f"{remaining // 60}m {remaining % 60}s"
+                        details += f" - {time_str} left"
+                    text += f"• {link} {status} {details}\n"
 
         await message.answer(text, parse_mode="HTML")
         logger.info(f"Admin {message.from_user.id} viewed user statistics")

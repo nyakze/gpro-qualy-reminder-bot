@@ -15,6 +15,7 @@ from notifications import load_users_data
 from notifications.history import load_notify_history, notify_history
 from i18n_setup import setup_i18n
 from middleware.user_profile import UserProfileMiddleware
+from middleware.rate_limit import RateLimitMiddleware
 from infra.logging import (
     init_logging_paths,
     setup_logging,
@@ -102,6 +103,9 @@ async def main():
 
     dp.update.middleware(UserProfileMiddleware())
     log_structured(logging.INFO, "UserProfileMiddleware loaded")
+
+    dp.update.middleware(RateLimitMiddleware(admin_ids=set(ADMIN_USER_IDS)))
+    log_structured(logging.INFO, "RateLimitMiddleware loaded")
 
     i18n = setup_i18n()
     await i18n.core.startup()
