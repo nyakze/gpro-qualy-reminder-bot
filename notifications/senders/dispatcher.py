@@ -6,6 +6,7 @@ from typing import Dict
 from aiogram import Bot
 
 from notifications.senders.quali import send_quali_notification
+from notifications.senders.quali_results import send_quali_results_notification
 from notifications.senders.race_live import send_race_live_notification
 from notifications.senders.race_replay import send_race_replay_notification
 from notifications.senders.race_results import send_race_results_notification
@@ -52,7 +53,10 @@ async def send_notification_to_user(
     elif ntype == "replay":
         await send_race_replay_notification(bot, user_id, race_id, race_data)
     elif ntype == "results":
-        await send_race_results_notification(bot, user_id, race_id, race_data)
+        if label == "quali_results":
+            await send_quali_results_notification(bot, user_id, race_id, race_data)
+        else:
+            await send_race_results_notification(bot, user_id, race_id, race_data)
     elif ntype == "new_season":
         await send_new_season_reminder_notification(bot, user_id, race_id, race_data)
     elif ntype == "snooze":

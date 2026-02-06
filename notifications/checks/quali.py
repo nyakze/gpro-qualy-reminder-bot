@@ -298,7 +298,7 @@ def check_quali_results(now: datetime) -> List[Tuple]:
 
     for race_id, race_data in race_calendar.items():
         quali_close = race_data["quali_close"]
-        history_key = (race_id, "race_results")
+        history_key = (race_id, "quali_results")
 
         # Skip if already notified
         if history_key in notify_history:
@@ -310,7 +310,7 @@ def check_quali_results(now: datetime) -> List[Tuple]:
         # Only notify if quali has been closed for at least 5 minutes
         if minutes_since_close >= 5:
             notifications.append(
-                ("results", race_id, race_data, "race_results", history_key)
+                ("results", race_id, race_data, "quali_results", history_key)
             )
 
     return notifications
