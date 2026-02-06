@@ -12,7 +12,6 @@ This file maintains the main check_notifications() entry point.
 import asyncio
 import logging
 from datetime import datetime, UTC
-from typing import Dict, Tuple
 
 from aiogram import Bot
 
@@ -57,9 +56,6 @@ logger = logging.getLogger(__name__)
 # Module-level in-memory caches (lazy loaded)
 notification_lock = asyncio.Lock()
 
-# Backwards compatibility: maintain notify_history reference
-notify_history: Dict[Tuple[int, str], datetime] = {}
-
 
 def _is_already_notified(race_id: int, label: str) -> bool:
     """Backwards compatibility wrapper"""
@@ -75,12 +71,11 @@ def _mark_notified(race_id: int, label: str) -> None:
 
 async def check_notifications(bot: Bot):
     """Continuous notification loop - adaptive check interval based on race proximity"""
-    global notify_history
     logger.info(
         "🔔 Starting notification checker (adaptive: 5min normal, 60s when race approaching)"
     )
     load_users_data()
-    notify_history = load_notify_history()
+    load_notify_history()  # Loads into notify_history from history.py
 
     while True:
         try:
