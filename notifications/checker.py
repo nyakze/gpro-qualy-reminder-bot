@@ -238,8 +238,18 @@ async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
                         }
                         setting = label_map.get(label, label)
                         should_send = is_notification_enabled(user_id_int, setting)
-                    elif ntype in ["opens", "replay", "results", "live", "custom"]:
-                        should_send = is_notification_enabled(user_id_int, ntype)
+                    elif ntype == "opens":
+                        should_send = is_notification_enabled(user_id_int, "opens_soon")
+                    elif ntype == "replay":
+                        should_send = is_notification_enabled(user_id_int, "race_replay")
+                    elif ntype == "live":
+                        should_send = is_notification_enabled(user_id_int, "race_live")
+                    elif ntype == "results":
+                        # Check label to determine which setting to use
+                        if label == "quali_results":
+                            should_send = is_notification_enabled(user_id_int, "quali_results")
+                        else:
+                            should_send = is_notification_enabled(user_id_int, "race_results")
 
                     if should_send:
                         await send_notification_to_user(
