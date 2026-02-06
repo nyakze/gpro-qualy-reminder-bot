@@ -1,9 +1,6 @@
 """Rate limiting middleware - progressive penalties for repeat offenders"""
 
-import json
 import logging
-import os
-import tempfile
 import time
 from typing import Callable, Awaitable, Dict, Any, Optional
 from collections import defaultdict, deque
@@ -12,10 +9,6 @@ from aiogram import BaseMiddleware
 from aiogram.types import Update
 
 logger = logging.getLogger(__name__)
-
-# Use absolute path based on script location
-_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RL_FILE = os.path.join(_SCRIPT_DIR, "rate_limit_data.json")
 
 # Very loose limits - only catch blatant abuse
 # Normal users clicking through menus won't hit these
@@ -33,9 +26,6 @@ BLOCK_DURATIONS = [30, 120, 300]  # First: 30s, Second: 2min, Third+: 5min
 
 # Reset violation count after this many seconds of good behavior
 VIOLATION_RESET_AFTER = 604800  # 7 days
-
-# Track if data has been loaded
-_rl_data_loaded = False
 
 
 @dataclass
@@ -56,77 +46,18 @@ class UserRateLimitState:
 _user_states: Dict[int, UserRateLimitState] = defaultdict(UserRateLimitState)
 
 
-def _load_rate_limit_data():
-    """Load rate limit state from JSON file"""
-    global _rl_data_loaded
-    if _rl_data_loaded:
-        return
+def _get_user_data() -> Dict:
+    """Get the users_data dict from notifications module"""
+    from notifications.users import users_data
 
-    if os.path.exists(RL_FILE):
-        try:
-            with open(RL_FILE, "r") as f:
-                raw_data = json.load(f)
-                loaded_count = 0
-                now = time.time()
-                for uid_str, state_data in raw_data.items():
-                    uid = int(uid_str)
-                    state = _user_states[uid]
-                    state.violation_count = state_data.get("violation_count", 0)
-                    state.blocked_until = state_data.get("blocked_until", 0)
-                    state.last_warning = state_data.get("last_warning", 0)
-                    state.warned_this_session = state_data.get(
-                        "warned_this_session", False
-                    )
-                    state.last_violation_time = state_data.get("last_violation_time", 0)
-                    loaded_count += 1
-                logger.info(f"Loaded rate limit data for {loaded_count} users")
-        except Exception as e:
-            logger.error(f"Failed to load rate limit data: {e}")
-
-    _rl_data_loaded = True
+    return users_data
 
 
-def _save_rate_limit_data():
-    """Save rate limit state with atomic write"""
-    temp_file = None
-    try:
-        fd, temp_file = tempfile.mkstemp(dir=os.path.dirname(RL_FILE), suffix=".tmp")
-        try:
-            with os.fdopen(fd, "w") as f:
-                save_data = {}
-                for uid, state in _user_states.items():
-                    # Only save users with violations or blocks
-                    if (
-                        state.violation_count > 0
-                        or state.blocked_until > 0
-                        or state.warned_this_session
-                    ):
-                        save_data[str(uid)] = {
-                            "violation_count": state.violation_count,
-                            "blocked_until": state.blocked_until,
-                            "last_warning": state.last_warning,
-                            "warned_this_session": state.warned_this_session,
-                            "last_violation_time": state.last_violation_time,
-                        }
-                json.dump(save_data, f, indent=2)
-                f.flush()
-                os.fsync(f.fileno())
-            os.replace(temp_file, RL_FILE)
-            logger.debug(f"Saved rate limit data for {len(save_data)} users")
-        except Exception:
-            try:
-                os.close(fd)
-            except (OSError, ValueError):
-                pass
-            raise
-    except Exception as e:
-        logger.error(f"Failed to save rate limit data: {e}")
-    finally:
-        if temp_file and os.path.exists(temp_file):
-            try:
-                os.remove(temp_file)
-            except Exception:
-                pass
+def _save_user_data():
+    """Save user data using existing function"""
+    from notifications import save_users_data
+
+    save_users_data()
 
 
 class RateLimitMiddleware(BaseMiddleware):
@@ -140,13 +71,12 @@ class RateLimitMiddleware(BaseMiddleware):
 
     - Admins are exempt from all rate limiting
     - Normal menu interactions won't trigger these limits
-    - State is persisted to rate_limit_data.json
+    - State is persisted to users_data.json
     """
 
     def __init__(self, admin_ids: Optional[set] = None):
         super().__init__()
         self.admin_ids = admin_ids or set()
-        _load_rate_limit_data()
 
     async def __call__(
         self,
@@ -201,7 +131,7 @@ class RateLimitMiddleware(BaseMiddleware):
             )
             state.violation_count = 0
             state.warned_this_session = False
-            _save_rate_limit_data()
+            _save_user_data()
 
     def _get_user_id(self, event: Update) -> Optional[int]:
         """Extract user ID from update"""
@@ -264,6 +194,19 @@ class RateLimitMiddleware(BaseMiddleware):
         state.violation_count += 1
         state.last_violation_time = now
 
+        # Persist to users_data.json
+        users_data = _get_user_data()
+        if user_id not in users_data:
+            users_data[user_id] = {}
+        users_data[user_id]["rate_limit"] = {
+            "violation_count": state.violation_count,
+            "blocked_until": state.blocked_until,
+            "last_warning": state.last_warning,
+            "warned_this_session": state.warned_this_session,
+            "last_violation_time": state.last_violation_time,
+        }
+        _save_user_data()
+
         if state.violation_count == 1:
             # First violation: Warn only
             if not state.warned_this_session:
@@ -271,7 +214,6 @@ class RateLimitMiddleware(BaseMiddleware):
                 state.warned_this_session = True
                 state.last_warning = now
                 logger.info(f"Rate limit warning for user {user_id}: {reason}")
-            _save_rate_limit_data()
             return await handler(event, data)
 
         # Subsequent violations: Block with progressive duration
@@ -280,13 +222,16 @@ class RateLimitMiddleware(BaseMiddleware):
         ]
         state.blocked_until = now + block_duration
 
+        # Update persisted state
+        users_data[user_id]["rate_limit"]["blocked_until"] = state.blocked_until
+        _save_user_data()
+
         logger.warning(
             f"Rate limit block for user {user_id}: {reason}. "
             f"Violation #{state.violation_count}, blocked for {block_duration}s"
         )
 
         await self._send_block_message(event, block_duration)
-        _save_rate_limit_data()
         return None
 
     async def _send_warning(self, event: Update):
@@ -337,9 +282,38 @@ class RateLimitMiddleware(BaseMiddleware):
         return "unknown"
 
 
+def _load_from_users_data():
+    """Load rate limit state from users_data"""
+    users_data = _get_user_data()
+    for uid, data in users_data.items():
+        rl = data.get("rate_limit")
+        if rl:
+            state = _user_states[uid]
+            state.violation_count = rl.get("violation_count", 0)
+            state.blocked_until = rl.get("blocked_until", 0)
+            state.last_warning = rl.get("last_warning", 0)
+            state.warned_this_session = rl.get("warned_this_session", False)
+            state.last_violation_time = rl.get("last_violation_time", 0)
+
+
+def _update_users_data(uid: int, state: UserRateLimitState):
+    """Update users_data with rate limit state"""
+    users_data = _get_user_data()
+    if uid not in users_data:
+        users_data[uid] = {}
+    users_data[uid]["rate_limit"] = {
+        "violation_count": state.violation_count,
+        "blocked_until": state.blocked_until,
+        "last_warning": state.last_warning,
+        "warned_this_session": state.warned_this_session,
+        "last_violation_time": state.last_violation_time,
+    }
+    _save_user_data()
+
+
 def get_rate_limit_stats() -> Dict[str, Any]:
     """Get current rate limiting statistics"""
-    _load_rate_limit_data()
+    _load_from_users_data()
     users_with_violations = sum(
         1 for s in _user_states.values() if s.violation_count > 0
     )
@@ -366,7 +340,7 @@ def get_rate_limit_stats() -> Dict[str, Any]:
 
 def get_user_rate_limit_info(user_id: int) -> Optional[Dict[str, Any]]:
     """Get rate limit information for a specific user"""
-    _load_rate_limit_data()
+    _load_from_users_data()
     if user_id not in _user_states:
         return None
 
@@ -396,7 +370,7 @@ def get_rate_limited_users() -> Dict[int, Dict[str, Any]]:
     Returns a dict mapping user_id to their rate limit info for users who have
     violations or are currently blocked/warned.
     """
-    _load_rate_limit_data()
+    _load_from_users_data()
     result = {}
     now = time.time()
 
@@ -424,19 +398,14 @@ def get_rate_limited_users() -> Dict[int, Dict[str, Any]]:
 def reset_rate_limit_stats():
     """Reset all rate limiting statistics (for testing)"""
     _user_states.clear()
-    if os.path.exists(RL_FILE):
-        try:
-            os.remove(RL_FILE)
-        except Exception:
-            pass
+    users_data = _get_user_data()
+    for uid in users_data:
+        if "rate_limit" in users_data[uid]:
+            del users_data[uid]["rate_limit"]
+    _save_user_data()
 
 
 def set_admin_ids(admin_ids: set):
     """Update admin IDs for the middleware (called after initialization)"""
     global _admin_ids
     _admin_ids = admin_ids
-
-
-def save_rate_limit_data():
-    """Manually trigger save (for periodic backup)"""
-    _save_rate_limit_data()
