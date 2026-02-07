@@ -60,12 +60,14 @@ notification_lock = asyncio.Lock()
 def _is_already_notified(race_id: int, label: str) -> bool:
     """Backwards compatibility wrapper"""
     from notifications.history import is_already_notified as _is_notified
+
     return _is_notified(race_id, label)
 
 
 def _mark_notified(race_id: int, label: str) -> None:
     """Backwards compatibility wrapper"""
     from notifications.history import mark_notified as _mark
+
     _mark(race_id, label)
 
 
@@ -93,24 +95,16 @@ async def check_notifications(bot: Bot):
 
                 # Check all notification types
                 notifications_to_send = []
-                notifications_to_send.extend(
-                    check_quali_closing(now, races_closing)
-                )
+                notifications_to_send.extend(check_quali_closing(now, races_closing))
                 notifications_to_send.extend(await check_quali_open(now))
                 notifications_to_send.extend(check_quali_results(now))
                 notifications_to_send.extend(check_race_live_notifications(now))
-                notifications_to_send.extend(
-                    await check_last_race_results(now)
-                )
+                notifications_to_send.extend(await check_last_race_results(now))
                 notifications_to_send.extend(
                     check_custom_notifications(now, races_closing)
                 )
-                notifications_to_send.extend(
-                    check_new_season_reminder(now)
-                )
-                notifications_to_send.extend(
-                    check_snooze_reminders(now, races_closing)
-                )
+                notifications_to_send.extend(check_new_season_reminder(now))
+                notifications_to_send.extend(check_snooze_reminders(now, races_closing))
 
                 # Reset snooze counts for past deadlines
                 reset_snooze_counts_for_past_deadlines(now)
@@ -218,13 +212,15 @@ async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
                     should_send = False
 
                     if ntype == "new_season":
-                        # New season reminder uses race_live setting
-                        should_send = is_notification_enabled(user_id_int, "race_live")
+                        # New season reminder uses new_season_reminder setting
+                        should_send = is_notification_enabled(
+                            user_id_int, "new_season_reminder"
+                        )
                     elif ntype == "closing":
                         # Map labels to settings
                         label_map = {
-                            "72h": "custom_1",
-                            "48h": "custom_1",
+                            "72h": "72h",
+                            "48h": "48h",
                             "24h": "24h",
                             "2h": "2h",
                             "10min": "10min",
@@ -236,15 +232,21 @@ async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
                     elif ntype == "opens":
                         should_send = is_notification_enabled(user_id_int, "opens_soon")
                     elif ntype == "replay":
-                        should_send = is_notification_enabled(user_id_int, "race_replay")
+                        should_send = is_notification_enabled(
+                            user_id_int, "race_replay"
+                        )
                     elif ntype == "live":
                         should_send = is_notification_enabled(user_id_int, "race_live")
                     elif ntype == "results":
                         # Check label to determine which setting to use
                         if label == "quali_results":
-                            should_send = is_notification_enabled(user_id_int, "quali_results")
+                            should_send = is_notification_enabled(
+                                user_id_int, "quali_results"
+                            )
                         else:
-                            should_send = is_notification_enabled(user_id_int, "race_results")
+                            should_send = is_notification_enabled(
+                                user_id_int, "race_results"
+                            )
 
                     if should_send:
                         await send_notification_to_user(
@@ -264,13 +266,17 @@ async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
                     snooze_id = snooze_key.replace("snooze_", "")
                     from notifications.users import get_all_active_snoozes
 
-                    logger.debug(f"Removing snooze {snooze_id} from active_snoozes after sending")
+                    logger.debug(
+                        f"Removing snooze {snooze_id} from active_snoozes after sending"
+                    )
                     for snooze in get_all_active_snoozes():
                         if snooze["id"] == snooze_id:
                             if remove_active_snooze(snooze["user_id"], snooze_id):
                                 logger.debug(f"Removed active snooze {snooze_id}")
                             else:
-                                logger.warning(f"Failed to remove active snooze {snooze_id}")
+                                logger.warning(
+                                    f"Failed to remove active snooze {snooze_id}"
+                                )
                             break
 
         except Exception as e:

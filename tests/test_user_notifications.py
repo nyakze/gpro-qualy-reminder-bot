@@ -357,8 +357,8 @@ class TestNotificationSendingConditions:
         get_user_status(user_id)
 
         label_map = {
-            "72h": "custom_1",
-            "48h": "custom_1",
+            "72h": "72h",
+            "48h": "48h",
             "24h": "24h",
             "2h": "2h",
             "10min": "10min",
