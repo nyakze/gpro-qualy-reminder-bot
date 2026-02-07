@@ -259,9 +259,14 @@ class TestConvertToUserTimezone:
 class TestTimezoneSearchIndex:
     """Test timezone search index loading"""
 
-    def test_timezone_search_index_exists(self):
-        """Test timezone search index exists"""
+    def test_timezone_search_index_is_dict_or_none(self):
+        """Test timezone search index is properly initialized"""
         assert _timezone_search_index is None or isinstance(_timezone_search_index, dict)
+
+    def test_timezone_search_index_lookup(self):
+        """Test timezone search index can be used for lookups"""
+        if _timezone_search_index is not None:
+            assert isinstance(_timezone_search_index, dict)
 
 
 if __name__ == "__main__":

@@ -265,24 +265,6 @@ class TestCalendarParsing:
         assert calendar[1]["track"] == "Valid Track"
 
 
-class TestAPIResponseHandling:
-    """Test API response parsing and error handling"""
-
-    def test_update_calendar_missing_token(self):
-        """Test update fails without API token - skipped (requires async setup)"""
-        pass
-
-    @pytest.mark.skip(reason="Requires async test setup")
-    async def test_update_calendar_api_error(self):
-        """Test update handles API error gracefully"""
-        pass
-
-    @pytest.mark.skip(reason="Requires async test setup")
-    async def test_check_quali_status_missing_token(self):
-        """Test quali status check fails without API token"""
-        pass
-
-
 class TestCalendarSerialization:
     """Test calendar JSON serialization"""
 

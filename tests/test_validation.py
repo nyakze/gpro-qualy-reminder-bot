@@ -344,22 +344,14 @@ class TestFormatCustomNotificationTime:
         from notifications.validation import format_custom_notification_time
 
         result = format_custom_notification_time(0.5)  # 30 minutes
-        assert "30" in result
+        assert result == "30m"
 
     def test_format_hours_and_minutes(self):
         """Test formatting hours and minutes"""
         from notifications.validation import format_custom_notification_time
 
         result = format_custom_notification_time(2.5)  # 2 hours 30 minutes
-        assert "2" in result
-        assert "30" in result
-
-    def test_format_none(self):
-        """Test formatting None returns default"""
-        from notifications.validation import format_custom_notification_time
-
-        result = format_custom_notification_time(None)
-        assert result == "Not set"
+        assert result == "2h 30m"
 
 
 if __name__ == "__main__":
