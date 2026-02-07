@@ -243,7 +243,7 @@ class TestConvertToUserTimezone:
         result = convert_to_user_tz(None, 12345)
         assert result is None
 
-    @patch('timezone_utils.get_user_timezone')
+    @patch("timezone_utils.get_user_timezone")
     def test_convert_uses_user_timezone(self, mock_get_tz):
         """Test conversion uses user's timezone setting"""
 
@@ -261,7 +261,9 @@ class TestTimezoneSearchIndex:
 
     def test_timezone_search_index_is_dict_or_none(self):
         """Test timezone search index is properly initialized"""
-        assert _timezone_search_index is None or isinstance(_timezone_search_index, dict)
+        assert _timezone_search_index is None or isinstance(
+            _timezone_search_index, dict
+        )
 
     def test_timezone_search_index_lookup(self):
         """Test timezone search index can be used for lookups"""

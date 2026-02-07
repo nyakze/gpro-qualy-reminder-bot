@@ -1,11 +1,11 @@
 """Tests for race notification checks"""
 
-import pytest
 from datetime import datetime, timedelta, UTC
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 import os
 import sys
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
@@ -14,8 +14,8 @@ class TestCheckRaceLiveNotifications:
 
     def test_no_races_returns_empty(self):
         """Test that empty calendar returns empty list"""
-        with patch('notifications.history.get_notify_history', return_value={}):
-            with patch('notifications.checks.race.race_calendar', {}):
+        with patch("notifications.history.get_notify_history", return_value={}):
+            with patch("notifications.checks.race.race_calendar", {}):
                 from notifications.checks.race import check_race_live_notifications
 
                 now = datetime.now(UTC)
@@ -28,8 +28,12 @@ class TestCheckRaceLiveNotifications:
         race_time = now + timedelta(minutes=2)
         mock_history = {(1, "race_live"): now}
 
-        with patch('notifications.history.get_notify_history', return_value=mock_history):
-            with patch('notifications.checks.race.race_calendar', {1: {"date": race_time}}):
+        with patch(
+            "notifications.history.get_notify_history", return_value=mock_history
+        ):
+            with patch(
+                "notifications.checks.race.race_calendar", {1: {"date": race_time}}
+            ):
                 from notifications.checks.race import check_race_live_notifications
 
                 result = check_race_live_notifications(now)
@@ -40,8 +44,10 @@ class TestCheckRaceLiveNotifications:
         now = datetime.now(UTC)
         race_time = now + timedelta(minutes=2)
 
-        with patch('notifications.history.get_notify_history', return_value={}):
-            with patch('notifications.checks.race.race_calendar', {1: {"date": race_time}}):
+        with patch("notifications.history.get_notify_history", return_value={}):
+            with patch(
+                "notifications.checks.race.race_calendar", {1: {"date": race_time}}
+            ):
                 from notifications.checks.race import check_race_live_notifications
 
                 result = check_race_live_notifications(now)
@@ -55,8 +61,10 @@ class TestCheckRaceLiveNotifications:
         now = datetime.now(UTC)
         race_time = now - timedelta(minutes=1)
 
-        with patch('notifications.history.get_notify_history', return_value={}):
-            with patch('notifications.checks.race.race_calendar', {1: {"date": race_time}}):
+        with patch("notifications.history.get_notify_history", return_value={}):
+            with patch(
+                "notifications.checks.race.race_calendar", {1: {"date": race_time}}
+            ):
                 from notifications.checks.race import check_race_live_notifications
 
                 result = check_race_live_notifications(now)
@@ -67,8 +75,10 @@ class TestCheckRaceLiveNotifications:
         now = datetime.now(UTC)
         race_time = now + timedelta(minutes=5)
 
-        with patch('notifications.history.get_notify_history', return_value={}):
-            with patch('notifications.checks.race.race_calendar', {1: {"date": race_time}}):
+        with patch("notifications.history.get_notify_history", return_value={}):
+            with patch(
+                "notifications.checks.race.race_calendar", {1: {"date": race_time}}
+            ):
                 from notifications.checks.race import check_race_live_notifications
 
                 result = check_race_live_notifications(now)
@@ -79,8 +89,10 @@ class TestCheckRaceLiveNotifications:
         now = datetime.now(UTC)
         race_time = now + timedelta(minutes=10)
 
-        with patch('notifications.history.get_notify_history', return_value={}):
-            with patch('notifications.checks.race.race_calendar', {1: {"date": race_time}}):
+        with patch("notifications.history.get_notify_history", return_value={}):
+            with patch(
+                "notifications.checks.race.race_calendar", {1: {"date": race_time}}
+            ):
                 from notifications.checks.race import check_race_live_notifications
 
                 result = check_race_live_notifications(now)
@@ -92,11 +104,14 @@ class TestCheckRaceLiveNotifications:
         race1_time = now + timedelta(minutes=2)
         race2_time = now + timedelta(minutes=4)
 
-        with patch('notifications.history.get_notify_history', return_value={}):
-            with patch('notifications.checks.race.race_calendar', {
-                1: {"date": race1_time},
-                2: {"date": race2_time},
-            }):
+        with patch("notifications.history.get_notify_history", return_value={}):
+            with patch(
+                "notifications.checks.race.race_calendar",
+                {
+                    1: {"date": race1_time},
+                    2: {"date": race2_time},
+                },
+            ):
                 from notifications.checks.race import check_race_live_notifications
 
                 result = check_race_live_notifications(now)
@@ -108,9 +123,11 @@ class TestCheckLastRaceResults:
 
     def test_no_last_race_returns_empty(self):
         """Test that missing last race returns empty list"""
-        with patch('notifications.history.get_notify_history', return_value={}):
-            with patch('notifications.checks.race.race_calendar', {}):
-                with patch('notifications.checks.race.get_last_race_id', return_value=0):
+        with patch("notifications.history.get_notify_history", return_value={}):
+            with patch("notifications.checks.race.race_calendar", {}):
+                with patch(
+                    "notifications.checks.race.get_last_race_id", return_value=0
+                ):
                     from notifications.checks.race import check_last_race_results
                     import asyncio
 
@@ -135,8 +152,11 @@ class TestCheckLastRaceResults:
 
         now = datetime.now(UTC)
 
-        with patch('notifications.history.get_notify_history', return_value={}):
-            with patch('notifications.checks.race.race_calendar', {1: {"date": now + timedelta(minutes=6)}}):
+        with patch("notifications.history.get_notify_history", return_value={}):
+            with patch(
+                "notifications.checks.race.race_calendar",
+                {1: {"date": now + timedelta(minutes=6)}},
+            ):
                 from notifications.checks.race import check_race_live_notifications
 
                 result = check_race_live_notifications(now)
@@ -147,8 +167,10 @@ class TestCheckLastRaceResults:
         now = datetime.now(UTC)
         race_time = now + timedelta(minutes=2)
 
-        with patch('notifications.history.get_notify_history', return_value={}):
-            with patch('notifications.checks.race.race_calendar', {1: {"date": race_time}}):
+        with patch("notifications.history.get_notify_history", return_value={}):
+            with patch(
+                "notifications.checks.race.race_calendar", {1: {"date": race_time}}
+            ):
                 from notifications.checks.race import check_race_live_notifications
 
                 result = check_race_live_notifications(now)

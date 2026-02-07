@@ -29,7 +29,9 @@ class TestCountryCodeToFlag:
 
         for code, expected_flag in test_cases:
             result = country_code_to_flag(code)
-            assert result == expected_flag, f"Expected {code} -> {expected_flag}, got {result}"
+            assert (
+                result == expected_flag
+            ), f"Expected {code} -> {expected_flag}, got {result}"
 
     def test_lowercase_country_codes(self):
         """Test conversion handles lowercase"""
@@ -76,7 +78,9 @@ class TestCountryNameToISO:
 
         for name, expected_code in test_cases:
             result = get_country_iso_code(name)
-            assert result == expected_code, f"Expected {name} -> {expected_code}, got {result}"
+            assert (
+                result == expected_code
+            ), f"Expected {name} -> {expected_code}, got {result}"
 
     def test_manual_mappings(self):
         """Test manual country name mappings"""
@@ -202,7 +206,9 @@ class TestLanguageMapping:
 
         for telegram_code, expected_ui in test_cases:
             result = map_telegram_language(telegram_code)
-            assert result == expected_ui, f"Expected {telegram_code} -> {expected_ui}, got {result}"
+            assert (
+                result == expected_ui
+            ), f"Expected {telegram_code} -> {expected_ui}, got {result}"
 
     def test_unknown_language(self):
         """Test unknown language falls back to English"""
@@ -233,7 +239,20 @@ class TestUIDisplayNames:
         """Test all supported languages have display names"""
         from utils import UI_LANGUAGE_DISPLAY
 
-        expected_languages = ["gb", "ru", "br", "it", "es", "fr", "nl", "bg", "cz", "in", "ua", "pt"]
+        expected_languages = [
+            "gb",
+            "ru",
+            "br",
+            "it",
+            "es",
+            "fr",
+            "nl",
+            "bg",
+            "cz",
+            "in",
+            "ua",
+            "pt",
+        ]
 
         for lang in expected_languages:
             assert lang in UI_LANGUAGE_DISPLAY
@@ -262,7 +281,7 @@ class TestUserDataSerialization:
         import tempfile
         import os
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             temp_path = f.name
 
         try:
@@ -274,20 +293,20 @@ class TestUserDataSerialization:
                         "48h": True,
                         "24h": True,
                         "2h": True,
-                        "10min": True
+                        "10min": True,
                     },
                     "custom_notifications": [
                         {"enabled": False, "hours_before": None},
-                        {"enabled": False, "hours_before": None}
+                        {"enabled": False, "hours_before": None},
                     ],
-                    "group": "P15"
+                    "group": "P15",
                 }
             }
 
-            with open(temp_path, 'w') as f:
+            with open(temp_path, "w") as f:
                 json.dump(test_data, f)
 
-            with open(temp_path, 'r') as f:
+            with open(temp_path, "r") as f:
                 loaded = json.load(f)
 
             assert loaded is not None
@@ -301,7 +320,7 @@ class TestUserDataSerialization:
         import tempfile
         import os
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             temp_path = f.name
 
         try:
@@ -311,14 +330,14 @@ class TestUserDataSerialization:
                     "timezone": "UTC",
                     "notifications": {},
                     "custom_notifications": [],
-                    "group": "E"
+                    "group": "E",
                 }
             }
 
-            with open(temp_path, 'w') as f:
+            with open(temp_path, "w") as f:
                 json.dump(test_data, f, indent=2)
 
-            with open(temp_path, 'r') as f:
+            with open(temp_path, "r") as f:
                 loaded = json.load(f)
 
             assert loaded["user1"]["language"] == "gb"
@@ -337,7 +356,7 @@ class TestDateTimeFormatting:
         race_data = {
             "track": "Test GP (Country)",
             "hours_left": 24.5,
-            "quali_close": datetime(2025, 7, 15, 18, 0, tzinfo=UTC)
+            "quali_close": datetime(2025, 7, 15, 18, 0, tzinfo=UTC),
         }
 
         result = format_race_beautiful(race_data)
@@ -400,7 +419,7 @@ class TestFullCalendarFormatting:
                 "track": "Test Track (Test Country)",
                 "quali_close": datetime.now(UTC) + timedelta(days=7),
                 "date": datetime.now(UTC) + timedelta(days=7),
-                "group": "Pro"
+                "group": "Pro",
             }
         }
 
@@ -417,7 +436,7 @@ class TestFullCalendarFormatting:
                 "track": "Test Track (Test Country)",
                 "quali_close": datetime.now(UTC) + timedelta(days=7),
                 "date": datetime.now(UTC) + timedelta(days=7),
-                "group": "Pro"
+                "group": "Pro",
             }
         }
 

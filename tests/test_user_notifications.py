@@ -1,18 +1,17 @@
 """Tests for user notification interactions - toggles, groups, and settings"""
 
 import pytest
-from datetime import datetime, timedelta, UTC
-from unittest.mock import patch, MagicMock
 
 import os
 import sys
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 @pytest.fixture(autouse=True)
 def reset_user_data():
     """Reset user data before and after each test"""
-    from notifications.users.storage import users_data, USERS_FILE, save_users_data
+    from notifications.users.storage import users_data, USERS_FILE
     from notifications.history import set_notify_history
     import os
 
@@ -36,7 +35,11 @@ class TestToggleNotification:
 
     def test_toggle_notification_enable_to_disable(self):
         """Test toggling notification from enabled to disabled"""
-        from notifications import get_user_status, toggle_notification, is_notification_enabled
+        from notifications import (
+            get_user_status,
+            toggle_notification,
+            is_notification_enabled,
+        )
 
         user_id = 11111
         get_user_status(user_id)
@@ -52,7 +55,11 @@ class TestToggleNotification:
 
     def test_toggle_notification_disable_to_enable(self):
         """Test toggling notification from disabled to enabled"""
-        from notifications import get_user_status, toggle_notification, is_notification_enabled
+        from notifications import (
+            get_user_status,
+            toggle_notification,
+            is_notification_enabled,
+        )
 
         user_id = 22222
         get_user_status(user_id)
@@ -66,16 +73,27 @@ class TestToggleNotification:
 
     def test_toggle_all_notification_types(self):
         """Test toggling all notification types"""
-        from notifications import get_user_status, toggle_notification, is_notification_enabled
+        from notifications import (
+            get_user_status,
+            toggle_notification,
+            is_notification_enabled,
+        )
 
         user_id = 33333
         get_user_status(user_id)
 
         notification_types = [
-            "72h", "48h", "24h", "2h", "10min",
-            "opens_soon", "quali_results",
-            "race_live", "race_replay", "race_results",
-            "new_season_reminder"
+            "72h",
+            "48h",
+            "24h",
+            "2h",
+            "10min",
+            "opens_soon",
+            "quali_results",
+            "race_live",
+            "race_replay",
+            "race_results",
+            "new_season_reminder",
         ]
 
         for notif_type in notification_types:
@@ -98,7 +116,11 @@ class TestMassEnableDisable:
 
     def test_disable_all_notifications(self):
         """Test disabling all notifications at once"""
-        from notifications import get_user_status, is_notification_enabled, set_user_group
+        from notifications import (
+            get_user_status,
+            is_notification_enabled,
+            set_user_group,
+        )
 
         user_id = 11111
         get_user_status(user_id)
@@ -111,6 +133,7 @@ class TestMassEnableDisable:
             user_status["notifications"][notif_type] = False
 
         from notifications.users.storage import save_users_data
+
         save_users_data()
 
         for notif_type in notif_types:
@@ -118,7 +141,11 @@ class TestMassEnableDisable:
 
     def test_enable_all_notifications(self):
         """Test enabling all notifications at once"""
-        from notifications import get_user_status, is_notification_enabled, set_user_group
+        from notifications import (
+            get_user_status,
+            is_notification_enabled,
+            set_user_group,
+        )
 
         user_id = 22222
         get_user_status(user_id)
@@ -134,6 +161,7 @@ class TestMassEnableDisable:
             user_status["notifications"][notif_type] = True
 
         from notifications.users.storage import save_users_data
+
         save_users_data()
 
         for notif_type in notif_types:
@@ -141,7 +169,11 @@ class TestMassEnableDisable:
 
     def test_partial_disable_then_enable_all(self):
         """Test enabling all after partial disable"""
-        from notifications import get_user_status, toggle_notification, is_notification_enabled
+        from notifications import (
+            get_user_status,
+            toggle_notification,
+            is_notification_enabled,
+        )
 
         user_id = 33333
         get_user_status(user_id)
@@ -156,6 +188,7 @@ class TestMassEnableDisable:
             user_status["notifications"][notif_type] = True
 
         from notifications.users.storage import save_users_data
+
         save_users_data()
 
         for notif_type in notif_types:
@@ -199,6 +232,7 @@ class TestNotificationCategories:
 
         user_id = 99901
         from notifications import get_user_status as load_user
+
         load_user(user_id)
 
         user_status = get_user_status(user_id)[0]
@@ -208,6 +242,7 @@ class TestNotificationCategories:
             user_status["notifications"][notif_type] = False
 
         from notifications.users.storage import save_users_data
+
         save_users_data()
 
         for notif_type in category_types:
@@ -294,7 +329,11 @@ class TestNotificationSendingConditions:
 
     def test_notification_blocked_when_disabled(self):
         """Test that notification is blocked when user has it disabled"""
-        from notifications import get_user_status, toggle_notification, is_notification_enabled
+        from notifications import (
+            get_user_status,
+            toggle_notification,
+            is_notification_enabled,
+        )
 
         user_id = 22222
         get_user_status(user_id)
@@ -305,7 +344,11 @@ class TestNotificationSendingConditions:
 
     def test_race_live_requires_enabled_setting(self):
         """Test race_live notification check"""
-        from notifications import get_user_status, toggle_notification, is_notification_enabled
+        from notifications import (
+            get_user_status,
+            toggle_notification,
+            is_notification_enabled,
+        )
 
         user_id = 33333
         get_user_status(user_id)
@@ -317,7 +360,11 @@ class TestNotificationSendingConditions:
 
     def test_quali_results_requires_enabled_setting(self):
         """Test quali_results notification check"""
-        from notifications import get_user_status, toggle_notification, is_notification_enabled
+        from notifications import (
+            get_user_status,
+            toggle_notification,
+            is_notification_enabled,
+        )
 
         user_id = 44444
         get_user_status(user_id)
@@ -329,7 +376,11 @@ class TestNotificationSendingConditions:
 
     def test_opens_soon_requires_enabled_setting(self):
         """Test opens_soon notification check"""
-        from notifications import get_user_status, toggle_notification, is_notification_enabled
+        from notifications import (
+            get_user_status,
+            toggle_notification,
+            is_notification_enabled,
+        )
 
         user_id = 55555
         get_user_status(user_id)
@@ -370,7 +421,7 @@ class TestNotificationSendingConditions:
 
     def test_blocked_user_receives_no_notifications(self):
         """Test that blocked users are filtered out"""
-        from notifications import get_user_status, is_notification_enabled
+        from notifications import get_user_status
         from notifications.users.blocked import mark_user_blocked, is_user_blocked
 
         user_id = 88888
@@ -450,7 +501,11 @@ class TestLanguageSettings:
 
     def test_set_ui_language(self):
         """Test setting user UI language"""
-        from notifications import get_user_status, set_user_ui_language, get_user_ui_language
+        from notifications import (
+            get_user_status,
+            set_user_ui_language,
+            get_user_ui_language,
+        )
 
         user_id = 33333
         get_user_status(user_id)
@@ -504,7 +559,11 @@ class TestWebsiteMode:
 
     def test_set_website_mode_classic(self):
         """Test setting website mode to classic"""
-        from notifications import get_user_status, set_user_website_mode, get_user_website_mode
+        from notifications import (
+            get_user_status,
+            set_user_website_mode,
+            get_user_website_mode,
+        )
 
         user_id = 11111
         get_user_status(user_id)
@@ -517,7 +576,11 @@ class TestWebsiteMode:
 
     def test_set_website_mode_app(self):
         """Test setting website mode to app"""
-        from notifications import get_user_status, set_user_website_mode, get_user_website_mode
+        from notifications import (
+            get_user_status,
+            set_user_website_mode,
+            get_user_website_mode,
+        )
 
         user_id = 22222
         get_user_status(user_id)
@@ -586,10 +649,7 @@ class TestUserProfile:
         user_id = 44444
         get_user_status(user_id)
         update_user_profile(
-            user_id,
-            username="testuser",
-            first_name="Test",
-            tg_language_code="en"
+            user_id, username="testuser", first_name="Test", tg_language_code="en"
         )
 
         profile = get_user_profile(user_id)

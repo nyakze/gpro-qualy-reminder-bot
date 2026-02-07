@@ -1,7 +1,7 @@
 """Tests for GPRO calendar parsing and API response handling"""
 
 import pytest
-from datetime import datetime, UTC
+from datetime import datetime, timedelta, UTC
 import sys
 import os
 
@@ -133,15 +133,15 @@ class TestCalendarParsing:
                 "idxReal": 1,
                 "dateEvent": "15.07.2025",
                 "trackName": "Spa GP",
-                "group": "Pro"
+                "group": "Pro",
             },
             {
                 "eventType": "R",
                 "idxReal": 2,
                 "dateEvent": "22.07.2025",
                 "trackName": "Monaco GP",
-                "group": "Pro"
-            }
+                "group": "Pro",
+            },
         ]
 
         calendar = parse_gpro_events(events)
@@ -162,15 +162,15 @@ class TestCalendarParsing:
                 "idxReal": 5,
                 "dateEvent": "15.07.2025",
                 "trackName": "Spa GP",
-                "group": "Pro"
+                "group": "Pro",
             },
             {
                 "eventType": "R",
                 "idxReal": 17,
                 "dateEvent": "22.07.2025",
                 "trackName": "Monaco GP",
-                "group": "Pro"
-            }
+                "group": "Pro",
+            },
         ]
 
         calendar = parse_gpro_events(events)
@@ -205,7 +205,7 @@ class TestCalendarParsing:
                 "eventType": "R",
                 "idxReal": 1,
                 "dateEvent": "15.07.2025",
-                "trackName": "Test Track"
+                "trackName": "Test Track",
             }
         ]
 
@@ -224,15 +224,15 @@ class TestCalendarParsing:
                 "idxReal": 1,
                 "dateEvent": "22.07.2025",
                 "trackName": "Monaco GP",
-                "group": "Pro"
+                "group": "Pro",
             },
             {
                 "eventType": "R",
                 "idxReal": 2,
                 "dateEvent": "15.07.2025",
                 "trackName": "Spa GP",
-                "group": "Pro"
-            }
+                "group": "Pro",
+            },
         ]
 
         calendar = parse_gpro_events(events)
@@ -257,7 +257,7 @@ class TestCalendarParsing:
                 "idxReal": 2,
                 "dateEvent": "15.07.2025",
                 "trackName": "Valid Track",
-            }
+            },
         ]
 
         calendar = parse_gpro_events(events)
@@ -270,7 +270,11 @@ class TestCalendarSerialization:
 
     def test_save_and_load_calendar(self):
         """Test calendar can be saved and loaded"""
-        from gpro_calendar import parse_gpro_events, _save_calendar_to_file, _load_calendar_from_file
+        from gpro_calendar import (
+            parse_gpro_events,
+            _save_calendar_to_file,
+            _load_calendar_from_file,
+        )
         import tempfile
         import os
 
@@ -280,13 +284,13 @@ class TestCalendarSerialization:
                 "idxReal": 1,
                 "dateEvent": "15.07.2025",
                 "trackName": "Spa GP",
-                "group": "Pro"
+                "group": "Pro",
             }
         ]
 
         calendar = parse_gpro_events(events)
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             temp_path = f.name
 
         try:
@@ -336,6 +340,41 @@ class TestSeasonTransition:
         gpro_calendar.next_season_calendar = {}
 
         now = datetime.now(UTC)
+        result = should_prefetch_next_season(now)
+        assert result is False
+
+    def test_should_not_prefetch_when_already_exists(self):
+        """Test prefetch doesn't trigger when next season already loaded"""
+        from gpro_calendar import should_prefetch_next_season
+        import gpro_calendar
+
+        now = datetime.now(UTC)
+        gpro_calendar.race_calendar = {
+            1: {
+                "date": now + timedelta(days=4),
+                "quali_close": now + timedelta(days=4, hours=-1.5),
+            }
+        }
+        gpro_calendar.next_season_calendar = {1: {"date": now + timedelta(days=30)}}
+
+        result = should_prefetch_next_season(now)
+        assert result is False
+
+    def test_should_not_prefetch_too_early(self):
+        """Test prefetch doesn't trigger too early (more than 4 days)"""
+        from gpro_calendar import should_prefetch_next_season
+        import gpro_calendar
+
+        now = datetime.now(UTC)
+        # First race is 6 days away - outside prefetch window
+        gpro_calendar.race_calendar = {
+            1: {
+                "date": now + timedelta(days=6),
+                "quali_close": now + timedelta(days=6, hours=-1.5),
+            }
+        }
+        gpro_calendar.next_season_calendar = {}
+
         result = should_prefetch_next_season(now)
         assert result is False
 

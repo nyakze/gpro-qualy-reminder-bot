@@ -13,7 +13,10 @@ class TestCheckIntervals:
 
     def test_normal_interval(self):
         """Test normal check interval (5 minutes)"""
-        from notifications.timing import get_next_check_interval, CHECK_INTERVAL_NORMAL_SECONDS
+        from notifications.timing import (
+            get_next_check_interval,
+            CHECK_INTERVAL_NORMAL_SECONDS,
+        )
 
         now = datetime.now(UTC)
         race_calendar = {}
@@ -23,7 +26,11 @@ class TestCheckIntervals:
 
     def test_fast_interval_approaching_race(self):
         """Test fast interval when approaching race time"""
-        from notifications.timing import get_next_check_interval, CHECK_INTERVAL_FAST_SECONDS, CHECK_INTERVAL_CLOSING_HOURS
+        from notifications.timing import (
+            get_next_check_interval,
+            CHECK_INTERVAL_FAST_SECONDS,
+            CHECK_INTERVAL_CLOSING_HOURS,
+        )
 
         now = datetime.now(UTC)
 
@@ -33,7 +40,7 @@ class TestCheckIntervals:
                 "quali_close": future_date,
                 "track": "Test",
                 "date": future_date,
-                "group": "Pro"
+                "group": "Pro",
             }
         }
 
@@ -42,7 +49,10 @@ class TestCheckIntervals:
 
     def test_fast_interval_quali_open_window(self):
         """Test fast interval during quali open window"""
-        from notifications.timing import get_next_check_interval, CHECK_INTERVAL_NORMAL_SECONDS
+        from notifications.timing import (
+            get_next_check_interval,
+            CHECK_INTERVAL_NORMAL_SECONDS,
+        )
 
         now = datetime.now(UTC)
 
@@ -53,7 +63,7 @@ class TestCheckIntervals:
                 "quali_close": future_date,
                 "track": "Race 1",
                 "date": future_date,
-                "group": "Pro"
+                "group": "Pro",
             }
         }
 
@@ -62,7 +72,11 @@ class TestCheckIntervals:
 
     def test_normal_interval_far_from_race(self):
         """Test normal interval when far from race"""
-        from notifications.timing import get_next_check_interval, CHECK_INTERVAL_NORMAL_SECONDS, CHECK_INTERVAL_CLOSING_HOURS
+        from notifications.timing import (
+            get_next_check_interval,
+            CHECK_INTERVAL_NORMAL_SECONDS,
+            CHECK_INTERVAL_CLOSING_HOURS,
+        )
 
         now = datetime.now(UTC)
 
@@ -72,7 +86,7 @@ class TestCheckIntervals:
                 "quali_close": distant_date,
                 "track": "Test",
                 "date": distant_date,
-                "group": "Pro"
+                "group": "Pro",
             }
         }
 
@@ -81,7 +95,10 @@ class TestCheckIntervals:
 
     def test_fast_interval_with_snooze(self):
         """Test fast interval when snooze is about to fire"""
-        from notifications.timing import get_next_check_interval, CHECK_INTERVAL_NORMAL_SECONDS
+        from notifications.timing import (
+            get_next_check_interval,
+            CHECK_INTERVAL_NORMAL_SECONDS,
+        )
 
         now = datetime.now(UTC)
         race_calendar = {}
@@ -99,7 +116,7 @@ class TestNotificationTimingConstants:
             API_CHECK_START_HOURS,
             API_CHECK_END_HOURS,
             API_CHECK_INTERVAL_MINUTES,
-            FALLBACK_TOLERANCE_MINUTES
+            FALLBACK_TOLERANCE_MINUTES,
         )
 
         assert API_CHECK_START_HOURS == 2.0
@@ -112,7 +129,7 @@ class TestNotificationTimingConstants:
         from notifications.timing import (
             CHECK_INTERVAL_NORMAL_SECONDS,
             CHECK_INTERVAL_FAST_SECONDS,
-            CHECK_INTERVAL_CLOSING_HOURS
+            CHECK_INTERVAL_CLOSING_HOURS,
         )
 
         assert CHECK_INTERVAL_NORMAL_SECONDS == 300  # 5 minutes
@@ -181,14 +198,14 @@ class TestRaceCalendarTiming:
                 "quali_close": now + timedelta(hours=24),
                 "track": "Test",
                 "date": now + timedelta(hours=48),
-                "group": "Pro"
+                "group": "Pro",
             },
             2: {
                 "quali_close": now + timedelta(hours=48),
                 "track": "Test 2",
                 "date": now + timedelta(hours=72),
-                "group": "Pro"
-            }
+                "group": "Pro",
+            },
         }
 
         races = get_races_closing_soon(hours_before=720)

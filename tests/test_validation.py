@@ -306,7 +306,9 @@ class TestCustomNotificationValidation:
         is_valid, error = validate_custom_notification_hours(CUSTOM_NOTIF_MIN_HOURS)
         assert is_valid is True
 
-        is_valid, error = validate_custom_notification_hours(CUSTOM_NOTIF_MIN_HOURS - 0.01)
+        is_valid, error = validate_custom_notification_hours(
+            CUSTOM_NOTIF_MIN_HOURS - 0.01
+        )
         assert is_valid is False
 
     def test_maximum_hours(self):
@@ -317,7 +319,9 @@ class TestCustomNotificationValidation:
         is_valid, error = validate_custom_notification_hours(CUSTOM_NOTIF_MAX_HOURS)
         assert is_valid is True
 
-        is_valid, error = validate_custom_notification_hours(CUSTOM_NOTIF_MAX_HOURS + 0.01)
+        is_valid, error = validate_custom_notification_hours(
+            CUSTOM_NOTIF_MAX_HOURS + 0.01
+        )
         assert is_valid is False
 
     def test_none_hours(self):

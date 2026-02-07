@@ -1,11 +1,11 @@
 """Tests for qualification notification checks"""
 
-import pytest
 from datetime import datetime, timedelta, UTC
-from unittest.mock import patch, MagicMock, AsyncMock
+from unittest.mock import patch
 
 import os
 import sys
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
@@ -120,8 +120,8 @@ class TestCheckQualiResults:
 
     def test_no_races_returns_empty(self):
         """Test that empty calendar returns empty list"""
-        with patch('notifications.history.get_notify_history', return_value={}):
-            with patch('notifications.checks.quali.race_calendar', {}):
+        with patch("notifications.history.get_notify_history", return_value={}):
+            with patch("notifications.checks.quali.race_calendar", {}):
                 from notifications.checks.quali import check_quali_results
 
                 now = datetime.now(UTC)
@@ -133,8 +133,11 @@ class TestCheckQualiResults:
         now = datetime.now(UTC)
         quali_close = now - timedelta(minutes=3)
 
-        with patch('notifications.history.get_notify_history', return_value={}):
-            with patch('notifications.checks.quali.race_calendar', {1: {"quali_close": quali_close}}):
+        with patch("notifications.history.get_notify_history", return_value={}):
+            with patch(
+                "notifications.checks.quali.race_calendar",
+                {1: {"quali_close": quali_close}},
+            ):
                 from notifications.checks.quali import check_quali_results
 
                 result = check_quali_results(now)
@@ -145,8 +148,11 @@ class TestCheckQualiResults:
         now = datetime.now(UTC)
         quali_close = now - timedelta(minutes=10)
 
-        with patch('notifications.history.get_notify_history', return_value={}):
-            with patch('notifications.checks.quali.race_calendar', {1: {"quali_close": quali_close}}):
+        with patch("notifications.history.get_notify_history", return_value={}):
+            with patch(
+                "notifications.checks.quali.race_calendar",
+                {1: {"quali_close": quali_close}},
+            ):
                 from notifications.checks.quali import check_quali_results
 
                 result = check_quali_results(now)
@@ -160,8 +166,13 @@ class TestCheckQualiResults:
         quali_close = now - timedelta(minutes=10)
         mock_history = {(1, "quali_results"): now}
 
-        with patch('notifications.history.get_notify_history', return_value=mock_history):
-            with patch('notifications.checks.quali.race_calendar', {1: {"quali_close": quali_close}}):
+        with patch(
+            "notifications.history.get_notify_history", return_value=mock_history
+        ):
+            with patch(
+                "notifications.checks.quali.race_calendar",
+                {1: {"quali_close": quali_close}},
+            ):
                 from notifications.checks.quali import check_quali_results
 
                 result = check_quali_results(now)
@@ -172,8 +183,11 @@ class TestCheckQualiResults:
         now = datetime.now(UTC)
         quali_close = now - timedelta(minutes=5)
 
-        with patch('notifications.history.get_notify_history', return_value={}):
-            with patch('notifications.checks.quali.race_calendar', {1: {"quali_close": quali_close}}):
+        with patch("notifications.history.get_notify_history", return_value={}):
+            with patch(
+                "notifications.checks.quali.race_calendar",
+                {1: {"quali_close": quali_close}},
+            ):
                 from notifications.checks.quali import check_quali_results
 
                 result = check_quali_results(now)
@@ -196,8 +210,10 @@ class TestQualiOpenNotificationLabels:
             1: {"date": now - timedelta(hours=2)},
         }
 
-        with patch('notifications.history.get_notify_history', return_value=mock_history):
-            with patch('notifications.checks.quali.race_calendar', mock_calendar):
+        with patch(
+            "notifications.history.get_notify_history", return_value=mock_history
+        ):
+            with patch("notifications.checks.quali.race_calendar", mock_calendar):
                 races = _get_races_for_polling(now)
                 if races:
                     assert len(races) > 0
@@ -213,8 +229,8 @@ class TestQualiOpenNotificationLabels:
             1: {"date": race_time},
         }
 
-        with patch('notifications.history.get_notify_history', return_value={}):
-            with patch('notifications.checks.quali.race_calendar', mock_calendar):
+        with patch("notifications.history.get_notify_history", return_value={}):
+            with patch("notifications.checks.quali.race_calendar", mock_calendar):
                 races = _get_races_for_polling(now)
                 assert len(races) == 0
 
@@ -229,8 +245,13 @@ class TestReplayAndResultsLabels:
         mock_notifications = []
         mock_history = {}
 
-        with patch('notifications.history.get_notify_history', return_value=mock_history):
-            with patch('notifications.checks.quali.race_calendar', {1: {"date": datetime.now(UTC)}}):
+        with patch(
+            "notifications.history.get_notify_history", return_value=mock_history
+        ):
+            with patch(
+                "notifications.checks.quali.race_calendar",
+                {1: {"date": datetime.now(UTC)}},
+            ):
                 _add_replay_and_results_notifications(mock_notifications, 1)
 
                 if mock_notifications:
@@ -244,8 +265,13 @@ class TestReplayAndResultsLabels:
         mock_notifications = []
         mock_history = {}
 
-        with patch('notifications.history.get_notify_history', return_value=mock_history):
-            with patch('notifications.checks.quali.race_calendar', {1: {"date": datetime.now(UTC)}}):
+        with patch(
+            "notifications.history.get_notify_history", return_value=mock_history
+        ):
+            with patch(
+                "notifications.checks.quali.race_calendar",
+                {1: {"date": datetime.now(UTC)}},
+            ):
                 _add_replay_and_results_notifications(mock_notifications, 1)
 
                 if mock_notifications:

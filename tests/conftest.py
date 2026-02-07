@@ -1,11 +1,23 @@
 """Pytest configuration and fixtures for GPRO bot tests"""
 
+import asyncio
 import pytest
+import pytest_asyncio
 import sys
 import os
 from datetime import datetime, UTC, timedelta
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+
+@pytest_asyncio.fixture(scope="function")
+async def event_loop():
+    """Create an instance of the default event loop for each test case."""
+    import asyncio
+
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    yield loop
+    loop.close()
 
 
 @pytest.fixture
@@ -19,14 +31,14 @@ def sample_race_calendar():
             "track": "Spa GP (Belgium)",
             "date": now + timedelta(hours=48),
             "group": "Pro",
-            "weather": {"temp": 20, "condition": "sunny"}
+            "weather": {"temp": 20, "condition": "sunny"},
         },
         2: {
             "quali_close": now + timedelta(hours=168),
             "track": "Monaco GP (Monaco)",
             "date": now + timedelta(hours=192),
-            "group": "Pro"
-        }
+            "group": "Pro",
+        },
     }
 
 
@@ -47,14 +59,14 @@ def sample_user_data():
                 "race_replay": True,
                 "race_results": True,
                 "custom_1": False,
-                "custom_2": False
+                "custom_2": False,
             },
             "custom_notifications": [
                 {"enabled": False, "hours_before": None},
-                {"enabled": False, "hours_before": None}
+                {"enabled": False, "hours_before": None},
             ],
             "group": "P15",
-            "snoozes": []
+            "snoozes": [],
         },
         "67890": {
             "language": "ru",
@@ -69,15 +81,15 @@ def sample_user_data():
                 "race_replay": True,
                 "race_results": True,
                 "custom_1": True,
-                "custom_2": False
+                "custom_2": False,
             },
             "custom_notifications": [
                 {"enabled": True, "hours_before": 12.0},
-                {"enabled": False, "hours_before": None}
+                {"enabled": False, "hours_before": None},
             ],
             "group": "M3",
-            "snoozes": []
-        }
+            "snoozes": [],
+        },
     }
 
 
@@ -91,15 +103,15 @@ def mock_api_response_races():
                 "idxReal": 5,
                 "dateEvent": "15.07.2025",
                 "trackName": "Spa GP",
-                "group": "Pro"
+                "group": "Pro",
             },
             {
                 "eventType": "R",
                 "idxReal": 17,
                 "dateEvent": "22.07.2025",
                 "trackName": "Monaco GP",
-                "group": "Pro"
-            }
+                "group": "Pro",
+            },
         ],
         "nextSeasonPublished": True,
         "nextSeasonEvents": [
@@ -108,9 +120,9 @@ def mock_api_response_races():
                 "idxReal": 1,
                 "dateEvent": "01.01.2026",
                 "trackName": "New Season GP",
-                "group": "Pro"
+                "group": "Pro",
             }
-        ]
+        ],
     }
 
 
@@ -136,7 +148,7 @@ def mock_timezone_search_index():
             "New York": "America/New_York",
             "US Eastern": "America/New_York",
             "EST": "America/New_York",
-            "EDT": "America/New_York"
+            "EDT": "America/New_York",
         },
         "timezone_info": {
             "America/New_York": {
@@ -144,15 +156,16 @@ def mock_timezone_search_index():
                 "abbreviationStandard": "EST",
                 "abbreviationDst": "EDT",
                 "utcOffsetStandard": "-05:00",
-                "type": "canonical"
+                "type": "canonical",
             }
-        }
+        },
     }
 
 
 @pytest.fixture
 def mock_i18n():
     """Mock i18n context"""
+
     class MockI18n:
         def get(self, key, **kwargs):
             return key
@@ -162,9 +175,12 @@ def mock_i18n():
 
 def pytest_configure(config):
     """Register custom markers"""
-    config.addinivalue_line(
-        "markers", "asyncio: mark test as async"
-    )
-    config.addinivalue_line(
-        "markers", "slow: mark test as slow running"
-    )
+    config.addinivalue_line("markers", "asyncio: mark test as async")
+    config.addinivalue_line("markers", "slow: mark test as slow running")
+
+
+def pytest_collection_modifyitems(config, items):
+    """Automatically mark async tests with asyncio marker"""
+    for item in items:
+        if hasattr(item, "obj") and asyncio.iscoroutinefunction(item.obj):
+            item.add_marker(pytest.mark.asyncio)

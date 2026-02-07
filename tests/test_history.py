@@ -1,12 +1,11 @@
 """Tests for notification history module"""
 
 import os
-import tempfile
-import pytest
 from datetime import datetime, timedelta, UTC
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 import sys
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
@@ -15,7 +14,7 @@ class TestHistorySizeLimit:
 
     def test_empty_history_unchanged(self):
         """Test that empty history is returned unchanged"""
-        from notifications.history import _enforce_history_size_limit, MAX_HISTORY_SIZE
+        from notifications.history import _enforce_history_size_limit
 
         history = {}
         result = _enforce_history_size_limit(history)
@@ -24,7 +23,7 @@ class TestHistorySizeLimit:
 
     def test_history_under_limit_unchanged(self):
         """Test that history under limit is returned unchanged"""
-        from notifications.history import _enforce_history_size_limit, MAX_HISTORY_SIZE
+        from notifications.history import _enforce_history_size_limit
 
         now = datetime.now(UTC)
         history = {
@@ -62,11 +61,13 @@ class TestIsAlreadyNotified:
     def setup_method(self):
         """Reset notification history before each test"""
         from notifications.history import set_notify_history
+
         set_notify_history({})
 
     def teardown_method(self):
         """Clean up after each test"""
         from notifications.history import set_notify_history
+
         set_notify_history({})
 
     def test_not_notified_returns_false(self):
@@ -109,11 +110,13 @@ class TestMarkNotified:
     def setup_method(self):
         """Reset notification history before each test"""
         from notifications.history import set_notify_history
+
         set_notify_history({})
 
     def teardown_method(self):
         """Clean up after each test"""
         from notifications.history import set_notify_history
+
         set_notify_history({})
 
     def test_mark_notified_adds_entry(self):
@@ -158,25 +161,33 @@ class TestCleanupOldEntries:
     def setup_method(self):
         """Reset notification history before each test"""
         from notifications.history import set_notify_history
+
         set_notify_history({})
 
     def teardown_method(self):
         """Clean up after each test"""
         from notifications.history import set_notify_history
+
         set_notify_history({})
 
     def test_removes_expired_entries(self):
         """Test that cleanup_old_entries removes expired entries"""
-        from notifications.history import cleanup_old_entries, set_notify_history, get_notify_history
+        from notifications.history import (
+            cleanup_old_entries,
+            set_notify_history,
+            get_notify_history,
+        )
 
         now = datetime.now(UTC)
         old_time = now - timedelta(hours=24 * 30 + 1)
         recent_time = now
 
-        set_notify_history({
-            (1, "48h"): old_time,
-            (2, "24h"): recent_time,
-        })
+        set_notify_history(
+            {
+                (1, "48h"): old_time,
+                (2, "24h"): recent_time,
+            }
+        )
 
         cleanup_old_entries()
 
@@ -186,15 +197,21 @@ class TestCleanupOldEntries:
 
     def test_preserves_recent_entries(self):
         """Test that cleanup_old_entries preserves recent entries"""
-        from notifications.history import cleanup_old_entries, set_notify_history, get_notify_history
+        from notifications.history import (
+            cleanup_old_entries,
+            set_notify_history,
+            get_notify_history,
+        )
 
         now = datetime.now(UTC)
         recent_time = now - timedelta(hours=1)
 
-        set_notify_history({
-            (1, "48h"): recent_time,
-            (2, "24h"): recent_time,
-        })
+        set_notify_history(
+            {
+                (1, "48h"): recent_time,
+                (2, "24h"): recent_time,
+            }
+        )
 
         cleanup_old_entries()
 
@@ -208,11 +225,13 @@ class TestNotifyHistoryPersistence:
     def setup_method(self):
         """Reset notification history before each test"""
         from notifications.history import set_notify_history
+
         set_notify_history({})
 
     def teardown_method(self):
         """Clean up after each test"""
         from notifications.history import set_notify_history
+
         set_notify_history({})
 
     def test_save_and_load_notify_history(self):
@@ -238,8 +257,12 @@ class TestNotifyHistoryPersistence:
         """Test that loading nonexistent file returns empty history"""
         from notifications.history import load_notify_history
 
-        with patch('notifications.history._get_history_file_path', return_value='/nonexistent/path.json'):
+        with patch(
+            "notifications.history._get_history_file_path",
+            return_value="/nonexistent/path.json",
+        ):
             from notifications.history import set_notify_history
+
             set_notify_history({})
             loaded = load_notify_history()
             assert loaded == {}
@@ -251,11 +274,13 @@ class TestSharedNotifyHistory:
     def setup_method(self):
         """Reset notification history before each test"""
         from notifications.history import set_notify_history
+
         set_notify_history({})
 
     def teardown_method(self):
         """Clean up after each test"""
         from notifications.history import set_notify_history
+
         set_notify_history({})
 
     def test_set_notify_history_updates_global(self):
@@ -270,7 +295,10 @@ class TestSharedNotifyHistory:
 
     def test_notify_history_reference_points_to_same_dict(self):
         """Test that notify_history reference updates when _notify_history changes"""
-        from notifications.history import set_notify_history, get_notify_history, notify_history
+        from notifications.history import (
+            set_notify_history,
+            get_notify_history,
+        )
 
         test_data = {(1, "test"): datetime.now(UTC)}
         set_notify_history(test_data)
