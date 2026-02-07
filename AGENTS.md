@@ -24,6 +24,9 @@ black .
 # Lint with auto-fix
 ruff check --fix .
 
+# Type check
+mypy .
+
 # View logs
 tail -f gpro_bot.log
 journalctl -u gpro -f --output=cat  # if deployed
@@ -124,12 +127,6 @@ InlineKeyboardMarkup(inline_keyboard=[
 - Return `(keyboard, message_text)` tuples for reusability
 - Edit messages with `message.edit_text()` not new sends
 
-### Logging
-- Structured: `log_structured(logging.INFO, "message", key=value)` from `infra/logging`
-- Simple: `logger.info("message")` with module-level logger
-- Verbose mode: `python bot.py -v` shows DEBUG in console
-- File logs: JSON format, auto-rotates (1MB × 5 files)
-
 ## Critical Conventions
 
 - **Race IDs**: sequential 1-17 (not GPRO's original IDs)
@@ -144,16 +141,25 @@ InlineKeyboardMarkup(inline_keyboard=[
 - Use `await i18n.core.startup()` before translations
 - Map `ua` → `gb` for GPRO links
 
+## Logging
+
+- Structured: `log_structured(logging.INFO, "message", key=value)` from `infra/logging`
+- Simple: `logger.info("message")` with module-level logger
+- Verbose mode: `python bot.py -v` shows DEBUG in console
+- File logs: JSON format, auto-rotates (1MB × 5 files)
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Tests fail | Run `python -m pytest tests/ -v --tb=short` |
+| Lint errors | Run `ruff check --fix .` then `black .` |
+| Type errors | Run `mypy .` |
+| Bot won't start | Check `gpro_bot.log` for errors |
+| No calendar data | Verify `GPRO_API_TOKEN` in `.env` |
+| Missing translations | Check `locales/{code}/messages.ftl` files |
+
 ## Module Structure
-
-```python
-"""Module description"""
-logger = logging.getLogger(__name__)
-# Global module-level dicts for caching
-# Use _SCRIPT_DIR pattern for paths
-```
-
-## Architecture
 
 ```
 bot.py              → Entry point, dispatcher, middleware
@@ -162,11 +168,11 @@ config.py           → Environment validation
 gpro_calendar.py    → API integration, calendar cache
 i18n_setup.py       → Fluent i18n middleware
 timezone_utils.py   → Timezone, fuzzy search
-middleware/user_profile.py → Auto-update profile
+middleware/         → User profile, rate limit
 handlers/           → Command, callback, FSM handlers
 notifications/      → Checker loop, senders
 utils.py            → Helpers, formatting
-tests/              → Pytest tests (131 tests)
+tests/              → Pytest tests
 ```
 
 ## Critical Data
