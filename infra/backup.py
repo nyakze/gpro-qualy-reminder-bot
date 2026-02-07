@@ -307,17 +307,24 @@ async def run_backup_now(
     return success, "\n".join(results)
 
 
-def _seconds_until_next_day(target_day: int, target_hour: int) -> float:
+def _seconds_until_next_day(target_day: int | None, target_hour: int) -> float:
     """Calculate seconds until next occurrence of target day/hour (UTC)
 
     Args:
-        target_day: Day of week (0=Monday, 6=Sunday)
+        target_day: Day of week (0=Monday, 6=Sunday) or None for daily
         target_hour: Hour of day (0-23)
 
     Returns:
         Seconds until the target time
     """
     now = datetime.now(UTC)
+
+    if target_day is None:
+        next_run = now.replace(hour=target_hour, minute=0, second=0, microsecond=0)
+        if now.hour >= target_hour:
+            next_run += timedelta(days=1)
+        return (next_run - now).total_seconds()
+
     days_ahead = target_day - now.weekday()
 
     if days_ahead <= 0:  # Target day already happened this week
@@ -326,7 +333,6 @@ def _seconds_until_next_day(target_day: int, target_hour: int) -> float:
     next_run = now.replace(hour=target_hour, minute=0, second=0, microsecond=0)
     next_run += timedelta(days=days_ahead)
 
-    # If today is the target day but hour has passed, go to next week
     if days_ahead == 0 and now.hour >= target_hour:
         next_run += timedelta(days=7)
 
@@ -338,41 +344,42 @@ async def _backup_scheduler_loop(bot: Bot):
     logger.info("Backup scheduler started")
 
     while True:
-        # Calculate time until next backup
         now_weekday = datetime.now(UTC).weekday()
 
-        if now_weekday == CLASSIC_BACKUP_DAY and CLASSIC_BACKUP_ENABLED:
-            # Today is Thursday - wait for classic backup time
+        classic_day_is_today = (
+            CLASSIC_BACKUP_DAY is None or now_weekday == CLASSIC_BACKUP_DAY
+        )
+        telegram_day_is_today = (
+            TELEGRAM_BACKUP_DAY is None or now_weekday == TELEGRAM_BACKUP_DAY
+        )
+
+        if classic_day_is_today and CLASSIC_BACKUP_ENABLED:
             seconds_until = _seconds_until_next_day(CLASSIC_BACKUP_DAY, BACKUP_HOUR)
             backup_type = "classic"
-        elif now_weekday == TELEGRAM_BACKUP_DAY:
-            # Today is Sunday - wait for telegram backup time
+        elif telegram_day_is_today:
             seconds_until = _seconds_until_next_day(TELEGRAM_BACKUP_DAY, BACKUP_HOUR)
             backup_type = "telegram"
         else:
-            # Find which backup comes next
-            thursday_seconds = (
+            classic_seconds = (
                 _seconds_until_next_day(CLASSIC_BACKUP_DAY, BACKUP_HOUR)
                 if CLASSIC_BACKUP_ENABLED
                 else float("inf")
             )
-            sunday_seconds = _seconds_until_next_day(TELEGRAM_BACKUP_DAY, BACKUP_HOUR)
+            telegram_seconds = _seconds_until_next_day(TELEGRAM_BACKUP_DAY, BACKUP_HOUR)
 
-            if thursday_seconds < sunday_seconds:
-                seconds_until = thursday_seconds
+            if classic_seconds < telegram_seconds:
+                seconds_until = classic_seconds
                 backup_type = "classic"
             else:
-                seconds_until = sunday_seconds
+                seconds_until = telegram_seconds
                 backup_type = "telegram"
 
         logger.info(
             f"Next backup scheduled: {backup_type} in {seconds_until/3600:.1f} hours"
         )
 
-        # Sleep until next backup
         await asyncio.sleep(seconds_until)
 
-        # Run the backup (classic only if enabled, telegram only to enabled admins)
         try:
             if backup_type == "classic":
                 success = create_classic_backup()
