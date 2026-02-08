@@ -2,6 +2,8 @@
 
 Telegram bot for Grand Prix Racing Online (GPRO) that sends qualification deadline notifications and provides race status/schedule commands.
 
+🇷🇺 Описание бота на русском [здесь](https://github.com/nyakze/gpro-qualy-reminder-bot/wiki/Home.ru)
+
 ## 🚀 Use the Public Bot
 
 [![Telegram](https://img.shields.io/badge/Launch_Bot_on_Telegram-2CA5E0?logo=telegram&logoColor=white&style=for-the-badge)](https://t.me/gproremindbot)
