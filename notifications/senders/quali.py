@@ -41,8 +41,9 @@ def is_qualifying_closed(race_id: int, race_data: dict) -> bool:
     Returns:
         bool: True if qualifying is closed and waiting for race to be calculated
     """
-    from notifications.history import notify_history
+    from notifications.history import get_notify_history
 
+    notify_history = get_notify_history()
     now = datetime.now(UTC)
     quali_close = race_data.get("quali_close")
 
@@ -165,7 +166,7 @@ async def send_quali_notification(
 
     # Build keyboard and message based on state
     keyboard_buttons = []
-    
+
     if quali_is_closed:
         # Only show weather button if available (no "Done" button when closed)
         if has_weather:
@@ -277,6 +278,7 @@ async def send_quali_notification(
         logger.info(f"✅ Sent {notification_type} to {user_id} for race {race_id}")
     except Exception as e:
         from aiogram.exceptions import TelegramForbiddenError
+
         if isinstance(e, TelegramForbiddenError):
             mark_user_blocked(user_id)
             logger.warning(f"🚫 User {user_id} blocked the bot (quali notification)")

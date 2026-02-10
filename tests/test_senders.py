@@ -150,8 +150,8 @@ class TestQualiNotificationSender:
         # Quali closed 1 hour ago
         sample_race_data["quali_close"] = now - timedelta(hours=1)
 
-        # Set the notify_history directly
-        history.notify_history = {}
+        # Clear the notify_history directly
+        history._notify_history.clear()
         result = is_qualifying_closed(1, sample_race_data)
         assert result is True
 
@@ -164,7 +164,7 @@ class TestQualiNotificationSender:
         # Quali closes in 1 hour
         sample_race_data["quali_close"] = now + timedelta(hours=1)
 
-        history.notify_history = {}
+        history._notify_history.clear()
         result = is_qualifying_closed(1, sample_race_data)
         assert result is False
 
@@ -176,9 +176,11 @@ class TestQualiNotificationSender:
         now = datetime.now(UTC)
         sample_race_data["quali_close"] = now - timedelta(hours=1)
 
-        history.notify_history = {(1, "opens_soon"): now}
+        history._notify_history[(1, "opens_soon")] = now
         result = is_qualifying_closed(1, sample_race_data)
         assert result is False
+        # Clean up
+        del history._notify_history[(1, "opens_soon")]
 
     def test_is_qualifying_closed_no_quali_close(self):
         """Test qualifying not closed if no quali_close time"""
