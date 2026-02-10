@@ -26,7 +26,8 @@ class TestCheckQualiClosing:
 
         now = datetime.now(UTC)
         race_time = now + timedelta(hours=48)
-        races_closing = [(48.0, 1, {"date": race_time})]
+        quali_close = now + timedelta(hours=48)
+        races_closing = [(48.0, 1, {"date": race_time, "quali_close": quali_close})]
 
         result = check_quali_closing(now, races_closing)
         assert len(result) == 1
@@ -38,7 +39,8 @@ class TestCheckQualiClosing:
 
         now = datetime.now(UTC)
         race_time = now + timedelta(hours=24)
-        races_closing = [(24.0, 1, {"date": race_time})]
+        quali_close = now + timedelta(hours=24)
+        races_closing = [(24.0, 1, {"date": race_time, "quali_close": quali_close})]
 
         result = check_quali_closing(now, races_closing)
         assert len(result) == 1
@@ -50,7 +52,8 @@ class TestCheckQualiClosing:
 
         now = datetime.now(UTC)
         race_time = now + timedelta(hours=2)
-        races_closing = [(2.0, 1, {"date": race_time})]
+        quali_close = now + timedelta(hours=2)
+        races_closing = [(2.0, 1, {"date": race_time, "quali_close": quali_close})]
 
         result = check_quali_closing(now, races_closing)
         assert len(result) == 1
@@ -62,7 +65,8 @@ class TestCheckQualiClosing:
 
         now = datetime.now(UTC)
         race_time = now + timedelta(minutes=10)
-        races_closing = [(0.17, 1, {"date": race_time})]
+        quali_close = now + timedelta(minutes=10)
+        races_closing = [(0.17, 1, {"date": race_time, "quali_close": quali_close})]
 
         result = check_quali_closing(now, races_closing)
         assert len(result) == 1
@@ -77,7 +81,8 @@ class TestCheckQualiClosing:
 
         now = datetime.now(UTC)
         race_time = now + timedelta(hours=48)
-        races_closing = [(48.0, 1, {"date": race_time})]
+        quali_close = now + timedelta(hours=48)
+        races_closing = [(48.0, 1, {"date": race_time, "quali_close": quali_close})]
 
         result = check_quali_closing(now, races_closing)
         assert result == []
@@ -90,9 +95,30 @@ class TestCheckQualiClosing:
 
         now = datetime.now(UTC)
         races_closing = [
-            (48.0, 1, {"date": now + timedelta(hours=48)}),
-            (24.0, 2, {"date": now + timedelta(hours=24)}),
-            (2.0, 3, {"date": now + timedelta(hours=2)}),
+            (
+                48.0,
+                1,
+                {
+                    "date": now + timedelta(hours=48),
+                    "quali_close": now + timedelta(hours=48),
+                },
+            ),
+            (
+                24.0,
+                2,
+                {
+                    "date": now + timedelta(hours=24),
+                    "quali_close": now + timedelta(hours=24),
+                },
+            ),
+            (
+                2.0,
+                3,
+                {
+                    "date": now + timedelta(hours=2),
+                    "quali_close": now + timedelta(hours=2),
+                },
+            ),
         ]
 
         result = check_quali_closing(now, races_closing)
@@ -107,12 +133,38 @@ class TestCheckQualiClosing:
         from notifications.checks.quali import check_quali_closing
 
         now = datetime.now(UTC)
+        quali_close = now + timedelta(hours=73)
         races_closing = [
-            (73.0, 1, {"date": now + timedelta(hours=73)}),
+            (73.0, 1, {"date": quali_close, "quali_close": quali_close}),
         ]
 
         result = check_quali_closing(now, races_closing)
         assert result == []
+
+    def test_72h_tuesday_race_notification(self):
+        """Test that 72h notification is sent for Tuesday races"""
+        from notifications.checks.quali import check_quali_closing
+
+        # Tuesday, Feb 10 2026 17:30 UTC
+        now = datetime(2026, 2, 10, 17, 30, tzinfo=UTC)
+        quali_close = datetime(2026, 2, 10, 17, 30, tzinfo=UTC)  # Tuesday
+        races_closing = [(72.0, 1, {"date": quali_close, "quali_close": quali_close})]
+
+        result = check_quali_closing(now, races_closing)
+        assert len(result) == 1
+        assert result[0][3] == "72h"
+
+    def test_72h_friday_race_no_notification(self):
+        """Test that 72h notification is NOT sent for Friday races"""
+        from notifications.checks.quali import check_quali_closing
+
+        # Friday, Feb 13 2026 17:30 UTC
+        now = datetime(2026, 2, 10, 17, 30, tzinfo=UTC)
+        quali_close = datetime(2026, 2, 13, 17, 30, tzinfo=UTC)  # Friday
+        races_closing = [(72.0, 1, {"date": quali_close, "quali_close": quali_close})]
+
+        result = check_quali_closing(now, races_closing)
+        assert len(result) == 0  # Should skip 72h for non-Tuesday
 
 
 class TestCheckQualiResults:
