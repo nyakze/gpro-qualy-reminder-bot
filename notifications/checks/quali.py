@@ -69,7 +69,12 @@ def check_quali_closing(now: datetime, races_closing: list) -> List[Tuple]:
         elif hours_remaining <= 48:
             label = "48h"
         elif hours_remaining <= 72:
-            label = "72h"
+            # 72h notification only for Tuesday races (quali closes on Tuesday)
+            quali_close = race_data["quali_close"]
+            if quali_close.weekday() == 1:  # Tuesday = 1
+                label = "72h"
+            else:
+                continue  # Skip 72h for non-Tuesday races
         else:
             continue
 
@@ -96,6 +101,7 @@ def _get_races_for_polling(now: datetime) -> list:
         list: Races to check via API [(race_id, race_data, prev_race_id, hours_since), ...]
     """
     from notifications.history import get_notify_history
+
     notify_history = get_notify_history()
 
     races = []
@@ -138,6 +144,7 @@ def _get_races_for_fallback(now: datetime) -> list:
         list: Races for fallback notification [(race_id, race_data, prev_race_id, hours_since), ...]
     """
     from notifications.history import get_notify_history
+
     notify_history = get_notify_history()
 
     races = []
@@ -182,6 +189,7 @@ def _add_replay_and_results_notifications(
         prev_race_id: The previous race ID
     """
     from notifications.history import get_notify_history
+
     notify_history = get_notify_history()
 
     if prev_race_id in race_calendar:
@@ -292,6 +300,7 @@ def check_quali_results(now: datetime) -> List[Tuple]:
         list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
     """
     from notifications.history import get_notify_history
+
     notify_history = get_notify_history()
 
     notifications = []
