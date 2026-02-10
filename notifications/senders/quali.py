@@ -102,8 +102,9 @@ async def send_quali_notification(
     else:
         original_type = notification_type
 
-    # Check if qualifying is currently closed (between deadline and opens_soon)
-    quali_is_closed = is_qualifying_closed(race_id, race_data)
+    # Check if qualifying is currently closed (deadline passed)
+    now = datetime.now(UTC)
+    quali_is_closed = is_qualifying_closed(race_id, race_data) or quali_close < now
 
     if quali_is_closed and not is_snoozed:
         # Qualifying is closed, waiting for race to be calculated
@@ -117,7 +118,6 @@ async def send_quali_notification(
         deadline = format_datetime_for_user(quali_close, user_id, "%d.%m %H:%M")
         race_time = format_datetime_for_user(race_date, user_id, "%d.%m %H:%M")
     else:
-        now = datetime.now(UTC)
         if "hours_left" not in race_data:
             hours_left = (quali_close - now).total_seconds() / 3600
         else:
