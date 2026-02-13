@@ -136,7 +136,7 @@ def get_country_iso_code(country_name: str) -> str:
     try:
         country = pycountry.countries.get(name=country_name)
         if country:
-            return country.alpha_2
+            return getattr(country, "alpha_2", "")
     except (KeyError, AttributeError):
         pass
 
@@ -144,7 +144,7 @@ def get_country_iso_code(country_name: str) -> str:
     try:
         results = pycountry.countries.search_fuzzy(country_name)
         if results:
-            return results[0].alpha_2
+            return getattr(results[0], "alpha_2", "")
     except (KeyError, LookupError, AttributeError):
         pass
 
@@ -324,7 +324,7 @@ def format_full_calendar(
     calendar_data: dict,
     title: str = "Full Season",
     is_current_season: bool = True,
-    user_id: int = None,
+    user_id: int | None = None,
     i18n=None,
 ) -> str:
     """Generic formatter for current/next season

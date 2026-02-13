@@ -105,7 +105,7 @@ def check_new_season_reminder(now: datetime) -> List[Tuple]:
     """
     from gpro_calendar import get_first_race_date, next_season_calendar
 
-    notifications = []
+    notifications: list = []
 
     # Check if we have a next season calendar (meaning new season is coming)
     if not next_season_calendar:

@@ -31,7 +31,9 @@ LOCALES_DIR = _SCRIPT_DIR / "locales"
 class UserLanguageManager(BaseManager):
     """Manager for determining user's UI language"""
 
-    async def get_locale(self, event_from_user: Any = None, data: dict = None) -> str:
+    async def get_locale(
+        self, event_from_user: Any = None, data: dict | None = None
+    ) -> str:
         """Get user's UI language preference from user data
 
         Args:
@@ -63,7 +65,7 @@ class UserLanguageManager(BaseManager):
         return ui_lang
 
     async def set_locale(
-        self, locale: str, event_from_user: Any = None, data: dict = None
+        self, locale: str, event_from_user: Any = None, data: dict | None = None
     ) -> None:
         """Set user's UI language preference
 

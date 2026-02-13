@@ -86,7 +86,7 @@ def translate_weather_condition(weather_condition: str, get_text_func: Callable)
         return weather_condition
 
 
-def format_weather_data(weather: dict, i18n=None, user_id: int = None) -> str:
+def format_weather_data(weather: dict, i18n=None, user_id: int | None = None) -> str:
     """Format weather data into human-readable text
 
     Args:

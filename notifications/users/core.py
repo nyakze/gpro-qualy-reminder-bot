@@ -272,9 +272,9 @@ def get_user_website_mode(user_id: int) -> str:
 
 def update_user_profile(
     user_id: int,
-    tg_language_code: str = None,
-    username: str = None,
-    first_name: str = None,
+    tg_language_code: str | None = None,
+    username: str | None = None,
+    first_name: str | None = None,
 ) -> bool:
     """Update user's profile data from Telegram message"""
     if user_id not in users_data:

@@ -63,7 +63,7 @@ async def check_last_race_results(now: datetime) -> List[Tuple]:
 
     notify_history = get_notify_history()
 
-    notifications = []
+    notifications: list = []
 
     # Only check for the last race of the season (race 17)
     last_race_id = get_last_race_id()

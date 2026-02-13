@@ -254,7 +254,7 @@ async def cmd_userstats(message: Message, i18n: I18nContext):
         text += f"👥 Total users: {total_users}\n\n"
 
         text += "<b>🏁 Groups:</b>\n"
-        groups = {}
+        groups: dict = {}
         for status in users_data.values():
             group = status.get("group") or "No group"
             groups[group] = groups.get(group, 0) + 1
@@ -265,7 +265,7 @@ async def cmd_userstats(message: Message, i18n: I18nContext):
             text += f"• {group}: {count} ({percentage:.1f}%)\n"
 
         text += "\n<b>🌍 Timezones (Top 5):</b>\n"
-        tz_counts = {}
+        tz_counts: dict = {}
         for status in users_data.values():
             tz = status.get("timezone", "UTC")
             tz_counts[tz] = tz_counts.get(tz, 0) + 1
@@ -278,7 +278,7 @@ async def cmd_userstats(message: Message, i18n: I18nContext):
             text += f"• ...and {len(tz_counts) - 5} more\n"
 
         text += "\n<b>🗣 UI Languages:</b>\n"
-        lang_counts = {}
+        lang_counts: dict = {}
         for status in users_data.values():
             lang = status.get("ui_lang", "gb")
             lang_counts[lang] = lang_counts.get(lang, 0) + 1
@@ -289,7 +289,7 @@ async def cmd_userstats(message: Message, i18n: I18nContext):
             text += f"• {lang}: {count} ({percentage:.1f}%)\n"
 
         text += "\n<b>🏎 GPRO Languages:</b>\n"
-        gpro_lang_counts = {}
+        gpro_lang_counts: dict = {}
         for status in users_data.values():
             lang = status.get("gpro_lang", "gb")
             gpro_lang_counts[lang] = gpro_lang_counts.get(lang, 0) + 1
@@ -300,7 +300,7 @@ async def cmd_userstats(message: Message, i18n: I18nContext):
             text += f"• {lang}: {count} ({percentage:.1f}%)\n"
 
         text += "\n<b>💻 Website Mode:</b>\n"
-        mode_counts = {}
+        mode_counts: dict = {}
         for status in users_data.values():
             mode = status.get("website_mode", "classic")
             mode_counts[mode] = mode_counts.get(mode, 0) + 1

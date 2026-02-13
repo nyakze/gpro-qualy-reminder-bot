@@ -44,6 +44,7 @@ class UserRateLimitState:
 
 # Track rate limit state per user
 _user_states: Dict[int, UserRateLimitState] = defaultdict(UserRateLimitState)
+_admin_ids: set = set()
 
 
 def _get_user_data() -> Dict:

@@ -42,7 +42,8 @@ def _parse_group(group: str) -> tuple[Optional[str], Optional[str]]:
     if not match:
         return None, None
 
-    return match.groups()
+    letter, number = match.groups()
+    return letter, number
 
 
 def generate_gpro_link(
@@ -176,7 +177,7 @@ def generate_app_quali_link() -> str:
     return "https://app.gpro.net/office"
 
 
-def generate_app_starting_grid_link(group: str = None) -> str:
+def generate_app_starting_grid_link(group: str | None = None) -> str:
     """Generate APP starting grid link
 
     Args:
@@ -223,7 +224,7 @@ def generate_app_race_analysis_link() -> str:
     return "https://app.gpro.net/pastrace/analysis"
 
 
-def generate_app_race_summary_link(group: str = None) -> str:
+def generate_app_race_summary_link(group: str | None = None) -> str:
     """Generate APP race summary link
 
     Args:

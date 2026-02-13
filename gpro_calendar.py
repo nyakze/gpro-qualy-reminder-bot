@@ -12,8 +12,8 @@ from config import GPRO_API_TOKEN, CALENDAR_FILE, GPRO_API_LANG, NEXT_SEASON_FIL
 logger = logging.getLogger(__name__)
 
 # Module-level globals
-race_calendar = {}
-next_season_calendar = {}
+race_calendar: dict = {}
+next_season_calendar: dict = {}
 
 # Date parsing formats (in order of priority)
 DATE_FORMATS = [
@@ -333,7 +333,7 @@ def parse_gpro_events(events: list, is_next_season: bool = False) -> dict:
     return calendar
 
 
-def parse_gpro_date_fixed(date_str: str) -> datetime:
+def parse_gpro_date_fixed(date_str: str) -> datetime | None:
     """Parse GPRO dates - Simple 'Today' handler!"""
     if not date_str:
         return None

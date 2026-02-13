@@ -18,7 +18,7 @@ import logging
 import os
 import shutil
 from datetime import datetime, UTC, timedelta
-from typing import Optional
+from typing import Any, Optional
 
 from aiogram import Bot
 from aiogram.types import FSInputFile
@@ -233,7 +233,7 @@ def get_classic_backup_info() -> list:
     """
     _ensure_backup_dir()
 
-    backups = []
+    backups: list[dict[str, Any]] = []
     for filename in os.listdir(BACKUP_DIR):
         if filename.startswith("users_data_") and filename.endswith(".json"):
             filepath = os.path.join(BACKUP_DIR, filename)
@@ -382,16 +382,16 @@ async def _backup_scheduler_loop(bot: Bot):
 
         try:
             if backup_type == "classic":
-                success = create_classic_backup()
-                if success:
+                classic_success = create_classic_backup()
+                if classic_success:
                     logger.info("Scheduled classic backup completed")
                 else:
                     logger.error("Scheduled classic backup failed")
             else:
                 enabled_admins = get_enabled_telegram_admins()
                 if enabled_admins:
-                    success = await send_telegram_backup(bot)
-                    if success:
+                    telegram_success = await send_telegram_backup(bot)
+                    if telegram_success:
                         logger.info("Scheduled telegram backup completed")
                     else:
                         logger.error("Scheduled telegram backup failed")

@@ -270,7 +270,7 @@ class ProgressLogger:
                     ),
                     None,
                 )
-                spin = "⠋"
+                spin = (c for c in ["⠋"])
 
             spin_str = f"{spin} " if _should_use_colors() else ""
             logger = logging.getLogger()

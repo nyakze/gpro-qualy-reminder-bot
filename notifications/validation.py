@@ -56,7 +56,7 @@ def validate_custom_notification_hours(hours: float, i18n=None) -> tuple[bool, s
     return True, ""
 
 
-def parse_time_input(time_str: str, i18n=None) -> tuple[float, str]:
+def parse_time_input(time_str: str, i18n=None) -> tuple[float | None, str]:
     """Parse user time input into hours
 
     Supported formats:

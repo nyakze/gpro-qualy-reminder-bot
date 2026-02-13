@@ -581,6 +581,8 @@ def get_timezone_display_name(tz: ZoneInfo, dt: Optional[datetime] = None) -> st
 
         # Get timezone abbreviation
         tz_abbr = local_dt.tzname()
+        if tz_abbr is None:
+            tz_abbr = str(tz)
 
         # Get timezone string (e.g., "America/New_York")
         tz_str = str(tz)

@@ -19,7 +19,7 @@ __all__ = [
     "build_settings_keyboard",
 ]
 
-router = Router()
+router: Router = Router()
 
 from . import main_menu  # noqa: F401, E402
 from . import settings  # noqa: F401, E402

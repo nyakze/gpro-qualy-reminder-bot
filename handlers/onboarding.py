@@ -110,7 +110,7 @@ async def handle_onboarding_ui_language_select(
 
 
 async def show_onboarding_group_menu(
-    message: Message, user_id: int, i18n: I18nContext, state: FSMContext = None
+    message: Message, user_id: int, i18n: I18nContext, state: FSMContext | None = None
 ):
     """Show group selection menu during onboarding - text input only"""
     # Set state to wait for group input

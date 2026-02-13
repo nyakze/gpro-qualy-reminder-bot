@@ -229,7 +229,7 @@ async def check_quali_open(now: datetime) -> List[Tuple]:
         list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
     """
     global last_api_check_time
-    notifications = []
+    notifications: list = []
 
     # Get races to check via API and races for fallback
     races_in_polling_window = _get_races_for_polling(now)
