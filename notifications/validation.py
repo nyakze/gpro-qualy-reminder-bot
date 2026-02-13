@@ -255,7 +255,8 @@ def get_custom_notifications(user_id: int) -> list:
     Returns:
         List of custom notification dicts
     """
-    from .user_data import get_user_status, get_default_custom_notifications
+    from notifications.users.core import get_user_status
+    from notifications.users.constants import get_default_custom_notifications
 
     user_status = get_user_status(user_id)[0]
     return user_status.get("custom_notifications", get_default_custom_notifications())
@@ -301,11 +302,9 @@ def set_custom_notification(
         if not is_valid:
             return False, error_msg
 
-    from .user_data import (
-        get_user_status,
-        get_default_custom_notifications,
-        save_users_data,
-    )
+    from notifications.users.core import get_user_status
+    from notifications.users.constants import get_default_custom_notifications
+    from notifications.users.storage import save_users_data
 
     user_status = get_user_status(user_id)[0]
     custom_notifs = user_status.get(
