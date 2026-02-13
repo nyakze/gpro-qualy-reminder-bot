@@ -12,7 +12,11 @@ from notifications.utils.link_generators import (
     generate_app_race_analysis_link,
     generate_app_race_summary_link,
 )
-from notifications.senders.common import get_user_info, get_text_getter, send_notification
+from notifications.senders.common import (
+    get_user_info,
+    get_text_getter,
+    send_notification,
+)
 
 logger = logging.getLogger(__name__)
 

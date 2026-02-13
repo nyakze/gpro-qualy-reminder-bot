@@ -17,7 +17,7 @@ GROUP_NAMES = {"M": "Master", "P": "Pro", "A": "Amateur", "R": "Rookie"}
 def _validate_language(gpro_lang: str) -> str:
     """Validate and return language code, fallback to 'gb' if invalid"""
     from notifications.users import is_valid_language
-    
+
     if not is_valid_language(gpro_lang):
         logger.warning(f"Invalid language code '{gpro_lang}', falling back to 'gb'")
         return "gb"
@@ -26,22 +26,22 @@ def _validate_language(gpro_lang: str) -> str:
 
 def _parse_group(group: str) -> tuple[Optional[str], Optional[str]]:
     """Parse group string into letter and number
-    
+
     Returns:
         Tuple of (letter, number) or (None, None) if invalid
     """
     if not group:
         return None, None
-    
+
     group = group.strip().upper()
-    
+
     if group == "E":
         return "E", None
-    
+
     match = re.match(r"^([MPAR])(\d{1,3})$", group)
     if not match:
         return None, None
-    
+
     return match.groups()
 
 
@@ -62,10 +62,10 @@ def generate_gpro_link(
     base_url = f"https://gpro.net/{gpro_lang}/{endpoint}?Group="
 
     letter, number = _parse_group(group)
-    
+
     if letter is None:
         return base_url
-    
+
     if letter == "E":
         return f"{base_url}Elite"
 
@@ -98,10 +98,10 @@ def generate_starting_grid_link(group: str, gpro_lang: str = "gb") -> str:
     base_url = f"https://gpro.net/{gpro_lang}/StartingGrid.asp?Group="
 
     letter, number = _parse_group(group)
-    
+
     if letter is None:
         return base_url
-    
+
     if letter == "E":
         return f"{base_url}Elite"
 
@@ -156,10 +156,10 @@ def format_group_for_app_url(group: str) -> str:
         str: URL-encoded group string for APP URLs
     """
     letter, number = _parse_group(group)
-    
+
     if letter is None:
         return ""
-    
+
     if letter == "E":
         return "Elite"
 

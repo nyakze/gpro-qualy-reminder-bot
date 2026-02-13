@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 def get_user_info(user_id: int) -> dict:
     """Get user status and extract commonly used fields
-    
+
     Returns:
         dict with user info including group, gpro_lang, ui_lang, website_mode
     """
@@ -33,11 +33,11 @@ def get_user_info(user_id: int) -> dict:
 
 def get_text_getter(i18n=None, ui_lang: str = "gb") -> Callable:
     """Get a text getter function
-    
+
     Args:
         i18n: Optional i18n context
         ui_lang: UI language code (used if i18n not provided)
-    
+
     Returns:
         Function that takes key and kwargs and returns translated text
     """
@@ -46,10 +46,12 @@ def get_text_getter(i18n=None, ui_lang: str = "gb") -> Callable:
 
         def get_text(key, **kwargs):
             return get_translation(key, locale=ui_lang, **kwargs)
+
     else:
+
         def get_text(key, **kwargs):
             return i18n.get(key, **kwargs)
-    
+
     return get_text
 
 
@@ -62,7 +64,7 @@ async def send_notification(
     reply_markup=None,
 ) -> bool:
     """Send a notification with proper error handling
-    
+
     Args:
         bot: Aiogram Bot instance
         user_id: Telegram user ID
@@ -70,7 +72,7 @@ async def send_notification(
         notification_type: Type of notification (for logging)
         race_id: Race ID (for logging)
         reply_markup: Optional inline keyboard markup
-    
+
     Returns:
         bool: True if sent successfully, False otherwise
     """

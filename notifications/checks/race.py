@@ -25,6 +25,7 @@ def check_race_live_notifications(now: datetime) -> List[Tuple]:
         list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
     """
     from notifications.history import get_notify_history
+
     notify_history = get_notify_history()
 
     notifications = []
@@ -59,6 +60,7 @@ async def check_last_race_results(now: datetime) -> List[Tuple]:
         list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
     """
     from notifications.history import get_notify_history
+
     notify_history = get_notify_history()
 
     notifications = []

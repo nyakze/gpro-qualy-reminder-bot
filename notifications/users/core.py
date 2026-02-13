@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 def get_user_status(user_id: int) -> Tuple[Dict, bool]:
     """Get or create user status, with field migrations
-    
+
     Returns:
         Tuple of (user_data_dict, was_new_user)
     """
@@ -25,6 +25,7 @@ def get_user_status(user_id: int) -> Tuple[Dict, bool]:
 
     if not users_data:
         from notifications.users.storage import load_users_data
+
         load_users_data()
         logger.debug(f"Loaded {len(users_data)} users from file")
 
@@ -44,6 +45,9 @@ def get_user_status(user_id: int) -> Tuple[Dict, bool]:
             "tg_language_code": None,
             "username": None,
             "first_name": None,
+            "snooze_tracking": get_default_snooze_tracking(),
+            "active_snoozes": {},
+            "blocked_at": None,
         }
         save_users_data()
     else:
@@ -54,11 +58,15 @@ def get_user_status(user_id: int) -> Tuple[Dict, bool]:
             logger.debug(f"Added 'group' field to user {user_id}")
             needs_save = True
         if "notifications" not in users_data[user_id]:
-            users_data[user_id]["notifications"] = get_default_notification_preferences()
+            users_data[user_id][
+                "notifications"
+            ] = get_default_notification_preferences()
             logger.debug(f"Added 'notifications' field to user {user_id}")
             needs_save = True
         if "custom_notifications" not in users_data[user_id]:
-            users_data[user_id]["custom_notifications"] = get_default_custom_notifications()
+            users_data[user_id][
+                "custom_notifications"
+            ] = get_default_custom_notifications()
             logger.debug(f"Added 'custom_notifications' field to user {user_id}")
             needs_save = True
         if "gpro_lang" not in users_data[user_id]:
@@ -141,12 +149,23 @@ def toggle_notification(user_id: int, notification_type: str):
 def is_notification_enabled(user_id: int, notification_type: str) -> bool:
     """Check if a notification type is enabled for a user"""
     user_status = get_user_status(user_id)[0]
+
+    # Handle custom notifications (custom_1, custom_2) from custom_notifications array
+    if notification_type in ("custom_1", "custom_2"):
+        slot_idx = int(notification_type.split("_")[1]) - 1  # custom_1 -> slot 0
+        custom_notifs = user_status.get("custom_notifications", [])
+        if 0 <= slot_idx < len(custom_notifs):
+            return custom_notifs[slot_idx].get("enabled", False)
+        return False  # Default to disabled if slot doesn't exist
+
+    # Standard notifications from notifications dict
     return user_status["notifications"].get(notification_type, True)
 
 
 def is_valid_language(lang_code: str) -> bool:
     """Validate language code against supported languages"""
     from notifications.users.constants import LANGUAGE_OPTIONS
+
     return lang_code in LANGUAGE_OPTIONS
 
 
@@ -203,6 +222,7 @@ def set_user_timezone(user_id: int, timezone: str) -> bool:
     # Validate timezone exists
     try:
         from zoneinfo import ZoneInfo
+
         ZoneInfo(timezone)
     except Exception as e:
         logger.warning(f"Invalid timezone '{timezone}': {e}")
@@ -267,7 +287,9 @@ def update_user_profile(
         if current_lang != tg_language_code:
             users_data[user_id]["tg_language_code"] = tg_language_code
             needs_save = True
-            logger.debug(f"Updated tg_language_code for user {user_id}: {tg_language_code}")
+            logger.debug(
+                f"Updated tg_language_code for user {user_id}: {tg_language_code}"
+            )
 
     current_username = users_data[user_id].get("username")
     if current_username != username:

@@ -68,12 +68,14 @@ def load_notify_history() -> Dict[Tuple[int, str], datetime]:
                     if len(item) == 3:
                         race_id, label, timestamp_str = item
                         try:
-                            _notify_history[(int(race_id), label)] = datetime.fromisoformat(
-                                timestamp_str
+                            _notify_history[(int(race_id), label)] = (
+                                datetime.fromisoformat(timestamp_str)
                             )
                         except (ValueError, TypeError):
                             continue
-            logger.info(f"✅ Loaded {len(_notify_history)} notification history entries")
+            logger.info(
+                f"✅ Loaded {len(_notify_history)} notification history entries"
+            )
         except (json.JSONDecodeError, IOError, OSError) as e:
             logger.error(f"Failed to load notification history: {e}")
 

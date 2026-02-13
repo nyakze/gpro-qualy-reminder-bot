@@ -103,6 +103,7 @@ def format_weather_data(weather: dict, i18n=None, user_id: int = None) -> str:
         ui_lang = "gb"
         if user_id is not None:
             from notifications.users import get_user_status
+
             user_status, _ = get_user_status(user_id)
             ui_lang = user_status.get("ui_lang", "gb")
 

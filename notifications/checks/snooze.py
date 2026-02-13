@@ -62,6 +62,7 @@ def check_snooze_reminders(now: datetime, races_closing: list) -> List[Tuple]:
                 # Mark as notified immediately to prevent duplicate fires in the same check cycle
                 # This is marked before adding to notifications list to prevent race conditions
                 from notifications.history import mark_notified
+
                 mark_notified(race_id, f"snooze_{snooze_id}")
 
                 # Include user_id as 6th element for targeted delivery

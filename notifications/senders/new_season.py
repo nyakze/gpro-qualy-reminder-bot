@@ -6,7 +6,11 @@ from aiogram import Bot
 
 from utils import add_flag_to_track, format_group_display
 from timezone_utils import format_datetime_for_user
-from notifications.senders.common import get_user_info, get_text_getter, send_notification
+from notifications.senders.common import (
+    get_user_info,
+    get_text_getter,
+    send_notification,
+)
 
 logger = logging.getLogger(__name__)
 

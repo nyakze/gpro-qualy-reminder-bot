@@ -392,12 +392,32 @@ class TestNotificationSendingConditions:
 
     def test_custom_notifications_require_enabled_setting(self):
         """Test custom notification check via is_notification_enabled"""
-        from notifications import get_user_status, is_notification_enabled
+        from notifications import (
+            get_user_status,
+            is_notification_enabled,
+            set_custom_notification,
+        )
 
         user_id = 66666
         get_user_status(user_id)
 
+        # Custom notifications default to disabled (False)
+        assert is_notification_enabled(user_id, "custom_1") is False
+        assert is_notification_enabled(user_id, "custom_2") is False
+
+        # Enable custom_1 with 8 hours before
+        set_custom_notification(user_id, 0, 8)
         assert is_notification_enabled(user_id, "custom_1") is True
+        assert is_notification_enabled(user_id, "custom_2") is False
+
+        # Enable custom_2 with 12 hours before
+        set_custom_notification(user_id, 1, 12)
+        assert is_notification_enabled(user_id, "custom_1") is True
+        assert is_notification_enabled(user_id, "custom_2") is True
+
+        # Disable custom_1
+        set_custom_notification(user_id, 0, None)
+        assert is_notification_enabled(user_id, "custom_1") is False
         assert is_notification_enabled(user_id, "custom_2") is True
 
     def test_label_to_setting_mapping(self):

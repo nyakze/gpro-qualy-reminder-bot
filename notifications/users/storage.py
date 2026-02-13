@@ -10,7 +10,9 @@ logger = logging.getLogger(__name__)
 
 # Use absolute path based on script location for robustness
 # This file is at notifications/users/storage.py, so we need to go up 2 levels
-_SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+_SCRIPT_DIR = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
 USERS_FILE = os.path.join(_SCRIPT_DIR, "users_data.json")
 
 # In-memory cache

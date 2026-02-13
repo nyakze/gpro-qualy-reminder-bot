@@ -63,7 +63,7 @@ def get_next_notification_time(
     except ValueError:
         return None
 
-    for label in notification_labels[current_idx + 1:]:
+    for label in notification_labels[current_idx + 1 :]:
         hours_map = {
             "72h": 72,
             "48h": 48,
