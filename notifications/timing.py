@@ -56,6 +56,14 @@ def get_next_check_interval(now: datetime, race_calendar: dict) -> int:
         if 0 < hours_until <= CHECK_INTERVAL_CLOSING_HOURS:
             return CHECK_INTERVAL_FAST_SECONDS
 
+    # Check if any race is about to start (within 10 minutes)
+    for race_id, race_data in race_calendar.items():
+        race_time = race_data["date"]
+        minutes_until = (race_time - now).total_seconds() / 60
+
+        if -5 <= minutes_until <= 10:
+            return CHECK_INTERVAL_FAST_SECONDS
+
     # Check if any qualification just opened (within last 4 hours)
     for race_id, race_data in race_calendar.items():
         # Skip race 1 - no previous race
