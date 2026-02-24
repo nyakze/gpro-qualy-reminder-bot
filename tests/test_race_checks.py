@@ -40,9 +40,9 @@ class TestCheckRaceLiveNotifications:
                 assert result == []
 
     def test_race_within_window_returns_notification(self):
-        """Test that race within 6 minute window returns notification"""
+        """Test that race within window (30 sec before) returns notification"""
         now = datetime.now(UTC)
-        race_time = now + timedelta(minutes=2)
+        race_time = now + timedelta(seconds=30)
 
         with patch("notifications.history.get_notify_history", return_value={}):
             with patch(
@@ -73,7 +73,7 @@ class TestCheckRaceLiveNotifications:
     def test_race_5_minutes_after_in_window(self):
         """Test that race 5 minutes after is in window"""
         now = datetime.now(UTC)
-        race_time = now + timedelta(minutes=5)
+        race_time = now - timedelta(minutes=5)
 
         with patch("notifications.history.get_notify_history", return_value={}):
             with patch(
@@ -83,6 +83,20 @@ class TestCheckRaceLiveNotifications:
 
                 result = check_race_live_notifications(now)
                 assert len(result) == 1
+
+    def test_race_5_minutes_before_not_in_window(self):
+        """Test that race 5 minutes before is NOT in window"""
+        now = datetime.now(UTC)
+        race_time = now + timedelta(minutes=5)
+
+        with patch("notifications.history.get_notify_history", return_value={}):
+            with patch(
+                "notifications.checks.race.race_calendar", {1: {"date": race_time}}
+            ):
+                from notifications.checks.race import check_race_live_notifications
+
+                result = check_race_live_notifications(now)
+                assert len(result) == 0
 
     def test_race_outside_window_not_returned(self):
         """Test that race outside window is not returned"""
@@ -101,8 +115,8 @@ class TestCheckRaceLiveNotifications:
     def test_multiple_races_in_window(self):
         """Test that multiple races in window all return notifications"""
         now = datetime.now(UTC)
-        race1_time = now + timedelta(minutes=2)
-        race2_time = now + timedelta(minutes=4)
+        race1_time = now + timedelta(seconds=30)
+        race2_time = now - timedelta(seconds=30)
 
         with patch("notifications.history.get_notify_history", return_value={}):
             with patch(

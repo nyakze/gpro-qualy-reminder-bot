@@ -38,12 +38,11 @@ def check_race_live_notifications(now: datetime) -> List[Tuple]:
         if history_key in notify_history:
             continue
 
-        # Check if race is starting now (within 6 minute window: 1min before to 5min after)
+        # Check if race is starting now (1 min before to 5 min after race starts)
         seconds_until = (race_time - now).total_seconds()
 
-        # Race starts when seconds_until is around 0 (within tolerance)
-        # -60s (1 min before) to +300s (5 min after) to catch late checks
-        if -60 <= seconds_until <= 300:
+        # Window: -300s to +60s (5 min after race to 1 min before race)
+        if -300 <= seconds_until <= 60:
             notifications.append(("live", race_id, race_data, "race_live", history_key))
 
     return notifications
