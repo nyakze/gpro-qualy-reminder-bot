@@ -21,10 +21,28 @@ def get_temp_icon(temp: int) -> str:
         Icon based on temperature (🔥 for hot, 🧊 for cold, 🌡️ for normal)
     """
     if isinstance(temp, int):
-        if temp > 38:
-            return "🔥"
         if temp < 12:
             return "🧊"
+        if temp > 38:
+            return "🔥"
+    return "🌡️"
+
+
+def get_temp_icon_for_range(temp_low: int, temp_high: int) -> str:
+    """Return temperature icon based on range values
+
+    Args:
+        temp_low: Low temperature value in Celsius
+        temp_high: High temperature value in Celsius
+
+    Returns:
+        Icon based on temperature (🔥 if any value >38, 🧊 if any value <12, 🌡️ otherwise)
+    """
+    if isinstance(temp_low, int) and isinstance(temp_high, int):
+        if temp_low < 12 or temp_high < 12:
+            return "🧊"
+        if temp_low > 38 or temp_high > 38:
+            return "🔥"
     return "🌡️"
 
 
@@ -180,8 +198,12 @@ def format_weather_data(weather: dict, i18n=None, user_id: int | None = None) ->
             f"{rain_low}%" if rain_low == rain_high else f"{rain_low}%-{rain_high}%"
         )
 
-        # Get icons for temp (use higher value for range), humidity, and rain
-        temp_icon = get_temp_icon(temp_high) if isinstance(temp_high, int) else ""
+        # Get icons for temp (check range), humidity, and rain
+        temp_icon = (
+            get_temp_icon_for_range(temp_low, temp_high)
+            if isinstance(temp_low, int) and isinstance(temp_high, int)
+            else ""
+        )
         rain_icon = get_rain_icon(rain_high) if isinstance(rain_high, int) else ""
 
         message += f"\n{get_time_interval_icon()} {get_text(label_key)}\n"
