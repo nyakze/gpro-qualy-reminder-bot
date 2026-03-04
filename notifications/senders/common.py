@@ -4,7 +4,7 @@ import logging
 from typing import Callable
 
 from aiogram import Bot
-from aiogram.exceptions import TelegramForbiddenError
+from aiogram.exceptions import TelegramForbiddenError, TelegramNotFound
 
 from notifications.users import (
     get_user_status,
@@ -84,6 +84,10 @@ async def send_notification(
     except TelegramForbiddenError:
         mark_user_blocked(user_id)
         logger.warning(f"🚫 User {user_id} blocked the bot ({notification_type})")
+        return False
+    except TelegramNotFound:
+        logger.warning(f"📍 Chat not found for user {user_id} ({notification_type}) - removing user")
+        mark_user_blocked(user_id)
         return False
     except Exception as e:
         logger.error(f"{notification_type} notify {user_id} failed: {e}")
