@@ -23,7 +23,7 @@ def get_temp_icon(temp: int) -> str:
     if isinstance(temp, int):
         if temp < 12:
             return "🧊"
-        if temp > 38:
+        if temp > 31:
             return "🔥"
     return "🌡️"
 
@@ -41,7 +41,7 @@ def get_temp_icon_for_range(temp_low: int, temp_high: int) -> str:
     if isinstance(temp_low, int) and isinstance(temp_high, int):
         if temp_low < 12 or temp_high < 12:
             return "🧊"
-        if temp_low > 38 or temp_high > 38:
+        if temp_low > 31 or temp_high > 31:
             return "🔥"
     return "🌡️"
 
