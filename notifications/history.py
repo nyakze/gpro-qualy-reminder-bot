@@ -13,7 +13,7 @@ from typing import Dict, Tuple
 logger = logging.getLogger(__name__)
 
 # Constants
-NOTIFICATION_HISTORY_RETENTION_HOURS = 24 * 30  # 30 days
+NOTIFICATION_HISTORY_RETENTION_HOURS = 24 * 120  # 120 days / hotfix to prevent old notifications from being sent
 MAX_HISTORY_SIZE = 10000  # Maximum entries to prevent unbounded growth
 
 # In-memory cache (lazy loaded)
