@@ -155,7 +155,11 @@ async def cmd_users(message: Message, i18n: I18nContext):
             link = format_user_link(uid, username, first_name)
 
             rl_info = get_user_rate_limit_info(uid)
-            if rl_info and rl_info["violation_count"] > 0:
+            is_bot_blocked = users_data[uid].get("blocked_at") is not None
+
+            if is_bot_blocked:
+                icon = "🚫"
+            elif rl_info and rl_info["violation_count"] > 0:
                 if rl_info["is_blocked"]:
                     icon = "⛔"
                 elif rl_info["warned"]:
@@ -252,6 +256,11 @@ async def cmd_user(message: Message, i18n: I18nContext):
 
     # Rate limiting info
     rl_info = get_user_rate_limit_info(target_user_id)
+    is_blocked = status.get("blocked_at") is not None
+    if is_blocked:
+        text += "\n<b>🚫 Bot Blocked:</b>\n"
+        text += f"• User blocked the bot: {format_relative_time(status.get('blocked_at'))}\n"
+
     if rl_info and rl_info["violation_count"] > 0:
         text += "\n<b>🛡️ Rate Limit Status:</b>\n"
         text += f"• Violations: {rl_info['violation_count']}\n"
@@ -402,8 +411,22 @@ async def cmd_userstats(message: Message, i18n: I18nContext):
                         details += f" - {time_str} left"
                     text += f"• {link} {status} {details}\n"
 
+        # Bot-blocked users
+        blocked_users = [
+            (uid, status)
+            for uid, status in users_data.items()
+            if status.get("blocked_at")
+        ]
+        if blocked_users:
+            text += f"\n<b>🚫 Bot-Blocked Users: {len(blocked_users)}</b>\n"
+            for uid, status in blocked_users:
+                username = status.get("username")
+                first_name = status.get("first_name")
+                link = format_user_link(uid, username, first_name)
+                blocked_time = format_relative_time(status.get("blocked_at"))
+                text += f"• {link} - blocked {blocked_time}\n"
+
         await message.answer(text, parse_mode="HTML")
-        logger.info(f"Admin {message.from_user.id} viewed user statistics")
 
     except Exception as e:
         logger.error(f"USERSTATS ERROR: {e}")
