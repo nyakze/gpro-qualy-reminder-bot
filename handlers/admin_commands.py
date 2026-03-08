@@ -44,6 +44,40 @@ def format_user_link(user_id: int, username: str | None, first_name: str | None)
     return "—"
 
 
+def format_relative_time(iso_timestamp: str | None) -> str:
+    """Format ISO timestamp as relative time (e.g., '2 hours ago')"""
+    if not iso_timestamp:
+        return "—"
+
+    try:
+        from datetime import datetime, UTC
+        from datetime import timedelta
+
+        dt = datetime.fromisoformat(iso_timestamp.replace("Z", "+00:00"))
+        now = datetime.now(UTC)
+        delta = now - dt
+
+        if delta < timedelta(seconds=60):
+            return "just now"
+        elif delta < timedelta(hours=1):
+            minutes = int(delta.total_seconds() / 60)
+            return f"{minutes} min ago"
+        elif delta < timedelta(days=1):
+            hours = int(delta.total_seconds() / 3600)
+            return f"{hours} hour{'s' if hours != 1 else ''} ago"
+        elif delta < timedelta(days=30):
+            days = delta.days
+            return f"{days} day{'s' if days != 1 else ''} ago"
+        elif delta < timedelta(days=365):
+            months = delta.days // 30
+            return f"{months} month{'s' if months != 1 else ''} ago"
+        else:
+            years = delta.days // 365
+            return f"{years} year{'s' if years != 1 else ''} ago"
+    except Exception:
+        return "—"
+
+
 @router.message(Command("update"))
 async def cmd_update(message: Message, i18n: I18nContext):
     if not is_admin(message.from_user.id):
@@ -116,10 +150,10 @@ async def cmd_users(message: Message, i18n: I18nContext):
             group = status.get("group", "—")
             username = status.get("username")
             first_name = status.get("first_name")
+            last_interaction = format_relative_time(status.get("last_interaction"))
 
             link = format_user_link(uid, username, first_name)
 
-            # Check rate limit status for icon
             rl_info = get_user_rate_limit_info(uid)
             if rl_info and rl_info["violation_count"] > 0:
                 if rl_info["is_blocked"]:
@@ -131,9 +165,7 @@ async def cmd_users(message: Message, i18n: I18nContext):
             else:
                 icon = ""
 
-            text += (
-                f"• {icon} <code>{uid}</code> ({link}): Race {quali} | Group {group}\n"
-            )
+            text += f"• {icon} <code>{uid}</code> ({link}): Race {quali} | Group {group} | {last_interaction}\n"
 
         text += "\n💡 Use /user USER_ID for details or /userstats for statistics"
         await message.answer(text, parse_mode="HTML")
@@ -189,7 +221,9 @@ async def cmd_user(message: Message, i18n: I18nContext):
     text += "<b>📋 Basic Info:</b>\n"
     text += f"• Completed Quali: {status.get('completed_quali', 'None')}\n"
     text += f"• Group: {status.get('group', '—')}\n"
-    text += f"• Website Mode: {status.get('website_mode', 'classic')}\n\n"
+    text += f"• Website Mode: {status.get('website_mode', 'classic')}\n"
+    last_interaction = format_relative_time(status.get("last_interaction"))
+    text += f"• Last Active: {last_interaction}\n\n"
 
     text += "<b>🌍 Localization:</b>\n"
     text += f"• UI Language: {status.get('ui_lang', 'gb')}\n"

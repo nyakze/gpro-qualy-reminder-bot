@@ -33,6 +33,8 @@ def get_user_status(user_id: int) -> Tuple[Dict, bool]:
     if user_id not in users_data:
         was_new = True
         logger.info(f"🆕 New user {user_id} registered")
+        from datetime import datetime, UTC
+
         users_data[user_id] = {
             "completed_quali": None,
             "group": None,
@@ -48,6 +50,7 @@ def get_user_status(user_id: int) -> Tuple[Dict, bool]:
             "snooze_tracking": get_default_snooze_tracking(),
             "active_snoozes": {},
             "blocked_at": None,
+            "last_interaction": datetime.now(UTC).isoformat(),
         }
         save_users_data()
     else:
@@ -120,6 +123,10 @@ def get_user_status(user_id: int) -> Tuple[Dict, bool]:
         if "blocked_at" not in users_data[user_id]:
             users_data[user_id]["blocked_at"] = None
             logger.debug(f"Added 'blocked_at' field to user {user_id}")
+            needs_save = True
+        if "last_interaction" not in users_data[user_id]:
+            users_data[user_id]["last_interaction"] = None
+            logger.debug(f"Added 'last_interaction' field to user {user_id}")
             needs_save = True
         if needs_save:
             save_users_data()
@@ -303,6 +310,11 @@ def update_user_profile(
             users_data[user_id]["first_name"] = first_name
             needs_save = True
             logger.debug(f"Updated first_name for user {user_id}: {first_name}")
+
+    from datetime import datetime, UTC
+
+    users_data[user_id]["last_interaction"] = datetime.now(UTC).isoformat()
+    needs_save = True
 
     if needs_save:
         save_users_data()

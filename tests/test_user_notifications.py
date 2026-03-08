@@ -677,6 +677,126 @@ class TestUserProfile:
         assert profile["first_name"] == "Test"
         assert profile["tg_language_code"] == "en"
 
+    def test_new_user_has_last_interaction(self):
+        """Test that new user is created with last_interaction timestamp (registration is an interaction)"""
+        from notifications import get_user_status
+
+        user_id = 55555
+        user_status, was_new = get_user_status(user_id)
+
+        assert was_new is True
+        assert "last_interaction" in user_status
+        assert user_status["last_interaction"] is not None
+
+    def test_update_user_profile_updates_last_interaction(self):
+        """Test that update_user_profile updates last_interaction"""
+        from notifications import get_user_status, update_user_profile
+        import time
+
+        user_id = 66666
+        get_user_status(user_id)
+        initial_time = get_user_status(user_id)[0]["last_interaction"]
+
+        time.sleep(0.1)
+        update_user_profile(user_id, username="testuser")
+
+        updated_time = get_user_status(user_id)[0]["last_interaction"]
+        assert updated_time != initial_time
+
+
+class TestFormatRelativeTime:
+    """Tests for format_relative_time helper function"""
+
+    def test_just_now(self):
+        """Test 'just now' for very recent timestamps"""
+        from handlers.admin_commands import format_relative_time
+        from datetime import datetime, UTC
+
+        now = datetime.now(UTC).isoformat()
+        assert format_relative_time(now) == "just now"
+
+    def test_minutes_ago(self):
+        """Test minutes ago"""
+        from handlers.admin_commands import format_relative_time
+        from datetime import datetime, UTC, timedelta
+
+        past = (datetime.now(UTC) - timedelta(minutes=5)).isoformat()
+        assert format_relative_time(past) == "5 min ago"
+
+    def test_single_minute_ago(self):
+        """Test singular minute"""
+        from handlers.admin_commands import format_relative_time
+        from datetime import datetime, UTC, timedelta
+
+        past = (datetime.now(UTC) - timedelta(minutes=1)).isoformat()
+        assert format_relative_time(past) == "1 min ago"
+
+    def test_hours_ago(self):
+        """Test hours ago"""
+        from handlers.admin_commands import format_relative_time
+        from datetime import datetime, UTC, timedelta
+
+        past = (datetime.now(UTC) - timedelta(hours=3)).isoformat()
+        assert format_relative_time(past) == "3 hours ago"
+
+    def test_single_hour_ago(self):
+        """Test singular hour"""
+        from handlers.admin_commands import format_relative_time
+        from datetime import datetime, UTC, timedelta
+
+        past = (datetime.now(UTC) - timedelta(hours=1)).isoformat()
+        assert format_relative_time(past) == "1 hour ago"
+
+    def test_days_ago(self):
+        """Test days ago"""
+        from handlers.admin_commands import format_relative_time
+        from datetime import datetime, UTC, timedelta
+
+        past = (datetime.now(UTC) - timedelta(days=10)).isoformat()
+        assert format_relative_time(past) == "10 days ago"
+
+    def test_single_day_ago(self):
+        """Test singular day"""
+        from handlers.admin_commands import format_relative_time
+        from datetime import datetime, UTC, timedelta
+
+        past = (datetime.now(UTC) - timedelta(days=1)).isoformat()
+        assert format_relative_time(past) == "1 day ago"
+
+    def test_months_ago(self):
+        """Test months ago"""
+        from handlers.admin_commands import format_relative_time
+        from datetime import datetime, UTC, timedelta
+
+        past = (datetime.now(UTC) - timedelta(days=60)).isoformat()
+        assert format_relative_time(past) == "2 months ago"
+
+    def test_years_ago(self):
+        """Test years ago"""
+        from handlers.admin_commands import format_relative_time
+        from datetime import datetime, UTC, timedelta
+
+        past = (datetime.now(UTC) - timedelta(days=400)).isoformat()
+        assert format_relative_time(past) == "1 year ago"
+
+    def test_none_timestamp(self):
+        """Test None timestamp returns dash"""
+        from handlers.admin_commands import format_relative_time
+
+        assert format_relative_time(None) == "—"
+
+    def test_invalid_timestamp(self):
+        """Test invalid timestamp returns dash"""
+        from handlers.admin_commands import format_relative_time
+
+        assert format_relative_time("invalid-date") == "—"
+
+    def test_empty_string_timestamp(self):
+        """Test empty string timestamp returns dash"""
+        from handlers.admin_commands import format_relative_time
+
+        assert format_relative_time("") == "—"
+
 
 class TestQualiDone:
     """Tests for marking qualification as done"""
