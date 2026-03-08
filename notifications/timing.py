@@ -17,6 +17,9 @@ CHECK_INTERVAL_NORMAL_SECONDS = 5 * 60  # 5 minutes
 CHECK_INTERVAL_FAST_SECONDS = 60  # 1 minute (when approaching race time)
 CHECK_INTERVAL_CLOSING_HOURS = 3  # Switch to fast mode when within this many hours
 
+# Early check for timed notifications (send 1 minute before intended time)
+EARLY_CHECK_MINUTES = 1
+
 # API check constants for quali open notifications
 API_CHECK_START_HOURS = 2.0  # Start checking API 2 hours after race
 API_CHECK_END_HOURS = 3.5  # Fallback after 3.5 hours if API doesn't detect

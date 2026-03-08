@@ -87,14 +87,14 @@ def check_custom_notifications(now: datetime, races_closing: list) -> List[Tuple
     notifications = []
 
     for hours_remaining, race_id, race_data in races_closing:
-        # Check custom_1 (8h)
+        # Check custom_1 (8h) - no early check, fires exactly at threshold
         custom_1_key = (race_id, "custom_1")
         if custom_1_key not in get_notify_history() and hours_remaining <= 8:
             notifications.append(
                 ("closing", race_id, race_data, "custom_1", custom_1_key)
             )
 
-        # Check custom_2 (12h)
+        # Check custom_2 (12h) - no early check, fires exactly at threshold
         custom_2_key = (race_id, "custom_2")
         if custom_2_key not in get_notify_history() and hours_remaining <= 12:
             notifications.append(

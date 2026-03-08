@@ -19,6 +19,7 @@ from notifications.timing import (
     API_CHECK_END_HOURS,
     API_CHECK_INTERVAL_MINUTES,
     FALLBACK_TOLERANCE_MINUTES,
+    EARLY_CHECK_MINUTES,
 )
 
 logger = logging.getLogger(__name__)
@@ -58,17 +59,20 @@ def check_quali_closing(now: datetime, races_closing: list) -> List[Tuple]:
     """
     notifications = []
 
+    # Convert early check minutes to hours for comparison
+    early_check_hours = EARLY_CHECK_MINUTES / 60.0
+
     for hours_remaining, race_id, race_data in races_closing:
-        # Determine notification label based on time remaining
-        if hours_remaining <= 0.17:  # ~10 minutes
+        # Determine notification label based on time remaining (with early check offset)
+        if hours_remaining <= 0.17 + early_check_hours:  # ~10 minutes + early
             label = "10min"
-        elif hours_remaining <= 2:
+        elif hours_remaining <= 2 + early_check_hours:
             label = "2h"
-        elif hours_remaining <= 24:
+        elif hours_remaining <= 24 + early_check_hours:
             label = "24h"
-        elif hours_remaining <= 48:
+        elif hours_remaining <= 48 + early_check_hours:
             label = "48h"
-        elif hours_remaining <= 72:
+        elif hours_remaining <= 72 + early_check_hours:
             # 72h notification only for Tuesday races (quali closes on Tuesday)
             quali_close = race_data["quali_close"]
             if quali_close.weekday() == 1:  # Tuesday = 1
