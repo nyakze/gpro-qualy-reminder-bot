@@ -277,10 +277,13 @@ async def send_quali_notification(
         )
         logger.info(f"✅ Sent {notification_type} to {user_id} for race {race_id}")
     except Exception as e:
-        from aiogram.exceptions import TelegramForbiddenError
+        from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError
 
         if isinstance(e, TelegramForbiddenError):
             mark_user_blocked(user_id)
             logger.warning(f"🚫 User {user_id} blocked the bot (quali notification)")
+        elif isinstance(e, TelegramBadRequest) and "chat not found" in str(e.message).lower():
+            logger.warning(f"📍 Chat not found for user {user_id} (quali notification)")
+            mark_user_blocked(user_id)
         else:
             logger.error(f"Notify {user_id} failed: {e}")
