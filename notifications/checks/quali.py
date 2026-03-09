@@ -320,8 +320,9 @@ def check_quali_results(now: datetime) -> List[Tuple]:
         # Check if quali closed 5+ minutes ago (time for GPRO to process results)
         minutes_since_close = (now - quali_close).total_seconds() / 60
 
-        # Only notify if quali has been closed for at least 5 minutes
-        if minutes_since_close >= 5:
+        # Only notify if quali closed between 5 and 10 minutes ago
+        # After 10 minutes, the window has passed - don't send even if purged from history
+        if 5 <= minutes_since_close <= 10:
             notifications.append(
                 ("results", race_id, race_data, "quali_results", history_key)
             )
