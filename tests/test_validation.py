@@ -127,15 +127,15 @@ class TestGroupValidation:
             assert is_valid is False, f"Expected {group} to be invalid"
 
     def test_rookie_range_boundaries(self):
-        """Test Rookie group number boundaries (1-150)"""
+        """Test Rookie group number boundaries (1-250)"""
         from notifications.validation import validate_group_input
 
-        valid_rookie = ["R1", "R75", "R150"]
+        valid_rookie = ["R1", "R75", "R250"]
         for group in valid_rookie:
             is_valid, _, _ = validate_group_input(group)
             assert is_valid is True, f"Expected {group} to be valid"
 
-        invalid_rookie = ["R0", "R151"]
+        invalid_rookie = ["R0", "R251"]
         for group in invalid_rookie:
             is_valid, _, _ = validate_group_input(group)
             assert is_valid is False, f"Expected {group} to be invalid"

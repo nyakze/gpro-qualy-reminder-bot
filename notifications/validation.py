@@ -15,7 +15,7 @@ GROUP_RANGES = {
     "M": (1, 5),
     "P": (1, 25),
     "A": (1, 80),
-    "R": (1, 150),
+    "R": (1, 250),
 }
 
 
@@ -337,7 +337,7 @@ def validate_group_input(group: str, i18n=None) -> tuple[bool, str | None, str]:
     - M: numbers 1-5
     - P: numbers 1-25
     - A: numbers 1-80
-    - R: numbers 1-150
+    - R: numbers 1-250
     - Leading zeros are stripped (e.g., R007 -> R7, M07 -> M7)
     - Lowercase is accepted and converted to uppercase
 
