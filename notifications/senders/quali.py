@@ -1,6 +1,7 @@
 """Qualifying notification sender (main quali notifications)"""
 
 import logging
+import math
 from datetime import datetime, UTC
 
 from aiogram import Bot
@@ -124,7 +125,10 @@ async def send_quali_notification(
             hours_left = race_data["hours_left"]
 
         if hours_left >= 24:
-            days = int(hours_left / 24)
+            # Round up for standard 24h/48h/72h notifications, keep exact for custom/snooze
+            STANDARD_NOTIF_LABELS = {"24h", "48h", "72h"}
+            use_rounding = notification_type in STANDARD_NOTIF_LABELS
+            days = math.ceil(hours_left / 24) if use_rounding else int(hours_left / 24)
             remaining_hours = int(hours_left % 24)
             if remaining_hours > 0:
                 time_text = get_text(
@@ -282,7 +286,10 @@ async def send_quali_notification(
         if isinstance(e, TelegramForbiddenError):
             mark_user_blocked(user_id)
             logger.warning(f"🚫 User {user_id} blocked the bot (quali notification)")
-        elif isinstance(e, TelegramBadRequest) and "chat not found" in str(e.message).lower():
+        elif (
+            isinstance(e, TelegramBadRequest)
+            and "chat not found" in str(e.message).lower()
+        ):
             logger.warning(f"📍 Chat not found for user {user_id} (quali notification)")
             mark_user_blocked(user_id)
         else:
