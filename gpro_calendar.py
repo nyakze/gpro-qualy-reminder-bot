@@ -429,7 +429,7 @@ async def check_quali_status_from_api() -> dict:
                                     race_data["quali_close"] - expected_close
                                 ).total_seconds()
                             )
-                            if time_diff < 3600:  # Within 1 hour
+                            if time_diff < 7200:  # Within 2 hours
                                 logger.info(
                                     f"✅ API: Race {race_id} quali open, {seconds//3600}h remaining"
                                 )
