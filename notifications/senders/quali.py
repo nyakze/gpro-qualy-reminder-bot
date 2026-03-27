@@ -124,7 +124,7 @@ async def send_quali_notification(
         else:
             hours_left = race_data["hours_left"]
 
-        if hours_left >= 24:
+        if hours_left >= 23.9:
             # Round up for standard 24h/48h/72h notifications, keep exact for custom/snooze
             STANDARD_NOTIF_LABELS = {"24h", "48h", "72h"}
             use_rounding = notification_type in STANDARD_NOTIF_LABELS
