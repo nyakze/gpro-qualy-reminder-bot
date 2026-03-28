@@ -125,17 +125,21 @@ async def send_quali_notification(
             hours_left = race_data["hours_left"]
 
         if hours_left >= 23.9:
-            # Round up for standard 24h/48h/72h notifications, keep exact for custom/snooze
+            # Use 23.9 instead of 24 to handle slight notification delays (e.g., 23h58m still shows "1 day")
             STANDARD_NOTIF_LABELS = {"24h", "48h", "72h"}
             use_rounding = notification_type in STANDARD_NOTIF_LABELS
-            days = math.ceil(hours_left / 24) if use_rounding else int(hours_left / 24)
-            remaining_hours = int(hours_left % 24)
-            if remaining_hours > 0:
-                time_text = get_text(
-                    "time-days-hours", days=days, hours=remaining_hours
-                )
-            else:
+            if use_rounding:
+                days = round(hours_left / 24)
                 time_text = get_text("time-days", days=days)
+            else:
+                days = int(hours_left / 24)
+                remaining_hours = int(hours_left % 24)
+                if remaining_hours > 0:
+                    time_text = get_text(
+                        "time-days-hours", days=days, hours=remaining_hours
+                    )
+                else:
+                    time_text = get_text("time-days", days=days)
             emoji = "🔔"
         elif hours_left >= 2:
             hours = int(hours_left)
