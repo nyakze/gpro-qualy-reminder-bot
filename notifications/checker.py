@@ -258,7 +258,9 @@ async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
 
             # Mark as notified (snoozes are marked in check_snooze_reminders before being added to list)
             if ntype != "snooze":
-                mark_notified(race_id, label)
+                # Use history_key[0] for race_id to match the key used in is_already_notified check
+                # This ensures new_season reminders (which use race_id=0 in history_key) are properly marked
+                mark_notified(history_key[0], label)
             else:
                 # For snoozes, remove from active_snoozes after sending (history already marked)
                 _, snooze_key = history_key
