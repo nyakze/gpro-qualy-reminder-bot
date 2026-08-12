@@ -11,6 +11,7 @@ from notifications.utils.link_generators import (
     generate_app_race_replay_link,
 )
 from notifications.senders.common import (
+    DeliveryStatus,
     get_user_info,
     get_text_getter,
     send_notification,
@@ -21,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 async def send_race_replay_notification(
     bot: Bot, user_id: int, race_id: int, race_data: dict, i18n=None
-):
+) -> DeliveryStatus:
     """Send race replay notification when next quali opens"""
     user_info = get_user_info(user_id)
     group = user_info["group"]
@@ -66,5 +67,6 @@ async def send_race_replay_notification(
     success = await send_notification(
         bot, user_id, message, "race replay notification", race_id
     )
-    if success:
+    if success is DeliveryStatus.SENT:
         logger.info(f"📺 Sent race replay notification to {user_id} for race {race_id}")
+    return success

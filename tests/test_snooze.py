@@ -520,121 +520,82 @@ class TestUserSnoozeOperations:
         assert result is False
 
     def test_get_snooze_count(self):
-        """Test getting snooze count"""
+        """Test getting a race-specific snooze count."""
         from notifications.users.snooze import get_snooze_count, increment_snooze_count
         from notifications.users import get_user_status
 
-        user_id = 88888  # Use unique user ID
+        user_id = 88888
         user_status, _ = get_user_status(user_id)
+        user_status["snooze_counts"] = {}
 
-        # Ensure fresh state
-        user_status["snooze_tracking"] = {"48h": 0, "24h": 0, "2h": 0, "10min": 0}
-
-        initial_count = get_snooze_count(user_id, "48h")
-        assert initial_count == 0
-
-        increment_snooze_count(user_id, "48h")
-
-        new_count = get_snooze_count(user_id, "48h")
-        assert new_count == 1
+        assert get_snooze_count(user_id, 1, "48h") == 0
+        increment_snooze_count(user_id, 1, "48h")
+        assert get_snooze_count(user_id, 1, "48h") == 1
+        assert get_snooze_count(user_id, 2, "48h") == 0
 
     def test_increment_snooze_count(self):
-        """Test incrementing snooze count"""
+        """Test incrementing snooze count."""
         from notifications.users.snooze import increment_snooze_count, get_snooze_count
         from notifications.users import get_user_status
 
-        user_id = 55555  # Use unique user ID
+        user_id = 55555
         get_user_status(user_id)
 
-        initial = get_snooze_count(user_id, "48h")
-        increment_snooze_count(user_id, "48h")
-        increment_snooze_count(user_id, "48h")
-        increment_snooze_count(user_id, "48h")
+        initial = get_snooze_count(user_id, 1, "48h")
+        increment_snooze_count(user_id, 1, "48h")
+        increment_snooze_count(user_id, 1, "48h")
+        increment_snooze_count(user_id, 1, "48h")
 
-        count = get_snooze_count(user_id, "48h")
-        assert count == initial + 3
+        assert get_snooze_count(user_id, 1, "48h") == initial + 3
 
     def test_reset_snooze_count(self):
-        """Test resetting snooze count"""
+        """Test resetting snooze count."""
         from notifications.users.snooze import reset_snooze_count
         from notifications.users import get_user_status
 
-        user_id = 66666  # Use unique user ID
+        user_id = 66666
         user_status, _ = get_user_status(user_id)
-
-        # Set up snooze_counts structure first
         user_status["snooze_counts"] = {"1_48h": 5}
 
         reset_snooze_count(user_id, 1, "48h")
 
-        count = user_status["snooze_counts"].get("1_48h", 0)
-        assert count == 0
+        assert "1_48h" not in user_status["snooze_counts"]
 
     def test_reset_snooze_counts_for_deadline_passed(self):
-        """Test resetting all snooze counts after deadline"""
+        """Only the completed race's snooze counts are cleared."""
         from notifications.users.snooze import reset_snooze_counts_for_deadline_passed
         from notifications.users import get_user_status
 
-        user_id = 77777  # Use unique user ID
-        user_status, _ = get_user_status(user_id)
+        user_status, _ = get_user_status(77777)
+        user_status["snooze_counts"] = {
+            "1_48h": 2,
+            "1_24h": 1,
+            "2_48h": 3,
+        }
 
-        # Set up user with snooze_tracking
-        user_status["snooze_tracking"] = {"48h": 2, "24h": 1, "2h": 0, "10min": 0}
-
-        # Mock the quali_close to be in the past
         past_time = datetime.now(UTC) - timedelta(hours=2)
         reset_snooze_counts_for_deadline_passed(1, past_time)
 
-        # All counts should be reset to default (0)
-        tracking = user_status["snooze_tracking"]
-        assert tracking["48h"] == 0
-        assert tracking["24h"] == 0
+        assert "1_48h" not in user_status["snooze_counts"]
+        assert "1_24h" not in user_status["snooze_counts"]
+        assert user_status["snooze_counts"]["2_48h"] == 3
 
 
 class TestCustomNotifications:
-    """Tests for custom notification checks"""
+    """Tests for custom notification checks."""
 
-    def test_check_custom_notifications_8h(self):
-        """Test custom_1 notification at 8 hours"""
+    def test_check_custom_notifications_uses_user_interval(self):
+        """Use the actual per-user interval instead of fixed thresholds."""
         from notifications.checks.snooze import check_custom_notifications
+        from notifications.users import get_user_status
 
-        now = datetime.now(UTC)
-        race_data = {
-            "track": "Test GP",
-            "quali_close": now + timedelta(hours=6),  # 6 hours remaining
-            "date": now + timedelta(hours=24),
-        }
-
-        races_closing = [(6.0, 1, race_data)]
-        result = check_custom_notifications(now, races_closing)
-
-        # Should trigger custom_1 (8h threshold) since 6 < 8
-        labels = [r[3] for r in result]
-        assert "custom_1" in labels
-
-    def test_check_custom_notifications_12h(self):
-        """Test custom_2 notification at 12 hours"""
-        from notifications.checks.snooze import check_custom_notifications
-
-        now = datetime.now(UTC)
-        race_data = {
-            "track": "Test GP",
-            "quali_close": now + timedelta(hours=10),  # 10 hours remaining
-            "date": now + timedelta(hours=24),
-        }
-
-        races_closing = [(10.0, 1, race_data)]
-        result = check_custom_notifications(now, races_closing)
-
-        # Should trigger custom_2 (12h) since 10 < 12
-        # custom_1 (8h) is only triggered when hours_remaining <= 8
-        labels = [r[3] for r in result]
-        assert "custom_2" in labels
-
-    def test_check_custom_notifications_already_notified(self):
-        """Test custom notifications skip already notified"""
-        from notifications.checks.snooze import check_custom_notifications
-        from notifications.history import mark_notified
+        user_id = 12345
+        user_status, _ = get_user_status(user_id)
+        user_status["custom_notifications"] = [
+            {"enabled": True, "hours_before": 7.5},
+            {"enabled": False, "hours_before": None},
+        ]
+        user_status["notifications"]["custom_1"] = True
 
         now = datetime.now(UTC)
         race_data = {
@@ -643,14 +604,88 @@ class TestCustomNotifications:
             "date": now + timedelta(hours=24),
         }
 
-        # Mark custom_1 as already notified
-        mark_notified(1, "custom_1")
+        result = check_custom_notifications(now, [(6.0, 1, race_data)])
 
-        races_closing = [(6.0, 1, race_data)]
-        result = check_custom_notifications(now, races_closing)
+        assert result == [
+            (
+                "custom",
+                1,
+                race_data,
+                "custom_1",
+                (1, f"custom_1:user:{user_id}"),
+                user_id,
+            )
+        ]
 
-        labels = [r[3] for r in result]
-        assert "custom_1" not in labels  # Already notified
+    def test_check_custom_notifications_targets_only_due_user(self):
+        """Different user intervals produce independently targeted events."""
+        from notifications.checks.snooze import check_custom_notifications
+        from notifications.users import get_user_status
+
+        early_user = 111
+        late_user = 222
+        for user_id, hours_before in ((early_user, 12.0), (late_user, 1.0)):
+            user_status, _ = get_user_status(user_id)
+            user_status["custom_notifications"] = [
+                {"enabled": True, "hours_before": hours_before},
+                {"enabled": False, "hours_before": None},
+            ]
+            user_status["notifications"]["custom_1"] = True
+
+        now = datetime.now(UTC)
+        race_data = {
+            "track": "Test GP",
+            "quali_close": now + timedelta(hours=10),
+            "date": now + timedelta(hours=24),
+        }
+
+        result = check_custom_notifications(now, [(10.0, 1, race_data)])
+
+        assert [notification[5] for notification in result] == [early_user]
+
+    def test_check_custom_notifications_already_notified(self):
+        """Already delivered custom events are skipped per user."""
+        from notifications.checks.snooze import check_custom_notifications
+        from notifications.history import mark_notified
+        from notifications.users import get_user_status
+
+        user_id = 12345
+        user_status, _ = get_user_status(user_id)
+        user_status["custom_notifications"] = [
+            {"enabled": True, "hours_before": 8.0},
+            {"enabled": False, "hours_before": None},
+        ]
+        user_status["notifications"]["custom_1"] = True
+        mark_notified(1, f"custom_1:user:{user_id}")
+
+        now = datetime.now(UTC)
+        race_data = {
+            "track": "Test GP",
+            "quali_close": now + timedelta(hours=6),
+            "date": now + timedelta(hours=24),
+        }
+
+        assert check_custom_notifications(now, [(6.0, 1, race_data)]) == []
+
+    def test_check_custom_notifications_skips_blocked_user(self):
+        from notifications.checks.snooze import check_custom_notifications
+        from notifications.users import get_user_status
+
+        user_status, _ = get_user_status(12345)
+        user_status["blocked_at"] = datetime.now(UTC).isoformat()
+        user_status["custom_notifications"] = [{"enabled": True, "hours_before": 8.0}]
+
+        assert check_custom_notifications(datetime.now(UTC), [(1.0, 1, {})]) == []
+
+
+def test_parse_snooze_callback_preserves_underscored_label():
+    from handlers.callbacks.race_status import _parse_snooze_callback_data
+
+    assert _parse_snooze_callback_data("snooze_2_opens_soon_15") == (
+        2,
+        "opens_soon",
+        15,
+    )
 
 
 if __name__ == "__main__":

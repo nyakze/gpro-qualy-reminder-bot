@@ -139,6 +139,19 @@ def mark_notified(race_id: int, label: str) -> None:
     _notify_history = _enforce_history_size_limit(_notify_history)
 
 
+def clear_delivery_entries(race_id: int, label: str) -> None:
+    """Remove temporary per-user delivery markers for a completed event."""
+    global _notify_history
+    prefix = f"{label}:user:"
+    keys_to_remove = [
+        key
+        for key in _notify_history
+        if key[0] == race_id and key[1].startswith(prefix)
+    ]
+    for key in keys_to_remove:
+        del _notify_history[key]
+
+
 def get_notify_history() -> Dict[Tuple[int, str], datetime]:
     """Get the current notification history"""
     global _notify_history

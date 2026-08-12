@@ -5,7 +5,6 @@ from datetime import datetime, UTC
 
 from notifications.users.storage import users_data, save_users_data
 from notifications.users.core import get_user_status
-from notifications.users.constants import get_default_snooze_tracking
 
 logger = logging.getLogger(__name__)
 
@@ -190,51 +189,53 @@ def remove_active_snooze(user_id: int, snooze_id: str) -> bool:
     return False
 
 
-def get_snooze_count(user_id: int, notification_label: str) -> int:
-    """Get snooze count for a notification type"""
+def get_snooze_count(user_id: int, race_id: int, notification_label: str) -> int:
+    """Get the snooze count for one race and notification type."""
     user_status = get_user_status(user_id)[0]
-    tracking = user_status.get("snooze_tracking", get_default_snooze_tracking())
-    return tracking.get(notification_label, 0)
+    counts = user_status.setdefault("snooze_counts", {})
+    return counts.get(f"{race_id}_{notification_label}", 0)
 
 
-def increment_snooze_count(user_id: int, notification_label: str) -> None:
-    """Increment snooze count for a notification type"""
+def increment_snooze_count(user_id: int, race_id: int, notification_label: str) -> None:
+    """Increment a race-specific snooze count."""
     user_status = get_user_status(user_id)[0]
-    if "snooze_tracking" not in user_status:
-        user_status["snooze_tracking"] = get_default_snooze_tracking()
-    user_status["snooze_tracking"][notification_label] = (
-        user_status["snooze_tracking"].get(notification_label, 0) + 1
-    )
+    counts = user_status.setdefault("snooze_counts", {})
+    count_key = f"{race_id}_{notification_label}"
+    counts[count_key] = counts.get(count_key, 0) + 1
     save_users_data()
-    logger.debug(f"User {user_id} snooze count for '{notification_label}' incremented")
+    logger.debug(
+        f"User {user_id} snooze count for race {race_id} "
+        f"and '{notification_label}' incremented"
+    )
 
 
 def reset_snooze_count(user_id: int, race_id: int, notification_label: str) -> None:
-    """Reset snooze count for a specific race and notification type"""
+    """Remove a race-specific snooze count after its deadline."""
     user_status = get_user_status(user_id)[0]
-
-    if "snooze_counts" not in user_status:
-        return
-
+    counts = user_status.get("snooze_counts", {})
     count_key = f"{race_id}_{notification_label}"
-    if count_key in user_status["snooze_counts"]:
-        user_status["snooze_counts"][count_key] = 0
+    if count_key in counts:
+        del counts[count_key]
         save_users_data()
         logger.debug(
-            f"Reset snooze count for user {user_id}, race {race_id}, label {notification_label}"
+            f"Reset snooze count for user {user_id}, race {race_id}, "
+            f"label {notification_label}"
         )
 
 
 def reset_snooze_counts_for_deadline_passed(race_id: int, quali_close) -> None:
-    """Reset snooze counts for notification types where deadline has passed"""
-    now = datetime.now(UTC)
-    if now < quali_close:
+    """Remove all snooze counters for a race after its deadline."""
+    if datetime.now(UTC) < quali_close:
         return
 
-    for user_id in users_data:
-        if "snooze_tracking" not in users_data[user_id]:
-            continue
-        users_data[user_id]["snooze_tracking"] = get_default_snooze_tracking()
+    changed = False
+    prefix = f"{race_id}_"
+    for user_status in users_data.values():
+        counts = user_status.get("snooze_counts", {})
+        for count_key in [key for key in counts if key.startswith(prefix)]:
+            del counts[count_key]
+            changed = True
 
-    save_users_data()
-    logger.info(f"🔄 Reset snooze counts for all users after race {race_id} deadline")
+    if changed:
+        save_users_data()
+        logger.info(f"Reset snooze counts after race {race_id} deadline")

@@ -21,6 +21,23 @@ from . import router
 logger = logging.getLogger(__name__)
 
 
+def _parse_snooze_callback_data(data: str | None) -> tuple[int, str, int]:
+    """Parse snooze callback data while preserving underscored labels."""
+    if not data:
+        raise ValueError("Invalid snooze callback data")
+
+    parts = data.split("_")
+    if len(parts) < 4 or parts[0] != "snooze":
+        raise ValueError("Invalid snooze callback data")
+
+    race_id = int(parts[1])
+    notification_type = "_".join(parts[2:-1])
+    snooze_minutes = int(parts[-1])
+    if not notification_type:
+        raise ValueError("Missing notification type")
+    return race_id, notification_type, snooze_minutes
+
+
 def strip_existing_feedback(message_text: str, i18n: I18nContext) -> str:
     """Remove existing feedback messages from notification text"""
     feedback_messages = [
@@ -140,11 +157,10 @@ async def handle_snooze(callback: CallbackQuery, i18n: I18nContext):
     user_id = callback.from_user.id
 
     try:
-        parts = callback.data.split("_")
-        race_id = int(parts[1])
-        notification_type = parts[2]
-        snooze_minutes = int(parts[3])
-    except (ValueError, IndexError):
+        race_id, notification_type, snooze_minutes = _parse_snooze_callback_data(
+            callback.data
+        )
+    except (TypeError, ValueError):
         await callback.answer(i18n.get("error-invalid-data"), show_alert=True)
         return
 
@@ -177,7 +193,7 @@ async def handle_snooze(callback: CallbackQuery, i18n: I18nContext):
 
     add_snooze_reminder(user_id, race_id, snooze_until, notification_type)
 
-    increment_snooze_count(user_id, notification_type)
+    increment_snooze_count(user_id, race_id, notification_type)
 
     from timezone_utils import format_datetime_for_user
 

@@ -6,6 +6,7 @@ from typing import Dict
 from aiogram import Bot
 
 from notifications.senders.quali import send_quali_notification
+from notifications.senders.common import DeliveryStatus
 from notifications.senders.quali_results import send_quali_results_notification
 from notifications.senders.race_live import send_race_live_notification
 from notifications.senders.race_replay import send_race_replay_notification
@@ -22,7 +23,7 @@ async def send_notification_to_user(
     race_id: int,
     race_data: Dict,
     label: str,
-):
+) -> DeliveryStatus:
     """Dispatcher function to send the appropriate notification type to a user.
 
     Args:
@@ -45,26 +46,37 @@ async def send_notification_to_user(
             "custom_2": "custom_2",
         }
         quali_type = quali_type_map.get(label, label)
-        await send_quali_notification(bot, user_id, race_id, race_data, quali_type)
+        return await send_quali_notification(
+            bot, user_id, race_id, race_data, quali_type
+        )
     elif ntype == "opens":
-        await send_quali_notification(bot, user_id, race_id, race_data, "opens_soon")
+        return await send_quali_notification(
+            bot, user_id, race_id, race_data, "opens_soon"
+        )
     elif ntype == "live":
-        await send_race_live_notification(bot, user_id, race_id, race_data)
+        return await send_race_live_notification(bot, user_id, race_id, race_data)
     elif ntype == "replay":
-        await send_race_replay_notification(bot, user_id, race_id, race_data)
+        return await send_race_replay_notification(bot, user_id, race_id, race_data)
     elif ntype == "results":
         if label == "quali_results":
-            await send_quali_results_notification(bot, user_id, race_id, race_data)
+            return await send_quali_results_notification(
+                bot, user_id, race_id, race_data
+            )
         else:
-            await send_race_results_notification(bot, user_id, race_id, race_data)
+            return await send_race_results_notification(
+                bot, user_id, race_id, race_data
+            )
     elif ntype == "new_season":
-        await send_new_season_reminder_notification(bot, user_id, race_id, race_data)
+        return await send_new_season_reminder_notification(
+            bot, user_id, race_id, race_data
+        )
     elif ntype == "snooze":
         # Snooze notifications use the snooze_ prefix with original type
-        await send_quali_notification(
+        return await send_quali_notification(
             bot, user_id, race_id, race_data, f"snooze_{label}"
         )
     elif ntype == "custom":
-        await send_quali_notification(bot, user_id, race_id, race_data, label)
+        return await send_quali_notification(bot, user_id, race_id, race_data, label)
     else:
         logger.warning(f"Unknown notification type '{ntype}' for user {user_id}")
+        return DeliveryStatus.SKIPPED

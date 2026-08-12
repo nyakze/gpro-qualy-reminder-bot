@@ -1,10 +1,18 @@
 """Common utilities for notification senders"""
 
 import logging
+from enum import Enum
 from typing import Callable
 
 from aiogram import Bot
-from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError, TelegramNotFound
+from aiogram.exceptions import (
+    TelegramBadRequest,
+    TelegramForbiddenError,
+    TelegramNetworkError,
+    TelegramNotFound,
+    TelegramRetryAfter,
+    TelegramServerError,
+)
 
 from notifications.users import (
     get_user_status,
@@ -13,6 +21,20 @@ from notifications.users import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+class DeliveryStatus(str, Enum):
+    """Outcome of one Telegram delivery attempt."""
+
+    SENT = "sent"
+    SKIPPED = "skipped"
+    PERMANENT_FAILURE = "permanent_failure"
+    RETRYABLE_FAILURE = "retryable_failure"
+
+    @property
+    def is_terminal(self) -> bool:
+        """Return whether retrying cannot improve this delivery."""
+        return self is not DeliveryStatus.RETRYABLE_FAILURE
 
 
 def get_user_info(user_id: int) -> dict:
@@ -62,7 +84,7 @@ async def send_notification(
     notification_type: str,
     race_id: int,
     reply_markup=None,
-) -> bool:
+) -> DeliveryStatus:
     """Send a notification with proper error handling
 
     Args:
@@ -74,28 +96,41 @@ async def send_notification(
         reply_markup: Optional inline keyboard markup
 
     Returns:
-        bool: True if sent successfully, False otherwise
+        DeliveryStatus describing whether the attempt is terminal or retryable.
     """
     try:
         await bot.send_message(
             user_id, message, reply_markup=reply_markup, parse_mode="HTML"
         )
-        return True
+        return DeliveryStatus.SENT
     except TelegramForbiddenError:
         mark_user_blocked(user_id)
         logger.warning(f"🚫 User {user_id} blocked the bot ({notification_type})")
-        return False
+        return DeliveryStatus.PERMANENT_FAILURE
     except TelegramNotFound:
-        logger.warning(f"📍 Chat not found for user {user_id} ({notification_type}) - removing user")
+        logger.warning(
+            f"📍 Chat not found for user {user_id} ({notification_type}) - removing user"
+        )
         mark_user_blocked(user_id)
-        return False
+        return DeliveryStatus.PERMANENT_FAILURE
+    except TelegramRetryAfter as e:
+        logger.warning(
+            f"Telegram rate limited {notification_type} for user {user_id}; "
+            f"retry after {e.retry_after}s"
+        )
+        return DeliveryStatus.RETRYABLE_FAILURE
+    except (TelegramNetworkError, TelegramServerError) as e:
+        logger.warning(f"Temporary {notification_type} failure for {user_id}: {e}")
+        return DeliveryStatus.RETRYABLE_FAILURE
     except TelegramBadRequest as e:
         if "chat not found" in str(e.message).lower():
-            logger.warning(f"📍 Chat not found for user {user_id} ({notification_type}) - removing user")
+            logger.warning(
+                f"📍 Chat not found for user {user_id} ({notification_type}) - removing user"
+            )
             mark_user_blocked(user_id)
-            return False
+            return DeliveryStatus.PERMANENT_FAILURE
         logger.error(f"{notification_type} notify {user_id} failed: {e}")
-        return False
+        return DeliveryStatus.PERMANENT_FAILURE
     except Exception as e:
         logger.error(f"{notification_type} notify {user_id} failed: {e}")
-        return False
+        return DeliveryStatus.RETRYABLE_FAILURE

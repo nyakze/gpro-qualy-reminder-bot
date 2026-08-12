@@ -1,7 +1,6 @@
 """Qualifying notification sender (main quali notifications)"""
 
 import logging
-import math
 from datetime import datetime, UTC
 
 from aiogram import Bot
@@ -12,7 +11,6 @@ from utils import add_flag_to_track
 from timezone_utils import format_datetime_for_user
 from notifications.users import (
     get_user_status,
-    mark_user_blocked,
     DEFAULT_USER_LANG,
 )
 from notifications.utils.link_generators import (
@@ -23,7 +21,11 @@ from notifications.utils.snooze_manager import (
     QUALI_NOTIFICATION_TYPES,
     get_snooze_buttons,
 )
-from notifications.senders.common import get_text_getter
+from notifications.senders.common import (
+    DeliveryStatus,
+    get_text_getter,
+    send_notification,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -71,13 +73,13 @@ async def send_quali_notification(
     race_data: dict,
     notification_type: str = "deadline",
     i18n=None,
-):
+) -> DeliveryStatus:
     """Send qualifying notification with appropriate formatting and buttons"""
     user_status, _ = get_user_status(user_id)
 
     # Skip automatic notifications if user marked quali done
     if user_status.get("completed_quali") == race_id and notification_type != "manual":
-        return
+        return DeliveryStatus.SKIPPED
 
     track = add_flag_to_track(race_data["track"])
     race_date = race_data["date"]
@@ -279,22 +281,9 @@ async def send_quali_notification(
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=keyboard_buttons)
 
-    try:
-        await bot.send_message(
-            user_id, message, reply_markup=keyboard, parse_mode="HTML"
-        )
+    status = await send_notification(
+        bot, user_id, message, notification_type, race_id, reply_markup=keyboard
+    )
+    if status is DeliveryStatus.SENT:
         logger.info(f"✅ Sent {notification_type} to {user_id} for race {race_id}")
-    except Exception as e:
-        from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError
-
-        if isinstance(e, TelegramForbiddenError):
-            mark_user_blocked(user_id)
-            logger.warning(f"🚫 User {user_id} blocked the bot (quali notification)")
-        elif (
-            isinstance(e, TelegramBadRequest)
-            and "chat not found" in str(e.message).lower()
-        ):
-            logger.warning(f"📍 Chat not found for user {user_id} (quali notification)")
-            mark_user_blocked(user_id)
-        else:
-            logger.error(f"Notify {user_id} failed: {e}")
+    return status

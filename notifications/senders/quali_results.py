@@ -11,6 +11,7 @@ from notifications.utils.link_generators import (
     generate_app_starting_grid_link,
 )
 from notifications.senders.common import (
+    DeliveryStatus,
     get_user_info,
     get_text_getter,
     send_notification,
@@ -21,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 async def send_quali_results_notification(
     bot: Bot, user_id: int, race_id: int, race_data: dict, i18n=None
-):
+) -> DeliveryStatus:
     """Send qualifying results notification after quali deadline"""
     user_info = get_user_info(user_id)
     group = user_info["group"]
@@ -70,7 +71,8 @@ async def send_quali_results_notification(
     success = await send_notification(
         bot, user_id, message, "quali results notification", race_id
     )
-    if success:
+    if success is DeliveryStatus.SENT:
         logger.info(
             f"🏁 Sent quali results notification to {user_id} for race {race_id}"
         )
+    return success

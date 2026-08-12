@@ -25,6 +25,7 @@ from notifications.users import (
     is_user_blocked,
     is_notification_enabled,
     remove_active_snooze,
+    get_all_active_snoozes,
 )
 from notifications.senders import send_notification_to_user
 from notifications.history import (
@@ -32,11 +33,14 @@ from notifications.history import (
     save_notify_history,
     mark_notified,
     cleanup_old_entries,
+    get_notify_history,
+    clear_delivery_entries,
 )
 from notifications.timing import (
     get_next_check_interval,
     CHECK_INTERVAL_NORMAL_SECONDS,
 )
+from notifications.senders.common import DeliveryStatus
 from notifications.checks import (
     check_quali_closing,
     check_quali_open,
@@ -49,12 +53,14 @@ from notifications.checks import (
     check_new_season_reminder,
     reset_snooze_counts_for_past_deadlines,
 )
-from infra.logging import log_structured
 
 logger = logging.getLogger(__name__)
 
 # Module-level in-memory caches (lazy loaded)
 notification_lock = asyncio.Lock()
+MAX_DELIVERY_ATTEMPTS = 3
+_pending_notifications: dict[tuple[int, str], tuple] = {}
+_delivery_attempts: dict[tuple[int, str, int], int] = {}
 
 
 def _is_already_notified(race_id: int, label: str) -> bool:
@@ -106,6 +112,12 @@ async def check_notifications(bot: Bot):
                 notifications_to_send.extend(check_new_season_reminder(now))
                 notifications_to_send.extend(check_snooze_reminders(now, races_closing))
 
+                # Keep retryable events after their original trigger window closes.
+                for notification in notifications_to_send:
+                    history_key = notification[4]
+                    _pending_notifications[history_key] = notification
+                notifications_to_send = list(_pending_notifications.values())
+
                 # Reset snooze counts for past deadlines
                 reset_snooze_counts_for_past_deadlines(now)
 
@@ -126,163 +138,157 @@ async def check_notifications(bot: Bot):
         await asyncio.sleep(next_interval)
 
 
+def _should_send_to_user(user_id: int, ntype: str, label: str) -> bool:
+    """Return whether the user's settings allow this event."""
+    if ntype == "snooze":
+        return True
+    if ntype == "new_season":
+        return is_notification_enabled(user_id, "new_season_reminder")
+    if ntype in ("closing", "custom"):
+        return is_notification_enabled(user_id, label)
+    if ntype == "opens":
+        return is_notification_enabled(user_id, "opens_soon")
+    if ntype == "replay":
+        return is_notification_enabled(user_id, "race_replay")
+    if ntype == "live":
+        return is_notification_enabled(user_id, "race_live")
+    if ntype == "results":
+        setting = "quali_results" if label == "quali_results" else "race_results"
+        return is_notification_enabled(user_id, setting)
+    return False
+
+
+def _delivery_marker(history_key: tuple[int, str], user_id: int) -> tuple[int, str]:
+    """Build a temporary per-user marker for a broadcast event."""
+    return history_key[0], f"{history_key[1]}:user:{user_id}"
+
+
+async def _attempt_delivery(
+    bot: Bot,
+    user_id: int,
+    ntype: str,
+    race_id: int,
+    race_data: dict,
+    label: str,
+    history_key: tuple[int, str],
+) -> bool:
+    """Attempt one delivery and return True when no more retries are needed."""
+    attempt_key = (history_key[0], history_key[1], user_id)
+    try:
+        status = await send_notification_to_user(
+            bot, user_id, ntype, race_id, race_data, label
+        )
+    except Exception as e:
+        logger.exception(f"Unexpected delivery error for user {user_id}: {e}")
+        status = DeliveryStatus.RETRYABLE_FAILURE
+
+    if status is not DeliveryStatus.RETRYABLE_FAILURE:
+        _delivery_attempts.pop(attempt_key, None)
+        return True
+
+    attempts = _delivery_attempts.get(attempt_key, 0) + 1
+    _delivery_attempts[attempt_key] = attempts
+    if attempts < MAX_DELIVERY_ATTEMPTS:
+        logger.warning(
+            f"Temporary delivery failure for user {user_id}; "
+            f"attempt {attempts}/{MAX_DELIVERY_ATTEMPTS}"
+        )
+        return False
+
+    _delivery_attempts.pop(attempt_key, None)
+    logger.error(
+        f"Delivery retries exhausted for user {user_id}, race {race_id}, "
+        f"notification {history_key[1]}"
+    )
+    return True
+
+
+def _remove_delivered_snooze(history_key: tuple[int, str]) -> None:
+    """Remove a terminal snooze from user storage."""
+    snooze_key = history_key[1]
+    if not snooze_key.startswith("snooze_"):
+        return
+
+    snooze_id = snooze_key.removeprefix("snooze_")
+    for snooze in get_all_active_snoozes():
+        if snooze["id"] == snooze_id:
+            remove_active_snooze(snooze["user_id"], snooze_id)
+            return
+
+
 async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
-    """Send notifications to all eligible users
+    """Deliver queued events with per-user deduplication and bounded retries."""
+    history = get_notify_history()
 
-    Args:
-        bot: Bot instance
-        notifications: List of (type, race_id, race_data, label, history_key, [user_id]) tuples.
-                      For snooze notifications, user_id is included as the 6th element for targeted delivery.
-    """
     for notification in notifications:
-        try:
-            # Handle both formats: regular (5 items) and snooze (6 items with user_id)
-            if len(notification) == 6:
-                ntype, race_id, race_data, label, history_key, target_user_id = (
-                    notification
-                )
-                is_targeted = True
-            else:
-                ntype, race_id, race_data, label, history_key = notification
-                target_user_id = None
-                is_targeted = False
+        if len(notification) == 6:
+            ntype, race_id, race_data, label, history_key, target_user_id = notification
+            targeted = True
+        else:
+            ntype, race_id, race_data, label, history_key = notification
+            target_user_id = None
+            targeted = False
 
-            race_name = race_data.get("track", f"Race {race_id}")
+        event_complete = True
 
-            # Log notification type
-            if ntype == "closing":
-                log_structured(
-                    logging.INFO,
-                    f"🔔 Quali {label} notification: Race {race_id} - {race_name}",
-                    race_id=race_id,
-                    race_name=race_name,
-                    hours_remaining=(
-                        race_data["quali_close"] - datetime.now(UTC)
-                    ).total_seconds()
-                    / 3600,
-                )
-            elif ntype == "opens":
-                logger.info(f"🆕 Quali opened: Race {race_id} - {race_name}")
-            elif ntype == "replay":
-                logger.info(f"📺 Race replay available: Race {race_id} - {race_name}")
-            elif ntype == "results":
-                logger.info(f"📊 Race results available: Race {race_id} - {race_name}")
-            elif ntype == "live":
-                logger.info(f"🏁 Race is LIVE: Race {race_id} - {race_name}")
-            elif ntype == "custom":
-                logger.info(
-                    f"🔔 Custom notification {label}: Race {race_id} - {race_name}"
-                )
-            elif ntype == "snooze":
-                logger.info(
-                    f"⏰ Snooze reminder: user {target_user_id}, race {race_id} - {race_name}"
-                )
-            elif ntype == "new_season":
-                logger.info(f"🎉 New season reminder: {label}")
-
-            # For targeted notifications (snoozes), only send to the specific user
-            if is_targeted and target_user_id is not None:
-                try:
-                    user_id_int = int(target_user_id)
-
-                    # Skip blocked users
-                    if is_user_blocked(user_id_int):
-                        continue
-
-                    await send_notification_to_user(
-                        bot, user_id_int, ntype, race_id, race_data, label
+        if targeted and target_user_id is not None:
+            user_id = int(target_user_id)
+            if history_key not in history:
+                if (
+                    user_id not in users_data
+                    or is_user_blocked(user_id)
+                    or not _should_send_to_user(user_id, ntype, label)
+                ):
+                    mark_notified(history_key[0], history_key[1])
+                else:
+                    terminal = await _attempt_delivery(
+                        bot,
+                        user_id,
+                        ntype,
+                        race_id,
+                        race_data,
+                        label,
+                        history_key,
                     )
-                except Exception as e:
-                    logger.error(
-                        f"Error sending targeted {ntype} to user {target_user_id}: {e}"
-                    )
-                    # Skip to next notification (don't mark notified if error)
+                    if terminal:
+                        mark_notified(history_key[0], history_key[1])
+                    else:
+                        event_complete = False
+
+            if event_complete and ntype == "snooze":
+                _remove_delivered_snooze(history_key)
+        else:
+            for raw_user_id in list(users_data):
+                user_id = int(raw_user_id)
+                marker = _delivery_marker(history_key, user_id)
+                if marker in history:
                     continue
 
-            # Send to all users (for non-targeted notifications)
-            for user_id, user_data in list(users_data.items()):
-                try:
-                    user_id_int = int(user_id)
+                if is_user_blocked(user_id) or not _should_send_to_user(
+                    user_id, ntype, label
+                ):
+                    mark_notified(marker[0], marker[1])
+                    continue
 
-                    # Skip blocked users
-                    if is_user_blocked(user_id_int):
-                        continue
+                terminal = await _attempt_delivery(
+                    bot,
+                    user_id,
+                    ntype,
+                    race_id,
+                    race_data,
+                    label,
+                    history_key,
+                )
+                if terminal:
+                    mark_notified(marker[0], marker[1])
+                else:
+                    event_complete = False
 
-                    # Check notification type and settings
-                    should_send = False
+            if event_complete:
+                mark_notified(history_key[0], history_key[1])
+                clear_delivery_entries(history_key[0], history_key[1])
 
-                    if ntype == "new_season":
-                        # New season reminder uses new_season_reminder setting
-                        should_send = is_notification_enabled(
-                            user_id_int, "new_season_reminder"
-                        )
-                    elif ntype == "closing":
-                        # Map labels to settings
-                        label_map = {
-                            "72h": "72h",
-                            "48h": "48h",
-                            "24h": "24h",
-                            "2h": "2h",
-                            "10min": "10min",
-                            "custom_1": "custom_1",
-                            "custom_2": "custom_2",
-                        }
-                        setting = label_map.get(label, label)
-                        should_send = is_notification_enabled(user_id_int, setting)
-                    elif ntype == "opens":
-                        should_send = is_notification_enabled(user_id_int, "opens_soon")
-                    elif ntype == "replay":
-                        should_send = is_notification_enabled(
-                            user_id_int, "race_replay"
-                        )
-                    elif ntype == "live":
-                        should_send = is_notification_enabled(user_id_int, "race_live")
-                    elif ntype == "results":
-                        # Check label to determine which setting to use
-                        if label == "quali_results":
-                            should_send = is_notification_enabled(
-                                user_id_int, "quali_results"
-                            )
-                        else:
-                            should_send = is_notification_enabled(
-                                user_id_int, "race_results"
-                            )
+        if event_complete:
+            _pending_notifications.pop(history_key, None)
 
-                    if should_send:
-                        await send_notification_to_user(
-                            bot, user_id_int, ntype, race_id, race_data, label
-                        )
-
-                except Exception as e:
-                    logger.error(f"Error sending to user {user_id}: {e}")
-
-            # Mark as notified (snoozes are marked in check_snooze_reminders before being added to list)
-            if ntype != "snooze":
-                # Use history_key[0] for race_id to match the key used in is_already_notified check
-                # This ensures new_season reminders (which use race_id=0 in history_key) are properly marked
-                mark_notified(history_key[0], label)
-            else:
-                # For snoozes, remove from active_snoozes after sending (history already marked)
-                _, snooze_key = history_key
-                if snooze_key.startswith("snooze_"):
-                    snooze_id = snooze_key.replace("snooze_", "")
-                    from notifications.users import get_all_active_snoozes
-
-                    logger.debug(
-                        f"Removing snooze {snooze_id} from active_snoozes after sending"
-                    )
-                    for snooze in get_all_active_snoozes():
-                        if snooze["id"] == snooze_id:
-                            if remove_active_snooze(snooze["user_id"], snooze_id):
-                                logger.debug(f"Removed active snooze {snooze_id}")
-                            else:
-                                logger.warning(
-                                    f"Failed to remove active snooze {snooze_id}"
-                                )
-                            break
-
-        except Exception as e:
-            logger.error(f"Error processing notification {notification}: {e}")
-
-    # Persist history after processing all notifications
     save_notify_history()

@@ -108,7 +108,7 @@ def can_snooze(
 
     snooze_until = now + timedelta(minutes=snooze_minutes)
 
-    snooze_count = get_snooze_count(user_id, notification_label)
+    snooze_count = get_snooze_count(user_id, race_id, notification_label)
     if snooze_count >= MAX_SNOOZES:
         return False, "max_reached"
 
@@ -166,7 +166,7 @@ def get_snooze_buttons(
     if available_minutes < 5:
         return []
 
-    snooze_count = get_snooze_count(user_id, notification_label)
+    snooze_count = get_snooze_count(user_id, race_id, notification_label)
     if snooze_count >= MAX_SNOOZES:
         return []
 

@@ -99,11 +99,11 @@ class TestSenderCommon:
     @pytest.mark.asyncio
     async def test_send_notification_success(self, mock_bot):
         """Test successful notification sending"""
-        from notifications.senders.common import send_notification
+        from notifications.senders.common import DeliveryStatus, send_notification
 
         result = await send_notification(mock_bot, 12345, "Test message", "test", 1)
 
-        assert result is True
+        assert result is DeliveryStatus.SENT
         mock_bot.send_message.assert_called_once_with(
             12345, "Test message", reply_markup=None, parse_mode="HTML"
         )
@@ -111,8 +111,8 @@ class TestSenderCommon:
     @pytest.mark.asyncio
     async def test_send_notification_blocked(self, mock_bot):
         """Test notification handling when user blocked bot"""
-        from notifications.senders.common import send_notification
         from aiogram.exceptions import TelegramForbiddenError
+        from notifications.senders.common import DeliveryStatus, send_notification
 
         mock_bot.send_message.side_effect = TelegramForbiddenError(
             method="send_message", message="Forbidden: bot was blocked by the user"
@@ -123,19 +123,37 @@ class TestSenderCommon:
         ) as mock_mark_blocked:
             result = await send_notification(mock_bot, 12345, "Test message", "test", 1)
 
-            assert result is False
-            mock_mark_blocked.assert_called_once_with(12345)
+        assert result is DeliveryStatus.PERMANENT_FAILURE
+        mock_mark_blocked.assert_called_once_with(12345)
+
+    @pytest.mark.asyncio
+    async def test_send_notification_deleted_chat_is_permanent(self, mock_bot):
+        """A deleted/unavailable chat is blocked and never retried."""
+        from aiogram.exceptions import TelegramNotFound
+        from notifications.senders.common import DeliveryStatus, send_notification
+
+        mock_bot.send_message.side_effect = TelegramNotFound(
+            method="send_message", message="Not Found: chat not found"
+        )
+
+        with patch(
+            "notifications.senders.common.mark_user_blocked"
+        ) as mock_mark_blocked:
+            result = await send_notification(mock_bot, 12345, "Test message", "test", 1)
+
+        assert result is DeliveryStatus.PERMANENT_FAILURE
+        mock_mark_blocked.assert_called_once_with(12345)
 
     @pytest.mark.asyncio
     async def test_send_notification_error(self, mock_bot):
-        """Test notification handling on general error"""
-        from notifications.senders.common import send_notification
+        """Unexpected delivery errors remain eligible for a bounded retry."""
+        from notifications.senders.common import DeliveryStatus, send_notification
 
         mock_bot.send_message.side_effect = Exception("Network error")
 
         result = await send_notification(mock_bot, 12345, "Test message", "test", 1)
 
-        assert result is False
+        assert result is DeliveryStatus.RETRYABLE_FAILURE
 
 
 class TestQualiNotificationSender:

@@ -49,6 +49,7 @@ def get_user_status(user_id: int) -> Tuple[Dict, bool]:
             "first_name": None,
             "snooze_tracking": get_default_snooze_tracking(),
             "active_snoozes": {},
+            "snooze_counts": {},
             "blocked_at": None,
             "last_interaction": datetime.now(UTC).isoformat(),
         }
@@ -119,6 +120,10 @@ def get_user_status(user_id: int) -> Tuple[Dict, bool]:
         if "active_snoozes" not in users_data[user_id]:
             users_data[user_id]["active_snoozes"] = {}
             logger.debug(f"Added 'active_snoozes' field to user {user_id}")
+            needs_save = True
+        if "snooze_counts" not in users_data[user_id]:
+            users_data[user_id]["snooze_counts"] = {}
+            logger.debug(f"Added 'snooze_counts' field to user {user_id}")
             needs_save = True
         if "blocked_at" not in users_data[user_id]:
             users_data[user_id]["blocked_at"] = None

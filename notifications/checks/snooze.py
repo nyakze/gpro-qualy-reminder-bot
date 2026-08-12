@@ -7,9 +7,11 @@ from typing import List, Tuple
 from gpro_calendar import race_calendar
 from notifications.users import (
     get_all_active_snoozes,
+    remove_active_snooze,
+    is_user_blocked,
+    users_data,
     SNOOZE_TOLERANCE_SECONDS,
-    SNOOZE_MAX_COUNTS,
-    reset_snooze_count,
+    reset_snooze_counts_for_deadline_passed,
 )
 from notifications.history import (
     get_notify_history,
@@ -43,7 +45,7 @@ def check_snooze_reminders(now: datetime, races_closing: list) -> List[Tuple]:
         seconds_until = (snooze_time - now).total_seconds()
 
         # Snooze fires if we're within tolerance window (slightly early or up to 2 min late)
-        if -SNOOZE_TOLERANCE_SECONDS <= seconds_until <= SNOOZE_TOLERANCE_SECONDS:
+        if seconds_until <= SNOOZE_TOLERANCE_SECONDS:
             race_id = snooze["race_id"]
             snooze_id = snooze["id"]
             user_id = snooze["user_id"]
@@ -53,18 +55,15 @@ def check_snooze_reminders(now: datetime, races_closing: list) -> List[Tuple]:
             race_data = race_lookup.get(race_id)
             if not race_data:
                 continue
+            if now >= race_data["quali_close"]:
+                remove_active_snooze(user_id, snooze_id)
+                continue
 
             # Unique history key for this specific snooze instance
             history_key = (race_id, f"snooze_{snooze_id}")
 
             # Only send if not already notified for this snooze
             if history_key not in get_notify_history():
-                # Mark as notified immediately to prevent duplicate fires in the same check cycle
-                # This is marked before adding to notifications list to prevent race conditions
-                from notifications.history import mark_notified
-
-                mark_notified(race_id, f"snooze_{snooze_id}")
-
                 # Include user_id as 6th element for targeted delivery
                 # Use original_label (not display_label) so sender can parse notification type
                 notifications.append(
@@ -79,50 +78,47 @@ def check_snooze_reminders(now: datetime, races_closing: list) -> List[Tuple]:
 
 
 def check_custom_notifications(now: datetime, races_closing: list) -> List[Tuple]:
-    """Check for custom user-defined notifications
-
-    Returns:
-        list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
-    """
+    """Build targeted notifications using each user's configured interval."""
     notifications = []
+    history = get_notify_history()
 
     for hours_remaining, race_id, race_data in races_closing:
-        # Check custom_1 (8h) - no early check, fires exactly at threshold
-        custom_1_key = (race_id, "custom_1")
-        if custom_1_key not in get_notify_history() and hours_remaining <= 8:
-            notifications.append(
-                ("closing", race_id, race_data, "custom_1", custom_1_key)
-            )
+        for user_id, user_status in list(users_data.items()):
+            if is_user_blocked(int(user_id)):
+                continue
 
-        # Check custom_2 (12h) - no early check, fires exactly at threshold
-        custom_2_key = (race_id, "custom_2")
-        if custom_2_key not in get_notify_history() and hours_remaining <= 12:
-            notifications.append(
-                ("closing", race_id, race_data, "custom_2", custom_2_key)
-            )
+            custom_notifs = user_status.get("custom_notifications", [])
+            for slot_idx, custom_notif in enumerate(custom_notifs[:2]):
+                if not custom_notif.get("enabled", False):
+                    continue
+
+                hours_before = custom_notif.get("hours_before")
+                if hours_before is None or hours_remaining > float(hours_before):
+                    continue
+
+                label = f"custom_{slot_idx + 1}"
+                history_label = f"{label}:user:{int(user_id)}"
+                history_key = (race_id, history_label)
+                if history_key in history:
+                    continue
+
+                notifications.append(
+                    (
+                        "custom",
+                        race_id,
+                        race_data,
+                        label,
+                        history_key,
+                        int(user_id),
+                    )
+                )
 
     return notifications
 
 
 def reset_snooze_counts_for_past_deadlines(now: datetime) -> None:
-    """Reset snooze counts for races whose deadlines have passed
-
-    This allows snoozes to work again for the next occurrence of similar notifications.
-    """
-    from notifications.users import users_data
-
+    """Clear race-specific snooze counters after each deadline."""
     for race_id, race_data in race_calendar.items():
         quali_close = race_data["quali_close"]
-
-        # If quali closed more than 1 hour ago, reset snooze counts
         if now > quali_close + timedelta(hours=1):
-            for user_id_str in users_data:
-                user_data = users_data[user_id_str]
-                if "snooze_counts" not in user_data:
-                    continue
-
-                snooze_counts = user_data["snooze_counts"]
-                for label in SNOOZE_MAX_COUNTS.keys():
-                    count_key = f"{race_id}_{label}"
-                    if count_key in snooze_counts and snooze_counts[count_key] > 0:
-                        reset_snooze_count(int(user_id_str), race_id, label)
+            reset_snooze_counts_for_deadline_passed(race_id, quali_close)

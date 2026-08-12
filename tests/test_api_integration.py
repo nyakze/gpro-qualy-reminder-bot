@@ -257,7 +257,7 @@ class TestAPISuccessCases:
                 mock_session.get = MagicMock(return_value=mock_get_context)
 
                 with patch("os.path.exists", return_value=True):
-                    with patch("os.remove") as mock_remove:
+                    with patch("os.remove"):
                         result = await update_calendar()
                         assert result is True
                         # Verify next season was cleared
@@ -463,7 +463,7 @@ class TestConfigValidation:
         """Test that invalid ADMIN_USER_ID raises ValueError"""
         admin_id_str = os.environ.get("ADMIN_USER_ID")
         try:
-            admin_ids = [int(uid.strip()) for uid in admin_id_str.split(",")]
+            _ = [int(uid.strip()) for uid in admin_id_str.split(",")]
             assert False, "Should have raised ValueError"
         except ValueError:
             pass  # Expected
