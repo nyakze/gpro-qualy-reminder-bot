@@ -80,6 +80,23 @@ def format_relative_time(iso_timestamp: str | None) -> str:
         return "—"
 
 
+def _last_interaction_sort_key(user: tuple[int, dict]) -> float:
+    """Return a sortable timestamp, placing missing or invalid values last."""
+    iso_timestamp = user[1].get("last_interaction")
+    if not iso_timestamp:
+        return float("-inf")
+
+    try:
+        last_interaction = datetime.fromisoformat(
+            iso_timestamp.replace("Z", "+00:00")
+        )
+        if last_interaction.tzinfo is None:
+            last_interaction = last_interaction.replace(tzinfo=UTC)
+        return last_interaction.timestamp()
+    except (AttributeError, OSError, OverflowError, TypeError, ValueError):
+        return float("-inf")
+
+
 @router.message(Command("update"))
 async def cmd_update(message: UserTextMessage, i18n: I18nContext):
     if not is_admin(message.from_user.id):
@@ -147,7 +164,10 @@ async def cmd_users(message: UserTextMessage, i18n: I18nContext):
         text = f"{header}\n\n"
         text += f"📊 {users_with_group} in groups, {total_users - users_with_group} without\n\n"
 
-        for uid, status in users_data.items():
+        sorted_users = sorted(
+            users_data.items(), key=_last_interaction_sort_key, reverse=True
+        )
+        for uid, status in sorted_users:
             quali = status.get("completed_quali", "None")
             group = status.get("group", "—")
             username = status.get("username")
