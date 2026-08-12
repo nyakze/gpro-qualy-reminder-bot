@@ -10,6 +10,26 @@ from datetime import datetime, UTC, timedelta
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
+@pytest.fixture(autouse=True)
+def isolate_runtime_data_files(tmp_path, monkeypatch):
+    """Keep tests away from the bot's live JSON data files.
+
+    Several helpers persist state as a side effect. Redirect their module-level
+    paths for every test so running pytest beside a live bot cannot overwrite or
+    delete production data.
+    """
+    from notifications import history
+    from notifications.users import storage
+
+    users_file = tmp_path / "users_data.json"
+    history_file = tmp_path / "notification_history.json"
+
+    monkeypatch.setattr(storage, "USERS_FILE", str(users_file))
+    monkeypatch.setattr(
+        history, "_get_history_file_path", lambda: str(history_file)
+    )
+
+
 @pytest_asyncio.fixture(scope="function")
 async def event_loop():
     """Create an instance of the default event loop for each test case."""

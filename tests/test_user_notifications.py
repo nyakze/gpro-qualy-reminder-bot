@@ -11,23 +11,16 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 @pytest.fixture(autouse=True)
 def reset_user_data():
     """Reset user data before and after each test"""
-    from notifications.users.storage import users_data, USERS_FILE
+    from notifications.users.storage import users_data
     from notifications.history import set_notify_history
-    import os
 
     users_data.clear()
     set_notify_history({})
-
-    if os.path.exists(USERS_FILE):
-        os.remove(USERS_FILE)
 
     yield
 
     users_data.clear()
     set_notify_history({})
-
-    if os.path.exists(USERS_FILE):
-        os.remove(USERS_FILE)
 
 
 class TestToggleNotification:
