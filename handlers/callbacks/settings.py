@@ -2,7 +2,7 @@
 
 import logging
 from aiogram import F
-from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
 
@@ -20,6 +20,8 @@ from utils import (
     UI_LANGUAGE_DISPLAY,
 )
 from . import router
+
+from handlers.event_types import AccessibleCallbackQuery
 
 logger = logging.getLogger(__name__)
 
@@ -314,7 +316,7 @@ def build_ui_language_keyboard(
 
 
 @router.callback_query(F.data == "lang_menu")
-async def handle_language_menu(callback: CallbackQuery, i18n: I18nContext):
+async def handle_language_menu(callback: AccessibleCallbackQuery, i18n: I18nContext):
     """Open language selection menu (page 1)"""
     user_id = callback.from_user.id
     current_lang = get_user_language(user_id)
@@ -333,7 +335,7 @@ async def handle_language_menu(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data.startswith("lang_page_"))
-async def handle_language_page(callback: CallbackQuery, i18n: I18nContext):
+async def handle_language_page(callback: AccessibleCallbackQuery, i18n: I18nContext):
     """Handle language pagination"""
     user_id = callback.from_user.id
     current_lang = get_user_language(user_id)
@@ -354,7 +356,7 @@ async def handle_language_page(callback: CallbackQuery, i18n: I18nContext):
     F.data.startswith("lang_")
     & ~F.data.in_(["lang_menu", "lang_back_main", "lang_reset_default"])
 )
-async def handle_language_select(callback: CallbackQuery, i18n: I18nContext):
+async def handle_language_select(callback: AccessibleCallbackQuery, i18n: I18nContext):
     """Handle language selection"""
     user_id = callback.from_user.id
 
@@ -373,7 +375,7 @@ async def handle_language_select(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data == "lang_reset_default")
-async def handle_language_reset(callback: CallbackQuery, i18n: I18nContext):
+async def handle_language_reset(callback: AccessibleCallbackQuery, i18n: I18nContext):
     """Reset language to default (English GB)"""
     user_id = callback.from_user.id
 
@@ -393,7 +395,7 @@ async def handle_language_reset(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data == "ui_lang_menu")
-async def handle_ui_language_menu(callback: CallbackQuery, i18n: I18nContext):
+async def handle_ui_language_menu(callback: AccessibleCallbackQuery, i18n: I18nContext):
     """Show bot UI language selection menu (paginated)"""
     user_id = callback.from_user.id
     current_ui_lang = get_user_ui_language(user_id)
@@ -409,7 +411,7 @@ async def handle_ui_language_menu(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data.startswith("ui_lang_page_"))
-async def handle_ui_language_page(callback: CallbackQuery, i18n: I18nContext):
+async def handle_ui_language_page(callback: AccessibleCallbackQuery, i18n: I18nContext):
     """Handle UI language pagination"""
     user_id = callback.from_user.id
     current_ui_lang = get_user_ui_language(user_id)
@@ -429,7 +431,7 @@ async def handle_ui_language_page(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data.startswith("set_ui_lang_"))
-async def handle_set_ui_language(callback: CallbackQuery, i18n: I18nContext):
+async def handle_set_ui_language(callback: AccessibleCallbackQuery, i18n: I18nContext):
     """Handle bot UI language selection in settings"""
     user_id = callback.from_user.id
 
@@ -446,7 +448,7 @@ async def handle_set_ui_language(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data == "settings_main")
-async def handle_settings_main(callback: CallbackQuery, i18n: I18nContext):
+async def handle_settings_main(callback: AccessibleCallbackQuery, i18n: I18nContext):
     """Return to main settings menu"""
     user_id = callback.from_user.id
     keyboard = build_settings_keyboard(user_id, i18n)
@@ -458,14 +460,14 @@ async def handle_settings_main(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data == "lang_back_main")
-async def handle_language_back(callback: CallbackQuery, i18n: I18nContext):
+async def handle_language_back(callback: AccessibleCallbackQuery, i18n: I18nContext):
     """Alias for returning to main settings"""
     await handle_settings_main(callback, i18n)
 
 
 @router.callback_query(F.data == "group_menu")
 async def handle_group_menu(
-    callback: CallbackQuery, state: FSMContext, i18n: I18nContext
+    callback: AccessibleCallbackQuery, state: FSMContext, i18n: I18nContext
 ):
     """Show group settings menu"""
     from notifications import get_user_status
@@ -509,7 +511,7 @@ async def handle_group_menu(
 
 @router.callback_query(F.data == "group_reset")
 async def handle_group_reset(
-    callback: CallbackQuery, state: FSMContext, i18n: I18nContext
+    callback: AccessibleCallbackQuery, state: FSMContext, i18n: I18nContext
 ):
     """Reset group to default (remove data)"""
     from notifications import set_user_group
@@ -523,7 +525,7 @@ async def handle_group_reset(
 
 @router.callback_query(F.data == "timezone_menu")
 async def handle_timezone_menu(
-    callback: CallbackQuery, state: FSMContext, i18n: I18nContext
+    callback: AccessibleCallbackQuery, state: FSMContext, i18n: I18nContext
 ):
     """Show timezone settings menu"""
     from notifications import get_user_timezone
@@ -570,7 +572,7 @@ async def handle_timezone_menu(
 
 @router.callback_query(F.data.startswith("tz_page_"))
 async def handle_timezone_page(
-    callback: CallbackQuery, state: FSMContext, i18n: I18nContext
+    callback: AccessibleCallbackQuery, state: FSMContext, i18n: I18nContext
 ):
     """Handle timezone search results pagination"""
     from handlers.states import show_timezone_page_edit
@@ -583,7 +585,7 @@ async def handle_timezone_page(
 
 @router.callback_query(F.data.startswith("tz_select_"))
 async def handle_timezone_select(
-    callback: CallbackQuery, state: FSMContext, i18n: I18nContext
+    callback: AccessibleCallbackQuery, state: FSMContext, i18n: I18nContext
 ):
     """Handle timezone selection from fuzzy search results"""
     from notifications import set_user_timezone
@@ -630,7 +632,7 @@ async def handle_timezone_select(
 
 @router.callback_query(F.data == "tz_reset_utc")
 async def handle_timezone_reset(
-    callback: CallbackQuery, state: FSMContext, i18n: I18nContext
+    callback: AccessibleCallbackQuery, state: FSMContext, i18n: I18nContext
 ):
     """Reset timezone to UTC"""
     from notifications import set_user_timezone

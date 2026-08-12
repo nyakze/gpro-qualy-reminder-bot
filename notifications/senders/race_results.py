@@ -14,6 +14,7 @@ from notifications.utils.link_generators import (
 )
 from notifications.senders.common import (
     DeliveryStatus,
+    DeliveryOutcome,
     get_user_info,
     get_text_getter,
     send_notification,
@@ -24,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 async def send_race_results_notification(
     bot: Bot, user_id: int, race_id: int, race_data: dict, i18n=None
-) -> DeliveryStatus:
+) -> DeliveryOutcome:
     """Send race results notification when next quali opens"""
     user_info = get_user_info(user_id)
     group = user_info["group"]

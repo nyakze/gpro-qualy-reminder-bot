@@ -3,7 +3,7 @@
 import logging
 from typing import Callable, Awaitable, Dict, Any
 from aiogram import BaseMiddleware
-from aiogram.types import Update
+from aiogram.types import TelegramObject, Update
 
 from notifications import update_user_profile, unblock_user
 
@@ -17,10 +17,13 @@ class UserProfileMiddleware(BaseMiddleware):
 
     async def __call__(
         self,
-        handler: Callable[[Update, Dict[str, Any]], Awaitable[Any]],
-        event: Update,
+        handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]],
+        event: TelegramObject,
         data: Dict[str, Any],
     ) -> Any:
+        if not isinstance(event, Update):
+            return await handler(event, data)
+
         user = None
 
         if event.message and event.message.from_user:

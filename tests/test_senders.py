@@ -147,13 +147,28 @@ class TestSenderCommon:
     @pytest.mark.asyncio
     async def test_send_notification_error(self, mock_bot):
         """Unexpected delivery errors remain eligible for a bounded retry."""
-        from notifications.senders.common import DeliveryStatus, send_notification
+        from notifications.senders.common import RetryableDelivery, send_notification
 
         mock_bot.send_message.side_effect = Exception("Network error")
 
         result = await send_notification(mock_bot, 12345, "Test message", "test", 1)
 
-        assert result is DeliveryStatus.RETRYABLE_FAILURE
+        assert result == RetryableDelivery()
+
+    @pytest.mark.asyncio
+    async def test_send_notification_preserves_retry_after(self, mock_bot):
+        from aiogram.exceptions import TelegramRetryAfter
+        from notifications.senders.common import RetryableDelivery, send_notification
+
+        mock_bot.send_message.side_effect = TelegramRetryAfter(
+            method="send_message",
+            message="Too Many Requests",
+            retry_after=23,
+        )
+
+        result = await send_notification(mock_bot, 12345, "Test message", "test", 1)
+
+        assert result == RetryableDelivery(retry_after=23)
 
 
 class TestQualiNotificationSender:

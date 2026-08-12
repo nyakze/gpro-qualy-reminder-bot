@@ -139,7 +139,7 @@ def get_user_status(user_id: int) -> Tuple[Dict, bool]:
     return users_data[user_id], was_new
 
 
-def set_user_group(user_id: int, group: str):
+def set_user_group(user_id: int, group: str | None):
     """Set user's GPRO group for race links"""
     get_user_status(user_id)
     users_data[user_id]["group"] = group

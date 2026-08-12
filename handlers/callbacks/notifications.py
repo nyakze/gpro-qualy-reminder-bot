@@ -2,7 +2,7 @@
 
 import logging
 from aiogram import F
-from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
 
@@ -17,6 +17,8 @@ from notifications import (
     CUSTOM_NOTIF_MAX_HOURS,
 )
 from . import router
+
+from handlers.event_types import AccessibleCallbackQuery
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +57,7 @@ NOTIFICATION_CATEGORIES = {
 
 
 @router.callback_query(F.data.startswith("toggle_category_"))
-async def handle_toggle_category(callback: CallbackQuery, i18n: I18nContext):
+async def handle_toggle_category(callback: AccessibleCallbackQuery, i18n: I18nContext):
     """Enable or disable all notifications in a category"""
     user_id = callback.from_user.id
     user_status, _ = get_user_status(user_id)
@@ -98,7 +100,9 @@ async def handle_toggle_category(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data.startswith("toggle_"))
-async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext):
+async def handle_toggle_notification(
+    callback: AccessibleCallbackQuery, i18n: I18nContext
+):
     """Handle notification toggle button clicks"""
     user_id = callback.from_user.id
 
@@ -154,7 +158,9 @@ async def handle_toggle_notification(callback: CallbackQuery, i18n: I18nContext)
 
 
 @router.callback_query(F.data == "notif_menu")
-async def handle_notifications_menu(callback: CallbackQuery, i18n: I18nContext):
+async def handle_notifications_menu(
+    callback: AccessibleCallbackQuery, i18n: I18nContext
+):
     """Show notifications menu with categories"""
     user_id = callback.from_user.id
     user_status, _ = get_user_status(user_id)
@@ -225,7 +231,7 @@ async def handle_notifications_menu(callback: CallbackQuery, i18n: I18nContext):
 
 @router.callback_query(F.data.startswith("notif_category_"))
 async def handle_notification_category(
-    callback: CallbackQuery, i18n: I18nContext, category_id: str = None
+    callback: AccessibleCallbackQuery, i18n: I18nContext, category_id: str | None = None
 ):
     """Show individual notification toggles for a category"""
     user_id = callback.from_user.id
@@ -299,7 +305,9 @@ async def handle_notification_category(
 
 
 @router.callback_query(F.data == "custom_notif_menu")
-async def handle_custom_notifications_menu(callback: CallbackQuery, i18n: I18nContext):
+async def handle_custom_notifications_menu(
+    callback: AccessibleCallbackQuery, i18n: I18nContext
+):
     """Show custom notifications menu"""
     user_id = callback.from_user.id
     custom_notifs = get_custom_notifications(user_id)
@@ -350,7 +358,7 @@ async def handle_custom_notifications_menu(callback: CallbackQuery, i18n: I18nCo
 
 @router.callback_query(F.data.startswith("custom_notif_edit_"))
 async def handle_custom_notification_edit(
-    callback: CallbackQuery, state: FSMContext, i18n: I18nContext
+    callback: AccessibleCallbackQuery, state: FSMContext, i18n: I18nContext
 ):
     """Handle editing a custom notification slot"""
 
@@ -456,7 +464,9 @@ async def handle_custom_notification_edit(
 
 
 @router.callback_query(F.data.startswith("custom_notif_set_"))
-async def handle_custom_notification_set(callback: CallbackQuery, i18n: I18nContext):
+async def handle_custom_notification_set(
+    callback: AccessibleCallbackQuery, i18n: I18nContext
+):
     """Handle setting a custom notification with a preset value"""
     user_id = callback.from_user.id
 
@@ -479,7 +489,7 @@ async def handle_custom_notification_set(callback: CallbackQuery, i18n: I18nCont
 
 @router.callback_query(F.data.startswith("custom_notif_disable_"))
 async def handle_custom_notification_disable(
-    callback: CallbackQuery, i18n: I18nContext
+    callback: AccessibleCallbackQuery, i18n: I18nContext
 ):
     """Handle disabling a custom notification"""
     user_id = callback.from_user.id
@@ -503,7 +513,7 @@ async def handle_custom_notification_disable(
 
 @router.callback_query(F.data.startswith("custom_notif_input_"))
 async def handle_custom_notification_input_prompt(
-    callback: CallbackQuery, state: FSMContext, i18n: I18nContext
+    callback: AccessibleCallbackQuery, state: FSMContext, i18n: I18nContext
 ):
     """Prompt user to enter custom time"""
     from handlers.states import CustomNotificationStates

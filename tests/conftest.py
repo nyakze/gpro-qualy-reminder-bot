@@ -18,15 +18,20 @@ def isolate_runtime_data_files(tmp_path, monkeypatch):
     paths for every test so running pytest beside a live bot cannot overwrite or
     delete production data.
     """
-    from notifications import history
+    from notifications import delivery_queue, history
     from notifications.users import storage
 
     users_file = tmp_path / "users_data.json"
     history_file = tmp_path / "notification_history.json"
+    delivery_queue_file = tmp_path / "notification_delivery_queue.json"
 
     monkeypatch.setattr(storage, "USERS_FILE", str(users_file))
+    monkeypatch.setattr(history, "_get_history_file_path", lambda: str(history_file))
+
     monkeypatch.setattr(
-        history, "_get_history_file_path", lambda: str(history_file)
+        delivery_queue,
+        "_get_delivery_queue_path",
+        lambda: str(delivery_queue_file),
     )
 
 

@@ -181,7 +181,7 @@ def add_flag_to_track(track: str) -> str:
         return track
 
 
-def format_group_display(group: str) -> str:
+def format_group_display(group: str | None) -> str:
     """Convert group code to human-readable format
 
     Examples:

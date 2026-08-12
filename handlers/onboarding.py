@@ -4,7 +4,6 @@ import logging
 from aiogram import F
 from aiogram.types import (
     Message,
-    CallbackQuery,
     InlineKeyboardMarkup,
     InlineKeyboardButton,
 )
@@ -20,12 +19,14 @@ from notifications import (
 from .states import OnboardingStates
 from . import router
 
+from handlers.event_types import AccessibleCallbackQuery
+
 logger = logging.getLogger(__name__)
 
 
 @router.callback_query(F.data.startswith("onboard_ui_lang_page_"))
 async def handle_onboarding_ui_language_page(
-    callback: CallbackQuery, i18n: I18nContext
+    callback: AccessibleCallbackQuery, i18n: I18nContext
 ):
     """Handle UI language pagination during onboarding"""
     user_id = callback.from_user.id
@@ -50,7 +51,7 @@ async def handle_onboarding_ui_language_page(
 
 @router.callback_query(F.data == "onboard_skip_ui_lang")
 async def handle_onboarding_skip_ui_lang(
-    callback: CallbackQuery, state: FSMContext, i18n: I18nContext
+    callback: AccessibleCallbackQuery, state: FSMContext, i18n: I18nContext
 ):
     """Skip UI language selection during onboarding - keeps auto-detected language"""
     user_id = callback.from_user.id
@@ -77,7 +78,7 @@ async def handle_onboarding_skip_ui_lang(
     F.data.startswith("onboard_ui_lang_") & ~F.data.startswith("onboard_ui_lang_page_")
 )
 async def handle_onboarding_ui_language_select(
-    callback: CallbackQuery, state: FSMContext, i18n: I18nContext
+    callback: AccessibleCallbackQuery, state: FSMContext, i18n: I18nContext
 ):
     """Handle bot UI language selection at start of onboarding"""
     user_id = callback.from_user.id
@@ -135,7 +136,7 @@ async def show_onboarding_group_menu(
 
 @router.callback_query(F.data == "onboard_skip_group")
 async def handle_onboarding_skip_group(
-    callback: CallbackQuery, state: FSMContext, i18n: I18nContext
+    callback: AccessibleCallbackQuery, state: FSMContext, i18n: I18nContext
 ):
     """Skip group selection during onboarding"""
     user_id = callback.from_user.id
@@ -188,6 +189,8 @@ async def show_onboarding_complete(message: Message, i18n: I18nContext):
 
 
 @router.callback_query(F.data == "onboard_complete")
-async def handle_onboarding_complete(callback: CallbackQuery, i18n: I18nContext):
+async def handle_onboarding_complete(
+    callback: AccessibleCallbackQuery, i18n: I18nContext
+):
     """Acknowledge onboarding complete"""
     await callback.answer(i18n.get("feedback-welcome"))

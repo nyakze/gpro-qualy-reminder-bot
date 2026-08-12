@@ -118,7 +118,7 @@ def setup_i18n() -> I18nMiddleware:
     return i18n_middleware
 
 
-def get_translation(key: str, locale: str = None, **kwargs) -> str:
+def get_translation(key: str, locale: str | None = None, **kwargs) -> str:
     """Get translation for a key in a specific locale (for use outside handler context)
 
     Args:

@@ -1,7 +1,7 @@
 """Command handlers for /start, /status, /calendar, etc."""
 
 import logging
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
@@ -24,11 +24,15 @@ from utils import format_full_calendar, map_telegram_language
 from handlers.admin_commands import format_user_link
 from . import router
 
+from handlers.event_types import UserTextMessage
+
 logger = logging.getLogger(__name__)
 
 
 @router.message(Command("start"))
-async def cmd_start(message: Message, bot, state: FSMContext, i18n: I18nContext):
+async def cmd_start(
+    message: UserTextMessage, bot, state: FSMContext, i18n: I18nContext
+):
     user_id = message.from_user.id
 
     await state.clear()
@@ -140,7 +144,7 @@ async def cmd_start(message: Message, bot, state: FSMContext, i18n: I18nContext)
 
 
 @router.message(Command("settings"))
-async def cmd_settings(message: Message, state: FSMContext, i18n: I18nContext):
+async def cmd_settings(message: UserTextMessage, state: FSMContext, i18n: I18nContext):
     """Show main settings menu"""
     await state.clear()
 
@@ -156,7 +160,9 @@ async def cmd_settings(message: Message, state: FSMContext, i18n: I18nContext):
 
 
 @router.message(Command("status"))
-async def cmd_status(message: Message, bot, state: FSMContext, i18n: I18nContext):
+async def cmd_status(
+    message: UserTextMessage, bot, state: FSMContext, i18n: I18nContext
+):
     """Show next race status with full details including weather"""
     await state.clear()
 
@@ -173,7 +179,11 @@ async def cmd_status(message: Message, bot, state: FSMContext, i18n: I18nContext
                 quali_close = race_data.get("quali_close")
                 race_date = race_data.get("date")
                 # Include race if quali hasn't closed yet, OR if quali is closed but race hasn't happened
-                if quali_close > now or (quali_close <= now < race_date):
+                if (
+                    isinstance(quali_close, datetime)
+                    and isinstance(race_date, datetime)
+                    and (quali_close > now or quali_close <= now < race_date)
+                ):
                     future_races.append((race_id, race_data))
     else:
         for i, race_data in enumerate(race_calendar):
@@ -181,7 +191,11 @@ async def cmd_status(message: Message, bot, state: FSMContext, i18n: I18nContext
                 quali_close = race_data.get("quali_close")
                 race_date = race_data.get("date")
                 # Include race if quali hasn't closed yet, OR if quali is closed but race hasn't happened
-                if quali_close > now or (quali_close <= now < race_date):
+                if (
+                    isinstance(quali_close, datetime)
+                    and isinstance(race_date, datetime)
+                    and (quali_close > now or quali_close <= now < race_date)
+                ):
                     race_id = race_data.get("race_id", i + 1)
                     future_races.append((race_id, race_data))
 
@@ -200,7 +214,7 @@ async def cmd_status(message: Message, bot, state: FSMContext, i18n: I18nContext
 
 
 @router.message(Command("calendar"))
-async def cmd_calendar(message: Message, state: FSMContext, i18n: I18nContext):
+async def cmd_calendar(message: UserTextMessage, state: FSMContext, i18n: I18nContext):
     """Show full race calendar"""
     await state.clear()
     user_id = message.from_user.id
@@ -213,7 +227,7 @@ async def cmd_calendar(message: Message, state: FSMContext, i18n: I18nContext):
 
 
 @router.message(Command("next"))
-async def cmd_next(message: Message, i18n: I18nContext):
+async def cmd_next(message: UserTextMessage, i18n: I18nContext):
     await load_next_season_silent()
 
     if not next_season_calendar:
@@ -234,12 +248,14 @@ async def cmd_next(message: Message, i18n: I18nContext):
 
 
 @router.message(Command("schedule"))
-async def cmd_schedule(message: Message, i18n: I18nContext):
+async def cmd_schedule(message: UserTextMessage, i18n: I18nContext):
     await cmd_calendar(message, i18n)
 
 
 @router.message(Command("notify"))
-async def cmd_notify(message: Message, bot, state: FSMContext, i18n: I18nContext):
+async def cmd_notify(
+    message: UserTextMessage, bot, state: FSMContext, i18n: I18nContext
+):
     """Send a test notification for the next race (hidden command for testing)"""
     await state.clear()
 
@@ -256,7 +272,11 @@ async def cmd_notify(message: Message, bot, state: FSMContext, i18n: I18nContext
                 quali_close = race_data.get("quali_close")
                 race_date = race_data.get("date")
                 # Include race if quali hasn't closed yet, OR if quali is closed but race hasn't happened
-                if quali_close > now or (quali_close <= now < race_date):
+                if (
+                    isinstance(quali_close, datetime)
+                    and isinstance(race_date, datetime)
+                    and (quali_close > now or quali_close <= now < race_date)
+                ):
                     future_races.append((race_id, race_data))
     else:
         for i, race_data in enumerate(race_calendar):
@@ -264,7 +284,11 @@ async def cmd_notify(message: Message, bot, state: FSMContext, i18n: I18nContext
                 quali_close = race_data.get("quali_close")
                 race_date = race_data.get("date")
                 # Include race if quali hasn't closed yet, OR if quali is closed but race hasn't happened
-                if quali_close > now or (quali_close <= now < race_date):
+                if (
+                    isinstance(quali_close, datetime)
+                    and isinstance(race_date, datetime)
+                    and (quali_close > now or quali_close <= now < race_date)
+                ):
                     race_id = race_data.get("race_id", i + 1)
                     future_races.append((race_id, race_data))
 

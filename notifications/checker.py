@@ -11,7 +11,7 @@ This file maintains the main check_notifications() entry point.
 
 import asyncio
 import logging
-from datetime import datetime, UTC
+from datetime import datetime, timedelta, UTC
 
 from aiogram import Bot
 
@@ -40,7 +40,12 @@ from notifications.timing import (
     get_next_check_interval,
     CHECK_INTERVAL_NORMAL_SECONDS,
 )
-from notifications.senders.common import DeliveryStatus
+from notifications.delivery_queue import (
+    RetryState,
+    load_delivery_queue,
+    save_delivery_queue,
+)
+from notifications.senders.common import DeliveryStatus, RetryableDelivery
 from notifications.checks import (
     check_quali_closing,
     check_quali_open,
@@ -59,8 +64,35 @@ logger = logging.getLogger(__name__)
 # Module-level in-memory caches (lazy loaded)
 notification_lock = asyncio.Lock()
 MAX_DELIVERY_ATTEMPTS = 3
+DEFAULT_RETRY_DELAY_SECONDS = 60
 _pending_notifications: dict[tuple[int, str], tuple] = {}
-_delivery_attempts: dict[tuple[int, str, int], int] = {}
+_delivery_attempts: dict[tuple[int, str, int], RetryState] = {}
+
+
+def _save_delivery_state() -> None:
+    save_delivery_queue(_pending_notifications, _delivery_attempts)
+
+
+def _load_delivery_state() -> None:
+    pending, attempts = load_delivery_queue()
+    _pending_notifications.clear()
+    _pending_notifications.update(pending)
+    _delivery_attempts.clear()
+    _delivery_attempts.update(attempts)
+
+
+def _get_next_retry_delay(now: datetime | None = None) -> float | None:
+    """Return seconds until the closest scheduled retry."""
+    if not _delivery_attempts:
+        return None
+    current_time = now or datetime.now(UTC)
+    return max(
+        1.0,
+        min(
+            (state.next_attempt_at - current_time).total_seconds()
+            for state in _delivery_attempts.values()
+        ),
+    )
 
 
 def _is_already_notified(race_id: int, label: str) -> bool:
@@ -84,6 +116,8 @@ async def check_notifications(bot: Bot):
     )
     load_users_data()
     load_notify_history()  # Loads into notify_history from history.py
+    _load_delivery_state()
+    next_interval: float = CHECK_INTERVAL_NORMAL_SECONDS
 
     while True:
         try:
@@ -116,6 +150,7 @@ async def check_notifications(bot: Bot):
                 for notification in notifications_to_send:
                     history_key = notification[4]
                     _pending_notifications[history_key] = notification
+                _save_delivery_state()
                 notifications_to_send = list(_pending_notifications.values())
 
                 # Reset snooze counts for past deadlines
@@ -129,6 +164,9 @@ async def check_notifications(bot: Bot):
 
             # Send notifications outside the lock (slow operation)
             await _send_notifications_to_users(bot, notifications_to_send)
+            retry_delay = _get_next_retry_delay()
+            if retry_delay is not None:
+                next_interval = min(next_interval, retry_delay)
 
         except Exception as e:
             logger.error(f"❌ Notification check error: {e}")
@@ -163,6 +201,22 @@ def _delivery_marker(history_key: tuple[int, str], user_id: int) -> tuple[int, s
     return history_key[0], f"{history_key[1]}:user:{user_id}"
 
 
+def _mark_delivery_complete(history_key: tuple[int, str]) -> None:
+    """Persist a terminal marker before mutating the retry queue."""
+    mark_notified(history_key[0], history_key[1])
+    save_notify_history()
+
+
+def _clear_attempts_for_event(history_key: tuple[int, str]) -> None:
+    keys_to_remove = [
+        key
+        for key in _delivery_attempts
+        if key[0] == history_key[0] and key[1] == history_key[1]
+    ]
+    for key in keys_to_remove:
+        del _delivery_attempts[key]
+
+
 async def _attempt_delivery(
     bot: Bot,
     user_id: int,
@@ -172,35 +226,58 @@ async def _attempt_delivery(
     label: str,
     history_key: tuple[int, str],
 ) -> bool:
-    """Attempt one delivery and return True when no more retries are needed."""
+    """Attempt one due delivery and return True when no retries remain."""
     attempt_key = (history_key[0], history_key[1], user_id)
-    try:
-        status = await send_notification_to_user(
-            bot, user_id, ntype, race_id, race_data, label
-        )
-    except Exception as e:
-        logger.exception(f"Unexpected delivery error for user {user_id}: {e}")
-        status = DeliveryStatus.RETRYABLE_FAILURE
-
-    if status is not DeliveryStatus.RETRYABLE_FAILURE:
-        _delivery_attempts.pop(attempt_key, None)
-        return True
-
-    attempts = _delivery_attempts.get(attempt_key, 0) + 1
-    _delivery_attempts[attempt_key] = attempts
-    if attempts < MAX_DELIVERY_ATTEMPTS:
-        logger.warning(
-            f"Temporary delivery failure for user {user_id}; "
-            f"attempt {attempts}/{MAX_DELIVERY_ATTEMPTS}"
-        )
+    now = datetime.now(UTC)
+    previous_state = _delivery_attempts.get(attempt_key)
+    if previous_state and now < previous_state.next_attempt_at:
         return False
 
-    _delivery_attempts.pop(attempt_key, None)
-    logger.error(
-        f"Delivery retries exhausted for user {user_id}, race {race_id}, "
-        f"notification {history_key[1]}"
+    try:
+        outcome = await send_notification_to_user(
+            bot, user_id, ntype, race_id, race_data, label
+        )
+    except Exception as error:
+        logger.exception("Unexpected delivery error for user %s: %s", user_id, error)
+        outcome = RetryableDelivery()
+
+    if isinstance(outcome, RetryableDelivery):
+        retry_after = outcome.retry_after
+    elif outcome is DeliveryStatus.RETRYABLE_FAILURE:
+        # Compatibility for third-party/custom senders returning the old enum.
+        retry_after = None
+    else:
+        _delivery_attempts.pop(attempt_key, None)
+        _save_delivery_state()
+        return True
+
+    attempts = (previous_state.attempts if previous_state else 0) + 1
+    if attempts >= MAX_DELIVERY_ATTEMPTS:
+        _delivery_attempts.pop(attempt_key, None)
+        _save_delivery_state()
+        logger.error(
+            "Delivery retries exhausted for user %s, race %s, notification %s",
+            user_id,
+            race_id,
+            history_key[1],
+        )
+        return True
+
+    delay = max(
+        1.0,
+        retry_after if retry_after is not None else DEFAULT_RETRY_DELAY_SECONDS,
     )
-    return True
+    next_attempt_at = now + timedelta(seconds=delay)
+    _delivery_attempts[attempt_key] = RetryState(attempts, next_attempt_at)
+    _save_delivery_state()
+    logger.warning(
+        "Temporary delivery failure for user %s; attempt %s/%s, retry at %s",
+        user_id,
+        attempts,
+        MAX_DELIVERY_ATTEMPTS,
+        next_attempt_at.isoformat(),
+    )
+    return False
 
 
 def _remove_delivered_snooze(history_key: tuple[int, str]) -> None:
@@ -229,31 +306,35 @@ async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
             target_user_id = None
             targeted = False
 
+        if history_key in history:
+            _pending_notifications.pop(history_key, None)
+            _clear_attempts_for_event(history_key)
+            continue
+
         event_complete = True
 
         if targeted and target_user_id is not None:
             user_id = int(target_user_id)
-            if history_key not in history:
-                if (
-                    user_id not in users_data
-                    or is_user_blocked(user_id)
-                    or not _should_send_to_user(user_id, ntype, label)
-                ):
-                    mark_notified(history_key[0], history_key[1])
+            if (
+                user_id not in users_data
+                or is_user_blocked(user_id)
+                or not _should_send_to_user(user_id, ntype, label)
+            ):
+                _mark_delivery_complete(history_key)
+            else:
+                terminal = await _attempt_delivery(
+                    bot,
+                    user_id,
+                    ntype,
+                    race_id,
+                    race_data,
+                    label,
+                    history_key,
+                )
+                if terminal:
+                    _mark_delivery_complete(history_key)
                 else:
-                    terminal = await _attempt_delivery(
-                        bot,
-                        user_id,
-                        ntype,
-                        race_id,
-                        race_data,
-                        label,
-                        history_key,
-                    )
-                    if terminal:
-                        mark_notified(history_key[0], history_key[1])
-                    else:
-                        event_complete = False
+                    event_complete = False
 
             if event_complete and ntype == "snooze":
                 _remove_delivered_snooze(history_key)
@@ -267,7 +348,7 @@ async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
                 if is_user_blocked(user_id) or not _should_send_to_user(
                     user_id, ntype, label
                 ):
-                    mark_notified(marker[0], marker[1])
+                    _mark_delivery_complete(marker)
                     continue
 
                 terminal = await _attempt_delivery(
@@ -280,15 +361,17 @@ async def _send_notifications_to_users(bot: Bot, notifications: list) -> None:
                     history_key,
                 )
                 if terminal:
-                    mark_notified(marker[0], marker[1])
+                    _mark_delivery_complete(marker)
                 else:
                     event_complete = False
 
             if event_complete:
-                mark_notified(history_key[0], history_key[1])
+                _mark_delivery_complete(history_key)
                 clear_delivery_entries(history_key[0], history_key[1])
 
         if event_complete:
             _pending_notifications.pop(history_key, None)
+            _clear_attempts_for_event(history_key)
 
     save_notify_history()
+    _save_delivery_state()

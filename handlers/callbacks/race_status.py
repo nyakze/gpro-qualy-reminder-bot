@@ -3,7 +3,7 @@
 import logging
 from datetime import datetime, timedelta, UTC
 from aiogram import F
-from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram_i18n import I18nContext
 
 from gpro_calendar import race_calendar
@@ -17,6 +17,8 @@ from notifications.utils import can_snooze
 from notifications.users import increment_snooze_count
 from utils import add_flag_to_track
 from . import router
+
+from handlers.event_types import AccessibleCallbackQuery
 
 logger = logging.getLogger(__name__)
 
@@ -101,7 +103,7 @@ def build_race_notification_keyboard(
 
 
 @router.callback_query(F.data.startswith("done_"))
-async def handle_quali_done(callback: CallbackQuery, i18n: I18nContext):
+async def handle_quali_done(callback: AccessibleCallbackQuery, i18n: I18nContext):
     try:
         race_id = int(callback.data.split("_")[1])
     except (ValueError, IndexError):
@@ -123,7 +125,7 @@ async def handle_quali_done(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data.startswith("reset_"))
-async def handle_reset(callback: CallbackQuery, i18n: I18nContext):
+async def handle_reset(callback: AccessibleCallbackQuery, i18n: I18nContext):
     user_id = callback.from_user.id
 
     if callback.data == "reset_all":
@@ -152,7 +154,7 @@ async def handle_reset(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data.startswith("snooze_"))
-async def handle_snooze(callback: CallbackQuery, i18n: I18nContext):
+async def handle_snooze(callback: AccessibleCallbackQuery, i18n: I18nContext):
     """Handle snooze button clicks"""
     user_id = callback.from_user.id
 
@@ -228,7 +230,7 @@ async def handle_snooze(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data.startswith("weather_"))
-async def handle_weather(callback: CallbackQuery, i18n: I18nContext):
+async def handle_weather(callback: AccessibleCallbackQuery, i18n: I18nContext):
     """Display weather forecast for a race"""
     try:
         race_id = int(callback.data.split("_")[1])

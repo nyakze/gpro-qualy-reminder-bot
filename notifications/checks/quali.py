@@ -25,7 +25,7 @@ from notifications.timing import (
 logger = logging.getLogger(__name__)
 
 # Track last API check time for rate limiting
-last_api_check_time: datetime = None
+last_api_check_time: datetime | None = None
 
 
 async def _fetch_weather_with_retry(race_id: int) -> None:

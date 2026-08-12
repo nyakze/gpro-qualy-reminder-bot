@@ -2,7 +2,6 @@
 
 import logging
 from aiogram import F
-from aiogram.types import CallbackQuery
 from aiogram_i18n import I18nContext
 
 from gpro_calendar import race_calendar
@@ -10,11 +9,13 @@ from notifications import send_quali_notification, get_user_status
 from notifications.users import set_user_website_mode
 from . import router
 
+from handlers.event_types import AccessibleCallbackQuery
+
 logger = logging.getLogger(__name__)
 
 
 @router.callback_query(F.data == "main_menu_status")
-async def handle_main_menu_status(callback: CallbackQuery, i18n: I18nContext):
+async def handle_main_menu_status(callback: AccessibleCallbackQuery, i18n: I18nContext):
     """Handle Status button from main menu"""
     from datetime import datetime, UTC
 
@@ -49,8 +50,13 @@ async def handle_main_menu_status(callback: CallbackQuery, i18n: I18nContext):
 
     if future_races:
         next_race_id, next_race_data = future_races[0]
+        bot = callback.bot
+        if bot is None:
+            logger.error("Callback has no bot instance")
+            await callback.message.answer(i18n.get("error-invalid-data"))
+            return
         await send_quali_notification(
-            callback.bot,
+            bot,
             callback.from_user.id,
             next_race_id,
             next_race_data,
@@ -65,7 +71,9 @@ async def handle_main_menu_status(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data == "main_menu_calendar")
-async def handle_main_menu_calendar(callback: CallbackQuery, i18n: I18nContext):
+async def handle_main_menu_calendar(
+    callback: AccessibleCallbackQuery, i18n: I18nContext
+):
     """Handle Calendar button from main menu"""
     from utils import format_full_calendar
 
@@ -80,7 +88,7 @@ async def handle_main_menu_calendar(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data == "main_menu_next")
-async def handle_main_menu_next(callback: CallbackQuery, i18n: I18nContext):
+async def handle_main_menu_next(callback: AccessibleCallbackQuery, i18n: I18nContext):
     """Handle Next Season button from main menu"""
     from gpro_calendar import next_season_calendar, load_next_season_silent
     from utils import format_full_calendar
@@ -106,7 +114,9 @@ async def handle_main_menu_next(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data == "main_menu_settings")
-async def handle_main_menu_settings(callback: CallbackQuery, i18n: I18nContext):
+async def handle_main_menu_settings(
+    callback: AccessibleCallbackQuery, i18n: I18nContext
+):
     """Handle Settings button from main menu"""
     from .settings import build_settings_keyboard
 
@@ -121,7 +131,9 @@ async def handle_main_menu_settings(callback: CallbackQuery, i18n: I18nContext):
 
 
 @router.callback_query(F.data == "toggle_website_mode")
-async def handle_toggle_website_mode(callback: CallbackQuery, i18n: I18nContext):
+async def handle_toggle_website_mode(
+    callback: AccessibleCallbackQuery, i18n: I18nContext
+):
     """Toggle between Classic and APP website modes"""
     from .settings import handle_settings_main
 

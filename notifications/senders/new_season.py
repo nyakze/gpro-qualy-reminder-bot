@@ -8,6 +8,7 @@ from utils import add_flag_to_track, format_group_display
 from timezone_utils import format_datetime_for_user
 from notifications.senders.common import (
     DeliveryStatus,
+    DeliveryOutcome,
     get_user_info,
     get_text_getter,
     send_notification,
@@ -18,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 async def send_new_season_reminder_notification(
     bot: Bot, user_id: int, race_id: int, race_data: dict, i18n=None
-) -> DeliveryStatus:
+) -> DeliveryOutcome:
     """Send new season reminder notification before race 1"""
     user_info = get_user_info(user_id)
     group = user_info["group"]

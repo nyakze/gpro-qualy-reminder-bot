@@ -6,7 +6,7 @@ from typing import Callable, Awaitable, Dict, Any, Optional
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from aiogram import BaseMiddleware
-from aiogram.types import Update
+from aiogram.types import TelegramObject, Update
 
 logger = logging.getLogger(__name__)
 
@@ -81,10 +81,13 @@ class RateLimitMiddleware(BaseMiddleware):
 
     async def __call__(
         self,
-        handler: Callable[[Update, Dict[str, Any]], Awaitable[Any]],
-        event: Update,
+        handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]],
+        event: TelegramObject,
         data: Dict[str, Any],
     ) -> Any:
+        if not isinstance(event, Update):
+            return await handler(event, data)
+
         user_id = self._get_user_id(event)
         if not user_id:
             return await handler(event, data)

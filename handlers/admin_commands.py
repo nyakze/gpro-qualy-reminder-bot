@@ -1,7 +1,6 @@
 """Admin command handlers"""
 
 import logging
-from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
 from aiogram_i18n import I18nContext
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -26,6 +25,9 @@ from middleware.rate_limit import (
     get_rate_limited_users,
 )
 from . import router
+
+from handlers.event_types import AccessibleCallbackQuery
+from handlers.event_types import UserTextMessage
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +81,7 @@ def format_relative_time(iso_timestamp: str | None) -> str:
 
 
 @router.message(Command("update"))
-async def cmd_update(message: Message, i18n: I18nContext):
+async def cmd_update(message: UserTextMessage, i18n: I18nContext):
     if not is_admin(message.from_user.id):
         await message.answer(i18n.get("admin-only"))
         return
@@ -128,7 +130,7 @@ async def cmd_update(message: Message, i18n: I18nContext):
 
 
 @router.message(Command("users"))
-async def cmd_users(message: Message, i18n: I18nContext):
+async def cmd_users(message: UserTextMessage, i18n: I18nContext):
     if not is_admin(message.from_user.id):
         await message.answer(i18n.get("admin-only"))
         return
@@ -180,7 +182,7 @@ async def cmd_users(message: Message, i18n: I18nContext):
 
 
 @router.message(Command("user"))
-async def cmd_user(message: Message, i18n: I18nContext):
+async def cmd_user(message: UserTextMessage, i18n: I18nContext):
     if not is_admin(message.from_user.id):
         await message.answer(i18n.get("admin-only"))
         return
@@ -281,7 +283,7 @@ async def cmd_user(message: Message, i18n: I18nContext):
 
 
 @router.message(Command("userstats"))
-async def cmd_userstats(message: Message, i18n: I18nContext):
+async def cmd_userstats(message: UserTextMessage, i18n: I18nContext):
     if not is_admin(message.from_user.id):
         await message.answer(i18n.get("admin-only"))
         return
@@ -398,9 +400,9 @@ async def cmd_userstats(message: Message, i18n: I18nContext):
                     first_name = user_status.get("first_name")
                     link = format_user_link(uid, username, first_name)
 
-                    status = "🚫 BLOCKED"
+                    rate_status = "🚫 BLOCKED"
                     if not info["is_blocked"]:
-                        status = "⚠️ warned"
+                        rate_status = "⚠️ warned"
                     details = f"({info['violation_count']} violations)"
                     if info["is_blocked"]:
                         remaining = info["blocked_remaining_seconds"]
@@ -409,7 +411,7 @@ async def cmd_userstats(message: Message, i18n: I18nContext):
                         else:
                             time_str = f"{remaining // 60}m {remaining % 60}s"
                         details += f" - {time_str} left"
-                    text += f"• {link} {status} {details}\n"
+                    text += f"• {link} {rate_status} {details}\n"
 
         # Bot-blocked users
         blocked_users = [
@@ -434,7 +436,7 @@ async def cmd_userstats(message: Message, i18n: I18nContext):
 
 
 @router.message(Command("deleteuser", "deluser"))
-async def cmd_deleteuser(message: Message, i18n: I18nContext):
+async def cmd_deleteuser(message: UserTextMessage, i18n: I18nContext):
     if not is_admin(message.from_user.id):
         await message.answer(i18n.get("admin-only"))
         return
@@ -467,7 +469,7 @@ async def cmd_deleteuser(message: Message, i18n: I18nContext):
 
 
 @router.message(Command("weather"))
-async def cmd_weather(message: Message, i18n: I18nContext):
+async def cmd_weather(message: UserTextMessage, i18n: I18nContext):
     if not is_admin(message.from_user.id):
         await message.answer(i18n.get("admin-only"))
         return
@@ -492,7 +494,7 @@ async def cmd_weather(message: Message, i18n: I18nContext):
             next_race_data = race_data
             break
 
-    if not next_race_id:
+    if next_race_id is None or next_race_data is None:
         await message.answer(i18n.get("admin-no-upcoming-races"), parse_mode="HTML")
         return
 
@@ -529,7 +531,7 @@ async def cmd_weather(message: Message, i18n: I18nContext):
 
 
 @router.message(Command("welcomealert"))
-async def cmd_welcomealert(message: Message):
+async def cmd_welcomealert(message: UserTextMessage):
     if not is_admin(message.from_user.id):
         await message.answer("❌ Admin only command")
         return
@@ -559,7 +561,7 @@ async def cmd_welcomealert(message: Message):
 
 
 @router.message(Command("updatetz"))
-async def cmd_updatetz(message: Message, i18n: I18nContext):
+async def cmd_updatetz(message: UserTextMessage, i18n: I18nContext):
     from timezone_utils import (
         download_timezone_data,
         load_timezone_search_index,
@@ -627,7 +629,7 @@ def _get_backup_menu_markup(tg_enabled: bool):
 
 
 @router.message(Command("backup"))
-async def cmd_backup(message: Message, i18n: I18nContext):
+async def cmd_backup(message: UserTextMessage, i18n: I18nContext):
     if not is_admin(message.from_user.id):
         await message.answer(i18n.get("admin-only"))
         return
@@ -673,7 +675,7 @@ async def cmd_backup(message: Message, i18n: I18nContext):
 
 
 @router.callback_query(lambda c: c.data.startswith("backup:"))
-async def callback_backup_menu(callback: CallbackQuery, i18n: I18nContext):
+async def callback_backup_menu(callback: AccessibleCallbackQuery, i18n: I18nContext):
     if not is_admin(callback.from_user.id):
         await callback.answer(i18n.get("admin-only"), show_alert=True)
         return

@@ -198,7 +198,7 @@ def parse_time_input(time_str: str, i18n=None) -> tuple[float | None, str]:
     return None, get_text("validation-invalid-format")
 
 
-def format_custom_notification_time(hours: float, i18n=None) -> str:
+def format_custom_notification_time(hours: float | None, i18n=None) -> str:
     """Format hours into human-readable string
 
     Args:
@@ -263,7 +263,7 @@ def get_custom_notifications(user_id: int) -> list:
 
 
 def set_custom_notification(
-    user_id: int, slot: int, hours_before: float, i18n=None
+    user_id: int, slot: int, hours_before: float | None, i18n=None
 ) -> tuple[bool, str]:
     """Set or update a custom notification slot
 

@@ -632,7 +632,7 @@ def get_last_race_id() -> int:
     return max(race_calendar.keys())
 
 
-def get_first_race_date() -> datetime:
+def get_first_race_date() -> datetime | None:
     """Get the date of the first race in the current season
 
     Returns:

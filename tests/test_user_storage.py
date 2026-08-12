@@ -105,6 +105,19 @@ class TestUserStorageLoad:
             if os.path.exists(temp_path):
                 os.remove(temp_path)
 
+    def test_failed_recovery_preserves_loaded_memory(self, tmp_path, monkeypatch):
+        """A transient disk failure must not erase the live in-memory cache."""
+        from notifications.users import storage
+
+        storage.users_data[999] = {"language": "gb"}
+        monkeypatch.setattr(
+            storage, "USERS_FILE", str(tmp_path / "missing" / "users_data.json")
+        )
+
+        storage.load_users_data()
+
+        assert storage.users_data == {999: {"language": "gb"}}
+
 
 class TestUserStorageSave:
     """Tests for save_users_data function"""
@@ -345,6 +358,88 @@ class TestUserStorageConcurrency:
         finally:
             if os.path.exists(temp_path):
                 os.remove(temp_path)
+
+
+class TestUserStorageRecovery:
+    """Tests for automatic recovery from classic backups."""
+
+    def test_missing_primary_restores_latest_valid_backup(
+        self, tmp_path, sample_user_data, monkeypatch
+    ):
+        from notifications.users import storage
+
+        users_file = tmp_path / "users_data.json"
+        backup_dir = tmp_path / "backup"
+        backup_dir.mkdir()
+        older = backup_dir / "users_data_20260101_020000.json"
+        newer_invalid = backup_dir / "users_data_20260108_020000.json"
+        older.write_text(json.dumps({"12345": sample_user_data}), encoding="utf-8")
+        newer_invalid.write_text("broken", encoding="utf-8")
+        os.utime(older, (1, 1))
+        os.utime(newer_invalid, (2, 2))
+        monkeypatch.setattr(storage, "USERS_FILE", str(users_file))
+
+        storage.load_users_data()
+
+        assert 12345 in storage.users_data
+        assert (
+            json.loads(users_file.read_text(encoding="utf-8"))["12345"]["group"]
+            == "P15"
+        )
+
+    def test_corrupt_primary_is_quarantined_before_restore(
+        self, tmp_path, sample_user_data, monkeypatch
+    ):
+        from notifications.users import storage
+
+        users_file = tmp_path / "users_data.json"
+        users_file.write_text("corrupt primary", encoding="utf-8")
+        backup_dir = tmp_path / "backup"
+        backup_dir.mkdir()
+        backup = backup_dir / "users_data_20260101_020000.json"
+        backup.write_text(json.dumps({"67890": sample_user_data}), encoding="utf-8")
+        monkeypatch.setattr(storage, "USERS_FILE", str(users_file))
+
+        storage.load_users_data()
+
+        assert 67890 in storage.users_data
+        quarantined = list(tmp_path.glob("users_data.json.corrupt_*"))
+        assert len(quarantined) == 1
+        assert quarantined[0].read_text(encoding="utf-8") == "corrupt primary"
+
+    def test_empty_backup_is_not_used(self, tmp_path, monkeypatch):
+        from notifications.users import storage
+
+        users_file = tmp_path / "users_data.json"
+        backup_dir = tmp_path / "backup"
+        backup_dir.mkdir()
+        (backup_dir / "users_data_20260101_020000.json").write_text(
+            "{}", encoding="utf-8"
+        )
+        monkeypatch.setattr(storage, "USERS_FILE", str(users_file))
+
+        storage.load_users_data()
+
+        assert storage.users_data == {}
+        assert not users_file.exists()
+
+    def test_unrelated_json_is_not_considered_a_backup(
+        self, tmp_path, sample_user_data, monkeypatch
+    ):
+        from notifications.users import storage
+
+        users_file = tmp_path / "users_data.json"
+        backup_dir = tmp_path / "backup"
+        backup_dir.mkdir()
+        (backup_dir / "recovery_test_artifact_users_data_20260101.json").write_text(
+            json.dumps({"12345": sample_user_data}), encoding="utf-8"
+        )
+        monkeypatch.setattr(storage, "USERS_FILE", str(users_file))
+
+        storage.load_users_data()
+
+        assert storage.users_data == {}
+        assert not users_file.exists()
 
 
 if __name__ == "__main__":

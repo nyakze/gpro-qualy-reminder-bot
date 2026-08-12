@@ -1,8 +1,9 @@
 """Common utilities for notification senders"""
 
 import logging
+from dataclasses import dataclass
 from enum import Enum
-from typing import Callable
+from typing import Callable, TypeAlias
 
 from aiogram import Bot
 from aiogram.exceptions import (
@@ -35,6 +36,16 @@ class DeliveryStatus(str, Enum):
     def is_terminal(self) -> bool:
         """Return whether retrying cannot improve this delivery."""
         return self is not DeliveryStatus.RETRYABLE_FAILURE
+
+
+@dataclass(frozen=True)
+class RetryableDelivery:
+    """Temporary delivery failure with an optional Telegram retry delay."""
+
+    retry_after: float | None = None
+
+
+DeliveryOutcome: TypeAlias = DeliveryStatus | RetryableDelivery
 
 
 def get_user_info(user_id: int) -> dict:
@@ -84,8 +95,8 @@ async def send_notification(
     notification_type: str,
     race_id: int,
     reply_markup=None,
-) -> DeliveryStatus:
-    """Send a notification with proper error handling
+) -> DeliveryOutcome:
+    """Send a notification with proper error handling.
 
     Args:
         bot: Aiogram Bot instance
@@ -96,7 +107,7 @@ async def send_notification(
         reply_markup: Optional inline keyboard markup
 
     Returns:
-        DeliveryStatus describing whether the attempt is terminal or retryable.
+        Terminal status or retry metadata for a temporary failure.
     """
     try:
         await bot.send_message(
@@ -118,10 +129,10 @@ async def send_notification(
             f"Telegram rate limited {notification_type} for user {user_id}; "
             f"retry after {e.retry_after}s"
         )
-        return DeliveryStatus.RETRYABLE_FAILURE
+        return RetryableDelivery(retry_after=float(e.retry_after))
     except (TelegramNetworkError, TelegramServerError) as e:
         logger.warning(f"Temporary {notification_type} failure for {user_id}: {e}")
-        return DeliveryStatus.RETRYABLE_FAILURE
+        return RetryableDelivery()
     except TelegramBadRequest as e:
         if "chat not found" in str(e.message).lower():
             logger.warning(
@@ -133,4 +144,4 @@ async def send_notification(
         return DeliveryStatus.PERMANENT_FAILURE
     except Exception as e:
         logger.error(f"{notification_type} notify {user_id} failed: {e}")
-        return DeliveryStatus.RETRYABLE_FAILURE
+        return RetryableDelivery()

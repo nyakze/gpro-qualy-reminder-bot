@@ -16,6 +16,8 @@ from notifications import (
 from utils import format_group_display
 from . import router
 
+from handlers.event_types import UserTextMessage
+
 logger = logging.getLogger(__name__)
 
 
@@ -37,7 +39,9 @@ class TimezoneStates(StatesGroup):
 
 
 @router.message(SetGroupStates.waiting_for_group, F.text & ~F.text.startswith("/"))
-async def process_group_input(message: Message, state: FSMContext, i18n: I18nContext):
+async def process_group_input(
+    message: UserTextMessage, state: FSMContext, i18n: I18nContext
+):
     """Process user's group input from settings"""
     group_input = message.text
 
@@ -76,7 +80,7 @@ async def process_group_input(message: Message, state: FSMContext, i18n: I18nCon
     CustomNotificationStates.waiting_for_time, F.text & ~F.text.startswith("/")
 )
 async def process_custom_notification_time_input(
-    message: Message, state: FSMContext, i18n: I18nContext
+    message: UserTextMessage, state: FSMContext, i18n: I18nContext
 ):
     """Process user's custom time input"""
     user_id = message.from_user.id
@@ -89,7 +93,7 @@ async def process_custom_notification_time_input(
     # Parse time input
     hours, error_msg = parse_time_input(time_input, i18n)
 
-    if error_msg:
+    if error_msg or hours is None:
         await message.answer(
             i18n.get("custom-notif-error-parsing", error=error_msg),
             parse_mode="HTML",
@@ -145,7 +149,7 @@ async def process_custom_notification_time_input(
 
 @router.message(OnboardingStates.waiting_for_group, F.text & ~F.text.startswith("/"))
 async def process_onboarding_group_input(
-    message: Message, state: FSMContext, i18n: I18nContext
+    message: UserTextMessage, state: FSMContext, i18n: I18nContext
 ):
     """Process custom group input during onboarding"""
     user_id = message.from_user.id
@@ -204,7 +208,7 @@ async def process_onboarding_group_input(
     TimezoneStates.waiting_for_timezone_input, F.text & ~F.text.startswith("/")
 )
 async def process_timezone_input(
-    message: Message, state: FSMContext, i18n: I18nContext
+    message: UserTextMessage, state: FSMContext, i18n: I18nContext
 ):
     """Process user's timezone search input and show fuzzy-matched options"""
     from timezone_utils import fuzzy_search_timezones

@@ -23,6 +23,7 @@ from notifications.utils.snooze_manager import (
 )
 from notifications.senders.common import (
     DeliveryStatus,
+    DeliveryOutcome,
     get_text_getter,
     send_notification,
 )
@@ -73,7 +74,7 @@ async def send_quali_notification(
     race_data: dict,
     notification_type: str = "deadline",
     i18n=None,
-) -> DeliveryStatus:
+) -> DeliveryOutcome:
     """Send qualifying notification with appropriate formatting and buttons"""
     user_status, _ = get_user_status(user_id)
 

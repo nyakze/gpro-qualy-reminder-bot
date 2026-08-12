@@ -6,7 +6,7 @@ from typing import Dict
 from aiogram import Bot
 
 from notifications.senders.quali import send_quali_notification
-from notifications.senders.common import DeliveryStatus
+from notifications.senders.common import DeliveryOutcome, DeliveryStatus
 from notifications.senders.quali_results import send_quali_results_notification
 from notifications.senders.race_live import send_race_live_notification
 from notifications.senders.race_replay import send_race_replay_notification
@@ -23,7 +23,7 @@ async def send_notification_to_user(
     race_id: int,
     race_data: Dict,
     label: str,
-) -> DeliveryStatus:
+) -> DeliveryOutcome:
     """Dispatcher function to send the appropriate notification type to a user.
 
     Args:
