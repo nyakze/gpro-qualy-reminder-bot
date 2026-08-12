@@ -1,6 +1,7 @@
 """Admin command handlers"""
 
 import logging
+from html import escape
 from aiogram.filters import Command
 from aiogram_i18n import I18nContext
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -40,10 +41,12 @@ def is_admin(user_id: int) -> bool:
 def format_user_link(user_id: int, username: str | None, first_name: str | None) -> str:
     """Format user as clickable Telegram link"""
     if username:
-        return f'<a href="tg://user?id={user_id}">@{username}</a>'
+        label = f"@{username}"
     elif first_name:
-        return f'<a href="tg://user?id={user_id}">{first_name}</a>'
-    return "—"
+        label = first_name
+    else:
+        return "—"
+    return f'<a href="tg://user?id={user_id}">{escape(label)}</a>'
 
 
 def format_relative_time(iso_timestamp: str | None) -> str:
@@ -87,9 +90,7 @@ def _last_interaction_sort_key(user: tuple[int, dict]) -> float:
         return float("-inf")
 
     try:
-        last_interaction = datetime.fromisoformat(
-            iso_timestamp.replace("Z", "+00:00")
-        )
+        last_interaction = datetime.fromisoformat(iso_timestamp.replace("Z", "+00:00"))
         if last_interaction.tzinfo is None:
             last_interaction = last_interaction.replace(tzinfo=UTC)
         return last_interaction.timestamp()
@@ -109,7 +110,12 @@ async def cmd_update(message: UserTextMessage, i18n: I18nContext):
         if "soft" in args:
             soft_update = True
 
-    await update_calendar()
+    update_succeeded = await update_calendar()
+    if not update_succeeded:
+        await message.answer(
+            i18n.get("admin-calendar-update-failed"), parse_mode="HTML"
+        )
+        return
 
     reset_count = 0
     if not soft_update:
@@ -237,11 +243,11 @@ async def cmd_user(message: UserTextMessage, i18n: I18nContext):
     if first_name or username or tg_language_code:
         text += "<b>📱 Telegram Profile:</b>\n"
         if first_name:
-            text += f"• Name: {first_name}\n"
+            text += f"• Name: {escape(str(first_name))}\n"
         if username:
-            text += f"• Username: @{username}\n"
+            text += f"• Username: @{escape(str(username))}\n"
         if tg_language_code:
-            text += f"• Language: {tg_language_code}\n"
+            text += f"• Language: {escape(str(tg_language_code))}\n"
         text += "\n"
 
     text += "<b>📋 Basic Info:</b>\n"

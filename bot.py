@@ -14,6 +14,7 @@ from gpro_calendar import (
     load_calendar_silent,
     load_next_season_silent,
     race_calendar,
+    update_calendar,
 )
 from notifications import load_users_data
 from notifications.history import load_notify_history, notify_history
@@ -90,8 +91,12 @@ async def main():
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher(storage=MemoryStorage())
 
-    await load_calendar_silent()
+    calendar_loaded = await load_calendar_silent()
     await load_next_season_silent()
+
+    if not calendar_loaded:
+        log_structured(logging.WARNING, "Calendar cache unavailable, fetching API")
+        await update_calendar()
 
     race_count = len(race_calendar)
     set_startup_data(races=race_count)
@@ -106,11 +111,11 @@ async def main():
     else:
         log_structured(logging.INFO, "Calendar loaded", races=len(race_calendar))
 
-    dp.update.middleware(UserProfileMiddleware())
-    log_structured(logging.INFO, "UserProfileMiddleware loaded")
-
     dp.update.middleware(RateLimitMiddleware(admin_ids=set(ADMIN_USER_IDS)))
     log_structured(logging.INFO, "RateLimitMiddleware loaded")
+
+    dp.update.middleware(UserProfileMiddleware())
+    log_structured(logging.INFO, "UserProfileMiddleware loaded")
 
     i18n = setup_i18n()
     await i18n.core.startup()

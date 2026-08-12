@@ -1,6 +1,7 @@
 """Core user data management"""
 
 import logging
+from datetime import UTC, datetime, timedelta
 from typing import Dict, Tuple
 
 from notifications.users.storage import users_data, save_users_data
@@ -13,6 +14,8 @@ from notifications.users.constants import (
 )
 
 logger = logging.getLogger(__name__)
+
+USER_ACTIVITY_SAVE_INTERVAL = timedelta(minutes=5)
 
 
 def get_user_status(user_id: int) -> Tuple[Dict, bool]:
@@ -33,8 +36,6 @@ def get_user_status(user_id: int) -> Tuple[Dict, bool]:
     if user_id not in users_data:
         was_new = True
         logger.info(f"🆕 New user {user_id} registered")
-        from datetime import datetime, UTC
-
         users_data[user_id] = {
             "completed_quali": None,
             "group": None,
@@ -316,10 +317,25 @@ def update_user_profile(
             needs_save = True
             logger.debug(f"Updated first_name for user {user_id}: {first_name}")
 
-    from datetime import datetime, UTC
+    now = datetime.now(UTC)
+    last_interaction = users_data[user_id].get("last_interaction")
+    activity_save_due = last_interaction is None
+    if last_interaction:
+        try:
+            previous_interaction = datetime.fromisoformat(
+                str(last_interaction).replace("Z", "+00:00")
+            )
+            if previous_interaction.tzinfo is None:
+                previous_interaction = previous_interaction.replace(tzinfo=UTC)
+            activity_save_due = (
+                now - previous_interaction >= USER_ACTIVITY_SAVE_INTERVAL
+            )
+        except (TypeError, ValueError):
+            activity_save_due = True
 
-    users_data[user_id]["last_interaction"] = datetime.now(UTC).isoformat()
-    needs_save = True
+    if needs_save or activity_save_due:
+        users_data[user_id]["last_interaction"] = now.isoformat()
+        needs_save = True
 
     if needs_save:
         save_users_data()

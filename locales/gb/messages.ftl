@@ -414,6 +414,7 @@ weather-failed = ❌ Failed to fetch weather data
 admin-only = ❌ Admin only
 admin-calendar-updated = ✅ <b>Calendar</b>: { $count } races
     🔄 <b>{ $userCount } users</b> reset
+admin-calendar-update-failed = ❌ Calendar update failed. Existing data was preserved; please try again later.
 admin-next-season-ready = 🌟 <b>Next season ready!</b> { $count } races
     Use /next to view
 admin-next-season-not-published = ℹ️ <b>Next season not published</b>

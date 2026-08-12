@@ -366,6 +366,7 @@ weather-failed = ❌ Nepodařilo se načíst data o počasí
 admin-only = ❌ Pouze pro administrátory
 admin-calendar-updated = ✅ <b>Kalendář</b>: { $count } závodů
     🔄 <b>{ $userCount } uživatelů</b> resetováno
+admin-calendar-update-failed = ❌ Kalendář se nepodařilo aktualizovat. Stávající data byla zachována; zkuste to později.
 admin-next-season-ready = 🌟 <b>Příští sezóna je připravena!</b> { $count } závodů
     Použijte /next pro zobrazení
 admin-next-season-not-published = ℹ️ <b>Příští sezóna nebyla zveřejněna</b>

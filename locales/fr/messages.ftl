@@ -385,6 +385,7 @@ weather-condition-rain = Pluie
 admin-only = ❌ Administrateur uniquement
 admin-calendar-updated = ✅ <b>Calendrier</b> : { $count } courses
     🔄 <b>{ $userCount } utilisateurs</b> réinitialisés
+admin-calendar-update-failed = ❌ Échec de la mise à jour du calendrier. Les données existantes ont été conservées ; réessayez plus tard.
 admin-next-season-ready = 🌟 <b>Prochaine saison prête !</b> { $count } courses
     Utilisez /next pour visualiser
 admin-next-season-not-published = ℹ️ <b>Prochaine saison non publiée</b>

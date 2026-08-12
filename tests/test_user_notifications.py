@@ -696,6 +696,22 @@ class TestUserProfile:
         updated_time = get_user_status(user_id)[0]["last_interaction"]
         assert updated_time != initial_time
 
+    def test_unchanged_profile_does_not_write_activity_immediately(self):
+        """Repeated interactions inside the debounce window avoid a full JSON write."""
+        from unittest.mock import patch
+
+        from notifications import get_user_status
+        from notifications.users import core
+
+        user_id = 77777
+        get_user_status(user_id)
+
+        with patch.object(core, "save_users_data") as save_users_data:
+            changed = core.update_user_profile(user_id)
+
+        assert changed is False
+        save_users_data.assert_not_called()
+
 
 class TestFormatRelativeTime:
     """Tests for format_relative_time helper function"""

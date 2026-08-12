@@ -366,6 +366,7 @@ weather-failed = ❌ Не вдалося отримати дані про пог
 admin-only = ❌ Тільки для адміністраторів
 admin-calendar-updated = ✅ <b>Календар</b>: { $count } гонок
     🔄 <b>{ $userCount } користувачів</b> скинуто
+admin-calendar-update-failed = ❌ Не вдалося оновити календар. Поточні дані збережено; спробуйте ще раз пізніше.
 admin-next-season-ready = 🌟 <b>Наступний сезон готовий!</b> { $count } гонок
     Використовуйте /next для перегляду
 admin-next-season-not-published = ℹ️ <b>Наступний сезон не опубліковано</b>

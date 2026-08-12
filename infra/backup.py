@@ -24,7 +24,7 @@ from aiogram import Bot
 from aiogram.types import FSInputFile
 
 from config import ADMIN_USER_IDS, CLASSIC_BACKUP_ENABLED
-from notifications.users.storage import USERS_FILE
+from notifications.users.storage import USERS_FILE, save_users_data, users_data
 
 logger = logging.getLogger(__name__)
 
@@ -37,8 +37,6 @@ CLASSIC_BACKUP_DAY = 3  # Thursday (0=Monday, 3=Thursday)
 TELEGRAM_BACKUP_DAY = 6  # Sunday (0=Monday, 6=Sunday)
 BACKUP_HOUR = 2  # 2:00 AM UTC
 
-# Per-admin Telegram backup settings (default: OFF for each admin)
-_telegram_backup_enabled: dict[int, bool] = {}
 _backup_scheduler_task: Optional[asyncio.Task] = None
 
 
@@ -128,12 +126,15 @@ def create_classic_backup() -> Optional[str]:
 
 def is_telegram_backup_enabled(admin_id: int) -> bool:
     """Check if Telegram backup is enabled for specific admin (default: False)"""
-    return _telegram_backup_enabled.get(admin_id, False)
+    return bool(users_data.get(admin_id, {}).get("telegram_backup_enabled", False))
 
 
 def set_telegram_backup_enabled(admin_id: int, enabled: bool):
     """Enable or disable Telegram backup for specific admin"""
-    _telegram_backup_enabled[admin_id] = enabled
+    if admin_id not in users_data:
+        users_data[admin_id] = {}
+    users_data[admin_id]["telegram_backup_enabled"] = enabled
+    save_users_data()
     logger.info(
         f"Telegram backup {'enabled' if enabled else 'disabled'} for admin {admin_id}"
     )
@@ -142,9 +143,7 @@ def set_telegram_backup_enabled(admin_id: int, enabled: bool):
 def get_enabled_telegram_admins() -> set[int]:
     """Get set of admin IDs who have Telegram backup enabled"""
     return {
-        admin_id
-        for admin_id in ADMIN_USER_IDS
-        if _telegram_backup_enabled.get(admin_id, False)
+        admin_id for admin_id in ADMIN_USER_IDS if is_telegram_backup_enabled(admin_id)
     }
 
 
@@ -321,20 +320,17 @@ def _seconds_until_next_day(target_day: int | None, target_hour: int) -> float:
 
     if target_day is None:
         next_run = now.replace(hour=target_hour, minute=0, second=0, microsecond=0)
-        if now.hour >= target_hour:
+        if now >= next_run:
             next_run += timedelta(days=1)
         return (next_run - now).total_seconds()
 
     days_ahead = target_day - now.weekday()
+    next_run = now.replace(hour=target_hour, minute=0, second=0, microsecond=0)
 
-    if days_ahead <= 0:  # Target day already happened this week
+    if days_ahead < 0 or (days_ahead == 0 and now >= next_run):
         days_ahead += 7
 
-    next_run = now.replace(hour=target_hour, minute=0, second=0, microsecond=0)
     next_run += timedelta(days=days_ahead)
-
-    if days_ahead == 0 and now.hour >= target_hour:
-        next_run += timedelta(days=7)
 
     return (next_run - now).total_seconds()
 

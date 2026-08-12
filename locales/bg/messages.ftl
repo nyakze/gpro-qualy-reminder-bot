@@ -364,6 +364,7 @@ weather-failed = ❌ Неуспешно извличане на данни за 
 admin-only = ❌ Само за администратори
 admin-calendar-updated = ✅ <b>Календар</b>: { $count } състезания
     🔄 <b>{ $userCount } потребители</b> нулирани
+admin-calendar-update-failed = ❌ Календарът не бе обновен. Съществуващите данни са запазени; опитайте отново по-късно.
 admin-next-season-ready = 🌟 <b>Следващият сезон е готов!</b> { $count } състезания
     Използвайте /next за преглед
 admin-next-season-not-published = ℹ️ <b>Следващият сезон не е публикуван</b>

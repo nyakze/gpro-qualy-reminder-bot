@@ -366,6 +366,7 @@ weather-failed = ❌ मौसम डेटा प्राप्त करन�
 admin-only = ❌ केवल व्यवस्थापक
 admin-calendar-updated = ✅ <b>कैलेंडर</b>: { $count } रेस
     🔄 <b>{ $userCount } उपयोगकर्ता</b> रीसेट हुए
+admin-calendar-update-failed = ❌ कैलेंडर अपडेट नहीं हो सका। मौजूदा डेटा सुरक्षित रखा गया है; बाद में फिर प्रयास करें।
 admin-next-season-ready = 🌟 <b>अगला सीज़न तैयार है!</b> { $count } रेस
     देखने के लिए /next का उपयोग करें
 admin-next-season-not-published = ℹ️ <b>अगला सीज़न प्रकाशित नहीं हुआ है</b>

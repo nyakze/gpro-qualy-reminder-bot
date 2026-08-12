@@ -2,6 +2,7 @@
 
 import pytest
 from datetime import datetime, timedelta, UTC
+from unittest.mock import AsyncMock
 import sys
 import os
 
@@ -426,6 +427,32 @@ class TestSeasonTransition:
         gpro_calendar.next_season_calendar = {1: {"date": now + timedelta(days=5)}}
 
         assert should_trigger_season_transition(now) is True
+
+    @pytest.mark.asyncio
+    async def test_empty_calendar_recovery_retries_hourly(self, monkeypatch):
+        from notifications.checks import season
+
+        now = datetime.now(UTC)
+        updater = AsyncMock(return_value=False)
+        monkeypatch.setattr(season, "race_calendar", {})
+        monkeypatch.setattr(season, "update_calendar", updater)
+        monkeypatch.setattr(
+            season, "should_trigger_season_transition", lambda current: False
+        )
+        monkeypatch.setattr(
+            season, "should_prefetch_next_season", lambda current: False
+        )
+        monkeypatch.setattr(season, "last_calendar_recovery_check", None)
+        monkeypatch.setattr(season, "last_prefetch_check", None)
+
+        await season.check_season_transition(now)
+        await season.check_season_transition(now + timedelta(minutes=30))
+
+        assert updater.await_count == 1
+
+        await season.check_season_transition(now + timedelta(hours=1, seconds=1))
+
+        assert updater.await_count == 2
 
 
 if __name__ == "__main__":

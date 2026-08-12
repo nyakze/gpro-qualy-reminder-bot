@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 # Track last check times
 last_season_transition_check = None
 last_prefetch_check = None
+last_calendar_recovery_check = None
 SEASON_CHECK_INTERVAL_HOURS = 1  # Check season transition conditions every hour
 
 
@@ -47,6 +48,20 @@ async def check_season_transition(now: datetime) -> None:
         now: Current datetime
     """
     global last_season_transition_check, last_prefetch_check
+    global last_calendar_recovery_check
+
+    if not race_calendar and (
+        last_calendar_recovery_check is None
+        or (now - last_calendar_recovery_check).total_seconds()
+        >= SEASON_CHECK_INTERVAL_HOURS * 3600
+    ):
+        logger.warning("Calendar is empty; attempting API recovery")
+        recovered = await update_calendar()
+        last_calendar_recovery_check = now
+        if recovered:
+            logger.info("Calendar recovered from API")
+        else:
+            logger.error("Calendar recovery failed; retrying in one hour")
 
     # Season transition check (after last race concludes)
     if should_trigger_season_transition(now):

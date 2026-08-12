@@ -228,13 +228,15 @@ class TestAPISuccessCases:
                                 assert result is True
 
     @pytest.mark.asyncio
-    async def test_update_calendar_next_season_cleanup(self):
-        """Test next season data cleanup when not published"""
-        from gpro_calendar import update_calendar, next_season_calendar
+    async def test_empty_current_calendar_is_rejected_without_mutating_state(self):
+        """An invalid 200 response must not replace known calendar state."""
+        from gpro_calendar import race_calendar, update_calendar, next_season_calendar
 
         mock_response_data = {"events": [], "nextSeasonPublished": False}
 
-        # Pre-populate next season calendar
+        race_calendar.clear()
+        race_calendar[1] = {"track": "Current Data", "date": datetime.now(UTC)}
+        next_season_calendar.clear()
         next_season_calendar[1] = {"track": "Old Data", "date": datetime.now(UTC)}
 
         with patch("gpro_calendar.GPRO_API_TOKEN", "test_token"):
@@ -257,11 +259,12 @@ class TestAPISuccessCases:
                 mock_session.get = MagicMock(return_value=mock_get_context)
 
                 with patch("os.path.exists", return_value=True):
-                    with patch("os.remove"):
+                    with patch("os.remove") as remove:
                         result = await update_calendar()
-                        assert result is True
-                        # Verify next season was cleared
-                        assert len(next_season_calendar) == 0
+                        assert result is False
+                        assert race_calendar[1]["track"] == "Current Data"
+                        assert next_season_calendar[1]["track"] == "Old Data"
+                        remove.assert_not_called()
 
 
 class TestSeasonTransition:

@@ -208,14 +208,18 @@ async def update_calendar() -> bool:
                     data = raw_response.get("events", [])
                     calendar = parse_gpro_events(data, is_next_season=False)
 
-                    if calendar:
-                        save_calendar(calendar)
-                        global race_calendar
-                        race_calendar.clear()
-                        race_calendar.update(calendar)
-                        logger.info(f"✅ CURRENT SEASON: {len(calendar)} races!")
-                    else:
-                        logger.warning("No valid race events found")
+                    if not calendar:
+                        logger.error(
+                            "Calendar API returned no valid current-season races; "
+                            "keeping the existing calendar"
+                        )
+                        return False
+
+                    save_calendar(calendar)
+                    global race_calendar
+                    race_calendar.clear()
+                    race_calendar.update(calendar)
+                    logger.info(f"✅ CURRENT SEASON: {len(calendar)} races!")
 
                     # NEXT SEASON LOGIC
                     next_season_published = raw_response.get(
@@ -264,7 +268,7 @@ async def update_calendar() -> bool:
         logger.warning("Calendar API timeout")
     except aiohttp.ClientError as e:
         logger.error(f"Calendar API client error: {e}")
-    except (json.JSONDecodeError, KeyError, TypeError) as e:
+    except (json.JSONDecodeError, KeyError, TypeError, AttributeError, OSError) as e:
         logger.error(f"Calendar API response error: {e}")
 
     return False

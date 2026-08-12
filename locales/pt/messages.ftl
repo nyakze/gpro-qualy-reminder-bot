@@ -363,6 +363,7 @@ weather-failed = ❌ Falha ao obter dados meteorológicos
 admin-only = ❌ Apenas administrador
 admin-calendar-updated = ✅ <b>Calendário</b>: { $count } corridas
     🔄 <b>{ $userCount } utilizadores</b> redefinidos
+admin-calendar-update-failed = ❌ Não foi possível atualizar o calendário. Os dados existentes foram preservados; tenta novamente mais tarde.
 admin-next-season-ready = 🌟 <b>Próxima temporada pronta!</b> { $count } corridas
     Usa /next para visualizar
 admin-next-season-not-published = ℹ️ <b>Próxima temporada não publicada</b>

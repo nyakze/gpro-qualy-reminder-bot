@@ -366,6 +366,7 @@ weather-failed = ❌ Ophalen weergegevens mislukt
 admin-only = ❌ Alleen admin
 admin-calendar-updated = ✅ <b>Kalender</b>: { $count } races
     🔄 <b>{ $userCount } gebruikers</b> gereset
+admin-calendar-update-failed = ❌ De kalender kon niet worden bijgewerkt. Bestaande gegevens zijn behouden; probeer het later opnieuw.
 admin-next-season-ready = 🌟 <b>Volgend seizoen klaar!</b> { $count } races
     Gebruik /next om te bekijken
 admin-next-season-not-published = ℹ️ <b>Volgend seizoen niet gepubliceerd</b>

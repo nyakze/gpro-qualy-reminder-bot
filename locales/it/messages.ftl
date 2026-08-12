@@ -385,6 +385,7 @@ weather-condition-rain = Pioggia
 admin-only = ❌ Solo admin
 admin-calendar-updated = ✅ <b>Calendario</b>: { $count } gare
     🔄 <b>{ $userCount } utenti</b> reimpostati
+admin-calendar-update-failed = ❌ Aggiornamento del calendario non riuscito. I dati esistenti sono stati conservati; riprova più tardi.
 admin-next-season-ready = 🌟 <b>Prossima stagione pronta!</b> { $count } gare
     Usa /next per visualizzare
 admin-next-season-not-published = ℹ️ <b>Prossima stagione non pubblicata</b>
