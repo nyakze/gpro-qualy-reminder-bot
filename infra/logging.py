@@ -168,9 +168,9 @@ def print_banner() -> None:
     title_left = (box_width - len(title_content)) // 2
     title_right = box_width - len(title_content) - title_left
 
-    line1 = f"{green}║{' ' * line1_left}{line1_content}{' ' * line1_right}{reset}║"
-    line2 = f"{green}║{' ' * line2_left}{line2_content}{' ' * line2_right}{reset}║"
-    title = f"{green}║{' ' * title_left}{title_content}{' ' * title_right}{reset}║"
+    line1 = f"{green}║{' ' * line1_left}{line1_content}{' ' * line1_right}║{reset}"
+    line2 = f"{green}║{' ' * line2_left}{line2_content}{' ' * line2_right}║{reset}"
+    title = f"{green}║{' ' * title_left}{title_content}{' ' * title_right}║{reset}"
     top = f"{green}╔════════════════════════════════════════════════════════╗"
     divider = f"{green}╠════════════════════════════════════════════════════════╣"
     bottom = f"{green}╚════════════════════════════════════════════════════════╝{reset}"
