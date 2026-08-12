@@ -40,7 +40,6 @@ PREFETCH_DAYS_BEFORE_SEASON = 4  # Fetch next season calendar 4 days before firs
 # Replay/results notifications: sent immediately after race
 # We transition at 4h to ensure everything is complete and avoid conflicts
 SEASON_TRANSITION_HOURS_AFTER_RACE = 4.0  # Transition 4 hours after last race
-SEASON_TRANSITION_TOLERANCE_MINUTES = 15  # Tolerance window for detection
 
 
 def get_race_time_in_utc(race_date: datetime) -> datetime:
@@ -665,7 +664,8 @@ def should_trigger_season_transition(now: datetime) -> bool:
         now: Current datetime
 
     Returns:
-        bool: True if 4h after last race and we have next season data
+        bool: True once at least 4h have passed after the last race and we have
+        next season data
     """
     if not race_calendar or not next_season_calendar:
         return False
@@ -679,14 +679,9 @@ def should_trigger_season_transition(now: datetime) -> bool:
     # Target: 4 hours after race (ensures all notifications sent)
     # We wait until 4 hours to ensure everything is done
     target_hours = SEASON_TRANSITION_HOURS_AFTER_RACE
-    tolerance_hours = SEASON_TRANSITION_TOLERANCE_MINUTES / 60
-
-    # Trigger within tolerance window around 4 hours after race
-    if (
-        target_hours - tolerance_hours
-        <= hours_since_race
-        <= target_hours + tolerance_hours
-    ):
+    # Keep returning True after the threshold so a restart or temporary outage
+    # cannot permanently miss the transition.
+    if hours_since_race >= target_hours:
         logger.info(
             f"🔄 Season transition conditions met: {hours_since_race:.2f}h after last race "
             f"(all notifications sent)"
@@ -697,7 +692,11 @@ def should_trigger_season_transition(now: datetime) -> bool:
 
 
 def should_prefetch_next_season(now: datetime) -> bool:
-    """Check if we should pre-fetch next season calendar (4 days before first race)
+    """Check if we should poll for the next season calendar.
+
+    GPRO does not expose the next season's first-race date until the next-season
+    calendar is published. Start polling shortly before the current season's
+    final race and continue until the API supplies next-season data.
 
     Args:
         now: Current datetime
@@ -713,23 +712,17 @@ def should_prefetch_next_season(now: datetime) -> bool:
         logger.debug("Next season calendar already exists, skipping prefetch")
         return False
 
-    first_race_date = get_first_race_date()
-    if not first_race_date:
+    last_race_id = get_last_race_id()
+    if not last_race_id:
         return False
 
-    days_until_first_race = (first_race_date - now).total_seconds() / (24 * 3600)
+    last_race_date = race_calendar[last_race_id]["date"]
+    days_until_last_race = (last_race_date - now).total_seconds() / (24 * 3600)
 
-    # Check if we're within the prefetch window (4 days before, with 1 hour tolerance)
-    tolerance_hours = 1
-    target_days = PREFETCH_DAYS_BEFORE_SEASON
-
-    if (
-        target_days - (tolerance_hours / 24)
-        <= days_until_first_race
-        <= target_days + (tolerance_hours / 24)
-    ):
+    if days_until_last_race <= PREFETCH_DAYS_BEFORE_SEASON:
         logger.info(
-            f"📅 Prefetch conditions met: {days_until_first_race:.2f} days until first race"
+            f"📅 Next-season polling active: {days_until_last_race:.2f} days "
+            "until current season's final race"
         )
         return True
 

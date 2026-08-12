@@ -10,7 +10,11 @@ sys.path.insert(0, ".")
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from config import BOT_TOKEN, ADMIN_USER_IDS
-from gpro_calendar import load_calendar_silent, race_calendar
+from gpro_calendar import (
+    load_calendar_silent,
+    load_next_season_silent,
+    race_calendar,
+)
 from notifications import load_users_data
 from notifications.history import load_notify_history, notify_history
 from i18n_setup import setup_i18n
@@ -87,6 +91,7 @@ async def main():
     dp = Dispatcher(storage=MemoryStorage())
 
     await load_calendar_silent()
+    await load_next_season_silent()
 
     race_count = len(race_calendar)
     set_startup_data(races=race_count)

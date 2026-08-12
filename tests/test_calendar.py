@@ -361,12 +361,12 @@ class TestSeasonTransition:
         assert result is False
 
     def test_should_not_prefetch_too_early(self):
-        """Test prefetch doesn't trigger too early (more than 4 days)"""
+        """Test prefetch doesn't trigger too early before the final race"""
         from gpro_calendar import should_prefetch_next_season
         import gpro_calendar
 
         now = datetime.now(UTC)
-        # First race is 6 days away - outside prefetch window
+        # Final race is 6 days away - outside prefetch window
         gpro_calendar.race_calendar = {
             1: {
                 "date": now + timedelta(days=6),
@@ -377,6 +377,55 @@ class TestSeasonTransition:
 
         result = should_prefetch_next_season(now)
         assert result is False
+
+    def test_new_season_reminder_uses_next_season_date(self, monkeypatch):
+        """Reminder timing comes from next season, not the stale current season."""
+        import gpro_calendar
+        from notifications.checks import season
+
+        now = datetime.now(UTC)
+        gpro_calendar.race_calendar = {1: {"date": now - timedelta(days=60)}}
+        gpro_calendar.next_season_calendar = {
+            1: {"date": now + timedelta(hours=30), "track": "New Season Race"}
+        }
+        monkeypatch.setattr(season, "is_already_notified", lambda *_: False)
+
+        reminders = season.check_new_season_reminder(now)
+
+        assert len(reminders) == 1
+        assert reminders[0][0] == "new_season"
+
+    def test_new_season_reminder_uses_current_calendar_after_rollover(
+        self, monkeypatch
+    ):
+        """Reminder survives the API moving the new season into current data."""
+        import gpro_calendar
+        from notifications.checks import season
+
+        now = datetime.now(UTC)
+        gpro_calendar.race_calendar = {
+            1: {"date": now + timedelta(hours=30), "track": "Current Race 1"}
+        }
+        gpro_calendar.next_season_calendar = {
+            1: {"date": now + timedelta(days=60), "track": "Later Race 1"}
+        }
+        monkeypatch.setattr(season, "is_already_notified", lambda *_: False)
+
+        reminders = season.check_new_season_reminder(now)
+
+        assert len(reminders) == 1
+        assert reminders[0][2]["track"] == "Current Race 1"
+
+    def test_overdue_transition_is_not_missed(self):
+        """Transition remains eligible after the old tolerance window."""
+        from gpro_calendar import should_trigger_season_transition
+        import gpro_calendar
+
+        now = datetime.now(UTC)
+        gpro_calendar.race_calendar = {17: {"date": now - timedelta(days=2)}}
+        gpro_calendar.next_season_calendar = {1: {"date": now + timedelta(days=5)}}
+
+        assert should_trigger_season_transition(now) is True
 
 
 if __name__ == "__main__":

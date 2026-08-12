@@ -79,7 +79,7 @@ async def check_season_transition(now: datetime) -> None:
             success = await update_calendar()
 
             if success:
-                logger.info("✅ Next season calendar pre-fetched successfully!")
+                logger.info("✅ Calendar API poll completed successfully")
 
                 # Also fetch weather for Race 1 (it won't be auto-fetched later)
                 if 1 in race_calendar:
@@ -103,17 +103,22 @@ def check_new_season_reminder(now: datetime) -> List[Tuple]:
     Returns:
         list: Notifications to send [(type, race_id, race_data, label, history_key), ...]
     """
-    from gpro_calendar import get_first_race_date, next_season_calendar
+    from gpro_calendar import next_season_calendar, race_calendar
 
     notifications: list = []
 
-    # Check if we have a next season calendar (meaning new season is coming)
-    if not next_season_calendar:
+    # Race 1 may already have moved into race_calendar when the API rolls over.
+    # Select the nearest upcoming Race 1 from either calendar.
+    first_race_candidates = [
+        calendar[1]
+        for calendar in (race_calendar, next_season_calendar)
+        if 1 in calendar and calendar[1]["date"] > now
+    ]
+    if not first_race_candidates:
         return notifications
 
-    first_race_date = get_first_race_date()
-    if not first_race_date:
-        return notifications
+    first_race = min(first_race_candidates, key=lambda race: race["date"])
+    first_race_date = first_race["date"]
 
     days_until = (first_race_date - now).total_seconds() / (24 * 3600)
 
@@ -129,12 +134,10 @@ def check_new_season_reminder(now: datetime) -> List[Tuple]:
     if not is_already_notified(0, reminder_label):
         # Check if we're within the notification window
         if min_days <= days_until <= target_days:
-            # Use race_id=1 data for track name, but label indicates season reminder
-            if 1 in next_season_calendar:
-                race_data = next_season_calendar[1].copy()
-                race_data["days_until"] = days_until
-                notifications.append(
-                    ("new_season", 1, race_data, reminder_label, history_key)
-                )
+            race_data = first_race.copy()
+            race_data["days_until"] = days_until
+            notifications.append(
+                ("new_season", 1, race_data, reminder_label, history_key)
+            )
 
     return notifications

@@ -329,8 +329,8 @@ class TestSeasonTransition:
 
         now = datetime.now(UTC)
 
-        # First race exactly at the prefetch target time (4 days away)
-        race_calendar[1] = {
+        # Final race exactly at the prefetch target time (4 days away)
+        race_calendar[17] = {
             "date": now + timedelta(days=PREFETCH_DAYS_BEFORE_SEASON),
             "quali_close": now
             + timedelta(days=PREFETCH_DAYS_BEFORE_SEASON, hours=-1.5),
